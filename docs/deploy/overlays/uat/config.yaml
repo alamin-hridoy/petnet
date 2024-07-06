@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: docs-config
+data:
+  ENV: uat 
+  BASE_URL: https://uat.petnet.dev
+  AUTH_ISSUER: https://auth.uat.petnet.dev/
+
+...

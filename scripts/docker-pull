@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# WARNING: do not use /bin/bash, as docker:dind doesn't have bash.
+
+# This script builds a Docker image following our conventions. To see how the
+# image tag is worked out, see the docker-image-tag script.
+
+docker_image=$1
+target_image=$2
+
+if [ -z "$docker_image" ]; then
+	echo "missing source image"
+	exit 1
+fi
+
+if [ -n "$IMAGE_TAG" ]; then
+	: # nothing to do
+else
+	IMAGE_TAG=$(./scripts/docker-image-tag "$target_image")
+fi
+
+# we need GOOGLE_APPLICATION_CREDENTIALS on CI
+if [ -z $GOOGLE_APPLICATION_CREDENTIALS ]; then
+	echo '$GOOGLE_APPLICATION_CREDENTIALS missing' >&2
+	exit 1
+fi
+
+# set up gcr
+gcloud auth activate-service-account --key-file "$GOOGLE_APPLICATION_CREDENTIALS" || exit 1
+gcloud auth configure-docker || exit 1
+
+echo "Pulling $docker_image to $IMAGE_TAG"
+
+docker pull "$docker_image" 
+docker tag  "$docker_image" "$IMAGE_TAG"

@@ -1,0 +1,12 @@
+- op: replace
+  path: /spec/tls/0/hosts
+  value:
+    - auth.drp.perahub.com.ph
+
+- op: replace
+  path: /spec/rules/0/host
+  value: auth.drp.perahub.com.ph
+
+- op: add
+  path: /metadata/annotations/traefik.ingress.kubernetes.io~1router.middlewares
+  value: ingress-security-headers@kubernetescrd,ingress-https@kubernetescrd

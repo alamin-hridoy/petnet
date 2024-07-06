@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Remit</title>
+</head>
+{{ template "navbar.html" }}
+
+<body>
+	<div>
+		<h4>Status: {{if .Success}}Success!{{end}}{{if .Error}}{{.Error}}{{end}}</h4>
+		<h4>ControlNo: {{if .ControlNo}}{{.ControlNo}}{{end}}</h4>
+		<hr>
+	</div>
+	<div>
+		<form id="remit-form" method="POST" action="/choose-partner">
+			{{ .CSRFField }}
+			<input name="Types" value="{{.Types}}" type="hidden">
+			<div>
+				<h4>Guide</h4>
+				<h4>1. Choose RemitPartner and Type</h4>
+				<h4>2. Default values will be put into the fields, and the only field that needs to be changed is the "Control
+					Number" when disbursing a remit ("Disburse Remit" Type)</h4>
+				<h4>* if partner has both "Create Remit" and "Disburse Remit" Types (f.e Western Union) set the "Control
+					Number" to the ControlNo created after doing a successful "Create Remit" (ControlNo can also be found by clicking
+					"List Remit" in the navbar).</h4>
+				<h4>* if partner only has "Disburse Remit", a "Control Number" is needed from the partner to make a
+					transaction.</h4>
+				<h4>3. List successful remits by clicking the "List Remit" link in the navbar.</h4>
+				<div>
+					<div>
+						<label>Remit Partner</label>
+					</div>
+					<select onchange="submit()" name="Partner" id="partners">
+						{{range $k, $v := .Partners}}
+						{{if eq $v.PartnerCode $.Partner}}
+						<option selected="selected" value="{{$v.PartnerCode}}">{{$v.PartnerName}}</option>
+						{{else}}
+						<option value="{{$v.PartnerCode}}">{{$v.PartnerName}}</option>
+						{{end}}
+						{{end}}
+					</select>
+				</div>
+				<br>
+				<div>
+					<div>
+						<label>Type</label>
+					</div>
+					<select onchange="submit()" name="Type" id="types">
+						{{range $v := .Types}}
+						<option {{if eq $.Type .}}selected="selected" {{end}} value="{{$v}}">
+							{{if eq . "register-user"}}Register User{{end}}
+							{{if eq . "create-profile"}}Create Profile{{end}}
+							{{if eq . "create-recipient"}}Create Recipient{{end}}
+							{{if eq . "create-quote"}}Create Quote{{end}}
+							{{if eq . "create"}}Create Remit{{end}}
+							{{if eq . "disburse"}}Disburse Remit{{end}}
+							{{if eq . "not-implemented"}}Not Implemented Yet{{end}}
+						</option>
+						{{end}}
+					</select>
+				</div>
+				<br>
+				<br>
+			</div>
+		</form>
+		<hr>
+		<br>
+		{{if eq .Type "register-user"}}
+		{{ template "register-user.html" .}}
+		{{end}}
+		{{if eq .Type "create-profile"}}
+		{{ template "create-profile.html" .}}
+		{{end}}
+		{{if eq .Type "create-recipient"}}
+		{{ template "create-recipient.html" .}}
+		{{end}}
+		{{if eq .Type "create-quote"}}
+		{{ template "create-quote.html" .}}
+		{{end}}
+		{{if eq .Type "create"}}
+		{{ template "create-remit.html" .}}
+		{{end}}
+		{{if eq .Type "disburse"}}
+		{{ template "disburse-remit.html" .}}
+		{{end}}
+	</div>
+	<script>
+		function val() {
+			document.getElementById("remit-form").submit();
+		}
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,12 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "RBAC API",
+    "version": "0.0.1"
+  },
+  "apis": [
+    {
+      "url": "./v1/useraccount/all.swagger.json"
+    }
+  ]
+}

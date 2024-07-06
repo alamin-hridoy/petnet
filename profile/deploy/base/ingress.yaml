@@ -1,0 +1,24 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: profile
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/protocol: h2c
+    traefik.ingress.kubernetes.io/router.tls: "true"
+spec:
+  tls:
+  - hosts:
+    - "dev.OVERLAY_ME"
+    secretName: cert-profile
+  rules:
+  - host: sso.OVERLAY_ME
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: profile 
+          servicePort: 80
+
+...

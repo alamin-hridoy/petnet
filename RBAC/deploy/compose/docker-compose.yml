@@ -1,0 +1,183 @@
+# use buildkit
+# export COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1
+version: '3'
+
+volumes:
+  rbac_postgresql:
+  rbac_elector_sock:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+
+services:
+  postgresd:
+    container_name: rbac_postgresd
+    image: postgres:10.13
+    ports:
+      - "5434:5432"
+    volumes:
+      - rbac_postgresql:/var/lib/postgresql/data
+      - ./create-rbac-database.sh:/docker-entrypoint-initdb.d/create-rbac-database.sh
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=postgres
+      - CREATE_EXTENSION=uuid-ossp
+    restart: unless-stopped
+
+  rbac-site:
+    container_name: rbac_site
+    extends:
+      file: base-services.yml
+      service: rbac-site
+    ports:
+      - 4000:4000
+    environment:
+      RUNTIME_ENVIRONMENT: 'development'
+      SERVER_HOST: 127.0.0.1
+      SERVER_PORT: '4000'
+      HYDRA_ADMINURL: http://hydra:4445
+      SCOPES_HOST: "${USERMGM_INTERNAL:-rbac-usermgm:3030}"
+      AUTH_ISSUER: "${HYDRA_HOST:-http://127.0.0.1:4444}"
+      AUTH_TOKEN: "${HYDRA_HOST:-http://hydra:4444}"
+      AUTH_COOKIENAME: localdev
+      # Generated if blank
+      AUTH_COOKIESECRET: "${AUTH_COOKIESECRET}"
+      AUTH_CLIENTID: "${HYDRA_CLIENTID}"
+      AUTH_CLIENTSECRET: "${HYDRA_CLIENTSECRET}"
+      AUTH_REDIRECTURL: http://127.0.0.1:4000/oauth2/callback
+      CSRF_SECRET: somethingsecret
+    restart: unless-stopped
+
+  rbac-profile:
+    container_name: rbac_profile
+    depends_on:
+      - hydra
+      - rbac-usermgm
+      - postgresd
+    build:
+      context: ../..
+      dockerfile: deploy/compose/Dockerfile.profile
+    ports:
+      - 3005:3005 # external
+      - 3006:3006 # internal
+    environment:
+      TZ: "${TZ:-Asia/Manila}"
+      RUNTIME_ENVIRONMENT: development
+      RUNTIME_LOGLEVEL: trace
+      SERVER_HOST: 127.0.0.1
+      SERVER_PORT: '3005'
+      SERVER_ADMINPORT: '3006'
+      DATABASE_HOST: postgresd
+      DATABASE_PORT: '5432'
+      DATABASE_USER: profiledb_user
+      DATABASE_DBNAME: profiledb
+      DATABASE_PASSWORD: secret
+      ELECTOR_SOCK: /var/lib/leaderelex/lead.sock
+      ELECTOR_MOCK_RESPONSE: '7s'
+      MAINPKG_LEADER: 'false'
+      USERMGM_API: rbac-usermgm:3000
+      # GRPC_GO_LOG_SEVERITY_LEVEL: info
+      # GRPC_GO_LOG_VERBOSITY_LEVEL: '99'
+    restart: unless-stopped
+
+  rbac-usermgm:
+    container_name: rbac_usermgm
+    extends:
+      file: base-services.yml
+      service: usermgm
+    environment:
+      TRACE_COLLECTORHOST: "otel-collector:4317"
+      # OTEL_LOG_LEVEL: debug
+    ports:
+      - 3001:3000 # external
+      - 3030:3030 # internal
+      # - 1111:1111 # delve port TODO(robin): have the same delve port on all instances
+      - 12005:12000
+    depends_on:
+      - hydra
+      - keto
+      - postgresd
+
+  rbac-idp:
+    container_name: rbac_idp
+    extends:
+      file: base-services.yml
+      service: idp
+    ports:
+      - 3000:3000
+      # - 2222:2222 # delve port
+    depends_on:
+      - hydra
+    environment:
+      # Remove to skip consent
+      CONSENT_HOST: "${USERMGM_INTERNAL:-rbac-usermgm:3030}"
+      TRACE_COLLECTORHOST: "otel-collector:4317"
+      # OTEL_LOG_LEVEL: debug
+    volumes:
+      - ../../idp/assets:/src/idp/assets
+      - rbac_elector_sock:/var/lib/leaderelex
+
+  hydra-migrate:
+    container_name: rbac_hydra-migrate
+    extends:
+      file: base-services.yml
+      service: hydra-migrate
+    depends_on:
+      - postgresd
+
+  hydra:
+    container_name: rbac_hydra
+    extends:
+      file: base-services.yml
+      service: hydra
+    ports:
+      - '4444:4444' # Public port
+      - '4445:4445' # Admin port
+    depends_on:
+      - hydra-migrate
+
+  hydra-init-client:
+    container_name: rbac_hydra-init-client
+    extends:
+      file: base-services.yml
+      service: hydra-init-client
+
+  keto-migrate:
+    container_name: rbac_keto-migrate
+    extends:
+      file: base-services.yml
+      service: keto-migrate
+    depends_on:
+      - postgresd
+
+  keto:
+    container_name: rbac_keto
+    extends:
+      file: base-services.yml
+      service: keto
+    ports:
+      - '4466:4466'
+    depends_on:
+      - keto-migrate
+
+  jaeger:
+    container_name: petnet_jaeger
+    extends:
+      file: base-services.yml
+      service: jaeger
+    ports:
+      - "16686:16686"       # Jaeger UI
+      - "14268"
+      - "14250"
+
+  otel-collector:
+    container_name: petnet_otel-collector
+    extends:
+      file: base-services.yml
+      service: otel-collector
+    ports:
+      - "4317"              # OTLP gRPC receiver
+      - "1777:1777"         # pprof extension
+      - "55679:55679"       # zpages extension
+      - "13133"             # health_check

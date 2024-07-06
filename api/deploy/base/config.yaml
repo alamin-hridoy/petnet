@@ -1,0 +1,33 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-config
+data:
+  TZ: "Asia/Manila"
+  RUNTIME_ENVIRONMENT: "DEPLOY_ENV"
+  DATABASE_HOST: postgres
+  CORS_ORIGINS: "https://OVERLAY_ME,*.OVERLAY_ME"
+  HYDRA_ADMINURL: http://hydra-admin
+  AUTH_OAUTHURL: https://auth.ENV.petnet.dev
+  AUTH_ISSUER: https://auth.ENV.petnet.dev
+  AUTH_TOKEN: https://auth.ENV.petnet.dev/oauth2/token
+  PERAHUB_ENVIRONMENT: dev
+  PERAHUB_BASEURL: http://kycdevgateway.perahub.com.ph/gateway
+  PERAHUB_NONEXURL: https://privatedrp.dev.perahub.com.ph/v1/remit/nonex/
+  PERAHUB_BILLERURL: https://privatedrp.dev.perahub.com.ph/v1/billspay/wrapper/api/
+  PERAHUB_TRANSACTURL: https://privatedrp.dev.perahub.com.ph/v1/transactions/api/
+  PERAHUB_BILLSURL: https://privatedrp.dev.perahub.com.ph/v1/billspay/
+  PERAHUB_REVCOMMURL: https://privatedrp.dev.perahub.com.ph/v1/drp/
+  PERAHUB_RTAURL: https://privatedrp.dev.perahub.com.ph/v1/banks/
+  PERAHUB_CICOURL: https://privatedrp.dev.perahub.com.ph/v1/cico/wrapper/
+  PERAHUB_REMITTANCEURL: https://privatedrp.dev.perahub.com.ph/v1/remit/dmt/
+  PERAHUB_MICINSURL: https://privatedrp.dev.perahub.com.ph/v1/insurance/ruralnet/
+  PERAHUB_SERVERIP: 127.0.0.1
+  IDENTITY_INTERNAL: usermgm-admin:80
+  PROFILE_INTERNAL: profile-admin:80
+  INFLUXDB_HOST: influxdb2.influxdb.svc.cluster.local
+  INFLUXDB_PORT: "8086"
+  INFLUXDB_BATCHSIZE: "100"
+  INFLUXDB_GRPCMEASURE: conex_grpc_latency
+  INFLUXDB_HTTPMEASURE: conex_http_latency

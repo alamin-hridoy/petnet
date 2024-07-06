@@ -1,0 +1,309 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/rbac/gunk/v1/authenticate/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "SessionService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/authenticate": {
+      "post": {
+        "summary": "Authenticate user with username(or email) and password.\n\t   \t\tProvide session info to enrich the login.",
+        "description": "Authenticate user session.",
+        "operationId": "SessionService_Login",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/authenticateSession"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/authenticateLoginRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Authenticate"
+        ]
+      }
+    },
+    "/v1/authenticate/{mfa_event_id}": {
+      "put": {
+        "summary": "Reset and re-send (if necessary) the MFA token.",
+        "description": "Retry MFA.",
+        "operationId": "SessionService_RetryMFA",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/authenticateSession"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "mfa_event_id",
+            "description": "MFA event identifier for confirming user identity.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/authenticateRetryMFARequest"
+            }
+          }
+        ],
+        "tags": [
+          "Authenticate"
+        ]
+      }
+    },
+    "/v1/authenticate/{user_id}": {
+      "get": {
+        "summary": "Get existing user session.\n\t   \t\tProvide session info to enrich the login.",
+        "description": "Get user session.",
+        "operationId": "SessionService_GetSession",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/authenticateSession"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "description": "User unique identifier.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "client_id",
+            "description": "Auth Client ID for identifying the organization that is requesting the session.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Authenticate"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "authenticateLoginRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "client_id": {
+          "type": "string",
+          "description": "Auth Client ID for identifying the organization that is requesting the session."
+        },
+        "extra": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Additional or alternative form inputs for authentication."
+        },
+        "mfa_event_id": {
+          "type": "string",
+          "description": "MFA event identifier for confirming user identity."
+        },
+        "mfa_type": {
+          "$ref": "#/definitions/mfaMFA",
+          "description": "Expected type of MFA."
+        },
+        "mfa_token": {
+          "type": "string",
+          "description": "MFA Token for authentication."
+        },
+        "subject": {
+          "type": "string",
+          "description": "Auth Subject ID for identifying the user that is being validated."
+        }
+      }
+    },
+    "authenticateRetryMFARequest": {
+      "type": "object",
+      "properties": {
+        "subject": {
+          "type": "string",
+          "description": "Auth Subject ID for identifying the user that is being validated."
+        },
+        "client_id": {
+          "type": "string",
+          "description": "Auth Client ID for identifying the organization that is requesting the session."
+        },
+        "mfa_event_id": {
+          "type": "string",
+          "description": "MFA event identifier for confirming user identity."
+        },
+        "mfa_type": {
+          "$ref": "#/definitions/mfaMFA",
+          "description": "Expected type of MFA."
+        }
+      }
+    },
+    "authenticateSession": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "description": "User unique identifier."
+        },
+        "org_id": {
+          "type": "string",
+          "description": "Organization unique identifier."
+        },
+        "session": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Internal session data, will be accessible in authentication middleware."
+        },
+        "open_id": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Public session data, will be accessible in OpenID userinfo endpoint."
+        },
+        "mfa_event_id": {
+          "type": "string",
+          "description": "Returned when MFA is required before the session is created."
+        },
+        "mfa_type": {
+          "$ref": "#/definitions/mfaMFA",
+          "description": "Expected type of MFA."
+        },
+        "password_expiry": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Included when password is expiring."
+        },
+        "reset_required": {
+          "type": "boolean",
+          "description": "Password change/reset is required.  Login cannot complete until reset is complete."
+        },
+        "attempt": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Auth attempt count."
+        },
+        "force_login": {
+          "type": "boolean",
+          "description": "User login is required or the user's session is inconsistent.\nIdentity to be authenticated must be set in `UserID` field."
+        }
+      }
+    },
+    "mfaMFA": {
+      "type": "string",
+      "enum": [
+        "PASS",
+        "TOTP",
+        "CODE",
+        "SMS",
+        "RECOVERY",
+        "EMAIL"
+      ],
+      "default": "PASS"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

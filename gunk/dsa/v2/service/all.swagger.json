@@ -1,0 +1,1602 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/dsa/v2/service/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "ServiceService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v2/dsa-all-services": {
+      "get": {
+        "summary": "List DSA services.",
+        "description": "List DSA services with its partners.",
+        "operationId": "ServiceService_GetAllServiceRequest",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/dsaserviceGetAllServiceRequestResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_ids",
+            "description": "OrgIDs leave empty to retrieve services for all orgs.",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "service_types",
+            "description": "set Type to only retrieve services with that type.",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "EMPTYSERVICETYPE",
+                "REMITTANCE",
+                "BILLSPAYMENT",
+                "CASHINCASHOUT",
+                "MICROINSURANCE",
+                "REMITTOACCOUNT"
+              ]
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "service_request_statuses",
+            "description": "set Status to only retrieve services with that status.\n\n - NOSTATUS: ServiceRequestStatus_NOSTATUS is set when a service is enabled without a service request from DSA",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "NOSTATUS",
+                "PENDING",
+                "ACCEPTED",
+                "REJECTED",
+                "PARTNERDRAFT",
+                "REQDOCDRAFT",
+                "ADDIDOCDRAFT"
+              ]
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "partners",
+            "description": "set Partner to only retrieve services with those partners.",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "sort_by_column",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "CREATED",
+              "COMPANYNAME",
+              "SERVICENAME",
+              "STATUS",
+              "PARTNER",
+              "LASTUPDATED",
+              "UPDATEDBY",
+              "APPLIED"
+            ],
+            "default": "CREATED"
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "DESC",
+              "ASC"
+            ],
+            "default": "DESC"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "service_names",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "company_name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Service"
+        ]
+      }
+    },
+    "/v2/dsa-service/accept/{org_id}": {
+      "post": {
+        "summary": "Accept for DSA upload service request.",
+        "description": "Accept for DSA upload service request.",
+        "operationId": "ServiceService_AcceptUploadSvcRequest",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/serviceAcceptUploadSvcRequestRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AcceptServiceRequest"
+        ]
+      }
+    },
+    "/v2/dsa-service/add-request/{org_id}": {
+      "post": {
+        "summary": "Add DSA service partners.",
+        "description": "Add DSA service partners to the service request to service before applying so applying is done separately if files or other info needs to be added.",
+        "operationId": "ServiceService_AddServiceRequest",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/serviceAddServiceRequestRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ServiceRequest"
+        ]
+      }
+    },
+    "/v2/dsa-service/apply/{org_id}": {
+      "post": {
+        "summary": "Apply for DSA service.",
+        "description": "DSA makes Service request to be able to use the services.",
+        "operationId": "ServiceService_ApplyServiceRequest",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/serviceApplyServiceRequestRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ServiceRequest"
+        ]
+      }
+    },
+    "/v2/dsa-service/disable/{org_id}": {
+      "post": {
+        "summary": "Disable for DSA service.",
+        "description": "DSA makes Disable Service request to be able to use the services.",
+        "operationId": "ServiceService_DisableServiceRequest",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/serviceServiceStatusRequestRequest"
+            }
+          }
+        ],
+        "tags": [
+          "DisableServiceRequest"
+        ]
+      }
+    },
+    "/v2/dsa-service/enable/{org_id}": {
+      "post": {
+        "summary": "Enable for DSA service.",
+        "description": "DSA makes Enable Service request to be able to use the services.",
+        "operationId": "ServiceService_EnableServiceRequest",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/serviceServiceStatusRequestRequest"
+            }
+          }
+        ],
+        "tags": [
+          "EnableServiceRequest"
+        ]
+      }
+    },
+    "/v2/dsa-service/list": {
+      "get": {
+        "summary": "List DSA services.",
+        "description": "List DSA services with its partners.",
+        "operationId": "ServiceService_ListServiceRequest",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/dsaserviceListServiceResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_ids",
+            "description": "OrgIDs leave empty to retrieve services for all orgs.",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "service_types",
+            "description": "set Type to only retrieve services with that type.",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "EMPTYSERVICETYPE",
+                "REMITTANCE",
+                "BILLSPAYMENT",
+                "CASHINCASHOUT",
+                "MICROINSURANCE",
+                "REMITTOACCOUNT"
+              ]
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "service_request_statuses",
+            "description": "set Status to only retrieve services with that status.\n\n - NOSTATUS: ServiceRequestStatus_NOSTATUS is set when a service is enabled without a service request from DSA",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "NOSTATUS",
+                "PENDING",
+                "ACCEPTED",
+                "REJECTED",
+                "PARTNERDRAFT",
+                "REQDOCDRAFT",
+                "ADDIDOCDRAFT"
+              ]
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "partners",
+            "description": "set Partner to only retrieve services with those partners.",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "sort_by_column",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "CREATED",
+              "COMPANYNAME",
+              "SERVICENAME",
+              "STATUS",
+              "PARTNER",
+              "LASTUPDATED",
+              "UPDATEDBY",
+              "APPLIED"
+            ],
+            "default": "CREATED"
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "DESC",
+              "ASC"
+            ],
+            "default": "DESC"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "Service"
+        ]
+      }
+    },
+    "/v2/dsa-service/reject/{org_id}": {
+      "post": {
+        "summary": "Reject for DSA upload service request.",
+        "description": "Reject for DSA upload service request.",
+        "operationId": "ServiceService_RejectUploadSvcRequest",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/serviceRejectUploadSvcRequestRequest"
+            }
+          }
+        ],
+        "tags": [
+          "RejectServiceRequest"
+        ]
+      }
+    },
+    "/v2/dsa-service/remark/{org_id}": {
+      "post": {
+        "summary": "Add Remark for DSA service request.",
+        "description": "Add Remark for DSA service request.",
+        "operationId": "ServiceService_AddRemarkSvcRequest",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/serviceAddRemarkSvcRequestRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AddRemarkSvcRequest"
+        ]
+      }
+    },
+    "/v2/dsa-service/remove/{org_id}": {
+      "post": {
+        "summary": "Remove for DSA upload service request.",
+        "description": "Remove for DSA upload service request.",
+        "operationId": "ServiceService_RemoveUploadSvcRequest",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/serviceRemoveUploadSvcRequestRequest"
+            }
+          }
+        ],
+        "tags": [
+          "RemoveServiceRequest"
+        ]
+      }
+    },
+    "/v2/dsa-service/status/{org_id}": {
+      "post": {
+        "summary": "set status for DSA service request.",
+        "description": "set status for DSA service request.",
+        "operationId": "ServiceService_SetStatusUploadSvcRequest",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/serviceSetStatusUploadSvcRequestRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SetStatusServiceRequest"
+        ]
+      }
+    },
+    "/v2/dsa-service/update/{org_id}": {
+      "post": {
+        "summary": "update for DSA upload service request.",
+        "description": "update for DSA upload service request.",
+        "operationId": "ServiceService_UpdateUploadSvcRequest",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/dsaserviceUpdateUploadSvcRequestResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/serviceUpdateUploadSvcRequestRequest"
+            }
+          }
+        ],
+        "tags": [
+          "UpdateServiceRequest"
+        ]
+      }
+    },
+    "/v2/dsa-service/upload-list": {
+      "get": {
+        "summary": "List DSA services.",
+        "description": "List DSA services with its partners.",
+        "operationId": "ServiceService_ListUploadSvcRequest",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/dsaserviceListUploadSvcRequestResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "svc_names",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "partners",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "tags": [
+          "UploadServiceRequest"
+        ]
+      }
+    },
+    "/v2/dsa-service/upload-request/{org_id}": {
+      "post": {
+        "summary": "Add upload service request.",
+        "description": "Add upload service request.",
+        "operationId": "ServiceService_AddUploadSvcRequest",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/dsaserviceAddUploadSvcRequestResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/serviceAddUploadSvcRequestRequest"
+            }
+          }
+        ],
+        "tags": [
+          "UploadServiceRequest"
+        ]
+      }
+    },
+    "/v2/dsa-service/validate/{org_id}": {
+      "post": {
+        "summary": "Disable for DSA service.",
+        "description": "DSA makes Disable Service request to be able to use the services.",
+        "operationId": "ServiceService_ValidateServiceAccess",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/dsaserviceValidateServiceAccessResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/serviceValidateServiceAccessRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ValidateServiceAccess"
+        ]
+      }
+    },
+    "/v2/dsa-service/{oldOrgID}": {
+      "put": {
+        "summary": "Upsert org profile.",
+        "description": "Update service request.",
+        "operationId": "ServiceService_UpdateServiceRequestByOrgID",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/dsaserviceUpdateServiceRequestByOrgIDResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "oldOrgID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/serviceUpdateServiceRequestByOrgIDRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Service Request"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "serviceAcceptUploadSvcRequestRequest": {
+      "type": "object",
+      "properties": {
+        "org_id": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "service_name": {
+          "type": "string"
+        },
+        "file_type": {
+          "type": "string"
+        },
+        "verify_by": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "org_id",
+        "partner",
+        "service_name",
+        "file_type",
+        "verify_by"
+      ]
+    },
+    "serviceAddRemarkSvcRequestRequest": {
+      "type": "object",
+      "properties": {
+        "org_id": {
+          "type": "string"
+        },
+        "remark": {
+          "type": "string"
+        },
+        "updated_by": {
+          "type": "string"
+        },
+        "service_name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "org_id",
+        "updated_by",
+        "service_name"
+      ]
+    },
+    "serviceAddServiceRequestRequest": {
+      "type": "object",
+      "properties": {
+        "org_id": {
+          "type": "string"
+        },
+        "service_type": {
+          "$ref": "#/definitions/serviceServiceType"
+        },
+        "partners": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "add service partners to apply for later, use the enums for service partners"
+        },
+        "all_partners": {
+          "type": "boolean",
+          "title": "set if all available partners should be added for the service"
+        }
+      }
+    },
+    "serviceAddUploadSvcRequestRequest": {
+      "type": "object",
+      "properties": {
+        "org_id": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "service_name": {
+          "type": "string"
+        },
+        "file_type": {
+          "type": "string"
+        },
+        "file_id": {
+          "type": "string"
+        },
+        "create_by": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "org_id",
+        "partner",
+        "service_name",
+        "file_type",
+        "file_id"
+      ]
+    },
+    "serviceAddUploadSvcRequestResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "service_name": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "file_type": {
+          "type": "string"
+        },
+        "file_id": {
+          "type": "string"
+        },
+        "create_by": {
+          "type": "string"
+        },
+        "verify_by": {
+          "type": "string"
+        },
+        "total": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "verified": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "serviceApplyServiceRequestRequest": {
+      "type": "object",
+      "properties": {
+        "org_id": {
+          "type": "string"
+        },
+        "service_type": {
+          "$ref": "#/definitions/serviceServiceType"
+        }
+      }
+    },
+    "serviceGetAllServiceRequestResponse": {
+      "type": "object",
+      "properties": {
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/serviceServiceRequest"
+          }
+        },
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "serviceListServiceRequestResponse": {
+      "type": "object",
+      "properties": {
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/serviceServiceRequest"
+          }
+        },
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "serviceListUploadSvcRequestResponse": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/serviceUploadSvcResponse"
+          }
+        }
+      }
+    },
+    "serviceRejectUploadSvcRequestRequest": {
+      "type": "object",
+      "properties": {
+        "org_id": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "service_name": {
+          "type": "string"
+        },
+        "file_type": {
+          "type": "string"
+        },
+        "verify_by": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "org_id",
+        "partner",
+        "service_name",
+        "file_type",
+        "verify_by"
+      ]
+    },
+    "serviceRemoveUploadSvcRequestRequest": {
+      "type": "object",
+      "properties": {
+        "org_id": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "service_name": {
+          "type": "string"
+        },
+        "file_type": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "org_id",
+        "partner",
+        "service_name",
+        "file_type"
+      ]
+    },
+    "serviceServiceRequest": {
+      "type": "object",
+      "properties": {
+        "org_id": {
+          "type": "string"
+        },
+        "company_name": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "service_type": {
+          "$ref": "#/definitions/serviceServiceType"
+        },
+        "service_request_status": {
+          "$ref": "#/definitions/serviceServiceRequestStatus"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "remarks": {
+          "type": "string"
+        },
+        "applied": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_by": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "partners": {
+          "type": "string"
+        },
+        "pending": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "accepted": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "rejected": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "serviceServiceRequestStatus": {
+      "type": "string",
+      "enum": [
+        "NOSTATUS",
+        "PENDING",
+        "ACCEPTED",
+        "REJECTED",
+        "PARTNERDRAFT",
+        "REQDOCDRAFT",
+        "ADDIDOCDRAFT"
+      ],
+      "default": "NOSTATUS",
+      "title": "- NOSTATUS: ServiceRequestStatus_NOSTATUS is set when a service is enabled without a service request from DSA"
+    },
+    "serviceServiceSort": {
+      "type": "string",
+      "enum": [
+        "CREATED",
+        "COMPANYNAME",
+        "SERVICENAME",
+        "STATUS",
+        "PARTNER",
+        "LASTUPDATED",
+        "UPDATEDBY",
+        "APPLIED"
+      ],
+      "default": "CREATED"
+    },
+    "serviceServiceStatusRequestRequest": {
+      "type": "object",
+      "properties": {
+        "org_id": {
+          "type": "string"
+        },
+        "updated_by": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "svc_name": {
+          "type": "string"
+        }
+      }
+    },
+    "serviceServiceType": {
+      "type": "string",
+      "enum": [
+        "EMPTYSERVICETYPE",
+        "REMITTANCE",
+        "BILLSPAYMENT",
+        "CASHINCASHOUT",
+        "MICROINSURANCE",
+        "REMITTOACCOUNT"
+      ],
+      "default": "EMPTYSERVICETYPE"
+    },
+    "serviceSetStatusUploadSvcRequestRequest": {
+      "type": "object",
+      "properties": {
+        "org_id": {
+          "type": "string"
+        },
+        "partners": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "service_name": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/serviceServiceRequestStatus"
+        }
+      },
+      "required": [
+        "org_id",
+        "partner",
+        "service_name",
+        "status"
+      ]
+    },
+    "serviceSortBy": {
+      "type": "string",
+      "enum": [
+        "DESC",
+        "ASC"
+      ],
+      "default": "DESC"
+    },
+    "serviceUpdateServiceRequestByOrgIDRequest": {
+      "type": "object",
+      "properties": {
+        "oldOrgID": {
+          "type": "string"
+        },
+        "newOrgID": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "serviceUpdateServiceRequestByOrgIDResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "serviceUpdateUploadSvcRequestRequest": {
+      "type": "object",
+      "properties": {
+        "org_id": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "service_name": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "file_type": {
+          "type": "string"
+        },
+        "file_id": {
+          "type": "string"
+        },
+        "create_by": {
+          "type": "string"
+        },
+        "verify_by": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "org_id",
+        "partner",
+        "service_name",
+        "file_type",
+        "file_id",
+        "verify_by"
+      ]
+    },
+    "serviceUpdateUploadSvcRequestResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "service_name": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "file_type": {
+          "type": "string"
+        },
+        "file_id": {
+          "type": "string"
+        },
+        "create_by": {
+          "type": "string"
+        },
+        "verify_by": {
+          "type": "string"
+        },
+        "total": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "verified": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "serviceUploadSvcResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "service_name": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "file_type": {
+          "type": "string"
+        },
+        "file_id": {
+          "type": "string"
+        },
+        "create_by": {
+          "type": "string"
+        },
+        "verify_by": {
+          "type": "string"
+        },
+        "total": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "verified": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "serviceValidateServiceAccessRequest": {
+      "type": "object",
+      "properties": {
+        "org_id": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "svc_name": {
+          "type": "string"
+        },
+        "is_any_partner_enabled": {
+          "type": "boolean"
+        }
+      }
+    },
+    "serviceValidateServiceAccessResponse": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

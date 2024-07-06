@@ -1,0 +1,144 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>Currency</title>
+    <script>
+        let routeNameSideNav = "app/setting"
+        let routeNameConMenu = "configuration/currency"
+    </script>
+</head>
+
+<body class="font-sans">
+    <div class="flex">
+        <!-- sidebar-start -->
+        <div class="bg-petnetblue w-32 min-h-screen">
+            <div class="min-h-screen">
+                <img src="{{ assetHash "/images/DRP-Vertical.svg" }}" class="mx-auto my-5">
+
+                <!-- Sidebar menu start -->
+                {{ template "admin-sidenav-menu.html" dict "Type" "dsa-list" "Data" .}}
+                <!-- Sidebar menu end -->
+            </div>
+        </div>
+        <!-- sidebar-end -->
+
+        <!-- right-top-header-start -->
+        <div class="min-h-screen w-full flex bg-petnetgray">
+            <div class="w-full">
+                <!-- right-top-header-end -->
+                {{ template "admin-head.html" .}}
+                <div class="">
+                    <div>
+                        <!-- first-section-start -->
+                        <div class="px-6 lg:px-32 py-10 flex flex-wrap">
+                            <div class="w-1/4 pr-2 flex flex-col">
+                                {{ template "application-sidenav.html" .}}
+                            </div>
+                            {{if .PresetPermission.currency.read}}
+                            <div class="w-3/4 pl-2">
+                                <div class="bg-white rounded mb-3">
+                                    <div class="border-b flex">
+                                        <h4 class="text-xl font-semibold text-petnetblue pt-7 px-6 pb-4">Currency</h4>
+                                    </div>
+                                    {{if .PresetPermission.currency.update}}
+                                    <form id="sendform" action="/dashboard/currency/{{.OrgID}}" method="POST">
+                                        {{.CSRFField}}
+                                        {{end}}
+                                        <div class="p-6">
+                                        <h5 class="mb-5 text-sm">Bank Details</h5>
+                                        <!-- input form -->
+                                        <div class="grid grid-cols-6 gap-6 mb-4">
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <label for="first_name"
+                                                    class="block text-sm font-semibold text-petnetheadertext">BANK
+                                                </label>
+                                                <input type="text" value="{{.AccountInfo.Bank}}" id="bank"
+                                                    class="mt-3 w-full py-2 focus:outline-none border-b text-base font-normal"
+                                                    readonly>
+                                            </div>
+
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <label for="last_name"
+                                                    class="block text-sm font-semibold text-petnetheadertext ">BANK NUMBER
+                                                </label>
+                                                <input type="text" value="{{.AccountInfo.BankAccountNumber}}"
+                                                    id="bankAccountNumber" placeholder=""
+                                                    class="mt-3 w-full py-2 focus:outline-none border-b text-base font-normal"
+                                                    readonly>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-6 gap-6 mb-4">
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <label for="first_name"
+                                                    class="block text-sm font-semibold text-petnetheadertext">ACCOUNT
+                                                    HOLDER
+                                                </label>
+                                                <input type="text" id="bankAccountHolder"
+                                                    value="{{.AccountInfo.BankAccountHolder}}"
+                                                    class="mt-3 w-full py-2 focus:outline-none border-b text-base font-normal"
+                                                    readonly>
+                                            </div>
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <label for="first_name"
+                                                    class="block text-sm font-semibold text-petnetheadertext">CURRENCY
+                                                </label>
+                                                <div class="flex">
+                                                    <select name="Currency" id="currency"
+                                                        class="border-b mt-3 py-2 w-full text-gray-700 appearance-none bg-white outline-none text-base font-normal">
+                                                        {{range $key,$value := .CurrencyList}}
+                                                        {{if gt $key 0}}
+                                                        <option oninput="inputfiled()"
+                                                            {{if eq $key $.SelectedCurrency}}selected{{end}}
+                                                            value="{{$key}}">{{$value}}</option>
+                                                        {{end}}
+                                                        {{end}}
+                                                    </select>
+                                                    <div class=" mt-3">
+                                                        {{if .PresetPermission.currency.update}}
+                                                        <button id="btn" type="submit"
+                                                            class="border-b py-2 text-petnetlightblue mailsend">
+                                                            Change
+                                                        </button>
+                                                        {{end}}
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        {{if .PresetPermission.currency.update}}
+                                    </div>
+                                    </form>
+                                    {{end}}
+                                </div>
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let changeCurrency = document.getElementById('currency')
+        changeCurrency.addEventListener("change", function (event) {
+            event.target.nextElementSibling.children[0].innerText = "Save"
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+        let menus = document.querySelectorAll(".mailsend");
+        let form = document.getElementById("sendform")
+        for (let i = 0; i < menus.length; i++) {
+            menus[i].addEventListener("click", function(e){
+                e.preventDefault();
+                document.getElementById("sendform").submit();
+                menus[i].disabled=true;
+            });
+        }
+    });
+    </script>
+</body>
+
+</html>

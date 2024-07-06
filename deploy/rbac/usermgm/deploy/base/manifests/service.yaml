@@ -1,0 +1,27 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: usermgm
+spec:
+  ports:
+  - name: usermgm
+    port: 80
+    targetPort: 3000
+  selector:
+    app.kubernetes.io/instance: usermgm
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: usermgm-admin
+spec:
+  ports:
+  - name: usermgm-admin
+    port: 80
+    targetPort: 3030
+  selector:
+    app.kubernetes.io/instance: usermgm
+
+...

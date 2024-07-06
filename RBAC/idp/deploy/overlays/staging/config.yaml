@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: idp-config
+data:
+  RUNTIME_ENVIRONMENT: "staging"
+  SITE_URL: "https://auth.cebcorp.staging.bnk.to"
+  USERMGM_API: "usermgm:80"
+  AUTHENTICATOR_NAMES: "usermgm"
+  AUTHENTICATOR_USERMGM_TYPE: "usermgm"
+  AUTHENTICATOR_USERMGM_API: "usermgm:80"
+  AUTHENTICATOR_USERMGM_INTERNAL: "usermgm-admin:80"
+  CORS_ORIGINS: "https://auth.cebcorp.staging.bnk.to"
+  REMEMBER_FOR: "259200" # 3 days
+  HYDRA_ADMINURL: "http://hydra-admin"
+  GOOGLE_CALLBACK: "https://auth.cebcorp.staging.bnk.to/login/google-callback"
+
+...

@@ -1,0 +1,212 @@
+package transactiontype // proto "petnet.v2.transactiontype"
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+type (
+	TransactionType int
+)
+
+const (
+	EMPTYTRANSACTIONTYPE TransactionType = iota
+	DIGITAL
+	OTC
+)
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "user_id",
+//                 "org_id",
+//                 "client_id",
+//                 "environment",
+//                 "transaction_type",
+//         },
+// }}
+type CreateApiKeyTransactionTypeRequest struct {
+	UserID          string          `pb:"1" json:"user_id"`
+	OrgID           string          `pb:"2" json:"org_id"`
+	ClientID        string          `pb:"3" json:"client_id"`
+	Environment     string          `pb:"4" json:"environment"`
+	TransactionType TransactionType `pb:"5" json:"transaction_type"`
+}
+
+type CreateApiKeyTransactionTypeResponse struct {
+	ApiTransactionTypes ApiKeyTransactionType `pb:"2" json:"transaction_types"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "user_id",
+//                 "org_id",
+//                 "environment",
+//                 "transaction_type",
+//         },
+// }}
+type GetAPITransactionTypeRequest struct {
+	UserID          string          `pb:"1" json:"user_id"`
+	OrgID           string          `pb:"2" json:"org_id"`
+	Environment     string          `pb:"3" json:"environment"`
+	TransactionType TransactionType `pb:"4" json:"transaction_type"`
+}
+
+type ApiKeyTransactionType struct {
+	ID              string          `pb:"1" json:"id"`
+	UserID          string          `pb:"2" json:"user_id"`
+	OrgID           string          `pb:"3" json:"org_id"`
+	ClientID        string          `pb:"4" json:"client_id"`
+	Environment     string          `pb:"5" json:"environment"`
+	TransactionType TransactionType `pb:"6" json:"transaction_type"`
+	Created         time.Time       `pb:"7" json:"created"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "user_id",
+//                 "org_id",
+//         },
+// }}
+type ListUserAPIKeyTransactionTypeRequest struct {
+	OrgID  string `pb:"1" json:"org_id"`
+	UserID string `pb:"2" json:"user_id"`
+}
+
+type ListUserAPIKeyTransactionTypeResponse struct {
+	ApiTransactionType []ApiKeyTransactionType `pb:"1" json:"transaction_types"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "client_id",
+//         },
+// }}
+type GetTransactionTypeByClientIdRequest struct {
+	ClientID string `pb:"1" json:"client_id"`
+}
+
+type GetTransactionTypeByClientIdResponse struct {
+	TransactionType string `pb:"1" json:"transaction_type"`
+	Environment     string `pb:"2" json:"environment"`
+}
+
+type TransactionTypeService interface {
+	// Create transaction type.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/transaction-type",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"TransactionType"},
+	//         Description: "Create Transaction Type.",
+	//         Summary:     "Create Transaction Type.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/transactionCreateApiKeyTransactionTypeResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	CreateApiKeyTransactionType(CreateApiKeyTransactionTypeRequest) CreateApiKeyTransactionTypeResponse
+
+	// Get API Transaction Type.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v2/transaction-type",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Transaction Type"},
+	//         Description: "Get api transaction type.",
+	//         Summary:     "Get api transaction type.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/transactionGetAPITransactionTypeResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	GetAPITransactionType(GetAPITransactionTypeRequest) ApiKeyTransactionType
+
+	// List User API Key Transaction Type.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v2/api-transaction-type-list",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Transaction Type"},
+	//         Description: "List all User API Key Transaction Type.",
+	//         Summary:     "List User API Key Transaction Type.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/transactionListUserAPIKeyTransactionTypeResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	ListUserAPIKeyTransactionType(ListUserAPIKeyTransactionTypeRequest) ListUserAPIKeyTransactionTypeResponse
+
+	// get transaction type by client id
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v2/get-transaction-type/{ClientID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Transaction Type"},
+	//         Description: "Get Transaction Type.",
+	//         Summary:     "Get Transaction Type.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/transactionGetTransactionTypeByClientIdResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	GetTransactionTypeByClientId(GetTransactionTypeByClientIdRequest) GetTransactionTypeByClientIdResponse
+}

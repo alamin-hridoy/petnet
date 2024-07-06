@@ -1,0 +1,25 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-config
+data:
+  RUNTIME_LOGLEVEL: debug
+  RUNTIME_ENVIRONMENT: sandbox
+  DATABASE_HOST: 172.30.225.22
+  DATABASE_DBNAME: petnetdb_sandbox
+  CORS_ORIGINS: "https://sandbox.drp.perahub.com.ph,https://*.sandbox.drp.perahub.com.ph"
+  HYDRA_ADMINURL: http://hydra-admin
+  HYDRA_AUDIENCE: https://sandbox.drp.perahub.com.ph
+  AUTH_OAUTHURL: https://auth.drp.perahub.com.ph
+  AUTH_ISSUER: https://auth.drp.perahub.com.ph
+  AUTH_TOKEN: https://auth.drp.perahub.com.ph/oauth2/token
+  AUTH_COOKIEMAXAGE: "0"
+  PERAHUB_BASEURL: https://newkycgateway.dev.perahub.com.ph/gateway/
+  PERAHUB_SERVERIP: 34.87.153.43
+  PERAHUB_TIMEOUT: 45s
+  PERAHUB_AUTHMOCK: "false"
+  INFLUXDB_BUCKET: conexprod
+  INFLUXDB_ORGANIZATION: conex
+
+...

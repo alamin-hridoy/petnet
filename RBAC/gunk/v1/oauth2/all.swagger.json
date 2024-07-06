@@ -1,0 +1,470 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/rbac/gunk/v1/oauth2/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "AuthClientService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/oauth2client": {
+      "get": {
+        "summary": "List all OAuth2 clients.",
+        "description": "List all created OAuth2 clients.",
+        "operationId": "AuthClientService_ListClients",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/oauth2ListClientsResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "client_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "env",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "org_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "list_disable",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "OAuth2 Client"
+        ]
+      },
+      "post": {
+        "summary": "Create OAuth2 client",
+        "description": "Create a new OAuth2 client.",
+        "operationId": "AuthClientService_CreateClient",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/oauth2CreateClientResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/oauth2CreateClientRequest"
+            }
+          }
+        ],
+        "tags": [
+          "OAuth2 Client"
+        ]
+      }
+    },
+    "/v1/oauth2client/{clientID}": {
+      "post": {
+        "summary": "Update OAuth2 client",
+        "description": "Update an OAuth2 client.",
+        "operationId": "AuthClientService_UpdateClient",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/oauth2CreateClientResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "clientID",
+            "description": "ClientID is the client identifier of the client to be updated",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/oauth2UpdateClientRequest"
+            }
+          }
+        ],
+        "tags": [
+          "OAuth2 Client"
+        ]
+      }
+    },
+    "/v1/oauth2client/{client_id}": {
+      "delete": {
+        "summary": "Disable OAuth2 Client.",
+        "description": "Permanently Disable OAuth2 client.",
+        "operationId": "AuthClientService_DisableClient",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/oauth2DisableClientResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when service client is not found.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "client_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "OAuth2 Client"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "oauth2ClientConfig": {
+      "type": "object",
+      "properties": {
+        "login_template": {
+          "type": "string"
+        },
+        "otp_template": {
+          "type": "string"
+        },
+        "consent_template": {
+          "type": "string"
+        },
+        "force_consent": {
+          "type": "boolean",
+          "description": "Force the user to grant consent for each login."
+        },
+        "session_duration": {
+          "type": "string"
+        },
+        "identity_source": {
+          "type": "string",
+          "description": "IdentitySource to use when authenticating user login."
+        }
+      }
+    },
+    "oauth2ClientType": {
+      "type": "string",
+      "enum": [
+        "Private",
+        "Public"
+      ],
+      "default": "Private",
+      "description": " - Private: ClientType_Private clients should be used for all authentications being processed\nby a server backend, where a secret can be kept private.\n - Public: ClientType_Public clients are best used for SPA and/or mobile frontends,\nwhere client secret isn't able to be hidden.\nPKCE is required for security purposes when using a public client."
+    },
+    "oauth2CreateClientRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "Name is the friendly name of the service client to be created"
+        },
+        "audience": {
+          "type": "string",
+          "description": "Audience is the target service for the requested authentication."
+        },
+        "env": {
+          "type": "string",
+          "description": "Environment is the valid environment for the client."
+        },
+        "role": {
+          "type": "string",
+          "description": "Role is the assigned permissions role."
+        },
+        "client_type": {
+          "$ref": "#/definitions/oauth2ClientType",
+          "description": "ClientType is the oauth2 client type."
+        },
+        "cors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "CORS lists the allowed CORS Origins."
+        },
+        "logo_url": {
+          "type": "string",
+          "description": "Partner logo url for display on idp."
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Requested scopes for user consent."
+        },
+        "redirect_url": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Redirect URLs accepted by client."
+        },
+        "logout_redirect_url": {
+          "type": "string",
+          "description": "URL to redirect user to once logout is complete."
+        },
+        "identity_source": {
+          "type": "string",
+          "description": "IdentitySource to use when authenticating user login."
+        },
+        "config": {
+          "$ref": "#/definitions/oauth2ClientConfig",
+          "description": "Configuration for auth flow."
+        }
+      }
+    },
+    "oauth2CreateClientResponse": {
+      "type": "object",
+      "properties": {
+        "client_id": {
+          "type": "string",
+          "description": "OAuth2 Client ID."
+        },
+        "secret": {
+          "type": "string",
+          "description": "Client Secret for OAuth2 client."
+        }
+      }
+    },
+    "oauth2DisableClientResponse": {
+      "type": "object"
+    },
+    "oauth2ListClientsResponse": {
+      "type": "object",
+      "properties": {
+        "clients": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/oauth2Oauth2Client"
+          }
+        }
+      }
+    },
+    "oauth2Oauth2Client": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "env": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "client_id": {
+          "type": "string"
+        },
+        "logo_url": {
+          "type": "string"
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "redirect_url": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "logout_redirect_url": {
+          "type": "string"
+        },
+        "creator": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "disabled": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "config": {
+          "$ref": "#/definitions/oauth2ClientConfig"
+        }
+      }
+    },
+    "oauth2UpdateClientRequest": {
+      "type": "object",
+      "properties": {
+        "clientID": {
+          "type": "string",
+          "title": "ClientID is the client identifier of the client to be updated"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name is the friendly name of the client to be updated"
+        },
+        "cors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "CORS lists the allowed CORS Origins."
+        },
+        "logo_url": {
+          "type": "string",
+          "description": "Partner logo url for display on idp."
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Requested scopes for user consent."
+        },
+        "redirect_url": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Redirect URLs accepted by client."
+        },
+        "logout_redirect_url": {
+          "type": "string",
+          "description": "URL to redirect user to once logout is complete."
+        },
+        "config": {
+          "$ref": "#/definitions/oauth2ClientConfig",
+          "description": "Configuration for auth flow."
+        }
+      }
+    },
+    "oauth2UpdateClientResponse": {
+      "type": "object",
+      "properties": {
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

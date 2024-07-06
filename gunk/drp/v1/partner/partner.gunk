@@ -1,0 +1,199 @@
+package partner
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+type RemitPartnersRequest struct {
+	Country string `pb:"1" json:"country"`
+}
+
+type Error struct {
+	Code    string              `pb:"1" json:"code"`
+	Message string              `pb:"2" json:"message"`
+	Errors  map[string][]string `pb:"3" json:"errors"`
+}
+
+// +gunk openapiv2.Schema{Example: `{
+//   "partners": {
+//     "WU": {
+//       "partner_code": "WU",
+//       "partner_name": "Western Union",
+//       "supported_types": [
+//         {
+//           "code": "Send",
+//           "description": "Send money for pickup at Western Union location."
+//         },
+//         {
+//           "code": "Mobile",
+//           "description": "Send money to mobile number."
+//         }
+//       ]
+//     },
+//     "PT2": {
+//       "partner_code": "PT2",
+//       "partner_name": "Partner 2",
+//       "supported_types": [
+//         {
+//           "code": "Bank",
+//           "description": "Send money directly to receiver's bank account"
+//         }
+//       ]
+//     }
+//   }
+// }`}
+type RemitPartnersResponse struct {
+	Partners map[string]RemitPartner `pb:"1" json:"partners"`
+}
+
+type RemitPartner struct {
+	PartnerCode            string               `pb:"1" json:"partner_code"`
+	PartnerName            string               `pb:"2" json:"partner_name"`
+	SupportedSendTypes     map[string]RemitType `pb:"3" json:"supported_send_types"`
+	SupportedDisburseTypes map[string]RemitType `pb:"4" json:"supported_disburse_types"`
+}
+
+type RemitType struct {
+	Code        string `pb:"1" json:"code"`
+	Description string `pb:"2" json:"description"`
+}
+
+type InputGuideRequest struct {
+	RemitPartner   string `pb:"1" json:"remit_partner"`
+	SourceCountry  string `pb:"2" json:"source_country"`
+	SourceCurrency string `pb:"3" json:"source_currency"`
+	AgentCode      string `pb:"4" json:"agent_code"`
+	CountryCode    string `pb:"5" json:"country_code"`
+	City           string `pb:"6" json:"city"`
+	ID             int    `pb:"7" json:"id"`
+}
+
+type InputGuideResponse struct {
+	InputGuide map[string]Guide `pb:"1" json:"input_guide"`
+}
+
+type Guide struct {
+	Field     string  `pb:"1" json:"field"`
+	Inputs    []Input `pb:"2" json:"inputs"`
+	OtherInfo []Input `pb:"3" json:"other_info"`
+}
+
+type Input struct {
+	Value         string          `pb:"1" json:"code"`
+	Name          string          `pb:"2" json:"name"`
+	Description   string          `pb:"3" json:"description"`
+	HasIssueDate  string          `pb:"4" json:"has_issue_date"`
+	HasExpiration string          `pb:"5" json:"has_expiration"`
+	CountryName   string          `pb:"6" json:"country_name"`
+	StateName     string          `pb:"7" json:"state_name"`
+	CountryCode   string          `pb:"8" json:"country_code"`
+	CurrencyCode  string          `pb:"9" json:"currency_code"`
+	Currencies    []CurrencyGuide `pb:"10" json:"currencies"`
+}
+
+type CurrencyGuide struct {
+	Code         string `pb:"1" json:"code"`
+	CurrencyName string `pb:"2" json:"currency_name"`
+}
+
+type PerahubGetRemcoIDResult struct {
+	ID   string `pb:"1" json:"id"`
+	Name string `pb:"2" json:"non_ex_name"`
+}
+
+type GetPartnersRemcoResponse struct {
+	Code    string                    `pb:"1" json:"code"`
+	Message string                    `pb:"2" json:"message"`
+	Result  []PerahubGetRemcoIDResult `pb:"3" json:"result"`
+}
+
+type RemitPartnerService interface {
+	// List Remittance Partners.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/partner",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Remittance Partners"},
+	//         Summary:     "List Partners.",
+	//         Description: "List available remittance partners.",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/partnerRemitPartnersResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	RemitPartners(RemitPartnersRequest) RemitPartnersResponse
+
+	// Remittance Partners Input Guide.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Body:   "*",
+	//         Path:   "/v1/partner",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:    []string{"Remittance Partners"},
+	//         Summary: "Partner Input Guide.",
+	//         Description: `List valid input for remittance partner.
+	//           Fields with guide inputs can be displayed as a dropdown for user selection.`,
+	//         Produces: []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/partnerInputGuideResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	InputGuide(InputGuideRequest) InputGuideResponse
+
+	// get partners remco id
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/partners-remco",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Partners Remco Id"},
+	//         Summary:     "List Partners Remco Id.",
+	//         Description: "List Partners Remco Id.",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/partnerGetPartnersRemcoResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	GetPartnersRemco() GetPartnersRemcoResponse
+}

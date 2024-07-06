@@ -1,0 +1,248 @@
+package cicopartnerlist // proto "petnet.v2.cicopartnerlist"
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+type CICOPartnerList struct {
+	ID      string    `pb:"1" json:"id"`
+	Stype   string    `pb:"2" json:"stype"`
+	Name    string    `pb:"3" json:"name"`
+	Created time.Time `pb:"4" json:"created"`
+	Updated time.Time `pb:"5" json:"updated"`
+	Status  string    `pb:"6" json:"status"`
+}
+
+type CreateCICOPartnerListRequest struct {
+	CICOPartnerList CICOPartnerList `pb:"1" json:"cicopartnerlist"`
+}
+
+type CreateCICOPartnerListResponse struct {
+	CICOPartnerList CICOPartnerList `pb:"1" json:"cicopartnerlist"`
+}
+
+type UpdateCICOPartnerListRequest struct {
+	CICOPartnerList CICOPartnerList `pb:"1" json:"cicopartnerlist"`
+}
+
+type UpdateCICOPartnerListResponse struct {
+	CICOPartnerList CICOPartnerList `pb:"1" json:"cicopartnerlist"`
+}
+
+type GetCICOPartnerListRequest struct {
+	ID     string `pb:"1" json:"id"`
+	Stype  string `pb:"2" json:"stype"`
+	Status string `pb:"3" json:"status"`
+	Name   string `pb:"4" json:"name"`
+}
+
+type GetCICOPartnerListResponse struct {
+	CICOPartnerList []CICOPartnerList `pb:"1" json:"cicopartnerlist"`
+}
+
+type DeleteCICOPartnerListRequest struct {
+	Stype string `pb:"1" json:"stype"`
+}
+
+type DeleteCICOPartnerListResponse struct {
+	Stype string `pb:"1" json:"stype"`
+}
+
+type EnableCICOPartnerListRequest struct {
+	Stype string `pb:"1" json:"stype"`
+}
+
+type EnableCICOPartnerListResponse struct {
+	Stype string `pb:"1" json:"stype"`
+}
+
+type DisableCICOPartnerListRequest struct {
+	Stype string `pb:"1" json:"stype"`
+}
+
+type DisableCICOPartnerListResponse struct {
+	Stype string `pb:"1" json:"stype"`
+}
+
+type CICOPartnerListService interface {
+	// Create cicoPartnerList.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/cico-partnerlist",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"cicoPartnerlist"},
+	//         Description: "Create one or more dsa cicopartnerlist.",
+	//         Summary:     "Create cicopartnerlist.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/cicopartnerlistCreateCICOPartnerListResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	CreateCICOPartnerList(CreateCICOPartnerListRequest) CreateCICOPartnerListResponse
+
+	// Update cicopartnerlist.
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v2/update-cicopartnerlist",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"cicopartnerlist"},
+	//         Description: "Update one or more dsa cicopartnerlist.",
+	//         Summary:     "Update cicopartnerlist.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/cicopartnerlistUpdateCICOPartnerListResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	UpdateCICOPartnerList(UpdateCICOPartnerListRequest) UpdateCICOPartnerListResponse
+
+	// Get cicopartnerlist by org ID.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v2/get-cicopartnerlist",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"cicopartnerlist"},
+	//         Description: "Get created cicopartnerlist by org ID.",
+	//         Summary:     "Get cicopartnerlist.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/cicopartnerlistGetCICOPartnerListResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	GetCICOPartnerList(GetCICOPartnerListRequest) GetCICOPartnerListResponse
+
+	// Delete cicopartnerlist by ID.
+	//
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v2/delete-cicopartnerlist",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"cicopartnerlist"},
+	//         Description: "Delete cicopartnerlist by ID.",
+	//         Summary:     "Delete cicopartnerlist.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/cicopartnerlistDeleteCICOPartnerListResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	DeleteCICOPartnerList(DeleteCICOPartnerListRequest) DeleteCICOPartnerListResponse
+
+	// Enable cicopartnerlist.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/enable-cicopartnerlist",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"cicopartnerlist"},
+	//         Description: "Enable cicopartnerlist.",
+	//         Summary:     "Enable cicopartnerlist.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/cicopartnerlistEnableCICOPartnerListResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	EnableCICOPartnerList(EnableCICOPartnerListRequest) EnableCICOPartnerListResponse
+
+	// Disable cicopartnerlist.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/disable-cicopartnerlist",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"cicopartnerlist"},
+	//         Description: "Disable cicopartnerlist.",
+	//         Summary:     "Disable cicopartnerlist.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/cicopartnerlistDisableCICOPartnerListResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	DisableCICOPartnerList(DisableCICOPartnerListRequest) DisableCICOPartnerListResponse
+}

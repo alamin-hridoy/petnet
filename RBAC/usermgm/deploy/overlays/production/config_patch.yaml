@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: usermgm-deploy-env
+data:
+  ENV: 'production'
+  HOST: 'usermgm.proxtera.com'
+  AUDIENCE: account.proxtera.com
+  HYDRA_ADMIN_URL: 'http://hydra-admin'
+  CORS_ORIGINS: 'https://account.proxtera.com,https://*.proxtera.com,*.proxtera.com'
+  BASE_URL: 'https://account.proxtera.com'
+  API_HOST: 'https://api.proxtera.com'
+  API_AUTH_HOST: 'https://sso.proxtera.com/oauth2/token'
+  SAP_HOST: 'https://bsb-launchpad-qa.cfapps.ap21.hana.ondemand.com/'
+  AROHA_HOST: 'http://internal-aroha-elb1-sg-1973166453.ap-southeast-1.elb.amazonaws.com/api/v1/platforms'

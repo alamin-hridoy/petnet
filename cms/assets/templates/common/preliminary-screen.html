@@ -1,0 +1,60 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>Primary Scrren</title>
+</head>
+
+<body class="font-proxima-nova-reg bg-petnetblue">
+    <div>
+        <section class="h-full">
+            <div class="flex flex-wrap items-center justify-center">
+                <div class="w-full lg:mx-28 mx-8">
+                    <div class="my-2 hidden sm:flex justify-center">
+                        <img src="{{ assetHash "/images/DRP-white-horizontal.svg" }}" alt="" srcset="">
+                    </div>
+                    <div class="my-2 flex justify-center sm:hidden">
+                        <img src="{{ assetHash "/images/DRP-white-horizontal.svg" }}" alt="" srcset="">
+                    </div>
+                    <div class="bg-white rounded-sm sm:px-16 sm:py-12 mb-10 px-6 py-8 sm:mx-40">
+                        <h1 class="text-3xl font-bold pb-8">Your account has been created.</h1>
+                        <p class="pb-6">To access the live environment, please prepare and submit the requirements below or you can <br>
+                             do it later and try out our sandbox APIs first.</p>
+                        <ul>
+                            <li>1. Financial Statement (last 3 months)</li>
+                            <li>2. Bank Statement</li>
+                            <li>3. Valid ID (to be submitted by Principal/Owner and each FLA)</li>
+                            <li>4. 2x2 picture (to be submitted by Principal/Owner and each FLA)</li>
+                            <li>5. NBI Clearance</li>
+                            <li>6. Court Clearance</li>
+                            <li>7. Incorporation Papers</li>
+                            <li>8. Mayors Permit</li>
+                        </ul>
+                        <div class="justify-between mt-8 hidden lg:flex">
+                            <a href="/register/skip-onboarding" class="bg-white text-petnetblue border-2 border-petnetblue sm:px-16 py-3 rounded-md font-bold text-sm ">
+                                Try out using sandbox for now
+                            </a>
+                            <a href="/register/businessinfo" class="bg-petnetblue text-white sm:px-32 py-3 rounded-md font-bold text-sm">
+                                Continue
+                            </a>
+                        </div>
+                        <div class=" mt-5 flex lg:hidden flex-wrap">
+                            <a href="/register/businessinfo" class="bg-petnetblue text-white py-3 rounded-md font-bold text-sm w-full text-center mb-4">
+                                Continue
+                            </a>
+                            <a href="/register/skip-onboarding" class="bg-white text-petnetblue border-petnetblue border-2 text-center w-full py-3 rounded-md font-bold text-sm ">
+                                Try out using sandbox for now
+                            </a>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+
+</html>

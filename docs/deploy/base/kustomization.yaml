@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- deployment.yaml
+- config.yaml
+- ingress.yaml
+- service.yaml
+
+commonLabels:
+  app.kubernetes.io/name: docs
+  app.kubernetes.io/part-of: petnet-drp
+  app.kubernetes.io/component: doc-portal

@@ -1,0 +1,232 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Rubik";
+  src: url("../fonts/rubik/Rubik-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Rubik";
+  src: url("../fonts/rubik/Rubik-LightItalic.ttf") format("truetype");
+  font-weight: 300;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Rubik";
+  src: url("../fonts/rubik/Rubik-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Rubik";
+  src: url("../fonts/rubik/Rubik-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Rubik";
+  src: url("../fonts/rubik/Rubik-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Rubik";
+  src: url("../fonts/rubik/Rubik-MediumItalic.ttf") format("truetype");
+  font-weight: 500;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Rubik";
+  src: url("../fonts/rubik/Rubik-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Rubik";
+  src: url("../fonts/rubik/Rubik-SemiBoldItalic.ttf") format("truetype");
+  font-weight: 600;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Rubik";
+  src: url("../fonts/rubik/Rubik-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Rubik";
+  src: url("../fonts/rubik/Rubik-BoldItalic.ttf") format("truetype");
+  font-weight: 700;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Rubik";
+  src: url("../fonts/rubik/Rubik-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Rubik";
+  src: url("../fonts/rubik/Rubik-ExtraBoldItalic.ttf") format("truetype");
+  font-weight: 800;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Rubik";
+  src: url("../fonts/rubik/Rubik-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Rubik";
+  src: url("../fonts/rubik/Rubik-BlackItalic.ttf") format("truetype");
+  font-weight: 900;
+  font-style: italic;
+}
+
+html {
+  @apply text-base;
+}
+
+a,
+button,
+input,
+select {
+  @apply
+    outline-none
+    transition-all duration-300 ease-in-out
+}
+button:focus,
+input:focus,
+select:focus,
+button:active,
+input:active,
+select:active {
+  @apply outline-none;
+}
+input::-webkit-input-placeholder {
+  @apply text-sm text-grey-dark-5
+}
+input:-ms-input-placeholder {
+  @apply text-sm text-grey-dark-5
+}
+input::placeholder {
+  @apply text-sm text-grey-dark-5
+}
+select:required:invalid {
+  @apply text-white text-opacity-50
+}
+select option {
+  @apply text-white
+}
+
+/** custom checkbox **/
+.checkbox .checkmark:after {
+  @apply absolute hidden;
+  content: "";
+}
+.checkbox input:checked ~ .checkmark:after {
+  @apply block;
+}
+.checkbox .checkmark:after {
+  @apply border-r-2 border-b-2 border-t-0 border-l-0 border-solid border-grey-dark-10;
+  left: 5px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+/** PASSWORD **/
+.password[type="password"] ~ span .pw-show {
+  @apply block;
+}
+.password[type="text"] ~ span .pw-hide {
+  @apply block;
+}
+/** LOGIN **/
+.login-left-panel:before {
+  content: "";
+  background: #517ef0 url("../images/login-bg.png") no-repeat center right;
+  background-size: contain;
+  @apply absolute right-0 top-0 -z-1 w-screen h-full
+}
+/** REGISTRATION **/
+.register-left-panel:before {
+  content: ""; 
+  @apply
+    absolute right-0 top-0 -z-1
+    w-screen h-full
+    bg-blue
+}
+.custom-modal {
+  background-color: #fff;
+  max-width: 1000px;
+  padding: 120px 90px;
+  border-radius: 5px;
+  text-align: center;
+  color: #000;
+  position: relative;
+}
+a.modal-close {
+  position: absolute;
+  top: -20px;
+  right: 15px;
+}
+.font-weight-bold {
+  font-weight: bold;
+}
+.custom-modal h1{
+  margin-bottom: 50px;
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  font-weight: 500;
+}
+.custom-modal p {
+  margin-bottom: 35px;
+}
+.custom-modal a {
+  display: inline-block;
+  margin-top: 35px;
+}
+.custom-button {
+  padding: 0.75rem 9rem;
+  background: #FDD100;
+color: rgba(26, 39, 145, 1);
+  outline: none;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: 500;
+}
+body{
+  position: relative;
+}
+.modal-close img {
+  opacity: 0.7;
+}
+.custom-input{
+  height: 5rem;
+  width: 5rem;
+  background-color: rgba(246, 247, 255, 1);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  border-radius: 5px;
+  text-align: center; 
+  font-size: 3rem;
+  border-width: 1px;
+  box-sizing: border-box;
+  margin: auto 15px;
+  border-style: solid;
+  border-color: #e5e7eb;
+}
+.mfa-mdal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

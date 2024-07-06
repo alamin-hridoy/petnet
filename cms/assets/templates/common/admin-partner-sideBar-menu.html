@@ -1,0 +1,31 @@
+<div class="bg-white rounded">
+    <h4 class="text-xl font-semibold text-petnetblue pt-7 px-12 pb-4 border-b">Configuration</h4>
+    <!-- Summary list start -->
+    <ul>
+        <li>
+            <a href="/dashboard/partner-services" class="nav-anchor {{if eq .Tab "services"}} active-nav-anchor {{end}}">
+                <span class="w-12 inline-block">
+                    <img src="{{assetHash "/images/Services.svg"}}" alt="">
+                </span>
+                <span class="font-semibold text-base">Services</span>
+            </a>
+        </li>
+        <li>
+            <a href="/dashboard/commission-mgt" class="nav-anchor">
+                <span class="w-12 inline-block">
+                    <img src="{{assetHash "/images/Commission-Fee.svg"}}" alt="">
+                </span>
+                <span class="font-semibold text-base">Commission Fee</span>
+            </a>
+        </li>
+        <li>
+            <a href="/dashboard/providers" class="nav-anchor {{if eq .Tab "providers"}} active-nav-anchor {{end}}">
+                <span class="w-12 inline-block">
+                    <img src="{{assetHash "/images/hand-holding.svg"}}" alt="hand">
+                </span>
+                <span class="font-semibold text-base">Providers</span>
+            </a>
+        </li>
+    </ul>
+    <!-- Summary list end -->
+</div>

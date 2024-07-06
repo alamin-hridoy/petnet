@@ -1,0 +1,765 @@
+package revenuesharing // proto "petnet.v2.revenuesharing"
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+type (
+	// RemitType are types of remittance services. Ex. REMITTANCE, BILLSPAYMENT etc.
+	RemitType int
+
+	// BoundType can be either inbound or outbound
+	BoundType int
+
+	// TierType denotes whether commission is in fixed tier ot range tier
+	TierType int
+
+	// TransactionType is type of transaction
+	TransactionType int
+)
+
+const (
+	EMPTYSERVICETYPE RemitType = iota
+	REMITTANCE
+	BILLSPAYMENT
+	CASHINCASHOUT
+	MICROINSURANCE
+)
+
+// here some of bound type
+const (
+	EMPTYBOUNDTYPE BoundType = iota
+	INBOUND
+	OUTBOUND
+	OTHERS
+)
+
+// here is some of tier type
+const (
+	EMPTYTIERTYPE TierType = iota
+	PERCENTAGE
+	TIERPERCENTAGE
+)
+
+// here is some of transaction type
+const (
+	EMPTYTRANSACTIONTYPE TransactionType = iota
+	DIGITAL
+	OTC
+)
+
+type RevenueSharing struct {
+	ID      string `pb:"1" json:"id"`
+	OrgID   string `pb:"2" json:"org_id"`
+	UserID  string `pb:"3" json:"user_id"`
+	Partner string `pb:"4" json:"partner"`
+	// The bound type is two type of transaction one is inbound, other one is outbound
+	BoundType BoundType `pb:"5" json:"bound_type"`
+	// The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT
+	RemitType RemitType `pb:"6" json:"remit_type"`
+	// There is transaction type one is digital, other one is otc
+	TransactionType TransactionType `pb:"7" json:"transaction_type"`
+	// There is tier type is fixed, percentage, fixed_tier, percentage_tier
+	TierType  TierType  `pb:"8" json:"tier_type"`
+	Amount    string    `pb:"9" json:"amount"`
+	CreatedBy string    `pb:"10" json:"created_by"`
+	UpdatedBy string    `pb:"11" json:"updated_by"`
+	Created   time.Time `pb:"12" json:"created"`
+	Updated   time.Time `pb:"13" json:"updated"`
+	Count     int       `pb:"14" json:"count"`
+}
+
+type RevenueSharingTier struct {
+	ID               string `pb:"1" json:"id"`
+	RevenueSharingID string `pb:"2" json:"revenue_sharing_id"`
+	MinValue         string `pb:"3" json:"min_value"`
+	MaxValue         string `pb:"4" json:"max_value"`
+	Amount           string `pb:"5" json:"amount"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "org_id",
+//                 "user_id",
+//                 "partner",
+//                 "bound_type",
+//                 "remit_type",
+//                 "transaction_type",
+//                 "tier_type",
+//         },
+// }}
+type CreateRevenueSharingRequest struct {
+	OrgID   string `pb:"1" json:"org_id"`
+	UserID  string `pb:"2" json:"user_id"`
+	Partner string `pb:"3" json:"partner"`
+	// The bound type is two type of transaction one is inbound, other one is outbound
+	BoundType BoundType `pb:"4" json:"bound_type"`
+	// The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT
+	RemitType RemitType `pb:"5" json:"remit_type"`
+	// There is transaction type one is digital, other one is otc
+	TransactionType TransactionType `pb:"6" json:"transaction_type"`
+	// There is tier type is fixed, percentage, fixed_tier, percentage_tier
+	TierType  TierType  `pb:"7" json:"tier_type"`
+	Amount    string    `pb:"8" json:"amount"`
+	CreatedBy string    `pb:"9" json:"created_by"`
+	Created   time.Time `pb:"10" json:"created"`
+}
+
+type CreateRevenueSharingResponse struct {
+	ID      string `pb:"1" json:"id"`
+	OrgID   string `pb:"2" json:"org_id"`
+	UserID  string `pb:"3" json:"user_id"`
+	Partner string `pb:"4" json:"partner"`
+	// The bound type is two type of transaction one is inbound, other one is outbound
+	BoundType BoundType `pb:"5" json:"bound_type"`
+	// The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT
+	RemitType RemitType `pb:"6" json:"remit_type"`
+	// There is transaction type one is digital, other one is otc
+	TransactionType TransactionType `pb:"7" json:"transaction_type"`
+	// There is tier type is fixed, percentage, fixed_tier, percentage_tier
+	TierType  TierType  `pb:"8" json:"tier_type"`
+	Amount    string    `pb:"9" json:"amount"`
+	CreatedBy string    `pb:"10" json:"created_by"`
+	UpdatedBy string    `pb:"11" json:"updated_by"`
+	Created   time.Time `pb:"12" json:"created"`
+	Updated   time.Time `pb:"13" json:"updated"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "id",
+//                 "org_id",
+//                 "user_id",
+//                 "partner",
+//                 "transaction_type",
+//                 "remit_type",
+//                 "bound_type",
+//         },
+// }}
+type UpdateRevenueSharingRequest struct {
+	ID      string `pb:"1" json:"id"`
+	OrgID   string `pb:"2" json:"org_id"`
+	UserID  string `pb:"3" json:"user_id"`
+	Partner string `pb:"4" json:"partner"`
+	// The bound type is two type of transaction one is inbound, other one is outbound
+	BoundType BoundType `pb:"5" json:"bound_type"`
+	// The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT
+	RemitType RemitType `pb:"6" json:"remit_type"`
+	// There is transaction type one is digital, other one is otc
+	TransactionType TransactionType `pb:"7" json:"transaction_type"`
+	// There is tier type is fixed, percentage, fixed_tier, percentage_tier
+	TierType  TierType  `pb:"8" json:"tier_type"`
+	Amount    string    `pb:"9" json:"amount"`
+	CreatedBy string    `pb:"10" json:"created_by"`
+	Created   time.Time `pb:"11" json:"created"`
+}
+
+type UpdateRevenueSharingResponse struct {
+	ID      string `pb:"1" json:"id"`
+	OrgID   string `pb:"2" json:"org_id"`
+	UserID  string `pb:"3" json:"user_id"`
+	Partner string `pb:"4" json:"partner"`
+	// The bound type is two type of transaction one is inbound, other one is outbound
+	BoundType BoundType `pb:"5" json:"bound_type"`
+	// The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT
+	RemitType RemitType `pb:"6" json:"remit_type"`
+	// There is transaction type one is digital, other one is otc
+	TransactionType TransactionType `pb:"7" json:"transaction_type"`
+	// There is tier type is fixed, percentage, fixed_tier, percentage_tier
+	TierType  TierType  `pb:"8" json:"tier_type"`
+	Amount    string    `pb:"9" json:"amount"`
+	CreatedBy string    `pb:"10" json:"created_by"`
+	UpdatedBy string    `pb:"11" json:"updated_by"`
+	Created   time.Time `pb:"12" json:"created"`
+	Updated   time.Time `pb:"13" json:"updated"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "revenue_sharing_id",
+//                 "min_value",
+//                 "max_value",
+//                 "amount",
+//         },
+// }}
+type CreateRevenueSharingTierRequest struct {
+	RevenueSharingID string `pb:"1" json:"revenue_sharing_id"`
+	MinValue         string `pb:"2" json:"min_value"`
+	MaxValue         string `pb:"3" json:"max_value"`
+	Amount           string `pb:"4" json:"amount"`
+}
+
+type CreateRevenueSharingTierResponse struct {
+	ID               string `pb:"1" json:"id"`
+	RevenueSharingID string `pb:"2" json:"revenue_sharing_id"`
+	MinValue         string `pb:"3" json:"min_value"`
+	MaxValue         string `pb:"4" json:"max_value"`
+	Amount           string `pb:"5" json:"amount"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "id",
+//                 "revenue_sharing_id",
+//                 "min_value",
+//                 "max_value",
+//                 "amount",
+//         },
+// }}
+type UpdateRevenueSharingTierRequest struct {
+	ID               string `pb:"1" json:"id"`
+	RevenueSharingID string `pb:"2" json:"revenue_sharing_id"`
+	MinValue         string `pb:"3" json:"min_value"`
+	MaxValue         string `pb:"4" json:"max_value"`
+	Amount           string `pb:"5" json:"amount"`
+}
+
+type UpdateRevenueSharingTierResponse struct {
+	ID               string `pb:"1" json:"id"`
+	RevenueSharingID string `pb:"2" json:"revenue_sharing_id"`
+	MinValue         string `pb:"3" json:"min_value"`
+	MaxValue         string `pb:"4" json:"max_value"`
+	Amount           string `pb:"5" json:"amount"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "org_id",
+//                 "user_id",
+//                 "remit_type",
+//                 "bound_type",
+//         },
+// }}
+type GetRevenueSharingListRequest struct {
+	ID      string `pb:"1" json:"id"`
+	OrgID   string `pb:"2" json:"org_id"`
+	UserID  string `pb:"3" json:"user_id"`
+	Partner string `pb:"4" json:"partner"`
+	// The bound type is two type of transaction one is inbound, other one is outbound
+	BoundType BoundType `pb:"5" json:"bound_type"`
+	// The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT
+	RemitType RemitType `pb:"6" json:"remit_type"`
+	// There is transaction type one is digital, other one is otc
+	TransactionType TransactionType `pb:"7" json:"transaction_type"`
+	// There is tier type is fixed, percentage, fixed_tier, percentage_tier
+	TierType  TierType  `pb:"8" json:"tier_type"`
+	Amount    string    `pb:"9" json:"amount"`
+	CreatedBy string    `pb:"10" json:"created_by"`
+	UpdatedBy string    `pb:"11" json:"updated_by"`
+	Created   time.Time `pb:"12" json:"created"`
+	Updated   time.Time `pb:"13" json:"updated"`
+	Count     int       `pb:"14" json:"count"`
+}
+
+type GetRevenueSharingListResponse struct {
+	Results []RevenueSharing `pb:"1" json:"results"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "revenue_sharing_id",
+//         },
+// }}
+type GetRevenueSharingTierListRequest struct {
+	ID               string `pb:"1" json:"id"`
+	RevenueSharingID string `pb:"2" json:"revenue_sharing_id"`
+	MinValue         string `pb:"3" json:"min_value"`
+	MaxValue         string `pb:"4" json:"max_value"`
+	Amount           string `pb:"5" json:"amount"`
+}
+
+type GetRevenueSharingTierListResponse struct {
+	Results []RevenueSharingTier `pb:"1" json:"results"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "org_id",
+//                 "user_id",
+//                 "partner",
+//                 "bound_type",
+//                 "remit_type",
+//                 "transaction_type",
+//         },
+// }}
+type DeleteRevenueSharingRequest struct {
+	ID      string `pb:"1" json:"id"`
+	OrgID   string `pb:"2" json:"org_id"`
+	UserID  string `pb:"3" json:"user_id"`
+	Partner string `pb:"4" json:"partner"`
+	// The bound type is two type of transaction one is inbound, other one is outbound
+	BoundType BoundType `pb:"5" json:"bound_type"`
+	// The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT
+	RemitType RemitType `pb:"6" json:"remit_type"`
+	// There is transaction type one is digital, other one is otc
+	TransactionType TransactionType `pb:"7" json:"transaction_type"`
+	// There is tier type is fixed, percentage, fixed_tier, percentage_tier
+	TierType  TierType  `pb:"8" json:"tier_type"`
+	Amount    string    `pb:"9" json:"amount"`
+	CreatedBy string    `pb:"10" json:"created_by"`
+	UpdatedBy string    `pb:"11" json:"updated_by"`
+	Created   time.Time `pb:"12" json:"created"`
+	Updated   time.Time `pb:"13" json:"updated"`
+	Count     int       `pb:"14" json:"count"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "revenue_sharing_id",
+//         },
+// }}
+type DeleteRevenueSharingTierRequest struct {
+	ID               string `pb:"1" json:"id"`
+	RevenueSharingID string `pb:"2" json:"revenue_sharing_id"`
+	MinValue         string `pb:"3" json:"min_value"`
+	MaxValue         string `pb:"4" json:"max_value"`
+	Amount           string `pb:"5" json:"amount"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "id",
+//         },
+// }}
+type DeleteRevenueSharingTierByIdRequest struct {
+	ID                  string `pb:"1" json:"id"`
+	PartnerCommissionID string `pb:"2" json:"revenue_sharing_id"`
+	MinValue            string `pb:"3" json:"min_value"`
+	MaxValue            string `pb:"4" json:"max_value"`
+	Amount              string `pb:"5" json:"amount"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "org_id",
+//                 "user_id",
+//                 "partner",
+//                 "bound_type",
+//                 "remit_type",
+//                 "transaction_type",
+//                 "tier_type",
+//         },
+// }}
+type UpsertRevenueSharingRequest struct {
+	ID      string `pb:"1" json:"id"`
+	OrgID   string `pb:"2" json:"org_id"`
+	UserID  string `pb:"3" json:"user_id"`
+	Partner string `pb:"4" json:"partner"`
+	// The bound type is two type of transaction one is inbound, other one is outbound
+	BoundType BoundType `pb:"5" json:"bound_type"`
+	// The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT
+	RemitType RemitType `pb:"6" json:"remit_type"`
+	// There is transaction type one is digital, other one is otc
+	TransactionType TransactionType `pb:"7" json:"transaction_type"`
+	// There is tier type is fixed, percentage, fixed_tier, percentage_tier
+	TierType  TierType  `pb:"8" json:"tier_type"`
+	Amount    string    `pb:"9" json:"amount"`
+	CreatedBy string    `pb:"10" json:"created_by"`
+	Created   time.Time `pb:"11" json:"created"`
+}
+
+type UpsertRevenueSharingResponse struct {
+	ID      string `pb:"1" json:"id"`
+	OrgID   string `pb:"2" json:"org_id"`
+	UserID  string `pb:"3" json:"user_id"`
+	Partner string `pb:"4" json:"partner"`
+	// The bound type is two type of transaction one is inbound, other one is outbound
+	BoundType BoundType `pb:"5" json:"bound_type"`
+	// The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT
+	RemitType RemitType `pb:"6" json:"remit_type"`
+	// There is transaction type one is digital, other one is otc
+	TransactionType TransactionType `pb:"7" json:"transaction_type"`
+	// There is tier type is fixed, percentage, fixed_tier, percentage_tier
+	TierType  TierType  `pb:"8" json:"tier_type"`
+	Amount    string    `pb:"9" json:"amount"`
+	CreatedBy string    `pb:"10" json:"created_by"`
+	UpdatedBy string    `pb:"11" json:"updated_by"`
+	Created   time.Time `pb:"12" json:"created"`
+	Updated   time.Time `pb:"13" json:"updated"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "id",
+//                 "revenue_sharing_id",
+//                 "min_value",
+//                 "max_value",
+//                 "amount",
+//         },
+// }}
+type UpsertRevenueSharingTierRequest struct {
+	ID               string `pb:"1" json:"id"`
+	RevenueSharingID string `pb:"2" json:"revenue_sharing_id"`
+	MinValue         string `pb:"3" json:"min_value"`
+	MaxValue         string `pb:"4" json:"max_value"`
+	Amount           string `pb:"5" json:"amount"`
+}
+
+type UpsertRevenueSharingTierResponse struct {
+	ID               string `pb:"1" json:"id"`
+	RevenueSharingID string `pb:"2" json:"revenue_sharing_id"`
+	MinValue         string `pb:"3" json:"min_value"`
+	MaxValue         string `pb:"4" json:"max_value"`
+	Amount           string `pb:"5" json:"amount"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "partners",
+//         },
+// }}
+type GetPartnerTransactionTypeRequest struct {
+	Partners string `pb:"2" json:"partners"`
+}
+
+type PartnerDetail struct {
+	ID               string    `pb:"1" json:"id"`
+	Stype            string    `pb:"2" json:"stype"`
+	Name             string    `pb:"3" json:"name"`
+	TransactionTypes []string  `pb:"4" json:"transaction_types"`
+	Created          time.Time `pb:"5" json:"created"`
+	Updated          time.Time `pb:"6" json:"updated"`
+	Status           string    `pb:"7" json:"status"`
+}
+
+type GetPartnerTransactionTypeResponse struct {
+	PartnerDetails []PartnerDetail `pb:"1" json:"partner_details"`
+}
+
+type RevenueSharingService interface {
+	// Create Revenue Sharing
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/revenue-sharing",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Revenue Sharing"},
+	//         Description: "Create Revenue Sharing.",
+	//         Summary:     "Revenue Sharing.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/RevenueSharingServiceCreateRevenueSharingResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	CreateRevenueSharing(CreateRevenueSharingRequest) CreateRevenueSharingResponse
+
+	// Update Revenue Sharing
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v2/revenue-sharing",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Revenue Sharing"},
+	//         Description: "Update Revenue Sharing.",
+	//         Summary:     "Revenue Sharing.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/RevenueSharingServiceUpdateRevenueSharingResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	UpdateRevenueSharing(UpdateRevenueSharingRequest) UpdateRevenueSharingResponse
+
+	// Create Revenue Sharing Tier
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/revenue-sharing-tier",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Revenue Sharing"},
+	//         Description: "Create Revenue Sharing tier.",
+	//         Summary:     "Revenue Sharing Tier.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/RevenueSharingServiceCreateRevenueSharingTierResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	CreateRevenueSharingTier(CreateRevenueSharingTierRequest) CreateRevenueSharingTierResponse
+
+	// update Revenue Sharing Tier
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v2/revenue-sharing-tier",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Revenue Sharing"},
+	//         Description: "update Revenue Sharing tier.",
+	//         Summary:     "Revenue Sharing Tier.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/RevenueSharingServiceUpdateRevenueSharingTierResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	UpdateRevenueSharingTier(UpdateRevenueSharingTierRequest) UpdateRevenueSharingTierResponse
+
+	// List Revenue Sharing.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v2/revenue-sharing",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Revenue Sharing"},
+	//         Description: "List all created Revenue Sharing.",
+	//         Summary:     "List Revenue Sharing.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/RevenueSharingServiceGetRevenueSharingListResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	GetRevenueSharingList(GetRevenueSharingListRequest) GetRevenueSharingListResponse
+
+	// List Revenue Sharing tier
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v2/revenue-sharing-tier",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Revenue Sharing"},
+	//         Description: "List all created Revenue Sharing tier.",
+	//         Summary:     "List Revenue Sharing tier.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/RevenueSharingServiceGetRevenueSharingTierListResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	GetRevenueSharingTierList(GetRevenueSharingTierListRequest) GetRevenueSharingTierListResponse
+
+	// Delete Revenue Sharing
+	//
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v2/revenue-sharing",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Revenue Sharing"},
+	//         Description: `Delete Revenue Sharing`,
+	//         Summary:     "DELETE",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/RevenueSharingServiceRevenueSharing",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	DeleteRevenueSharing(DeleteRevenueSharingRequest)
+
+	// Delete Revenue Sharing Tier
+	//
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v2/revenue-sharing-tier",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Revenue Sharing"},
+	//         Description: `Delete Revenue Sharing Tier`,
+	//         Summary:     "DELETE",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/RevenueSharingServiceRevenueSharing",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	DeleteRevenueSharingTier(DeleteRevenueSharingTierRequest)
+
+	// Delete Revenue Sharing Tier By ID
+	//
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v2/revenue-sharing-tier-by-id",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Revenue Sharing"},
+	//         Description: `Delete Revenue Sharing Tier`,
+	//         Summary:     "DELETE",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/RevenueSharingServiceRevenueSharing",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	DeleteRevenueSharingTierById(DeleteRevenueSharingTierByIdRequest)
+
+	// Upsert Revenue Sharing
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v2/revenue-sharing-upsert",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Revenue Sharing"},
+	//         Description: "Update Revenue Sharing.",
+	//         Summary:     "Revenue Sharing.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/RevenueSharingServiceUpsertRevenueSharingResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	UpsertRevenueSharing(UpsertRevenueSharingRequest) UpsertRevenueSharingResponse
+
+	// upsert Revenue Sharing Tier
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v2/revenue-sharing-tier-upsert",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Revenue Sharing"},
+	//         Description: "upsert Revenue Sharing tier.",
+	//         Summary:     "Revenue Sharing Tier.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/RevenueSharingServiceUpsertRevenueSharingTierResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	UpsertRevenueSharingTier(UpsertRevenueSharingTierRequest) UpsertRevenueSharingTierResponse
+
+	// Get partner details list by partners.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v2/partner-list",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Revenue Sharing"},
+	//         Description: "get partner list.",
+	//         Summary:     "get partner list.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/RevenueSharingServiceGetPartnerTransactionTypeResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	GetPartnerTransactionType(GetPartnerTransactionTypeRequest) GetPartnerTransactionTypeResponse
+}

@@ -1,0 +1,551 @@
+package partnercommission // proto "petnet.v2.partnercommission"
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+type (
+	RemitType       int
+	BoundType       int
+	TierType        int
+	TransactionType int
+)
+
+// The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT
+const (
+	EMPTYSERVICETYPE RemitType = iota
+	REMITTANCE
+	BILLSPAYMENT
+	CASHINCASHOUT
+	MICROINSURANCE
+)
+
+// here some of bound type
+const (
+	EMPTYBOUNDTYPE BoundType = iota
+	INBOUND
+	OUTBOUND
+	OTHERS
+)
+
+// here is some of tier type
+const (
+	EMPTYTIERTYPE TierType = iota
+	FIXED
+	PERCENTAGE
+	TIERAMOUNT
+	TIERPERCENTAGE
+)
+
+// here is some of transaction type
+const (
+	EMPTYTRANSACTIONTYPE TransactionType = iota
+	DIGITAL
+	OTC
+)
+
+type PartnerCommission struct {
+	ID      string `pb:"1" json:"id"`
+	Partner string `pb:"2" json:"partner"`
+	// The bound type is two type of transaction one is inbound, other one is outbound
+	BoundType BoundType `pb:"3" json:"bound_type"`
+	// The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT
+	RemitType RemitType `pb:"4" json:"remit_type"`
+	// There is transaction type one is digital, other one is otc
+	TransactionType TransactionType `pb:"5" json:"transaction_type"`
+	// There is tier type is fixed, percentage, fixed_tier, percentage_tier
+	TierType  TierType  `pb:"6" json:"tier_type"`
+	Amount    string    `pb:"7" json:"amount"`
+	StartDate time.Time `pb:"8" json:"start_date"`
+	EndDate   time.Time `pb:"9" json:"end_date"`
+	CreatedBy string    `pb:"10" json:"created_by"`
+	UpdatedBy string    `pb:"11" json:"updated_by"`
+	Created   time.Time `pb:"12" json:"created"`
+	Updated   time.Time `pb:"13" json:"updated"`
+	Count     int       `pb:"14" json:"count"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "partner_commission_id",
+//                 "min_value",
+//                 "max_value",
+//                 "amount",
+//         },
+// }}
+type PartnerCommissionTier struct {
+	ID                  string `pb:"1" json:"id"`
+	PartnerCommissionID string `pb:"2" json:"partner_commission_id"`
+	MinValue            string `pb:"3" json:"min_value"`
+	MaxValue            string `pb:"4" json:"max_value"`
+	Amount              string `pb:"5" json:"amount"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "partner",
+//                 "bound_type",
+//                 "remit_type",
+//                 "transaction_type",
+//                 "tier_type",
+//         },
+// }}
+type CreatePartnerCommissionRequest struct {
+	Partner string `pb:"1" json:"partner"`
+	// The bound type is two type of transaction one is inbound, other one is outbound
+	BoundType BoundType `pb:"2" json:"bound_type"`
+	// The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT
+	RemitType RemitType `pb:"3" json:"remit_type"`
+	// There is transaction type one is digital, other one is otc
+	TransactionType TransactionType `pb:"4" json:"transaction_type"`
+	// There is tier type is fixed, percentage, fixed_tier, percentage_tier
+	TierType  TierType  `pb:"5" json:"tier_type"`
+	Amount    string    `pb:"6" json:"amount"`
+	StartDate time.Time `pb:"7" json:"start_date"`
+	EndDate   time.Time `pb:"8" json:"end_date"`
+	CreatedBy string    `pb:"9" json:"created_by"`
+	Created   time.Time `pb:"10" json:"created"`
+}
+
+type CreatePartnerCommissionResponse struct {
+	ID      string `pb:"1" json:"id"`
+	Partner string `pb:"2" json:"partner"`
+	// The bound type is two type of transaction one is inbound, other one is outbound
+	BoundType BoundType `pb:"3" json:"bound_type"`
+	// The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT
+	RemitType RemitType `pb:"4" json:"remit_type"`
+	// There is transaction type one is digital, other one is otc
+	TransactionType TransactionType `pb:"5" json:"transaction_type"`
+	// There is tier type is fixed, percentage, fixed_tier, percentage_tier
+	TierType  TierType  `pb:"6" json:"tier_type"`
+	Amount    string    `pb:"7" json:"amount"`
+	StartDate time.Time `pb:"8" json:"start_date"`
+	EndDate   time.Time `pb:"9" json:"end_date"`
+	CreatedBy string    `pb:"10" json:"created_by"`
+	UpdatedBy string    `pb:"11" json:"updated_by"`
+	Created   time.Time `pb:"12" json:"created"`
+	Updated   time.Time `pb:"13" json:"updated"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "id",
+//                 "partner",
+//                 "transaction_type",
+//                 "remit_type",
+//                 "bound_type",
+//         },
+// }}
+type UpdatePartnerCommissionRequest struct {
+	ID      string `pb:"1" json:"id"`
+	Partner string `pb:"2" json:"partner"`
+	// The bound type is two type of transaction one is inbound, other one is outbound
+	BoundType BoundType `pb:"3" json:"bound_type"`
+	// The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT
+	RemitType RemitType `pb:"4" json:"remit_type"`
+	// There is transaction type one is digital, other one is otc
+	TransactionType TransactionType `pb:"5" json:"transaction_type"`
+	// There is tier type is fixed, percentage, fixed_tier, percentage_tier
+	TierType  TierType  `pb:"6" json:"tier_type"`
+	Amount    string    `pb:"7" json:"amount"`
+	StartDate time.Time `pb:"8" json:"start_date"`
+	EndDate   time.Time `pb:"9" json:"end_date"`
+	CreatedBy string    `pb:"10" json:"created_by"`
+	Created   time.Time `pb:"11" json:"created"`
+}
+
+type UpdatePartnerCommissionResponse struct {
+	ID      string `pb:"1" json:"id"`
+	Partner string `pb:"2" json:"partner"`
+	// The bound type is two type of transaction one is inbound, other one is outbound
+	BoundType BoundType `pb:"3" json:"bound_type"`
+	// The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT
+	RemitType RemitType `pb:"4" json:"remit_type"`
+	// There is transaction type one is digital, other one is otc
+	TransactionType TransactionType `pb:"5" json:"transaction_type"`
+	// There is tier type is fixed, percentage, fixed_tier, percentage_tier
+	TierType  TierType  `pb:"6" json:"tier_type"`
+	Amount    string    `pb:"7" json:"amount"`
+	StartDate time.Time `pb:"8" json:"start_date"`
+	EndDate   time.Time `pb:"9" json:"end_date"`
+	CreatedBy string    `pb:"10" json:"created_by"`
+	UpdatedBy string    `pb:"11" json:"updated_by"`
+	Created   time.Time `pb:"12" json:"created"`
+	Updated   time.Time `pb:"13" json:"updated"`
+}
+
+type CreatePartnerCommissionTierRequest struct {
+	CommissionTier []PartnerCommissionTier `pb:"1" json:"commission_tier"`
+}
+
+type CreatePartnerCommissionTierResponse struct {
+	CommissionTier []PartnerCommissionTier `pb:"1" json:"commission_tier"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "id",
+//                 "partner_commission_id",
+//                 "min_value",
+//                 "max_value",
+//                 "amount",
+//         },
+// }}
+type UpdatePartnerCommissionTierRequest struct {
+	CommissionTier []PartnerCommissionTier `pb:"1" json:"commission_tier"`
+}
+
+type UpdatePartnerCommissionTierResponse struct {
+	CommissionTier []PartnerCommissionTier `pb:"1" json:"commission_tier"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "remit_type",
+//         },
+// }}
+type GetPartnerCommissionsListRequest struct {
+	ID      string `pb:"1" json:"id"`
+	Partner string `pb:"2" json:"partner"`
+	// The bound type is two type of transaction one is inbound, other one is outbound
+	BoundType BoundType `pb:"3" json:"bound_type"`
+	// The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT
+	RemitType RemitType `pb:"4" json:"remit_type"`
+	// There is transaction type one is digital, other one is otc
+	TransactionType TransactionType `pb:"5" json:"transaction_type"`
+	// There is tier type is fixed, percentage, fixed_tier, percentage_tier
+	TierType  TierType  `pb:"6" json:"tier_type"`
+	Amount    string    `pb:"7" json:"amount"`
+	StartDate time.Time `pb:"8" json:"start_date"`
+	EndDate   time.Time `pb:"9" json:"end_date"`
+	CreatedBy string    `pb:"10" json:"created_by"`
+	UpdatedBy string    `pb:"11" json:"updated_by"`
+	Created   time.Time `pb:"12" json:"created"`
+	Updated   time.Time `pb:"13" json:"updated"`
+	Count     int       `pb:"14" json:"count"`
+}
+
+type GetPartnerCommissionsListResponse struct {
+	Results []PartnerCommission `pb:"1" json:"results"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "partner_commission_id",
+//         },
+// }}
+type GetPartnerCommissionsTierListRequest struct {
+	ID                  string `pb:"1" json:"id"`
+	PartnerCommissionID string `pb:"2" json:"partner_commission_id"`
+	MinValue            string `pb:"3" json:"min_value"`
+	MaxValue            string `pb:"4" json:"max_value"`
+	Amount              string `pb:"5" json:"amount"`
+}
+
+type GetPartnerCommissionsTierListResponse struct {
+	Results []PartnerCommissionTier `pb:"1" json:"results"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "partner",
+//                 "bound_type",
+//                 "remit_type",
+//                 "transaction_type",
+//         },
+// }}
+type DeletePartnerCommissionRequest struct {
+	ID      string `pb:"1" json:"id"`
+	Partner string `pb:"2" json:"partner"`
+	// The bound type is two type of transaction one is inbound, other one is outbound
+	BoundType BoundType `pb:"3" json:"bound_type"`
+	// The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT
+	RemitType RemitType `pb:"4" json:"remit_type"`
+	// There is transaction type one is digital, other one is otc
+	TransactionType TransactionType `pb:"5" json:"transaction_type"`
+	// There is tier type is fixed, percentage, fixed_tier, percentage_tier
+	TierType  TierType  `pb:"6" json:"tier_type"`
+	Amount    string    `pb:"7" json:"amount"`
+	StartDate time.Time `pb:"8" json:"start_date"`
+	EndDate   time.Time `pb:"9" json:"end_date"`
+	CreatedBy string    `pb:"10" json:"created_by"`
+	UpdatedBy string    `pb:"11" json:"updated_by"`
+	Created   time.Time `pb:"12" json:"created"`
+	Updated   time.Time `pb:"13" json:"updated"`
+	Count     int       `pb:"14" json:"count"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "partner_commission_id",
+//         },
+// }}
+type DeletePartnerCommissionTierRequest struct {
+	ID                  string `pb:"1" json:"id"`
+	PartnerCommissionID string `pb:"2" json:"partner_commission_id"`
+	MinValue            string `pb:"3" json:"min_value"`
+	MaxValue            string `pb:"4" json:"max_value"`
+	Amount              string `pb:"5" json:"amount"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "id",
+//         },
+// }}
+type DeletePartnerCommissionTierByIdRequest struct {
+	ID                  string `pb:"1" json:"id"`
+	PartnerCommissionID string `pb:"2" json:"partner_commission_id"`
+	MinValue            string `pb:"3" json:"min_value"`
+	MaxValue            string `pb:"4" json:"max_value"`
+	Amount              string `pb:"5" json:"amount"`
+}
+
+type PartnerCommissionService interface {
+	// Create Partner Commission
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/partner-commission",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Partner Commission"},
+	//         Description: "Create Partner Commission.",
+	//         Summary:     "Partner Commission.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/PartnerCommissionServiceCreatePartnerCommissionResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	CreatePartnerCommission(CreatePartnerCommissionRequest) CreatePartnerCommissionResponse
+
+	// Update Partner Commission
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v2/partner-commission",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Partner Commission"},
+	//         Description: "Update Partner Commission.",
+	//         Summary:     "Partner Commission.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/PartnerCommissionServicePartnerCommissionResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	UpdatePartnerCommission(UpdatePartnerCommissionRequest) UpdatePartnerCommissionResponse
+
+	// Create Partner Commission Tier
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/partner-commission-tier",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Partner Commission"},
+	//         Description: "Create Partner Commission tier.",
+	//         Summary:     "Partner Commission Tier.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/PartnerCommissionServiceUpdatePartnerCommissionTierResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	CreatePartnerCommissionTier(CreatePartnerCommissionTierRequest) CreatePartnerCommissionTierResponse
+
+	// update Partner Commission Tier
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v2/partner-commission-tier",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Partner Commission"},
+	//         Description: "update Partner Commission tier.",
+	//         Summary:     "Partner Commission Tier.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/PartnerCommissionServiceUpdatePartnerCommissionTierResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	UpdatePartnerCommissionTier(UpdatePartnerCommissionTierRequest) UpdatePartnerCommissionTierResponse
+
+	// List Partner Commission.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v2/partner-commission",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Partner Commission"},
+	//         Description: "List all created Partner Commission.",
+	//         Summary:     "List Partner Commission.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/PartnerCommissionServiceGetPartnerCommissionsListResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	GetPartnerCommissionsList(GetPartnerCommissionsListRequest) GetPartnerCommissionsListResponse
+
+	// List Partner Commission tier
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v2/partner-commission-tier",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Partner Commission"},
+	//         Description: "List all created Partner Commission tier.",
+	//         Summary:     "List Partner Commission tier.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/PartnerCommissionServiceGetPartnerCommissionsTierListResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	GetPartnerCommissionsTierList(GetPartnerCommissionsTierListRequest) GetPartnerCommissionsTierListResponse
+
+	// Delete Partner Commission
+	//
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v2/partner-commission",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Partner Commission"},
+	//         Description: `Delete Partner Commission`,
+	//         Summary:     "DELETE",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/PartnerCommissionServicePartnerCommission",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	DeletePartnerCommission(DeletePartnerCommissionRequest)
+
+	// Delete Partner Commission Tier
+	//
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v2/partner-commission-tier",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Partner Commission"},
+	//         Description: `Delete Partner Commission Tier`,
+	//         Summary:     "DELETE",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/PartnerCommissionServicePartnerCommission",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	DeletePartnerCommissionTier(DeletePartnerCommissionTierRequest)
+
+	// Delete Partner Commission Tier
+	//
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v2/partner-commission-tier-by-id",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Partner Commission"},
+	//         Description: `Delete Partner Commission Tier`,
+	//         Summary:     "DELETE",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/PartnerCommissionServicePartnerCommission",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	DeletePartnerCommissionTierById(DeletePartnerCommissionTierByIdRequest)
+}

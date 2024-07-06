@@ -1,0 +1,60 @@
+package mfa // proto "petnet.v1.mfa"
+
+import (
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+type MFA int32
+
+const (
+	PASS MFA = iota
+	TOTP
+	CODE
+	SMS
+	RECOVERY
+	EMAIL
+)
+
+type EnableMFARequest struct {
+	UserID string `pb:"1" json:"user_id"`
+	Type   MFA    `pb:"2" json:"type"`
+	Source string `pb:"3" json:"source"`
+}
+
+type EnableMFAResponse struct {
+	ID             string   `pb:"1" json:"id"`
+	InitializeCode string   `pb:"2" json:"initialize_code"`
+	EventID        string   `pb:"3" json:"event_id"`
+	Codes          []string `pb:"4" json:"codes"`
+}
+
+type MFAService interface {
+	// Enable MFA source.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/mfa/{UserID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"MFA"},
+	//         Summary:     "Enable MFA Source.",
+	//         Description: "Enable source as an MFA associated with the user ID.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/mfaEnableMFAResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	EnableMFA(EnableMFARequest) EnableMFAResponse
+}

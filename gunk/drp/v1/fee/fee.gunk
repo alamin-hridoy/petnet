@@ -1,0 +1,62 @@
+package fee
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+
+	"brank.as/petnet/gunk/drp/v1/profile"
+	"brank.as/petnet/gunk/drp/v1/terminal"
+)
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "remit_partner",
+//                 "destination_country",
+//                 "remit_type",
+//                 "amount",
+//         },
+// }}
+type FeeInquiryRequest struct {
+	RemitPartner string              `pb:"1" json:"remit_partner"`
+	RemitType    string              `pb:"2" json:"remit_type"`
+	Amount       terminal.SendAmount `pb:"3" json:"amount"`
+	Promo        string              `pb:"4" json:"promo"`
+	Message      string              `pb:"5" json:"message"`
+}
+
+type FeeInquiryResponse struct {
+	Fees map[string]string `pb:"1" json:"fees"`
+}
+
+type FeeService interface {
+	// Get a list of fees for choosen remit type.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Body:   "*",
+	//         Path:   "/v1/fee/{RemitPartner}/inquiry",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Fee"},
+	//         Summary:     "Partner Fee Inquiry.",
+	//         Description: "Get a list of fees for choosen remit type.",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/feeFeeInquiryResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	FeeInquiry(FeeInquiryRequest) FeeInquiryResponse
+}

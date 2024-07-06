@@ -1,0 +1,633 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>Micro Insurance Transactions</title>
+</head>
+
+<body class="font-sans">
+    <div>
+        <div class="flex">
+            <!-- sidebar-left-start -->
+            <div class="bg-petnetblue w-32 min-h-screen">
+                <div class="min-h-screen">
+                    <img src="{{ assetHash "/images/DRP-Vertical.svg" }}" class="mx-auto my-5">
+                    <!-- Sidebar menu start -->
+                    {{ template "admin-sidenav-menu.html" dict "Type" "transaction-list" "Data" .}}
+                    <!-- Sidebar menu end -->
+                </div>
+            </div>
+            <!-- sidebarleft-end -->
+
+            <!-- top-header-start -->
+            <div class="min-h-screen w-full flex bg-petnetgray">
+                <div class="w-full">
+                    <div class="px-6 lg:px-8 py-10  bg-white">
+                        {{ template "top-header-transactionlist.html" .}}
+                        <div class="flex justify-between w-full">
+                            <div class="w-1/2">
+                                <div class="mb-4">
+                                    <h2 class="text-4xl text-petnetblue">{{.CompanyName}}</h2>
+                                </div>
+                                <div>
+                                    <ul class="flex justify-start items-center space-x-2">
+                                        <li>
+                                            <a href="/dashboard/transactionslist/{{.OrgId}}" class="mr-4 text-lg">Remittance</a>
+                                        </li>
+                                        <li>
+                                            <a href="/dashboard/transactionslistbp/{{.OrgId}}" class="mx-4 text-lg">Bills Payment</a>
+                                        </li>
+                                        <li>
+                                            <a href="/dashboard/transactionslistmi/{{.OrgId}}" class="text-petnetlightblue text-lg mx-4 border-b-4 py-1 border-petnetlightblue">Micro Insurance</a>
+                                        </li>
+                                        <li>
+                                            <a href="/dashboard/transactionslistcico/{{.OrgId}}" class="mx-4 text-lg">CI/CO</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="w-1/2">
+                                <div class="flex flex-wrap items-center justify-end">
+                                    <div class="border w-4/6 flex rounded-l">
+                                        <input id="search" type="text" value="{{.SearchTerms}}" placeholder="Search for transaction"
+                                            class="w-full h-12 p-4 bg-petnetgray focus:outline-none">
+                                        <button class="bg-petnetblue text-white p-3 rounded-r searchbtn">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- top-header-end -->
+                    <!-- table-start -->
+                    <div class="flex flex-col">
+                        <div class="block">
+                            <div class="align-middle inline-block min-w-full">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-white shadow-md relative z-10 border-t">
+                                        <tr>
+                                            <th class="pl-8 py-3 text-left">
+                                                Trace No.
+                                            </th>
+                                            <th class="py-3 text-left">
+                                                <div class="relative dropdown p-2 appearance-none">
+                                                    <button
+                                                        class="dropdown-toggle flex items-center w-full justify-between"
+                                                        onclick="dropdownToggle(event)">
+                                                        <p class="pr-4 font-semibold">Total Amount</p>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
+                                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                        </svg>
+                                                    </button>
+                                                    <div class="absolute right-0 top-12 hidden dropdown-item">
+                                                        <div
+                                                            class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                                        </div>
+                                                        <div class="shadow  absolute top-3 -right-5 rounded">
+                                                            <div
+                                                                class="relative z-20 pt-3 w-40 bg-white rounded flex flex-col">
+                                                                <div class="text-sm pl-2 pb-2 flex-col flex">
+                                                                    <ul>
+                                                                        <li
+                                                                        class="text-petnetheadertext font-normal pl-6">SORT
+                                                                        BY</li>
+                                                                        <li
+                                                                            class="mt-4 mb-2 relative font-normal" onclick="orderBy('miamount','asc')">
+                                                                            <input id="radio-sort-miamount-asc" type="radio" value="asc" class="hidden list-custom-input">
+                                                                            <label for="radio-asc"
+                                                                                class="flex w-full items-center cursor-pointer text-md">
+                                                                                <span
+                                                                                    class="w-4 h-4 flex items-center inline-block mr-2 text-lg flex-no-shrink">
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                        class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                                                                        stroke="currentColor">
+                                                                                        <path stroke-linecap="round"
+                                                                                            stroke-linejoin="round" stroke-width="2"
+                                                                                            d="M5 13l4 4L19 7" />
+                                                                                    </svg>
+                                                                                </span>
+                                                                                Lowest to Highest
+                                                                            </label>
+                                                                        </li>
+                                                                        <li class="font-normal" onclick="orderBy('miamount','desc')">
+                                                                            <input id="radio-sort-miamount-desc" type="radio" value="asc" class="hidden list-custom-input">
+                                                                            <label for="radio-asc"
+                                                                                class="flex w-full items-center cursor-pointer text-md">
+                                                                                <span
+                                                                                    class="w-4 h-4 flex items-center inline-block mr-2 text-lg flex-no-shrink">
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                        class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                                                                        stroke="currentColor">
+                                                                                        <path stroke-linecap="round"
+                                                                                            stroke-linejoin="round" stroke-width="2"
+                                                                                            d="M5 13l4 4L19 7" />
+                                                                                    </svg>
+                                                                                </span>
+                                                                                Highest to Lowest
+                                                                            </label>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </th>
+                                            <th class="px-6 py-3 text-left">
+                                                <div class="relative dropdown p-2 appearance-none">
+
+                                                    <button
+                                                        class="dropdown-toggle flex items-center w-full justify-between"
+                                                        onclick="dropdownToggle(event)">
+                                                        <p class="pr-4 font-semibold">Fee</p>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
+                                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                        </svg>
+                                                    </button>
+                                                    <div class="absolute right-0 top-12 hidden dropdown-item">
+                                                        <div
+                                                            class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                                        </div>
+                                                        <div class="shadow  absolute top-3 -right-5 rounded">
+                                                            <div
+                                                                class="relative z-20 pt-3 w-44 bg-white rounded flex flex-col">
+                                                                <div class="text-sm pl-2 pb-2 flex-col flex">
+                                                                    <ul>
+                                                                        <li
+                                                                        class="text-petnetheadertext font-normal pl-6">SORT
+                                                                        BY</li>
+                                                                        <li
+                                                                            class="mt-4 mb-2 relative font-normal" onclick="orderBy('fee','asc')">
+                                                                            <input id="radio-sort-fee-asc" type="radio" value="asc" class="hidden list-custom-input">
+                                                                            <label for="radio-asc"
+                                                                                class="flex w-full items-center cursor-pointer text-md">
+                                                                                <span
+                                                                                    class="w-4 h-4 flex items-center inline-block mr-2 text-lg flex-no-shrink">
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                        class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                                                                        stroke="currentColor">
+                                                                                        <path stroke-linecap="round"
+                                                                                            stroke-linejoin="round" stroke-width="2"
+                                                                                            d="M5 13l4 4L19 7" />
+                                                                                    </svg>
+                                                                                </span>
+                                                                                Highest to Lowest
+                                                                            </label>
+                                                                        </li>
+                                                                        <li class="font-normal" onclick="orderBy('fee','desc')">
+                                                                            <input id="radio-sort-fee-desc" type="radio" value="desc" class="hidden list-custom-input">
+                                                                            <label for="radio-asc"
+                                                                                class="flex w-full items-center cursor-pointer text-md">
+                                                                                <span
+                                                                                    class="w-4 h-4 flex items-center inline-block mr-2 text-lg flex-no-shrink">
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                        class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                                                                        stroke="currentColor">
+                                                                                        <path stroke-linecap="round"
+                                                                                            stroke-linejoin="round" stroke-width="2"
+                                                                                            d="M5 13l4 4L19 7" />
+                                                                                    </svg>
+                                                                                </span>
+                                                                                Lowest to Highest
+                                                                            </label>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </th>
+                                            <th class="px-6 py-3 text-left">
+                                                <div class="relative dropdown p-2 appearance-none">
+
+                                                    <button
+                                                        class="dropdown-toggle flex items-center w-full justify-between"
+                                                        onclick="dropdownToggle(event)">
+                                                        <p class="pr-4 font-semibold">Commission</p>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
+                                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                        </svg>
+                                                    </button>
+                                                    <div class="absolute right-0 top-12 hidden dropdown-item">
+                                                        <div
+                                                            class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                                        </div>
+                                                        <div class="shadow  absolute top-3 -right-5 rounded">
+                                                            <div
+                                                                class="relative z-20 pt-3 w-44 bg-white rounded flex flex-col">
+                                                                <div class="text-sm pl-2 pb-2 flex-col flex">
+                                                                    <ul>
+                                                                        <li href=""
+                                                                        class="text-petnetheadertext font-normal pl-6">SORT
+                                                                        BY</li>
+                                                                        <li
+                                                                            class="mt-4 mb-2 relative font-normal" onclick="orderBy('commission','asc')">
+                                                                            <input id="radio-sort-commission-asc" type="radio" value="asc" class="hidden list-custom-input">
+                                                                            <label for="radio-asc"
+                                                                                class="flex w-full items-center cursor-pointer text-md">
+                                                                                <span
+                                                                                    class="w-4 h-4 flex items-center inline-block mr-2 text-lg flex-no-shrink">
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                        class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                                                                        stroke="currentColor">
+                                                                                        <path stroke-linecap="round"
+                                                                                            stroke-linejoin="round" stroke-width="2"
+                                                                                            d="M5 13l4 4L19 7" />
+                                                                                    </svg>
+                                                                                </span>
+                                                                                Highest to Lowest
+                                                                            </label>
+                                                                        </li>
+                                                                        <li class="font-normal" onclick="orderBy('commission','desc')">
+                                                                            <input id="radio-sort-commission-desc" type="radio" value="desc" class="hidden list-custom-input">
+                                                                            <label for="radio-asc"
+                                                                                class="flex w-full items-center cursor-pointer text-md">
+                                                                                <span
+                                                                                    class="w-4 h-4 flex items-center inline-block mr-2 text-lg flex-no-shrink">
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                        class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                                                                        stroke="currentColor">
+                                                                                        <path stroke-linecap="round"
+                                                                                            stroke-linejoin="round" stroke-width="2"
+                                                                                            d="M5 13l4 4L19 7" />
+                                                                                    </svg>
+                                                                                </span>
+                                                                                Lowest to Highest
+                                                                            </label>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </th>
+                                            <th class="px-6 py-3 text-left">
+                                                <div class="relative dropdown p-2 appearance-none">
+
+                                                    <button
+                                                        class="dropdown-toggle flex items-center w-full justify-between"
+                                                        onclick="dropdownToggle(event)">
+                                                        <p class="pr-4 font-semibold">Transaction Date</p>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
+                                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                        </svg>
+                                                    </button>
+                                                    <div class="absolute right-0 top-12 hidden dropdown-item">
+                                                        <div
+                                                            class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                                        </div>
+                                                        <div class="shadow  absolute top-3 -right-5 rounded">
+                                                            <div
+                                                                class="relative z-20 pt-3 w-40 bg-white rounded flex flex-col">
+                                                                <div class="text-sm pl-2 pb-2 flex-col flex">
+                                                                    <ul>
+                                                                        <li
+                                                                            class="text-petnetheadertext font-normal pl-6">SORT
+                                                                            BY</li>
+                                                                        <li
+                                                                            class="mt-4 mb-2 relative font-normal"  onclick="orderBy('dateprocessed','desc')">
+                                                                            <input id="radio-sort-dateprocessed-desc" type="radio" value="desc" class="hidden list-custom-input">
+                                                                            <label for="radio-desc"
+                                                                                class="flex w-full items-center cursor-pointer text-md">
+                                                                                <span
+                                                                                    class="w-4 h-4 flex items-center inline-block mr-2 text-lg flex-no-shrink">
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                        class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                                                                        stroke="currentColor">
+                                                                                        <path stroke-linecap="round"
+                                                                                            stroke-linejoin="round" stroke-width="2"
+                                                                                            d="M5 13l4 4L19 7" />
+                                                                                    </svg>
+                                                                                </span>
+                                                                                Oldest to Newest
+                                                                            </label>
+                                                                        </li>
+                                                                        <li class="font-normal" onclick="orderBy('dateprocessed','asc')">
+                                                                            <input id="radio-sort-dateprocessed-asc" type="radio" value="asc" class="hidden list-custom-input" >
+                                                                            <label for="radio-asc"
+                                                                                class="flex w-full items-center cursor-pointer text-md">
+                                                                                <span
+                                                                                    class="w-4 h-4 flex items-center inline-block mr-2 text-lg flex-no-shrink">
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                        class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                                                                        stroke="currentColor">
+                                                                                        <path stroke-linecap="round"
+                                                                                            stroke-linejoin="round" stroke-width="2"
+                                                                                            d="M5 13l4 4L19 7" />
+                                                                                    </svg>
+                                                                                </span>
+                                                                                Newest to Oldest
+                                                                            </label>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </th>
+                                            <th class="px-6 py-3 text-left">
+                                              <p class="pr-4 font-semibold">Partner</p>
+                                            </th>
+                                            {{if .PresetPermission.transaction.read}}
+                                            <th class="px-6 py-3 text-left">
+                                                Actions
+                                            </th>
+                                            {{end}}
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200 ">
+                                        {{range .MiTransacts}}
+                                        <tr>
+                                            <td class="pl-8 py-4 whitespace-nowrap text-petnetheadertext text-xl">
+                                                {{.TraceNumber}}
+                                            </td>
+                                            <td class="px-2 py-4 whitespace-nowrap ">
+                                                <div class="h-3 w-3 rounded-full bg-petnetgreen inline-block">
+                                                </div>
+                                                <p class="text-xl pl-2 inline-block">{{.TotAmt.Currency}}</p>
+																<p class="font-semibold text-xl pl-2 inline-block">{{minorToAmount .TotAmt.Amount .TotAmt.Currency}}</p>
+                                            </td>
+                                            <td class="px-8 py-4 whitespace-nowrap ">
+                                                <p class="text-xl inline-block">PHP</p>
+                                                <p class="text-xl font-semibold inline-block pl-2">0.00</p>
+                                            </td>
+                                            <td class="px-8 py-4 whitespace-nowrap ">
+                                                <p class="text-xl inline-block">PHP</p>
+                                                <p class="text-xl font-semibold inline-block pl-2">0.00</p>
+                                            </td>
+                                            <td class="px-8 py-4 whitespace-nowrap text-xl">
+                                                {{formatTimestamp .TrnDate "January 02, 2006"}}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                               RuralNet
+                                            </td>
+                                            <td class="py-4 whitespace-nowrap text-left text-xl font-medium">
+                                                <a href="#" class="text-petnetlightblue pl-4">Details</a>
+                                            </td>
+                                        </tr>
+                                        {{end}}
+                                    </tbody>
+                                </table>
+                                <div class="text-gray-500 text-center bg-white py-8 flex justify-between px-20">
+                                    <div></div>
+                                    <p class="flex items-center pl-32"> Showing {{len .MiTransacts}} out of
+                                        {{.PaginationData.Total}} transactions</p>
+                                    <div>
+                                        <div class="flex flex-wrap justify-between items-center">
+                                            <div>
+                                                {{if ne .PaginationData.Total 0}}
+                                                <a {{if .PaginationData.Prev}}href="{{.PaginationData.Prev.URL}}" {{end}}>
+                                                    <button {{if eq .PaginationData.CurrentPage 1}} disabled {{end}} {{if .PaginationData.Prev}}
+                                                        class="relative inline-flex items-center px-4 py-2 rounded border border-gray-400 bg-white text-sm font-medium text-petnetblue hover:bg-gray-50"
+                                                        {{else}}
+                                                        class="relative inline-flex items-center px-4 py-2 rounded border border-gray-400 text-sm font-medium text-gray-500 bg-gray-50"
+                                                        {{end}}>
+                                                        Previous
+                                                    </button>
+                                                </a>
+                                                {{end}}
+                                                <div class="inline-block px-6">
+                                                    {{range .PaginationData.Pages}}
+                                                    {{if .Order}}
+                                                    <a href="{{.URL}}"
+                                                        class="{{if .Current}}font-bold bg-petnetblue text-white {{else}}text-petnetblue{{end}} z-10 b relative inline-flex items-center px-4 py-2 text-sm font-medium hover:bg-petnetblue hover:text-white">{{.Order}}</a>
+                                                    {{else}}
+                                                    <a href="" class="inline-block mr-4 hover:text-blue-dark-5">...</a>
+                                                    {{end}}
+                                                    {{end}}
+                                                </div>
+                                                {{if ne .PaginationData.Total 0}}
+                                                <a {{if .PaginationData.Next}}href="{{.PaginationData.Next.URL}}" {{end}}>
+                                                    <button {{if eq .PaginationData.CurrentPage (countPaginate .PaginationData.Total .PaginationData.PerPage)}}
+                                                    disabled {{end}} {{if .PaginationData.Next}}
+                                                        class="relative inline-flex items-center px-4 py-2 rounded border border-gray-400  bg-white text-sm font-medium text-petnetblue hover:bg-gray-50"
+                                                        {{else}}
+                                                        class="relative inline-flex items-center px-4 py-2 rounded border border-gray-400  bg-white text-sm font-medium text-gray-500 bg-gray-50"
+                                                        {{end}}>Next
+                                                    </button>
+                                                </a>
+                                                {{end}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+    const params = new URLSearchParams(window.location.search)
+
+    function dropdownToggle(event) {
+        let targetItem = event.target;
+        while (!targetItem.classList.contains('dropdown-toggle')) {
+            targetItem = targetItem.parentElement;
+        }
+        targetItem = targetItem.nextElementSibling;
+
+        if (targetItem.classList.contains('hidden')) {
+            targetItem.classList.remove("hidden");
+        } else {
+            targetItem.classList.add("hidden");
+        }
+        let x = document.getElementsByClassName("dropdown-item");
+        for (let i = 0; i < x.length; i++) {
+            if (x[i] != targetItem) {
+                x[i].classList.add("hidden")
+            }
+        }
+    }
+
+    function search() {
+        let searchTerm = document.getElementById("search").value;
+        if (params.has("search-term")) {
+            params.delete("search-term");
+        }
+        params.append("search-term", searchTerm);
+        if (params.has("page")) {
+            params.delete("page");
+        }
+        window.location.search = params.toString();
+    }
+
+    function miamountFilter(type) {
+        let miamount = [];
+        if (params.has("miamount")) {
+            miamount = params.get("miamount").split(",");
+        }
+
+        if (type === "success") {
+            let success = document.getElementById("miamount-success");
+            if (success.checked === false) {
+                miamount = miamount.filter(e => e !== 'success')
+            } else {
+                miamount.push("success")
+            }
+        }
+
+        if (type === "failed") {
+            let failed = document.getElementById("miamount-failed");
+
+            if (failed.checked === false) {
+                miamount = miamount.filter(e => e !== 'failed')
+            } else {
+                miamount.push("failed")
+            }
+        }
+
+        if (params.has("page")) {
+            params.delete("page")
+        }
+
+        if (miamount.length > 0) {
+            miamount = miamount.filter(function (item, pos) {
+                return miamount.indexOf(item) == pos;
+            })
+            params.set("miamount", miamount.join(","))
+        } else {
+            params.delete("miamount")
+        }
+        window.location.search = params.toString();
+    }
+
+    function servicesFilter(type) {
+        let services = [];
+        if (params.has("services")) {
+            services = params.get("services").split(",");
+        }
+        let typeElm = document.getElementById("services-transaction-" + type);
+        if (typeElm.checked === false) {
+            services.push(type);
+        }else if (typeElm.checked === true) {
+            let ind = services.indexOf(type);
+            if(ind !== -1){
+                services.splice(ind, 1);
+            }
+        }
+        if (params.has("page")) {
+            params.delete("page");
+        }
+        if (services.length > 0) {
+            services = services.filter(function (item, pos) {
+                return services.indexOf(item) == pos;
+            })
+            params.set("services", services.join(","));
+        } else {
+            params.delete("services");
+        }
+        window.location.search = params.toString();
+    }
+
+    function TypesFilter(type) {
+        let types = [];
+        if (params.has("types")) {
+            types = params.get("types").split(",");
+        }
+        let typeElm = document.getElementById("transaction-type-" + type);
+        if (typeElm.checked === false) {
+            types.push(type);
+        }else if (typeElm.checked === true) {
+            let ind = types.indexOf(type);
+            if(ind !== -1){
+                types.splice(ind, 1);
+            }
+        }
+        if (params.has("page")) {
+            params.delete("page");
+        }
+        if (types.length > 0) {
+            types = types.filter(function (item, pos) {
+                return types.indexOf(item) == pos;
+            })
+            params.set("types", types.join(","));
+        } else {
+            params.delete("types");
+        }
+        window.location.search = params.toString();
+    }
+
+    function orderBy(cloumn, type) {
+        params.set("sort", type);
+        params.set("sort_column", cloumn);
+
+        if (params.has("page")) {
+            params.delete("page")
+        }
+
+        window.location.search = params.toString();
+    }
+
+    window.onload = function () {
+        if (params.has("sort_column")) {
+            let column = params.get("sort_column");
+            console.log('radio-sort-' +column +"-"+ params.get("sort"));
+            if (column === "date") {
+                document.getElementById('radio-sort-' + params.get("sort")).checked = true
+            } else if (column === "remitted" || column === "miamount" || column === "fee" || column === "dateprocessed" || column === "commission") {
+                document.getElementById('radio-sort-' +column +"-"+ params.get("sort")).checked = true
+            }
+        }
+        if (params.has("miamount")) {
+            miamount = params.get("miamount").split(",");
+            document.getElementById('miamount-success').checked = false;
+            document.getElementById('miamount-failed').checked = false;
+            miamount.forEach(function(item) {
+                document.getElementById('miamount-'+item).checked = true
+            });
+        }
+        if (params.has("services")) {
+            services = params.get("services").split(",");
+            services.forEach(function (item) {
+                document.getElementById('services-transaction-' + item).checked = false;
+            });
+        }
+        if (params.has("types")) {
+            types = params.get("types").split(",");
+            types.forEach(function (item) {
+                document.getElementById('transaction-type-' + item).checked = false;
+            });
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let menus = document.querySelectorAll(".mailsend");
+        let searchbtn = document.querySelectorAll(".searchbtn");
+        let form = document.getElementById("sendform")
+        for (let i = 0; i < menus.length; i++) {
+            menus[i].addEventListener("click", function (e) {
+                menus[i].disabled = true;
+            });
+        }
+        for (let i = 0; i < searchbtn.length; i++) {
+            searchbtn[i].addEventListener("click", function (e) {
+                e.preventDefault();
+                search();
+                searchbtn[i].disabled = true;
+            });
+        }
+    });
+</script>
+</body>
+</html>

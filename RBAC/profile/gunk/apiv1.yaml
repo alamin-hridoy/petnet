@@ -1,0 +1,148 @@
+openapi: 3.0.0
+info:
+  title: RBAC API
+  version: 0.0.1
+paths:
+  /v1/user:
+    post:
+      summary: Get users associated with the org.
+      operationId: UserService_ListUsers
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        org_id:
+                          type: string
+                        org_name:
+                          type: string
+                        first_name:
+                          type: string
+                        last_name:
+                          type: string
+                        email:
+                          type: string
+                        invite_status:
+                          type: string
+                        country_code:
+                          type: string
+                        phone:
+                          type: string
+                        created:
+                          type: string
+                          format: date-time
+                        updated:
+                          type: string
+                          format: date-time
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                org_id:
+                  type: string
+        required: true
+      tags:
+        - UserService
+  "/v1/user/{id}":
+    get:
+      summary: Get user by ID.
+      operationId: UserService_GetUser
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      org_id:
+                        type: string
+                      org_name:
+                        type: string
+                      first_name:
+                        type: string
+                      last_name:
+                        type: string
+                      email:
+                        type: string
+                      invite_status:
+                        type: string
+                      country_code:
+                        type: string
+                      phone:
+                        type: string
+                      created:
+                        type: string
+                        format: date-time
+                      updated:
+                        type: string
+                        format: date-time
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - UserService

@@ -1,0 +1,22 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: e2e-cleanup
+  namespace: cebuana-corporate
+spec:
+  schedule: "0 0 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: e2e-cleanup 
+            image: docker.io/bitnami/postgresql:11.7.0-debian-10-r9 
+            imagePullPolicy: IfNotPresent
+            envFrom:
+            - secretRef:
+                name: cloudsql-secret
+            - configMapRef:
+                name: cebcorp-api
+            command: ["/deploy/cleanup/cleanup.sh"]
+          restartPolicy: OnFailure

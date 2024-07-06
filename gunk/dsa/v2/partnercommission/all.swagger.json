@@ -1,0 +1,1098 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/dsa/v2/partnercommission/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "PartnerCommissionService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v2/partner-commission": {
+      "get": {
+        "summary": "List Partner Commission.",
+        "description": "List all created Partner Commission.",
+        "operationId": "PartnerCommissionService_GetPartnerCommissionsList",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/PartnerCommissionServiceGetPartnerCommissionsListResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "partner",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "bound_type",
+            "description": "The bound type is two type of transaction one is inbound, other one is outbound.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EMPTYBOUNDTYPE",
+              "INBOUND",
+              "OUTBOUND",
+              "OTHERS"
+            ],
+            "default": "EMPTYBOUNDTYPE"
+          },
+          {
+            "name": "remit_type",
+            "description": "The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EMPTYSERVICETYPE",
+              "REMITTANCE",
+              "BILLSPAYMENT",
+              "CASHINCASHOUT",
+              "MICROINSURANCE"
+            ],
+            "default": "EMPTYSERVICETYPE"
+          },
+          {
+            "name": "transaction_type",
+            "description": "There is transaction type one is digital, other one is otc.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EMPTYTRANSACTIONTYPE",
+              "DIGITAL",
+              "OTC"
+            ],
+            "default": "EMPTYTRANSACTIONTYPE"
+          },
+          {
+            "name": "tier_type",
+            "description": "There is tier type is fixed, percentage, fixed_tier, percentage_tier.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EMPTYTIERTYPE",
+              "FIXED",
+              "PERCENTAGE",
+              "TIERAMOUNT",
+              "TIERPERCENTAGE"
+            ],
+            "default": "EMPTYTIERTYPE"
+          },
+          {
+            "name": "amount",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "created_by",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "updated_by",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "created",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "updated",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "Partner Commission"
+        ]
+      },
+      "delete": {
+        "summary": "DELETE",
+        "description": "Delete Partner Commission",
+        "operationId": "PartnerCommissionService_DeletePartnerCommission",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/PartnerCommissionServicePartnerCommission"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "partner",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "bound_type",
+            "description": "The bound type is two type of transaction one is inbound, other one is outbound.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EMPTYBOUNDTYPE",
+              "INBOUND",
+              "OUTBOUND",
+              "OTHERS"
+            ],
+            "default": "EMPTYBOUNDTYPE"
+          },
+          {
+            "name": "remit_type",
+            "description": "The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EMPTYSERVICETYPE",
+              "REMITTANCE",
+              "BILLSPAYMENT",
+              "CASHINCASHOUT",
+              "MICROINSURANCE"
+            ],
+            "default": "EMPTYSERVICETYPE"
+          },
+          {
+            "name": "transaction_type",
+            "description": "There is transaction type one is digital, other one is otc.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EMPTYTRANSACTIONTYPE",
+              "DIGITAL",
+              "OTC"
+            ],
+            "default": "EMPTYTRANSACTIONTYPE"
+          },
+          {
+            "name": "tier_type",
+            "description": "There is tier type is fixed, percentage, fixed_tier, percentage_tier.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EMPTYTIERTYPE",
+              "FIXED",
+              "PERCENTAGE",
+              "TIERAMOUNT",
+              "TIERPERCENTAGE"
+            ],
+            "default": "EMPTYTIERTYPE"
+          },
+          {
+            "name": "amount",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "created_by",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "updated_by",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "created",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "updated",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "Partner Commission"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      },
+      "post": {
+        "summary": "Partner Commission.",
+        "description": "Create Partner Commission.",
+        "operationId": "PartnerCommissionService_CreatePartnerCommission",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/PartnerCommissionServiceCreatePartnerCommissionResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/partnercommissionCreatePartnerCommissionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Partner Commission"
+        ]
+      },
+      "put": {
+        "summary": "Partner Commission.",
+        "description": "Update Partner Commission.",
+        "operationId": "PartnerCommissionService_UpdatePartnerCommission",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/PartnerCommissionServicePartnerCommissionResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/partnercommissionUpdatePartnerCommissionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Partner Commission"
+        ]
+      }
+    },
+    "/v2/partner-commission-tier": {
+      "get": {
+        "summary": "List Partner Commission tier.",
+        "description": "List all created Partner Commission tier.",
+        "operationId": "PartnerCommissionService_GetPartnerCommissionsTierList",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/PartnerCommissionServiceGetPartnerCommissionsTierListResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "partner_commission_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "min_value",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "max_value",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "amount",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Partner Commission"
+        ]
+      },
+      "delete": {
+        "summary": "DELETE",
+        "description": "Delete Partner Commission Tier",
+        "operationId": "PartnerCommissionService_DeletePartnerCommissionTier",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/PartnerCommissionServicePartnerCommission"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "partner_commission_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "min_value",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "max_value",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "amount",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Partner Commission"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      },
+      "post": {
+        "summary": "Partner Commission Tier.",
+        "description": "Create Partner Commission tier.",
+        "operationId": "PartnerCommissionService_CreatePartnerCommissionTier",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/PartnerCommissionServiceUpdatePartnerCommissionTierResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/partnercommissionCreatePartnerCommissionTierRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Partner Commission"
+        ]
+      },
+      "put": {
+        "summary": "Partner Commission Tier.",
+        "description": "update Partner Commission tier.",
+        "operationId": "PartnerCommissionService_UpdatePartnerCommissionTier",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/PartnerCommissionServiceUpdatePartnerCommissionTierResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/partnercommissionUpdatePartnerCommissionTierRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Partner Commission"
+        ]
+      }
+    },
+    "/v2/partner-commission-tier-by-id": {
+      "delete": {
+        "summary": "DELETE",
+        "description": "Delete Partner Commission Tier",
+        "operationId": "PartnerCommissionService_DeletePartnerCommissionTierById",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/PartnerCommissionServicePartnerCommission"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "partner_commission_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "min_value",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "max_value",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "amount",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Partner Commission"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "partnercommissionBoundType": {
+      "type": "string",
+      "enum": [
+        "EMPTYBOUNDTYPE",
+        "INBOUND",
+        "OUTBOUND",
+        "OTHERS"
+      ],
+      "default": "EMPTYBOUNDTYPE"
+    },
+    "partnercommissionCreatePartnerCommissionRequest": {
+      "type": "object",
+      "properties": {
+        "partner": {
+          "type": "string"
+        },
+        "bound_type": {
+          "$ref": "#/definitions/partnercommissionBoundType",
+          "title": "The bound type is two type of transaction one is inbound, other one is outbound"
+        },
+        "remit_type": {
+          "$ref": "#/definitions/partnercommissionRemitType",
+          "title": "The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT"
+        },
+        "transaction_type": {
+          "$ref": "#/definitions/partnercommissionTransactionType",
+          "title": "There is transaction type one is digital, other one is otc"
+        },
+        "tier_type": {
+          "$ref": "#/definitions/partnercommissionTierType",
+          "title": "There is tier type is fixed, percentage, fixed_tier, percentage_tier"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "start_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "created_by": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "partner",
+        "bound_type",
+        "remit_type",
+        "transaction_type",
+        "tier_type"
+      ]
+    },
+    "partnercommissionCreatePartnerCommissionResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "bound_type": {
+          "$ref": "#/definitions/partnercommissionBoundType",
+          "title": "The bound type is two type of transaction one is inbound, other one is outbound"
+        },
+        "remit_type": {
+          "$ref": "#/definitions/partnercommissionRemitType",
+          "title": "The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT"
+        },
+        "transaction_type": {
+          "$ref": "#/definitions/partnercommissionTransactionType",
+          "title": "There is transaction type one is digital, other one is otc"
+        },
+        "tier_type": {
+          "$ref": "#/definitions/partnercommissionTierType",
+          "title": "There is tier type is fixed, percentage, fixed_tier, percentage_tier"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "start_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "created_by": {
+          "type": "string"
+        },
+        "updated_by": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "partnercommissionCreatePartnerCommissionTierRequest": {
+      "type": "object",
+      "properties": {
+        "commission_tier": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/partnercommissionPartnerCommissionTier"
+          }
+        }
+      }
+    },
+    "partnercommissionCreatePartnerCommissionTierResponse": {
+      "type": "object",
+      "properties": {
+        "commission_tier": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/partnercommissionPartnerCommissionTier"
+          }
+        }
+      }
+    },
+    "partnercommissionGetPartnerCommissionsListResponse": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/partnercommissionPartnerCommission"
+          }
+        }
+      }
+    },
+    "partnercommissionGetPartnerCommissionsTierListResponse": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/partnercommissionPartnerCommissionTier"
+          }
+        }
+      }
+    },
+    "partnercommissionPartnerCommission": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "bound_type": {
+          "$ref": "#/definitions/partnercommissionBoundType",
+          "title": "The bound type is two type of transaction one is inbound, other one is outbound"
+        },
+        "remit_type": {
+          "$ref": "#/definitions/partnercommissionRemitType",
+          "title": "The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT"
+        },
+        "transaction_type": {
+          "$ref": "#/definitions/partnercommissionTransactionType",
+          "title": "There is transaction type one is digital, other one is otc"
+        },
+        "tier_type": {
+          "$ref": "#/definitions/partnercommissionTierType",
+          "title": "There is tier type is fixed, percentage, fixed_tier, percentage_tier"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "start_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "created_by": {
+          "type": "string"
+        },
+        "updated_by": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "partnercommissionPartnerCommissionTier": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "partner_commission_id": {
+          "type": "string"
+        },
+        "min_value": {
+          "type": "string"
+        },
+        "max_value": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "partner_commission_id",
+        "min_value",
+        "max_value",
+        "amount"
+      ]
+    },
+    "partnercommissionRemitType": {
+      "type": "string",
+      "enum": [
+        "EMPTYSERVICETYPE",
+        "REMITTANCE",
+        "BILLSPAYMENT",
+        "CASHINCASHOUT",
+        "MICROINSURANCE"
+      ],
+      "default": "EMPTYSERVICETYPE"
+    },
+    "partnercommissionTierType": {
+      "type": "string",
+      "enum": [
+        "EMPTYTIERTYPE",
+        "FIXED",
+        "PERCENTAGE",
+        "TIERAMOUNT",
+        "TIERPERCENTAGE"
+      ],
+      "default": "EMPTYTIERTYPE"
+    },
+    "partnercommissionTransactionType": {
+      "type": "string",
+      "enum": [
+        "EMPTYTRANSACTIONTYPE",
+        "DIGITAL",
+        "OTC"
+      ],
+      "default": "EMPTYTRANSACTIONTYPE"
+    },
+    "partnercommissionUpdatePartnerCommissionRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "bound_type": {
+          "$ref": "#/definitions/partnercommissionBoundType",
+          "title": "The bound type is two type of transaction one is inbound, other one is outbound"
+        },
+        "remit_type": {
+          "$ref": "#/definitions/partnercommissionRemitType",
+          "title": "The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT"
+        },
+        "transaction_type": {
+          "$ref": "#/definitions/partnercommissionTransactionType",
+          "title": "There is transaction type one is digital, other one is otc"
+        },
+        "tier_type": {
+          "$ref": "#/definitions/partnercommissionTierType",
+          "title": "There is tier type is fixed, percentage, fixed_tier, percentage_tier"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "start_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "created_by": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "partner",
+        "transaction_type",
+        "remit_type",
+        "bound_type"
+      ]
+    },
+    "partnercommissionUpdatePartnerCommissionResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "bound_type": {
+          "$ref": "#/definitions/partnercommissionBoundType",
+          "title": "The bound type is two type of transaction one is inbound, other one is outbound"
+        },
+        "remit_type": {
+          "$ref": "#/definitions/partnercommissionRemitType",
+          "title": "The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT"
+        },
+        "transaction_type": {
+          "$ref": "#/definitions/partnercommissionTransactionType",
+          "title": "There is transaction type one is digital, other one is otc"
+        },
+        "tier_type": {
+          "$ref": "#/definitions/partnercommissionTierType",
+          "title": "There is tier type is fixed, percentage, fixed_tier, percentage_tier"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "start_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "created_by": {
+          "type": "string"
+        },
+        "updated_by": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "partnercommissionUpdatePartnerCommissionTierRequest": {
+      "type": "object",
+      "properties": {
+        "commission_tier": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/partnercommissionPartnerCommissionTier"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "partner_commission_id",
+        "min_value",
+        "max_value",
+        "amount"
+      ]
+    },
+    "partnercommissionUpdatePartnerCommissionTierResponse": {
+      "type": "object",
+      "properties": {
+        "commission_tier": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/partnercommissionPartnerCommissionTier"
+          }
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

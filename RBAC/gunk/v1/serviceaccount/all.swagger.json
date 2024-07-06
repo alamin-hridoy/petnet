@@ -1,0 +1,336 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/rbac/gunk/v1/serviceaccount/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "SvcAccountService"
+    },
+    {
+      "name": "ValidationService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/serviceaccount": {
+      "get": {
+        "summary": "List all service accounts.",
+        "description": "List all created service accounts.",
+        "operationId": "SvcAccountService_ListAccounts",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/serviceaccountListAccountsResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Service Account"
+        ]
+      },
+      "post": {
+        "summary": "Create service account",
+        "description": "Create a new service account.",
+        "operationId": "SvcAccountService_CreateAccount",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/serviceaccountCreateAccountResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.  Platform must be activated to create production service accounts.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/serviceaccountCreateAccountRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Service Account"
+        ]
+      }
+    },
+    "/v1/serviceaccount/{client_id}": {
+      "get": {
+        "summary": "Validate service account",
+        "description": "Validate service account.",
+        "operationId": "ValidationService_ValidateAccount",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/serviceaccountValidateAccountResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Returned when service account is not found.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "client_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "operation",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "resource",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Service Account"
+        ]
+      }
+    },
+    "/v1/serviceaccount/{name}": {
+      "delete": {
+        "summary": "Disable service account.",
+        "description": "Permanently Disable service account.",
+        "operationId": "SvcAccountService_DisableAccount",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/serviceaccountDisableAccountResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Returned when service account is not found.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Service Account"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "serviceaccountAuthType": {
+      "type": "string",
+      "enum": [
+        "OAuth2",
+        "APIKey"
+      ],
+      "default": "OAuth2"
+    },
+    "serviceaccountCreateAccountRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "Name is the friendly name of the service account to be created"
+        },
+        "env": {
+          "type": "string",
+          "description": "Environment is the valid environment for the key."
+        },
+        "role": {
+          "type": "string",
+          "description": "Role is the assigned permissions role."
+        },
+        "auth_type": {
+          "$ref": "#/definitions/serviceaccountAuthType",
+          "description": "AuthType is the authentication method to be used."
+        }
+      }
+    },
+    "serviceaccountCreateAccountResponse": {
+      "type": "object",
+      "properties": {
+        "client_id": {
+          "type": "string",
+          "description": "OAuth2 Client ID."
+        },
+        "secret": {
+          "type": "string",
+          "description": "Secret will contain the secret value.\nClient Secret for OAuth2 service accounts.\nAPI Key for APIKey service accounts."
+        }
+      }
+    },
+    "serviceaccountDisableAccountResponse": {
+      "type": "object"
+    },
+    "serviceaccountListAccountsResponse": {
+      "type": "object",
+      "properties": {
+        "accounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/serviceaccountServiceAccount"
+          }
+        }
+      }
+    },
+    "serviceaccountServiceAccount": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "env": {
+          "type": "string"
+        },
+        "client_id": {
+          "type": "string"
+        },
+        "creator": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "disabled": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "serviceaccountValidateAccountResponse": {
+      "type": "object",
+      "properties": {
+        "environment": {
+          "type": "string"
+        },
+        "client_name": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

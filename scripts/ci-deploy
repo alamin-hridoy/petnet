@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+
+set -ex
+
+ENV=$1
+
+if [[ -z "$ENV" ]]; then
+	echo "Unknown environment '$ENV'" >&2
+	exit 1
+fi
+
+case "$ENV" in
+staging)
+	GCP_PROJECT_ID=petnet-brankas-prod-1
+	GKE_CLUSTER=brankas-production
+	services=(api cms idp deploy/rbac/usermgm docs profile dsa-sim)
+	;;
+uat)
+ 	GCP_PROJECT_ID=petnet-brankas-prod-1
+ 	GKE_CLUSTER=brankas-production
+	services=(api cms idp deploy/rbac/usermgm docs profile dsa-sim)
+ 	;;
+production)
+ 	GCP_PROJECT_ID=petnet-brankas-prod-2
+ 	GKE_CLUSTER=brankas-production
+	services=(api cms idp deploy/rbac/usermgm docs profile)
+ 	;;
+*)
+	echo "Unknown environment '$1'" >&2
+	exit 1
+	;;
+esac
+
+API_TAG=$(./scripts/docker-image-tag api)
+CMS_TAG=$(./scripts/docker-image-tag cms)
+IDP_TAG=$(./scripts/docker-image-tag idp)
+DOCS_TAG=$(./scripts/docker-image-tag docs)
+PROFILE_TAG=$(./scripts/docker-image-tag profile)
+DSASIM_TAG=$(./scripts/docker-image-tag dsa-sim)
+USERMGM_TAG=$(./scripts/docker-image-tag deploy/rbac/usermgm)
+
+# we need GOOGLE_APPLICATION_CREDENTIALS on CI
+if [[ -z $GOOGLE_APPLICATION_CREDENTIALS ]]; then
+	echo '$GOOGLE_APPLICATION_CREDENTIALS missing' >&2
+	exit 1
+fi
+
+if [[ -n $DRONE_REPO_NAME ]]; then
+	# set up auth for gcloud and kubectl on CI
+	gcloud auth activate-service-account --key-file "$GOOGLE_APPLICATION_CREDENTIALS" || exit 1
+	gcloud config set project $GCP_PROJECT_ID || exit 1
+	gcloud container clusters get-credentials $GKE_CLUSTER --zone asia-southeast1 || exit 1
+	# log all version information on CI
+	kustomize version
+	kubectl version
+fi
+
+TAGGER="$(pwd)"/scripts/docker-image-tag
+export VERSION=$(cat .version)
+
+for d in "${services[@]}"; do
+	pushd "$d"
+	IMAGE=$(cat image-name)
+	TAG=$(${TAGGER} .)
+	pushd deploy/overlays/${ENV}
+	kustomize edit set image ${IMAGE}=${TAG}
+	# the load_restrictor flag allows kustomize to reference files from outside the overlays directory
+	# this is particularly used for referencing .envs/*.txt files
+	kustomize build --load_restrictor=none | kubectl apply -f -
+
+	popd
+	popd
+done

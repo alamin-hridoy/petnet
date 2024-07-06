@@ -1,0 +1,25 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: drp-api
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/protocol: h2c
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.middlewares: ingress-https@kubernetescrd
+spec:
+  tls:
+  - hosts:
+    - "dev.OVERLAY_ME"
+    secretName: cert-drp-api
+  rules:
+  - host: dev.OVERLAY_ME
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: drp-api
+          servicePort: 80
+
+...

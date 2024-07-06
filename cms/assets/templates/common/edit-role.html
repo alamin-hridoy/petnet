@@ -1,0 +1,510 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>Edit Role</title>
+</head>
+
+<body class="font-sans">
+    <div>
+        <div class="flex">
+            <!-- sidebar-left-start -->
+            <div class="bg-petnetblue w-32 min-h-screen">
+              <div class="min-h-screen">
+                  <img src="{{ assetHash "/images/DRP-Vertical.svg" }}" class="mx-auto my-5">
+                  <!-- Sidebar menu start -->
+                  {{ template "admin-sidenav-menu.html" dict "Type" "manage-users" "Data" .}}
+                  <!-- Sidebar menu end -->
+              </div>
+            </div>
+            <!-- sidebarleft-end -->
+            <div class="min-h-screen w-full flex bg-petnetgray">
+                <div class="w-full">
+                    <!-- top-header-start -->
+                    <div class="px-6 lg:px-32 pt-10 pb-7 relative z-10 bg-white shadow-md">
+                        <ul class="flex justify-end items-center space-x-4 mb-16">
+                            <li class="mr-auto">
+                                <a href="/dashboard/manage-role" class="inline-flex text-petnetlightblue font-medium items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-4" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                                    </svg>
+                                    Back to Manage Roles
+                                </a>
+                            </li>
+                            <li>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                </svg>
+                            </li>
+                            <li>
+                             {{ template "top-head-profile.html" dict "UserInfo" .LoginUserInfo "CompanyName" "" .}}
+                            </li>
+                            <li>
+                                <div class="relative" id="topDropdownBox">
+                                    <a href="javascript:;" onclick="toggleTopButton('openTopDropdown')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </a>
+                                    <div class="absolute right-0 top-12 hidden" id="openTopDropdown">
+                                        <div
+                                            class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                        </div>
+                                        <div class="shadow-lg  absolute top-3 -right-5 rounded">
+                                            <div class="relative z-20 p-3 w-36 bg-white rounded space-y-2">
+                                              <a class="flex text-sm items-center" href="/profile">
+                                                <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                  <path fill-rule="evenodd" clip-rule="evenodd" d="M16 8C16 10.21 14.21 12 12 12C9.79 12 8 10.21 8 8C8 5.79 9.79 4 12 4C14.21 4 16 5.79 16 8ZM4 18C4 15.34 9.33 14 12 14C14.67 14 20 15.34 20 18V19C20 19.55 19.55 20 19 20H5C4.45 20 4 19.55 4 19V18Z" fill="#333333"/>
+                                                </svg>
+                                                Profile
+                                              </a>
+                                                <a href="/logout" class="flex text-sm">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2"
+                                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                                    </svg>
+                                                    Logout
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="mb-4">
+                            <h2 class="text-4xl text-petnetblue">Role Permissions</h2>
+                        </div>
+                    </div>
+                    {{if ne .ErrorMsg ""}}
+                    <!-- top-header-end -->
+                    <div role="alert" class="mt-5 justify-center flex">
+                        <!-- petnetpink text-white -->
+                        <div id="alert-show-error"
+                            class="p-3 bg-petnetpink text-gray bg-opacity-20 rounded-lg border border-petnetpink flex items-center">
+                            <span class="p-2 rounded-lg bg-petnetpink flex justify-center items-center mr-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white rounded-full"
+                                    viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                            <span>
+                                {{.ErrorMsg}}
+                            </span>
+                            <a href="javascript:;" class="mr-2 text-gray-400 inline-block w-3 ml-auto"
+                                id="alert-remove-error" onclick="hidealertMessage()">
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M11.25 0.757931C11.0943 0.601887 10.8829 0.514193 10.6625 0.514193C10.442 0.514193 10.2307 0.601887 10.075 0.757931L5.99998 4.8246L1.92498 0.749597C1.76928 0.593553 1.55791 0.505859 1.33748 0.505859C1.11704 0.505859 0.905668 0.593553 0.749976 0.749597C0.424976 1.0746 0.424976 1.5996 0.749976 1.9246L4.82498 5.9996L0.749976 10.0746C0.424976 10.3996 0.424976 10.9246 0.749976 11.2496C1.07498 11.5746 1.59998 11.5746 1.92498 11.2496L5.99998 7.1746L10.075 11.2496C10.4 11.5746 10.925 11.5746 11.25 11.2496C11.575 10.9246 11.575 10.3996 11.25 10.0746L7.17497 5.9996L11.25 1.9246C11.5666 1.60793 11.5666 1.0746 11.25 0.757931Z"
+                                        fill="#BCC3C8" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    {{end}}
+                    <!-- checkboxes 1st row -->
+                    <form action="/dashboard/manage-role/edit/{{.RoleID}}" method="POST">
+                      {{.CSRFField}}
+                      <input type="hidden" name="RoleID" value="{{.RoleID}}">
+                      <div class="flex flex-wrap mx-28 justify-around mt-8">
+                          <div class="h-80 w-64 bg-white rounded-md">
+                              <h1 class="text-petnetblue text-xl font-semibold pt-10 pl-8 pb-4 border-b-2">DSA Details</h1>
+                              <div class="mt-4 space-y-4 pl-8">
+                                  <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                          <input {{if ne .RolePresetPermission.dsaListAndDetails.read ""}} checked {{end}} type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="DSAListAndDetails" value="read">
+                                      </div>
+                                      <div class="ml-3">
+                                          <label class="text-black text-lg font-normal">Read</label>
+                                      </div>
+                                  </div>
+                                  <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                          <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="DSAListAndDetails" value="create" {{if ne .RolePresetPermission.dsaListAndDetails.create ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                          <label class="text-black text-lg font-normal">Create</label>
+                                      </div>
+                                  </div>
+                                  <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="DSAListAndDetails" value="update" {{if ne .RolePresetPermission.dsaListAndDetails.update ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Update</label>
+                                      </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="DSAListAndDetails" value="delete" {{if ne .RolePresetPermission.dsaListAndDetails.delete ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Delete</label>
+                                      </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="DSAListAndDetails" value="supervise" {{if ne .RolePresetPermission.dsaListAndDetails.supervise ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Supervise</label>
+                                      </div>
+                                    </div>
+                              </div>
+                          </div>
+                          <div class="h-80 w-64 bg-white rounded-md">
+                              <h1 class="text-petnetblue text-xl font-semibold pt-5 pl-8 pb-2 border-b-2">Transactions list & Details</h1>
+                              <div class="mt-4 space-y-4 pl-8">
+                                  <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                          <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="TransactionListAndDetails" value="read" {{if ne .RolePresetPermission.transactionListAndDetails.read ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                          <label class="text-black text-lg font-normal">Read</label>
+                                      </div>
+                                  </div>
+                                  <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                          <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="TransactionListAndDetails" value="create" {{if ne .RolePresetPermission.transactionListAndDetails.create ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                          <label class="text-black text-lg font-normal">Create</label>
+                                      </div>
+                                  </div>
+                                  <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="TransactionListAndDetails" value="update" {{if ne .RolePresetPermission.transactionListAndDetails.update ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Update</label>
+                                      </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded"  name="TransactionListAndDetails" value="delete" {{if ne .RolePresetPermission.transactionListAndDetails.delete ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Delete</label>
+                                      </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded"  name="TransactionListAndDetails" value="supervise" {{if ne .RolePresetPermission.transactionListAndDetails.supervise ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Supervise</label>
+                                      </div>
+                                    </div>
+                              </div>
+                          </div>
+                          <div class="h-80 w-64 bg-white rounded-md">
+                              <h1 class="text-petnetblue text-xl font-semibold pt-10 pl-8 pb-4 border-b-2">Document checklist</h1>
+                              <div class="mt-4 space-y-4 pl-8">
+                                  <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                          <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded"  name="DocumentChecklist" value="read" {{if ne .RolePresetPermission.documentChecklist.read ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                          <label class="text-black text-lg font-normal">Read</label>
+                                      </div>
+                                  </div>
+                                  <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                          <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded"  name="DocumentChecklist" value="create" {{if ne .RolePresetPermission.documentChecklist.create ""}} checked {{end}}> 
+                                      </div>
+                                      <div class="ml-3">
+                                          <label class="text-black text-lg font-normal">Create</label>
+                                      </div>
+                                  </div>
+                                  <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="DocumentChecklist" value="update" {{if ne .RolePresetPermission.documentChecklist.update ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Update</label>
+                                      </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="DocumentChecklist" value="delete" {{if ne .RolePresetPermission.documentChecklist.delete ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Delete</label>
+                                      </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="DocumentChecklist" value="supervise" {{if ne .RolePresetPermission.documentChecklist.supervise ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Supervise</label>
+                                      </div>
+                                    </div>
+                              </div>
+                          </div>
+                          <div class="h-80 w-64 bg-white rounded-md">
+                              <h1 class="text-petnetblue text-xl font-semibold pt-10 pl-8 pb-4 border-b-2">Risk assesment</h1>
+                              <div class="mt-4 space-y-4 pl-8">
+                                  <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                          <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="RiskAssessment" value="read" {{if ne .RolePresetPermission.riskAssessment.read ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                          <label class="text-black text-lg font-normal">Read</label>
+                                      </div>
+                                  </div>
+                                  <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                          <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="RiskAssessment" value="create" {{if ne .RolePresetPermission.riskAssessment.create ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                          <label class="text-black text-lg font-normal">Create</label>
+                                      </div>
+                                  </div>
+                                  <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="RiskAssessment" value="update" {{if ne .RolePresetPermission.riskAssessment.update ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Update</label>
+                                      </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="RiskAssessment" value="delete" {{if ne .RolePresetPermission.riskAssessment.delete ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Delete</label>
+                                      </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="RiskAssessment" value="supervise" {{if ne .RolePresetPermission.riskAssessment.supervise ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Supervise</label>
+                                      </div>
+                                    </div>
+                              </div>
+                          </div>
+                      </div>
+                      <!-- checkboxes 2nd row -->
+                      <div class="flex flex-wrap mx-28 justify-around my-8">
+                          <div class="h-80 w-64 bg-white rounded-md">
+                              <h1 class="text-petnetblue text-xl font-semibold pt-10 pl-8 pb-4 border-b-2">Currency</h1>
+                              <div class="mt-4 space-y-4 pl-8">
+                                  <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                          <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="Currency" value="read" {{if ne .RolePresetPermission.currency.read ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                          <label class="text-black text-lg font-normal">Read</label>
+                                      </div>
+                                  </div>
+                                  <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                          <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="Currency" value="create" {{if ne .RolePresetPermission.currency.create ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                          <label class="text-black text-lg font-normal">Create</label>
+                                      </div>
+                                  </div>
+                                  <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="Currency" value="update" {{if ne .RolePresetPermission.currency.update ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Update</label>
+                                      </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="Currency" value="delete" {{if ne .RolePresetPermission.currency.delete ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Delete</label>
+                                      </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="Currency" value="supervise" {{if ne .RolePresetPermission.currency.supervise ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Supervise</label>
+                                      </div>
+                                    </div>
+                              </div>
+                          </div>
+                          <div class="h-80 w-64 bg-white rounded-md">
+                              <h1 class="text-petnetblue text-xl font-semibold pt-10 pl-8 pb-4 border-b-2">Fees and commission</h1>
+                              <div class="mt-4 space-y-4 pl-8">
+                                  <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                          <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="FeeAndCommission" value="read" {{if ne .RolePresetPermission.feeAndCommission.read ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                          <label class="text-black text-lg font-normal">Read</label>
+                                      </div>
+                                  </div>
+                                  <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                          <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="FeeAndCommission" value="create" {{if ne .RolePresetPermission.feeAndCommission.create ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                          <label class="text-black text-lg font-normal">Create</label>
+                                      </div>
+                                  </div>
+                                  <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="FeeAndCommission" value="update" {{if ne .RolePresetPermission.feeAndCommission.update ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Update</label>
+                                      </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="FeeAndCommission" value="delete" {{if ne .RolePresetPermission.feeAndCommission.delete ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Delete</label>
+                                      </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="FeeAndCommission" value="supervise" {{if ne .RolePresetPermission.feeAndCommission.supervise ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Supervise</label>
+                                      </div>
+                                    </div>
+                              </div>
+                          </div>
+                          <div class="h-80 w-64 bg-white rounded-md">
+                              <h1 class="text-petnetblue text-xl font-semibold pt-10 pl-8 pb-4 border-b-2">Location & Branches</h1>
+                              <div class="mt-4 space-y-4 pl-8">
+                                  <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                          <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="LocationAndBranches" value="read" {{if ne .RolePresetPermission.locationAndBranches.read ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                          <label class="text-black text-lg font-normal">Read</label>
+                                      </div>
+                                  </div>
+                                  <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                          <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="LocationAndBranches" value="create" {{if ne .RolePresetPermission.locationAndBranches.create ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                          <label class="text-black text-lg font-normal">Create</label>
+                                      </div>
+                                  </div>
+                                  <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="LocationAndBranches" value="update" {{if ne .RolePresetPermission.locationAndBranches.update ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Update</label>
+                                      </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="LocationAndBranches" value="delete" {{if ne .RolePresetPermission.locationAndBranches.delete ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Delete</label>
+                                      </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="LocationAndBranches" value="supervise" {{if ne .RolePresetPermission.locationAndBranches.supervise ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Supervise</label>
+                                      </div>
+                                    </div>
+                              </div>
+                          </div>
+                          <div class="h-80 w-64 bg-white rounded-md">
+                              <h1 class="text-petnetblue text-xl font-semibold pt-10 pl-8 pb-4 border-b-2">Service Catalog</h1>
+                              <div class="mt-4 space-y-4 pl-8">
+                                  <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                          <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="ServiceCatalog" value="read" {{if ne .RolePresetPermission.serviceCatalog.read ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                          <label class="text-black text-lg font-normal">Read</label>
+                                      </div>
+                                  </div>
+                                  <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                          <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="ServiceCatalog" value="create" {{if ne .RolePresetPermission.serviceCatalog.create ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                          <label class="text-black text-lg font-normal">Create</label>
+                                      </div>
+                                  </div>
+                                  <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="ServiceCatalog" value="update" {{if ne .RolePresetPermission.serviceCatalog.update ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Update</label>
+                                      </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="ServiceCatalog" value="delete" {{if ne .RolePresetPermission.serviceCatalog.delete ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Delete</label>
+                                      </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                      <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded" name="ServiceCatalog" value="supervise" {{if ne .RolePresetPermission.serviceCatalog.supervise ""}} checked {{end}}>
+                                      </div>
+                                      <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Supervise</label>
+                                      </div>
+                                    </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="flex flex-wrap mx-32 mb-8">
+                          <button type="submit" class="bg-petnetlightblue py-3 px-16 rounded-md font-bold text-white">Save Changes</button>
+                      </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {{ template "otp-modal.html" dict "Email" .LoginUserInfo.Email "CSRFField" .CSRFField}}
+        <script>
+          if (typeof params === 'undefined') {
+            const params = new URLSearchParams(window.location.search)
+          }
+          function toggleTopButton(id) {
+              let getDropdownItem = document.getElementById(id)
+              let isHiddenClass = getDropdownItem.classList.contains('hidden');
+              if (!isHiddenClass) {
+                  getDropdownItem.classList.add("hidden");
+              } else {
+                  getDropdownItem.classList.remove("hidden");
+              }
+          }
+        </script>
+</body>
+</html>

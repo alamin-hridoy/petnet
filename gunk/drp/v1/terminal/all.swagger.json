@@ -1,0 +1,1366 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/drp/v1/terminal/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "TerminalService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/terminal/partner/{transaction_id}": {
+      "get": {
+        "summary": "Search Partner.",
+        "description": "Search Partner by transaction id.",
+        "operationId": "TerminalService_GetPartnerByTxnID",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/terminalGetPartnerByTxnIDResponse"
+            }
+          },
+          "404": {
+            "description": "Returned when not found.",
+            "schema": {
+              "example": {
+                "code": 404,
+                "message": "control number not found"
+              }
+            }
+          },
+          "409": {
+            "description": "Returned when already exists",
+            "schema": {
+              "example": {
+                "code": 409,
+                "message": "identifier already exists"
+              }
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "database error"
+              }
+            }
+          },
+          "503": {
+            "description": "Returned when service is unavailable.",
+            "schema": {
+              "example": {
+                "code": 503,
+                "message": "connection error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "transaction_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Terminal"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/terminal/remit": {
+      "get": {
+        "summary": "Get remittance history.",
+        "description": "Get user remittance history and statuses.",
+        "operationId": "TerminalService_ListRemit",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/terminalListRemitResponse"
+            }
+          },
+          "404": {
+            "description": "Returned when not found.",
+            "schema": {
+              "example": {
+                "code": 404,
+                "message": "control number not found"
+              }
+            }
+          },
+          "409": {
+            "description": "Returned when already exists",
+            "schema": {
+              "example": {
+                "code": 409,
+                "message": "identifier already exists"
+              }
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "database error"
+              }
+            }
+          },
+          "503": {
+            "description": "Returned when service is unavailable.",
+            "schema": {
+              "example": {
+                "code": 503,
+                "message": "connection error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "until",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "DESC",
+              "ASC"
+            ],
+            "default": "DESC"
+          },
+          {
+            "name": "sort_by_column",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "OmitSortByColumn",
+              "ControlNumber",
+              "RemittedTo",
+              "TotalRemittedAmount",
+              "TransactionCompletedTime",
+              "Partner"
+            ],
+            "default": "OmitSortByColumn"
+          },
+          {
+            "name": "control_numbers",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "exclude_partner",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "exclude_type",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Terminal"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      },
+      "post": {
+        "summary": "Create Remittance.",
+        "description": "Create a remittance transaction for processing.",
+        "operationId": "TerminalService_CreateRemit",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/terminalCreateRemitResponse"
+            }
+          },
+          "404": {
+            "description": "Returned when not found.",
+            "schema": {
+              "example": {
+                "code": 404,
+                "message": "control number not found"
+              }
+            }
+          },
+          "409": {
+            "description": "Returned when already exists",
+            "schema": {
+              "example": {
+                "code": 409,
+                "message": "identifier already exists"
+              }
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "database error"
+              }
+            }
+          },
+          "503": {
+            "description": "Returned when service is unavailable.",
+            "schema": {
+              "example": {
+                "code": 503,
+                "message": "connection error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/terminalCreateRemitRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Terminal"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/terminal/remit/{remit_partner}": {
+      "get": {
+        "summary": "Search remittance.",
+        "description": "Search remittance record status. Validate record by control number\n            number before initiating disbursement.",
+        "operationId": "TerminalService_LookupRemit",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/terminalLookupRemitResponse"
+            }
+          },
+          "404": {
+            "description": "Returned when not found.",
+            "schema": {
+              "example": {
+                "code": 404,
+                "message": "control number not found"
+              }
+            }
+          },
+          "409": {
+            "description": "Returned when already exists",
+            "schema": {
+              "example": {
+                "code": 409,
+                "message": "identifier already exists"
+              }
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "database error"
+              }
+            }
+          },
+          "503": {
+            "description": "Returned when service is unavailable.",
+            "schema": {
+              "example": {
+                "code": 503,
+                "message": "connection error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "remit_partner",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "control_number",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "payout_currency",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "device_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Terminal"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/terminal/remit/{remit_partner}/disburse": {
+      "post": {
+        "summary": "Disburse remittance.",
+        "description": "Disburse remittance to receiver.",
+        "operationId": "TerminalService_DisburseRemit",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/terminalDisburseRemitResponse"
+            }
+          },
+          "404": {
+            "description": "Returned when not found.",
+            "schema": {
+              "example": {
+                "code": 404,
+                "message": "control number not found"
+              }
+            }
+          },
+          "409": {
+            "description": "Returned when already exists",
+            "schema": {
+              "example": {
+                "code": 409,
+                "message": "identifier already exists"
+              }
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "database error"
+              }
+            }
+          },
+          "503": {
+            "description": "Returned when service is unavailable.",
+            "schema": {
+              "example": {
+                "code": 503,
+                "message": "connection error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "remit_partner",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/terminalDisburseRemitRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Terminal"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/terminal/remit/{transaction_id}": {
+      "post": {
+        "summary": "Confirm Remittance.",
+        "description": "Confirm remittance transaction for processing.",
+        "operationId": "TerminalService_ConfirmRemit",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/terminalConfirmRemitResponse"
+            }
+          },
+          "404": {
+            "description": "Returned when not found.",
+            "schema": {
+              "example": {
+                "code": 404,
+                "message": "control number not found"
+              }
+            }
+          },
+          "409": {
+            "description": "Returned when already exists",
+            "schema": {
+              "example": {
+                "code": 409,
+                "message": "identifier already exists"
+              }
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "database error"
+              }
+            }
+          },
+          "503": {
+            "description": "Returned when service is unavailable.",
+            "schema": {
+              "example": {
+                "code": 503,
+                "message": "connection error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "transaction_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/terminalConfirmRemitRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Terminal"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "profileDate": {
+      "type": "object",
+      "properties": {
+        "year": {
+          "type": "string"
+        },
+        "month": {
+          "type": "string"
+        },
+        "day": {
+          "type": "string"
+        }
+      }
+    },
+    "profileIdentification": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "number": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "issued": {
+          "$ref": "#/definitions/profileDate"
+        },
+        "expiration": {
+          "$ref": "#/definitions/profileDate"
+        },
+        "issued_city": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "number",
+        "country"
+      ]
+    },
+    "profilePhoneNumber": {
+      "type": "object",
+      "properties": {
+        "country_code": {
+          "type": "string"
+        },
+        "number": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "country_code",
+        "number"
+      ]
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "protobufNullValue": {
+      "type": "string",
+      "enum": [
+        "NULL_VALUE"
+      ],
+      "default": "NULL_VALUE"
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "terminalAddress": {
+      "type": "object",
+      "properties": {
+        "address1": {
+          "type": "string"
+        },
+        "address2": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "postal_code": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "zone": {
+          "type": "string",
+          "title": "Also known as Barangay in Philippines"
+        },
+        "province": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "address1",
+        "city",
+        "state",
+        "postal_code",
+        "country",
+        "province"
+      ]
+    },
+    "terminalAgent": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "ip_address": {
+          "type": "string"
+        },
+        "device_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "user_id"
+      ]
+    },
+    "terminalAmount": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string",
+          "description": "Monetary amount in the smallest currency denomination.  Example: USD $10.25 =\u003e \"1025\"."
+        },
+        "currency": {
+          "type": "string",
+          "description": "Currency code using ISO-4217 3-letter codes."
+        }
+      },
+      "required": [
+        "amount",
+        "currency"
+      ]
+    },
+    "terminalBankAccount": {
+      "type": "object",
+      "properties": {
+        "bic": {
+          "type": "string",
+          "description": "Bank Identification Code assigned by SWIFT."
+        },
+        "account_number": {
+          "type": "string"
+        },
+        "account_suffix": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "bic",
+        "account_number",
+        "account_suffix"
+      ]
+    },
+    "terminalBool": {
+      "type": "string",
+      "enum": [
+        "Invalid",
+        "True",
+        "False"
+      ],
+      "default": "Invalid"
+    },
+    "terminalBusiness": {
+      "type": "object",
+      "properties": {
+        "company_name": {
+          "type": "string"
+        },
+        "account_code": {
+          "type": "string"
+        },
+        "control_number": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "company_name",
+        "account_code",
+        "reference_number",
+        "country"
+      ]
+    },
+    "terminalConfirmRemitRequest": {
+      "type": "object",
+      "properties": {
+        "transaction_id": {
+          "type": "string"
+        },
+        "auth_source": {
+          "type": "string"
+        },
+        "auth_code": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "transaction_id",
+        "auth_source",
+        "auth_code"
+      ]
+    },
+    "terminalConfirmRemitResponse": {
+      "type": "object",
+      "properties": {
+        "control_number": {
+          "type": "string"
+        }
+      }
+    },
+    "terminalContact": {
+      "type": "object",
+      "properties": {
+        "first_name": {
+          "type": "string"
+        },
+        "middle_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "address": {
+          "$ref": "#/definitions/terminalAddress"
+        },
+        "phone": {
+          "$ref": "#/definitions/profilePhoneNumber"
+        },
+        "mobile": {
+          "$ref": "#/definitions/profilePhoneNumber"
+        }
+      },
+      "required": [
+        "first_name",
+        "middle_name",
+        "last_name",
+        "phone",
+        "mobile"
+      ]
+    },
+    "terminalCreateRemitRequest": {
+      "type": "object",
+      "properties": {
+        "remit_partner": {
+          "type": "string"
+        },
+        "remit_type": {
+          "type": "string"
+        },
+        "sender": {
+          "$ref": "#/definitions/terminalUserKYC"
+        },
+        "receiver": {
+          "$ref": "#/definitions/terminalReceiver",
+          "description": "Required for all remittances to individuals.  Details the person to receive the money."
+        },
+        "business": {
+          "$ref": "#/definitions/terminalBusiness",
+          "description": "Required for all transfers to businesses.  Details the biller or business."
+        },
+        "account": {
+          "$ref": "#/definitions/terminalBankAccount",
+          "description": "Bank account destination, for sending money directly to an account."
+        },
+        "amount": {
+          "$ref": "#/definitions/terminalSendAmount"
+        },
+        "promo": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "order_id": {
+          "type": "string",
+          "description": "Unique Order ID from the DSA system."
+        },
+        "agent": {
+          "$ref": "#/definitions/terminalAgent"
+        }
+      },
+      "required": [
+        "remit_partner",
+        "remit_type",
+        "sender",
+        "amount",
+        "order_id",
+        "agent"
+      ]
+    },
+    "terminalCreateRemitResponse": {
+      "type": "object",
+      "properties": {
+        "principal_amount": {
+          "$ref": "#/definitions/terminalAmount"
+        },
+        "remit_amount": {
+          "$ref": "#/definitions/terminalAmount"
+        },
+        "taxes": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/terminalAmount"
+          }
+        },
+        "total_tax": {
+          "$ref": "#/definitions/terminalAmount"
+        },
+        "charges": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/terminalAmount"
+          }
+        },
+        "total_charges": {
+          "$ref": "#/definitions/terminalAmount"
+        },
+        "gross_total": {
+          "$ref": "#/definitions/terminalAmount"
+        },
+        "promo_description": {
+          "type": "string"
+        },
+        "promo_message": {
+          "type": "string"
+        },
+        "transaction_id": {
+          "type": "string"
+        }
+      }
+    },
+    "terminalDisburseRemitRequest": {
+      "type": "object",
+      "properties": {
+        "remit_partner": {
+          "type": "string"
+        },
+        "remit_type": {
+          "type": "string"
+        },
+        "control_number": {
+          "type": "string"
+        },
+        "disburse_currency": {
+          "type": "string"
+        },
+        "order_id": {
+          "type": "string"
+        },
+        "receiver": {
+          "$ref": "#/definitions/terminalUserKYC"
+        },
+        "agent": {
+          "$ref": "#/definitions/terminalAgent"
+        },
+        "transaction": {
+          "$ref": "#/definitions/terminalTransaction"
+        },
+        "sender": {
+          "$ref": "#/definitions/terminalContact"
+        }
+      },
+      "required": [
+        "remit_partner",
+        "control_number",
+        "disburse_currency",
+        "receiver",
+        "agent"
+      ]
+    },
+    "terminalDisburseRemitResponse": {
+      "type": "object",
+      "properties": {
+        "transaction_id": {
+          "type": "string"
+        }
+      }
+    },
+    "terminalEmployment": {
+      "type": "object",
+      "properties": {
+        "employer": {
+          "type": "string"
+        },
+        "occupation_id": {
+          "type": "string"
+        },
+        "occupation": {
+          "type": "string"
+        },
+        "position_level": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "employer",
+        "occupation",
+        "position_level"
+      ]
+    },
+    "terminalGender": {
+      "type": "string",
+      "enum": [
+        "_",
+        "Male",
+        "Female"
+      ],
+      "default": "_"
+    },
+    "terminalGetPartnerByTxnIDResponse": {
+      "type": "object",
+      "properties": {
+        "partner": {
+          "type": "string"
+        }
+      }
+    },
+    "terminalListRemitResponse": {
+      "type": "object",
+      "properties": {
+        "next": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "remittances": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/terminalRemittance"
+          }
+        },
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "terminalLookupRemitResponse": {
+      "type": "object",
+      "properties": {
+        "control_number": {
+          "type": "string"
+        },
+        "sender": {
+          "$ref": "#/definitions/terminalContact"
+        },
+        "receiver": {
+          "$ref": "#/definitions/terminalContact"
+        },
+        "source_country": {
+          "type": "string"
+        },
+        "destination_city": {
+          "type": "string"
+        },
+        "destination_state": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "remit_amount": {
+          "$ref": "#/definitions/terminalAmount"
+        },
+        "taxes": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/terminalAmount"
+          }
+        },
+        "total_tax": {
+          "$ref": "#/definitions/terminalAmount"
+        },
+        "charges": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/terminalAmount"
+          }
+        },
+        "total_charges": {
+          "$ref": "#/definitions/terminalAmount"
+        },
+        "disburse_amount": {
+          "$ref": "#/definitions/terminalAmount"
+        },
+        "transaction_staged_time": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "transaction_completed_time": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "other_info": {
+          "type": "object"
+        }
+      }
+    },
+    "terminalReceiver": {
+      "type": "object",
+      "properties": {
+        "contact_info": {
+          "$ref": "#/definitions/terminalContact"
+        },
+        "destination_state": {
+          "type": "string",
+          "description": "Destination state is required for sending money to USA or Mexico."
+        },
+        "destination_city": {
+          "type": "string",
+          "description": "Destination city is required for sending money to USA or Mexico."
+        },
+        "recipient_id": {
+          "type": "string",
+          "description": "RecipientID Identifier for the selected recipient account will be used in the transfer."
+        },
+        "account_holder_name": {
+          "type": "string",
+          "description": "AccountHolderName registered under the bank/transfer account."
+        },
+        "source_account_number": {
+          "type": "string",
+          "description": "SourceAccountNumber Identifier for the bank/transfer account of the recipient."
+        },
+        "identification": {
+          "$ref": "#/definitions/profileIdentification",
+          "description": "Identification is used to identify a Receiver using f.e passport or id card."
+        }
+      },
+      "required": [
+        "contact_info"
+      ]
+    },
+    "terminalRemittance": {
+      "type": "object",
+      "properties": {
+        "control_number": {
+          "type": "string"
+        },
+        "remit_partner": {
+          "type": "string"
+        },
+        "remit_type": {
+          "type": "string"
+        },
+        "gross_amount": {
+          "$ref": "#/definitions/terminalAmount"
+        },
+        "remit_amount": {
+          "$ref": "#/definitions/terminalAmount"
+        },
+        "sender": {
+          "$ref": "#/definitions/terminalContact"
+        },
+        "receiver": {
+          "$ref": "#/definitions/terminalContact"
+        },
+        "receiver_relation": {
+          "type": "string"
+        },
+        "sender_reason": {
+          "type": "string"
+        },
+        "transaction_staged_time": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "transaction_completed_time": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "terminalSendAmount": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string",
+          "description": "Monetary amount in the smallest currency denomination.  Example: USD $10.25 =\u003e \"1025\"."
+        },
+        "source_country": {
+          "type": "string",
+          "description": "Source country code using ISO-3166 2-letter codes."
+        },
+        "source_currency": {
+          "type": "string",
+          "description": "Source currency code using ISO-4217 3-letter codes."
+        },
+        "destination_country": {
+          "type": "string",
+          "description": "Destination country code using ISO-3166 2-letter codes."
+        },
+        "destination_currency": {
+          "type": "string",
+          "description": "Destination currency code using ISO-4217 3-letter codes."
+        },
+        "destination_amount": {
+          "type": "boolean",
+          "description": "Use destination currency to calculate the remittance principal.\nPricipal amount will be adjusted for exchange rate."
+        }
+      },
+      "required": [
+        "amount",
+        "source_currency",
+        "destination_currency",
+        "destination_country"
+      ]
+    },
+    "terminalSortByColumn": {
+      "type": "string",
+      "enum": [
+        "OmitSortByColumn",
+        "ControlNumber",
+        "RemittedTo",
+        "TotalRemittedAmount",
+        "TransactionCompletedTime",
+        "Partner"
+      ],
+      "default": "OmitSortByColumn"
+    },
+    "terminalSortOrder": {
+      "type": "string",
+      "enum": [
+        "DESC",
+        "ASC"
+      ],
+      "default": "DESC"
+    },
+    "terminalTransaction": {
+      "type": "object",
+      "properties": {
+        "source_country": {
+          "type": "string"
+        },
+        "destination_country": {
+          "type": "string"
+        }
+      }
+    },
+    "terminalUserKYC": {
+      "type": "object",
+      "properties": {
+        "contact_info": {
+          "$ref": "#/definitions/terminalContact"
+        },
+        "partner_member_id": {
+          "type": "string"
+        },
+        "employment": {
+          "$ref": "#/definitions/terminalEmployment"
+        },
+        "birthdate": {
+          "$ref": "#/definitions/profileDate"
+        },
+        "birth_country": {
+          "type": "string"
+        },
+        "birth_place": {
+          "type": "string"
+        },
+        "gender": {
+          "$ref": "#/definitions/terminalGender"
+        },
+        "nationality": {
+          "type": "string"
+        },
+        "source_funds": {
+          "type": "string"
+        },
+        "transaction_purpose": {
+          "type": "string"
+        },
+        "sending_reason_id": {
+          "type": "string"
+        },
+        "sending_reason": {
+          "type": "string"
+        },
+        "relationship": {
+          "type": "string"
+        },
+        "identification": {
+          "$ref": "#/definitions/profileIdentification"
+        },
+        "alternate_id": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/profileIdentification"
+          }
+        },
+        "email": {
+          "type": "string"
+        },
+        "kyc_verified": {
+          "$ref": "#/definitions/terminalBool"
+        },
+        "proof_of_address": {
+          "$ref": "#/definitions/terminalBool"
+        }
+      },
+      "required": [
+        "contact_info",
+        "identification",
+        "employment",
+        "birthdate",
+        "birth_country",
+        "gender",
+        "nationality",
+        "source_funds",
+        "transaction_purpose",
+        "sender_reason",
+        "receiver_relation",
+        "email",
+        "current_address",
+        "permanent_address",
+        "partner_member_id"
+      ]
+    }
+  }
+}

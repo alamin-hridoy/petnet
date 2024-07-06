@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+# List all the tools imported by this tools module, and install them.
+
+go install $(go list -tags tools -f '{{range $_, $p := .Imports}}{{$p}} {{end}}')

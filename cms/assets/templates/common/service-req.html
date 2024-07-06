@@ -1,0 +1,963 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>Services Request</title>
+    <style>
+        .Custome-full-height{
+           height:  calc(100% - 272px);
+        }
+        .Custome-full-width-scroll{
+           width:  100%;
+        }
+        @media (min-width: 640px) {
+           
+        .Custome-full-width-scroll{
+           width:  calc(100% - 128px);
+        }
+}
+    </style>
+</head>
+
+<body class="font-body">
+    <div class="flex mx-3 sm:mx-0 relative bg-white">
+        <!-- left-section -->
+        <div class="bg-petnetblue w-32 min-h-screen hidden sm:block">
+            <div class="min-h-screen">
+                <img src="{{ assetHash "/images/DRP-Vertical.svg" }}" class="mx-auto my-5">
+                <!-- Sidebar menu start -->
+                {{ template "admin-sidenav-menu.html" dict "Type" "service-req" "Data" .}}
+                <!-- Sidebar menu end -->
+            </div>
+        </div>
+        <!-- right-section -->
+        <div class="min-h-screen Custome-full-width-scroll flex">
+            <div class="w-full">
+                <div class="px-6 lg:px-20 pt-10 bg-white hidden sm:block">
+                    {{ template "top-header.html" .}}
+                </div>
+                <div class="lg:px-16 px-4 sm:py-4 py-4">
+
+                    <div class="mb-4">
+                        <h2 class="sm:text-4xl text-2xl text-petnetblue">Services</h2>
+                    </div>
+                    <div class="flex flex-wrap items-center justify-between">
+                        <div class="border sm:w-1/3 w-full flex rounded-l">
+                            <input type="text" value="{{.SearchTerm}}" id="search" placeholder="Search for a service or company"
+                                class="w-full h-12 p-4 bg-petnetgray focus:outline-none">
+                            <button id="serachbutton" class="bg-petnetblue rounded-r text-white p-3 searchbtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col justify-between Custome-full-height">
+                    <div class="block overflow-x-visible w-full bg-white">
+                        <div class="align-middle inline-block w-full">
+                            <table class="w-full divide-y">
+                                <thead class="bg-white sm:shadow-md relative border-b-2 border-gray-200">
+                                    <tr>
+                                        <th
+                                            class="px-4 py-6 text-left font-semibold text-lg leading-4">
+                                            <div class="sm:w-44 w-28 flex justify-between items-center relative">
+                                                Company Name
+                                                <a href="javascript:;" onclick="toggleTopButton('openComDropdown')">
+                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                        class="h-6 w-6 ml-4 hidden sm:block" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                    </svg>
+                                                </a>
+
+                                                <div id="openComDropdown" class="absolute -right-4 top-12 hidden">
+                                                    <div
+                                                        class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-4 shadow bg-white z-10">
+                                                    </div>
+                                                    <div class="shadow absolute top-3 -right-2 rounded">
+                                                        <div class="relative z-20 px-3 py-4 w-36 bg-white rounded">
+                                                            <ul>
+                                                                <li
+                                                                    class="text-gray-500 w-full mb-2 text-center text-sm">
+                                                                    ORDER
+                                                                </li>
+                                                                <li class="flex items-center mb-2"
+                                                                    onclick="orderBy('company','asc')">
+                                                                    <input id="radio-asc" type="radio" value="asc"
+                                                                        class="hidden list-custom-input" />
+                                                                    <label for="radio-asc"
+                                                                        class="flex w-full items-center cursor-pointer text-base ml-3 font-normal">
+                                                                        <span
+                                                                            class="w-4 h-4 flex items-center inline-block mr-2 text-lg flex-no-shrink">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                class="h-4 w-4" fill="none"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke="currentColor">
+                                                                                <path stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                    stroke-width="2"
+                                                                                    d="M5 13l4 4L19 7" />
+                                                                            </svg>
+                                                                        </span>
+                                                                        A to Z
+                                                                    </label>
+                                                                </li>
+                                                                <li class="flex items-center"
+                                                                    onclick="orderBy('company','desc')">
+                                                                    <input id="radio-desc" type="radio" value="desc"
+                                                                        class="hidden list-custom-input" />
+                                                                    <label for="radio-desc"
+                                                                        class="flex w-full items-center cursor-pointer text-base ml-3 font-normal">
+                                                                        <span
+                                                                            class="w-4 h-4 flex items-center inline-block mr-2 text-lg flex-no-shrink">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                class="h-4 w-4" fill="none"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke="currentColor">
+                                                                                <path stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                    stroke-width="2"
+                                                                                    d="M5 13l4 4L19 7" />
+                                                                            </svg>
+                                                                        </span>
+                                                                        Z to A
+                                                                    </label>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </th>
+                                        <th
+                                            class="px-4 py-6 font-semibold text-lg leading-4 text-left">
+                                            <div class="flex text-md items-center relative">
+                                                Service Name
+                                                <a href="javascript:;" onclick="toggleTopButton('openSNDropdown')">
+                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                        class="h-6 w-6 ml-4 hidden sm:block" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                    </svg>
+                                                </a>
+                                                <div id="openSNDropdown" class="absolute right-8 top-12 hidden">
+                                                    <div
+                                                        class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-4 shadow bg-white z-10">
+                                                    </div>
+                                                    <div class="shadow  absolute top-3 -right-2 rounded">
+                                                        <div class="relative z-20 p-3 w-52 bg-white rounded">
+                                                            <ul class="pl-10">
+                                                                <li class="text-gray-500 text-sm">Service Name</li>
+                                                                <li class="my-3 relative"
+                                                                    onclick="filterSvcName('rem')">
+                                                                    <input id="checkbox-rem" type="checkbox" name="rem"
+                                                                        class="absolute dsa-checkbox hidden top-0 -left-8">
+                                                                    <label for="checkbox-rem"
+                                                                        class="cursor-pointer text-base font-normal w-full">
+                                                                        <span
+                                                                            class="w-4 h-4 border-2 absolute -left-8 top-1.5 border-gray-400 rounded text-white">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                class="h-3 w-3" fill="none"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke="currentColor">
+                                                                                <path stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                    stroke-width="2" d="M5 13l4 4L19 7">
+                                                                                </path>
+                                                                            </svg>
+                                                                        </span>
+                                                                        Remittances
+                                                                    </label>
+                                                                </li>
+                                                                <li class="my-3 relative"
+                                                                    onclick="filterSvcName('bp')">
+                                                                    <input id="checkbox-bp" type="checkbox"
+                                                                        name="bp"
+                                                                        class="absolute dsa-checkbox hidden top-0 -left-8">
+                                                                    <label for="checkbox-bp"
+                                                                        class="cursor-pointer text-base font-normal w-full">
+                                                                        <span
+                                                                            class="w-4 h-4 border-2 absolute -left-8 top-1.5 border-gray-400 rounded text-white">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                class="h-3 w-3" fill="none"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke="currentColor">
+                                                                                <path stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                    stroke-width="2" d="M5 13l4 4L19 7">
+                                                                                </path>
+                                                                            </svg>
+                                                                        </span>
+                                                                        Bills Payment
+                                                                    </label>
+                                                                </li>
+                                                                <li class="my-3 relative"
+                                                                    onclick="filterSvcName('cio')">
+                                                                    <input id="checkbox-cio" type="checkbox"
+                                                                        name="cio"
+                                                                        class="absolute dsa-checkbox hidden top-0 -left-8">
+                                                                    <label for="checkbox-cio"
+                                                                        class="cursor-pointer text-base font-normal w-full">
+                                                                        <span
+                                                                            class="w-4 h-4 border-2 absolute -left-8 top-1.5 border-gray-400 rounded text-white">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                class="h-3 w-3" fill="none"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke="currentColor">
+                                                                                <path stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                    stroke-width="2" d="M5 13l4 4L19 7">
+                                                                                </path>
+                                                                            </svg>
+                                                                        </span>
+                                                                        Cash In/Cash Out
+                                                                    </label>
+                                                                </li>
+                                                                <li class="my-3 relative"
+                                                                    onclick="filterSvcName('mi')">
+                                                                    <input id="checkbox-mi" type="checkbox"
+                                                                        name="mi"
+                                                                        class="absolute dsa-checkbox hidden top-0 -left-8">
+                                                                    <label for="checkbox-mi"
+                                                                        class="cursor-pointer text-base font-normal w-full">
+                                                                        <span
+                                                                            class="w-4 h-4 border-2 absolute -left-8 top-1.5 border-gray-400 rounded text-white">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                class="h-3 w-3" fill="none"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke="currentColor">
+                                                                                <path stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                    stroke-width="2" d="M5 13l4 4L19 7">
+                                                                                </path>
+                                                                            </svg>
+                                                                        </span>
+                                                                        Micro Insurance
+                                                                    </label>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </th>
+                                        <th
+                                            class="px-4 py-6 font-semibold text-lg leading-4 text-left">
+                                            <div class="sm:w-32 w-24 flex text-md items-center relative">
+                                              Partner
+                                                <a href="javascript:;" onclick="toggleTopButton('openRSDropdown')">
+                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                        class="h-6 w-6 ml-4 hidden sm:block" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                    </svg>
+                                                </a>
+                                                <div id="openRSDropdown" class="absolute right-3 top-12 hidden">
+                                                    <div
+                                                        class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-4 shadow bg-white z-10">
+                                                    </div>
+                                                    <div class="shadow absolute top-3 -right-2 rounded">
+                                                        <div class="relative z-20 px-3 py-4 w-36 bg-white rounded">
+                                                            <ul>
+                                                                <li
+                                                                    class="text-gray-500 w-full mb-2 text-center text-sm">
+                                                                    ORDER
+                                                                </li>
+                                                                <li class="flex items-center mb-2"
+                                                                    onclick="orderBy('partner','asc')">
+                                                                    <input id="radioo-asc" type="radio" value="asc"
+                                                                        class="hidden list-custom-input" />
+                                                                    <label for="radioo-asc"
+                                                                        class="flex w-full items-center cursor-pointer text-base ml-3 font-normal">
+                                                                        <span
+                                                                            class="w-4 h-4 flex items-center inline-block mr-2 text-lg flex-no-shrink">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                class="h-4 w-4" fill="none"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke="currentColor">
+                                                                                <path stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                    stroke-width="2"
+                                                                                    d="M5 13l4 4L19 7" />
+                                                                            </svg>
+                                                                        </span>
+                                                                        A to Z
+                                                                    </label>
+                                                                </li>
+                                                                <li class="flex items-center"
+                                                                    onclick="orderBy('partner','desc')">
+                                                                    <input id="radioo-desc" type="radio" value="desc"
+                                                                        class="hidden list-custom-input" />
+                                                                    <label for="radioo-desc"
+                                                                        class="flex w-full items-center cursor-pointer text-base ml-3 font-normal">
+                                                                        <span
+                                                                            class="w-4 h-4 flex items-center inline-block mr-2 text-lg flex-no-shrink">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                class="h-4 w-4" fill="none"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke="currentColor">
+                                                                                <path stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                    stroke-width="2"
+                                                                                    d="M5 13l4 4L19 7" />
+                                                                            </svg>
+                                                                        </span>
+                                                                        Z to A
+                                                                    </label>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </th>
+                                        <th
+                                            class="px-4 py-6 font-semibold text-lg  leading-4 text-left">
+                                            <div class="flex text-md items-center relative">
+                                              Status
+                                                <a href="javascript:;" onclick="toggleTopButton('openStatusDropdown')">
+                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                        class="h-6 w-6 ml-4 hidden sm:block" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                    </svg>
+                                                </a>
+                                                <div id="openStatusDropdown" class="absolute right-4 top-12 hidden">
+                                                    <div
+                                                        class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-4 shadow bg-white z-10">
+                                                    </div>
+                                                    <div class="shadow  absolute top-3 -right-2 rounded">
+                                                        <div class="relative z-20 p-3 w-44 bg-white rounded">
+                                                            <ul class="pl-10">
+                                                                <li class="text-gray-500 text-sm">STATUS</li>
+                                                                <li class="my-3 relative"
+                                                                    onclick="filterStatus('accepted')">
+                                                                    <input id="checkbox-accepted" type="checkbox"
+                                                                        value="accepted"
+                                                                        class="absolute dsa-checkbox hidden top-0 -left-8">
+                                                                    <label for="checkbox-accepted"
+                                                                        class="cursor-pointer text-base font-normal w-full">
+                                                                        <span
+                                                                            class="w-4 h-4 border-2 absolute -left-8 top-1.5 border-gray-400 rounded text-white">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                class="h-3 w-3" fill="none"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke="currentColor">
+                                                                                <path stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                    stroke-width="2" d="M5 13l4 4L19 7">
+                                                                                </path>
+                                                                            </svg>
+                                                                        </span>
+                                                                        Accepted
+                                                                    </label>
+                                                                </li>
+                                                                <li class="my-3 relative"
+                                                                    onclick="filterStatus('pending')">
+                                                                    <input id="checkbox-pending" value="pending"
+                                                                        type="checkbox"
+                                                                        class="absolute dsa-checkbox hidden top-0 -left-8">
+                                                                    <label for="checkbox-pending"
+                                                                        class="cursor-pointer text-base font-normal w-full">
+                                                                        <span
+                                                                            class="w-4 h-4 border-2 absolute -left-8 top-1.5 border-gray-400 rounded text-white">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                class="h-3 w-3" fill="none"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke="currentColor">
+                                                                                <path stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                    stroke-width="2" d="M5 13l4 4L19 7">
+                                                                                </path>
+                                                                            </svg>
+                                                                        </span>
+                                                                        Pending
+                                                                    </label>
+                                                                </li>
+                                                                <li class="my-3 relative"
+                                                                    onclick="filterStatus('rejected')">
+                                                                    <input id="checkbox-rejected" value="rejected"
+                                                                        type="checkbox"
+                                                                        class="absolute dsa-checkbox hidden top-0 -left-8">
+                                                                    <label for="checkbox-rejected"
+                                                                        class="cursor-pointer text-base font-normal w-full">
+                                                                        <span
+                                                                            class="w-4 h-4 border-2 absolute -left-8 top-1.5 border-gray-400 rounded text-white">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                class="h-3 w-3" fill="none"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke="currentColor">
+                                                                                <path stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                    stroke-width="2" d="M5 13l4 4L19 7">
+                                                                                </path>
+                                                                            </svg>
+                                                                        </span>
+                                                                        Rejected
+                                                                    </label>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </th>
+                                        <th
+                                            class="px-4 py-6 font-semibold text-lg leading-4 text-left">
+                                            <div class="flex text-md relative items-center justify-center">
+                                                Last Updated By
+                                                <a href="javascript:;" onclick="toggleTopButton('openDADropdown')">
+                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                        class="h-6 w-6 ml-4 hidden sm:block" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                    </svg>
+                                                </a>
+
+                                                <div id="openDADropdown" class="absolute right-9 top-12 hidden">
+                                                    <div
+                                                        class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-4 shadow bg-white z-10">
+                                                    </div>
+                                                    <div class="shadow absolute top-3 -right-2 rounded">
+                                                        <div class="relative z-20 px-3 py-4 w-56 bg-white rounded">
+                                                            <ul>
+                                                                <li class="text-gray-500 w-full mb-2 ml-10 text-sm">SORT
+                                                                    BY DATE
+                                                                </li>
+                                                                <li class="flex items-center mb-2"
+                                                                    onclick="orderBy('date','asc')">
+                                                                    <input id="radio-sort-asc" type="radio"
+                                                                        value="asc" class="hidden list-custom-input" />
+                                                                    <label for="radio-sort-asc"
+                                                                        class="flex w-full items-center cursor-pointer font-normal text-base ml-3">
+                                                                        <span
+                                                                            class="w-4 h-4 flex items-center inline-block mr-2 text-lg flex-no-shrink">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                class="h-4 w-4" fill="none"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke="currentColor">
+                                                                                <path stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                    stroke-width="2"
+                                                                                    d="M5 13l4 4L19 7" />
+                                                                            </svg>
+                                                                        </span>
+                                                                        Oldest to Newest
+                                                                    </label>
+                                                                </li>
+                                                                <li class="flex items-center"
+                                                                    onclick="orderBy('date','desc')">
+                                                                    <input id="radio-sort-desc" type="radio" value="desc"
+                                                                        class="hidden list-custom-input" />
+                                                                    <label for="radio-sort-desc"
+                                                                        class="flex w-full items-center cursor-pointer font-normal text-base ml-3">
+                                                                        <span
+                                                                            class="w-4 h-4 flex items-center inline-block mr-2 text-lg flex-no-shrink">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                class="h-4 w-4" fill="none"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke="currentColor">
+                                                                                <path stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                    stroke-width="2"
+                                                                                    d="M5 13l4 4L19 7" />
+                                                                            </svg>
+                                                                        </span>
+                                                                        Newest to Oldest
+                                                                    </label>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </th>
+                                        <th
+                                            class="px-4 py-6 font-semibold text-lg leading-4 text-left">
+                                            Actions
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{range .DSASvcApplicants}}
+                                    <tr class="hover:bg-petnetlightblue hover:bg-opacity-10 px-6 lg:px-28">
+                                        <td class="text-base  font-normal text-petnettextgray px-4 py-6 w-2/12">
+                                            {{.CompanyName}}
+                                        </td>
+                                        <td class="text-base font-normal text-petnettextgray pl-6 py-4">
+                                            {{if eq .ServiceName "CASHINCASHOUT"}}
+                                                Cash In/Cash Out
+                                            {{else if eq .ServiceName "REMITTANCE"}}
+                                                Remittance
+                                            {{else if eq .ServiceName "BILLSPAYMENT"}}
+                                                Bills Payment
+                                            {{else if eq .ServiceName "MICROINSURANCE"}}
+                                                Micro Insurance
+                                            {{end}}
+                                        </td>
+                                        <td class="text-base font-normal text-petnettextgray px-4 py-6">
+                                            {{.PartName}}
+                                        </td>
+                                        <td class="text-left py-6 px-4"><span class="bg-{{servicesStatusClass .Status}} py-2 px-3 text-sm rounded-xl ">
+                                            {{if eq .Status "ACCEPTED"}}
+                                                Accepted
+                                            {{else if eq .Status "PENDING"}}
+                                                Pending
+                                            {{else if eq .Status "REJECTED"}}
+                                                Rejected
+                                            {{else if eq .Status "REQDOCDRAFT"}}
+                                                Pending
+                                            {{else if eq .Status "ADDIDOCDRAFT"}}
+                                                Pending
+                                            {{else if eq .Status "NOSTATUS"}}
+                                                Pending
+                                            {{end}}
+                                            
+                                        </span>
+                                        </td>
+                                        <td class="text-base font-normal text-petnettextgray py-6 px-4">
+                                            <div class="flex justify-center">
+                                                {{formatDate .Updated "January 02, 2006"}}
+                                                <p class="pl-2">
+                                                    {{.UpatedBy}}
+                                                </p>
+                                            </div>
+                                        </td>
+                                        <td class="text-petnetlightblue px-4">
+                                            <button id="table-remarkbtn" class="show-modal" data-orgid="{{.OrgID}}" data-svc="{{.ServiceName}}" data-remark="{{.Remark}}">
+                                                Add Remark
+                                            </button>
+                                            {{if eq .ServiceName "REMITTANCE"}}
+                                                <a class="ml-4" href="/dashboard/services-details/{{.OrgID}}">
+                                                    View Details
+                                                </a>
+                                            {{else if eq .ServiceName "CASHINCASHOUT"}}
+                                                <a class="ml-4" href="/dashboard/services-details-cico/{{.OrgID}}">
+                                                    View Details
+                                                </a>
+                                            {{else if eq .ServiceName "MICROINSURANCE"}}
+                                                <a class="ml-4" href="/dashboard/services-details-mi/{{.OrgID}}">
+                                                    View Details
+                                                </a>
+                                            {{else if eq .ServiceName "BILLSPAYMENT"}}
+                                                <a class="ml-4" href="/dashboard/services-details-bills-payment/{{.OrgID}}">
+                                                    View Details
+                                                </a>
+                                            {{end}}
+                                        </td>
+                                    </tr>
+                                    {{end}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- pagination start -->
+                    <div class="text-gray-500 text-center bg-white pt-8 pb-12 flex flex-wrap justify-between pl-20 pr-14">
+                        <div class="sm:w-7/12 pl-4 pr-4 md:pr-24 w-full sm:order-1 order-2 py-4">
+                        <p class="flex items-center justify-center sm:justify-end  h-full"> Showing {{len .DSASvcApplicants}} out of
+                            {{.PaginationData.Total}} service requests</p>
+                        </div>
+                        <div class="sm:order-2 order-1 sm:w-5/12 w-full py-4">
+                            <div class="flex justify-center sm:justify-end items-center w-full h-full">
+                                <div class="flex flex-wrap justify-between items-center">
+                                    <div>
+                                        {{if ne .PaginationData.Total 0}}
+                                        <a {{if .PaginationData.Prev}}href="{{.PaginationData.Prev.URL}}" {{end}}>
+                                            <button {{if eq .PaginationData.CurrentPage 1}} disabled {{end}} {{if .PaginationData.Prev}}
+                                                class="relative inline-flex items-center px-4 py-2 rounded border border-gray-400 bg-white text-sm font-medium text-petnetblue hover:bg-gray-50"
+                                                {{else}}
+                                                class="relative inline-flex items-center px-4 py-2 rounded border border-gray-400 text-sm font-medium text-gray-500 bg-gray-50"
+                                                {{end}}>
+                                                Previous
+                                            </button>
+                                        </a>
+                                        {{end}}
+                                        <div class="inline-block px-6 my-2">
+                                            {{range .PaginationData.Pages}}
+                                            {{if .Order}}
+                                            <a href="{{.URL}}"
+                                                class="{{if .Current}}font-bold bg-petnetblue text-white {{else}}text-petnetblue{{end}} z-10 b relative inline-flex items-center px-4 py-2 text-sm font-medium hover:bg-petnetblue hover:text-white rounded-md">{{.Order}}</a>
+                                            {{else}}
+                                            <a href="" class="inline-block mr-4 hover:text-blue-dark-5">...</a>
+                                            {{end}}
+                                            {{end}}
+                                        </div>
+                                        {{if ne .PaginationData.Total 0}}
+                                        <a {{if .PaginationData.Next}}href="{{.PaginationData.Next.URL}}" {{end}}>
+                                            <button {{if eq .PaginationData.CurrentPage (countPaginate .PaginationData.Total .PaginationData.PerPage)}}
+                                            disabled {{end}} {{if .PaginationData.Next}}
+                                                class="relative inline-flex items-center px-4 py-2 rounded border border-gray-400  bg-white text-sm font-medium text-petnetblue hover:bg-gray-50"
+                                                {{else}}
+                                                class="relative inline-flex items-center px-4 py-2 rounded border border-gray-400  bg-white text-sm font-medium text-gray-500 bg-gray-50"
+                                                {{end}}>Next
+                                            </button>
+                                        </a>
+                                        {{end}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- pagination end -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- modal -->
+    <div class="modal h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-black bg-opacity-50 z-30 hidden">
+        <div class="py-3 sm:max-w-xl sm:mx-auto">
+            <div class="bg-white shadow-lg w-full z-50 rounded-md overflow-hidden">
+                <div class="mx-16 my-12">
+                    <form action="/dashboard/add-service-req" method="POST">
+                        {{.CSRFField}}
+                        <input type="hidden" name="OrgID" id="remark_orgid" value="">
+                        <input type="hidden" name="ServiceName" id="remark_svc" value="">
+                        <div class="w-full">
+                            <div class="mb-6">
+                                <label for="name" id="remark_lbl_id" class="block text-black mb-2 text-2xl font-semibold">Add Remark</label>
+                                <textarea name="Remark" id="remark_content"
+                                    class="w-full resize-none px-3 py-2 border border-gray-300 bg-petnetgray rounded-md focus:outline-none focus:border-petnetblue focus:border-transparent"
+                                    rows="10" placeholder="e.g. Quezon City Branch"></textarea>
+                            </div>
+                            <div class="flex justify-between">
+                                <a href="/dashboard/service-req"
+                                    class="cursor-pointer border-2 border-petnetblue rounded-md py-2 px-16 text-petnetblue font-bold mr-4 close-modal">
+                                    Cancel
+                                </a>
+                                <button type="submit" id="remark_submit"
+                                    class="border-2 border-petnetyellow rounded-md py-2 px-16 text-petnetblue font-bold bg-petnetyellow">
+                                    Add Remark
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+  <script>
+        const CSRFFieldValue = "{{.CSRFFieldValue}}"
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+          let menus = document.querySelectorAll("a");
+          for (let i = 0; i < menus.length; i++) {
+              menus[i].addEventListener("click", function(e){
+                  e.preventDefault();
+                  let lnk = menus[i].href;
+                  menus[i].href = "javascript:;"
+                  window.location.href = lnk;
+              });
+          }
+      });
+  </script>
+    <script>
+        const modal = document.querySelector('.modal');
+        const showModal = document.querySelectorAll('.show-modal');
+        const closeModal = document.querySelectorAll('.close-modal');
+        showModal.forEach(sm => {
+            sm.addEventListener('click', function (e) {
+                let elm = e.target;
+                let orgid = elm.getAttribute('data-orgid');
+                let svc = elm.getAttribute('data-svc');
+                let remark = elm.getAttribute('data-remark');
+                document.getElementById("remark_orgid").value = orgid;
+                document.getElementById("remark_svc").value = svc;
+                document.getElementById("remark_content").textContent = remark;
+                document.getElementById("remark_lbl_id").innerText = "Add Remark";
+                document.getElementById("remark_submit").innerText = "Add Remark";
+                if (remark != ""){
+                    document.getElementById("remark_lbl_id").innerText = "Edit Remark";
+                    document.getElementById("remark_submit").innerText = "Edit Remark";
+                }
+                modal.classList.remove('hidden');
+            });
+            changeButtonText(sm)
+        });
+        closeModal.forEach(close => {
+            close.addEventListener('click', function () {
+                modal.classList.add('hidden')
+            });
+        });
+
+        function changeButtonText(elm){
+            let remark = elm.getAttribute('data-remark');
+            if (remark != ""){
+                elm.innerText = "View Remark";
+            }
+        }
+        
+
+        const params = new URLSearchParams(window.location.search)
+        function loadValue(id, field, source, target) {
+            if (id != "undefined" && field != "undefined") {
+                loadAjax(id, field, source, target)
+            }
+        }
+        function loadAjax(id, field, source, target) {
+            var data = new FormData();
+            if (id != "undefined") {
+                data.id = id
+            }
+            if (field != "undefined") {
+                data.field = field
+            }
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                valueField = document.getElementById(source)
+                detailsBtn = document.getElementById(target)
+                if (xhttp.readyState == XMLHttpRequest.DONE) {
+                    resValue = JSON.parse(xhttp.responseText)
+                    valueField.innerHTML = resValue.email
+                    detailsBtn.classList.add("hidden")
+                    if (valueField.classList.contains("hidden")) {
+                        valueField.classList.remove("hidden")
+                    }
+                }
+            }
+            data.append("Field", field);
+            data.append("gorilla.csrf.Token", CSRFFieldValue);
+            xhttp.open("POST", "/dashboard/disclosure/" + id, true);
+            xhttp.send(data);
+        }
+        function search() {
+            let searchTerm = document.getElementById("search").value;
+            if (params.has("search-term")) {
+                params.delete("search-term");
+            }
+            params.append("search-term", searchTerm);
+            if (params.has("page")) {
+                params.delete("page");
+            }
+            window.location.search = params.toString();
+        }
+        function filterSvcName(type) {
+            let svcName = [];
+            if (params.has("service_name")) {
+                svcName = params.get("service_name").split(",");
+            }
+
+            if (type === "rem") {
+                let rem = document.getElementById("checkbox-rem");
+                if (rem.checked === false) {
+                    svcName = svcName.filter(e => e !== 'rem')
+                } else {
+                    svcName.push("rem")
+                }
+            }
+
+            if (type === "bp") {
+                let bp = document.getElementById("checkbox-bp");
+                if (bp.checked === false) {
+                    svcName = svcName.filter(e => e !== 'bp')
+                } else {
+                    svcName.push("bp")
+                }
+            }
+
+            if (type === "cio") {
+                let cio = document.getElementById("checkbox-cio");
+                if (cio.checked === false) {
+                    svcName = svcName.filter(e => e !== 'cio')
+                } else {
+                    svcName.push("cio")
+                }
+            }
+
+            if (type === "mi") {
+                let mi = document.getElementById("checkbox-mi");
+                if (mi.checked === false) {
+                    svcName = svcName.filter(e => e !== 'mi')
+                } else {
+                    svcName.push("mi")
+                }
+            }
+
+            if (params.has("page")) {
+                params.delete("page")
+            }
+
+            if (svcName.length > 0) {
+                svcName = svcName.filter(function (item, pos) {
+                    return svcName.indexOf(item) == pos;
+                })
+                params.set("service_name", svcName.join(","))
+            } else {
+                params.delete("service_name")
+            }
+            window.location.search = params.toString();
+        }
+
+        function filterStatus(type) {
+            let status = [];
+            if (params.has("status")) {
+                status = params.get("status").split(",");
+            }
+
+            if (type === "accepted") {
+                let accepted = document.getElementById("checkbox-accepted");
+                if (accepted.checked === false) {
+                    status = status.filter(e => e !== 'accepted')
+                } else {
+                    status.push("accepted")
+                }
+            }
+            if (type === "disabled") {
+                let accepted = document.getElementById("checkbox-disabled");
+                if (accepted.checked === false) {
+                    status = status.filter(e => e !== 'disabled')
+                } else {
+                    status.push("disabled")
+                }
+            }
+            if (type === "enabled") {
+                let accepted = document.getElementById("checkbox-enabled");
+                if (accepted.checked === false) {
+                    status = status.filter(e => e !== 'enabled')
+                } else {
+                    status.push("enabled")
+                }
+            }
+            if (type === "pending") {
+                let accepted = document.getElementById("checkbox-pending");
+                if (accepted.checked === false) {
+                    status = status.filter(e => e !== 'pending')
+                } else {
+                    status.push("pending")
+                }
+            }
+            if (type === "rejected") {
+                let accepted = document.getElementById("checkbox-rejected");
+                if (accepted.checked === false) {
+                    status = status.filter(e => e !== 'rejected')
+                } else {
+                    status.push("rejected")
+                }
+            }
+            if (type === "incomplete") {
+                let accepted = document.getElementById("checkbox-incomplete");
+                if (accepted.checked === false) {
+                    status = status.filter(e => e !== 'incomplete')
+                } else {
+                    status.push("incomplete")
+                }
+            }
+
+            if (params.has("page")) {
+                params.delete("page")
+            }
+
+            if (status.length > 0) {
+                status = status.filter(function (item, pos) {
+                    return status.indexOf(item) == pos;
+                })
+                params.set("status", status.join(","))
+            } else {
+                params.delete("status")
+            }
+            window.location.search = params.toString();
+        }
+        function orderBy(cloumn, type) {
+            params.set("sort", type);
+            params.set("sort_column", cloumn);
+
+            if (params.has("page")) {
+                params.delete("page")
+            }
+
+            window.location.search = params.toString();
+        }
+        window.onload = function () {
+            if (params.has("sort_column")) {
+                let column = params.get("sort_column");
+                if (column === "date") {
+                    document.getElementById('radio-sort-' + params.get("sort")).checked = true
+                } else if (column === "company") {
+                    document.getElementById('radio-' + params.get("sort")).checked = true
+                }else if (column === "partner") {
+                    document.getElementById('radioo-' + params.get("sort")).checked = true
+                } else {
+                    document.getElementById('radio-sort-desc').checked = true
+                }
+            } else {
+                document.getElementById('radio-sort-desc').checked = true
+            }
+
+            if (params.has("service_name")) {
+                let status = params.get("service_name").split(",");
+                if (status.includes("rem")) {
+                    document.getElementById('checkbox-rem').checked = true
+                }
+                if (status.includes("bp")) {
+                    document.getElementById('checkbox-bp').checked = true
+                }
+                if (status.includes("cio")) {
+                    document.getElementById('checkbox-cio').checked = true
+                }
+                if (status.includes("mi")) {
+                    document.getElementById('checkbox-mi').checked = true
+                }
+            }
+            if (params.has("status")) {
+                let status = params.get("status").split(",");
+                if (status.includes("accepted")) {
+                    document.getElementById('checkbox-accepted').checked = true
+                }
+                if (status.includes("disabled")) {
+                    document.getElementById('checkbox-disabled').checked = true
+                }
+                if (status.includes("enabled")) {
+                    document.getElementById('checkbox-enabled').checked = true
+                }
+                if (status.includes("pending")) {
+                    document.getElementById('checkbox-pending').checked = true
+                }
+                if (status.includes("rejected")) {
+                    document.getElementById('checkbox-rejected').checked = true
+                }
+                if (status.includes("incomplete")) {
+                    document.getElementById('checkbox-incomplete').checked = true
+                }
+            }
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            let menus = document.querySelectorAll(".mailsend");
+            let searchbtn = document.querySelectorAll(".searchbtn");
+            let form = document.getElementById("sendform")
+            for (let i = 0; i < menus.length; i++) {
+                menus[i].addEventListener("click", function (e) {
+                    e.preventDefault();
+                    document.getElementById("sendform").submit();
+                    menus[i].disabled = true;
+                });
+            }
+            for (let i = 0; i < searchbtn.length; i++) {
+                searchbtn[i].addEventListener("click", function (e) {
+                    e.preventDefault();
+                    searchbtn[i].disabled = true;
+                    search();
+                });
+            }
+        });
+        var input = document.getElementById("search");
+        input.addEventListener("keyup", function(event) {
+        if (event.keyCode === 13) {
+         event.preventDefault();
+        document.getElementById("serachbutton").click();
+            }
+        });
+    </script>
+
+</body>
+</html>

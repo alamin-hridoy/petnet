@@ -1,0 +1,46 @@
+ingress:
+  # Configure ingress for the proxy port.
+  public:
+    # En-/Disable the proxy ingress.
+    enabled: true
+    annotations:
+      # kubernetes.io/ingress.class: nginx
+      # cert-manager.io/cluster-issuer: letsencrypt-nginx-fake
+    hosts:
+      - host: auth.project.tld
+        paths: ["/oauth2", "/.well-known", "/userinfo"]
+    tls:
+      - hosts:
+        - auth.project.tld
+        secretName: cert-authO
+
+hydra:
+  # The ORY Hydra configuration. For a full list of available settings, check:
+  #   https://github.com/ory/hydra/blob/master/docs/config.yaml
+  # Use a pre-existing secret (see hydra-secret.yaml for required fields)
+  existingSecret: hydra
+  config:
+    serve:
+      public:
+        port: 4444
+        cors:
+          allowed_origins:
+          # - project host
+            - https://project.tld
+        access_log:
+          disable_for_health: true
+      admin:
+        port: 4445
+        access_log:
+          disable_for_health: true
+      tls:
+        allow_termination_from:
+          - 10.0.0.0/14
+          - 192.168.0.0/16
+    urls:
+      login: https://auth.project.tld/login
+      consent: https://auth.project.tld/consent
+      logout: https://auth.project.tld/logout
+      post_logout_redirect: https://project.tld/
+      self:
+        issuer: https://auth.project.tld/

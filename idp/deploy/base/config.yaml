@@ -1,0 +1,29 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: idp-config
+data:
+  TZ: "Asia/Manila"
+  RUNTIME_ENVIRONMENT: DEPLOY_ENV
+  SERVER_HOST: OVERLAY_ME
+  SITE_URL: https://OVERLAY_ME
+  USERMGM_API: profile-admin:80
+  USERMGM_INTERNAL: usermgm-admin:80
+  CORS_ORIGINS: https://OVERLAY_ME,*.OVERLAY_ME
+  REMEMBER_FOR: "259200" # 3 days
+  HYDRA_ADMINURL: http://hydra-admin
+  AUTH_SOURCE: usermgm
+  GOOGLE_CALLBACK: https://sso.OVERLAY_ME/login/google-callback
+  ORG_AUTOCREATE: 'true'
+  ORG_AUTOAPPROVE: 'true'
+  INFLUXDB_HOST: influxdb2.influxdb.svc.cluster.local
+  INFLUXDB_PORT: '8086'
+  INFLUXDB_BATCHSIZE: '100'
+  INFLUXDB_GRPCMEASURE: idp_grpc_latency
+  INFLUXDB_HTTPMEASURE: idp_http_latency
+  LOGIN_RETRIES: "-1"
+  PROJECT_NAME: "petnet"
+  HANDLER_DISABLESIGNUP: "true"
+
+...

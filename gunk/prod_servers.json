@@ -1,0 +1,8 @@
+{
+  "servers": [
+    {
+      "url": "https://api.perahub.com",
+      "description": "Production Server"
+    }
+  ]
+}

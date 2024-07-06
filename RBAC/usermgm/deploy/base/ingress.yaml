@@ -1,0 +1,45 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: rbac-identity-grpc
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+    nginx.ingress.kubernetes.io/grpc-backend: "true"
+spec:
+  tls:
+  - hosts:
+    - "sso.OVERLAY_ME"
+    secretName: cert-authz
+  rules:
+  - host: sso.OVERLAY_ME
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: usermgm
+          servicePort: 80
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: rbac-identity
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+  - hosts:
+    - "sso.OVERLAY_ME"
+    secretName: cert-authz
+  rules:
+  - host: sso.OVERLAY_ME
+    http:
+      paths:
+      - path: /.*
+        backend:
+          serviceName: usermgm
+          servicePort: 80
+
+...

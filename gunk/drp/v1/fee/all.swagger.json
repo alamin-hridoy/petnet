@@ -1,0 +1,175 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/drp/v1/fee/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "FeeService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/fee/{remit_partner}/inquiry": {
+      "post": {
+        "summary": "Partner Fee Inquiry.",
+        "description": "Get a list of fees for choosen remit type.",
+        "operationId": "FeeService_FeeInquiry",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/feeFeeInquiryResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "remit_partner",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/feeFeeInquiryRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Fee"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "feeFeeInquiryRequest": {
+      "type": "object",
+      "properties": {
+        "remit_partner": {
+          "type": "string"
+        },
+        "remit_type": {
+          "type": "string"
+        },
+        "amount": {
+          "$ref": "#/definitions/terminalSendAmount"
+        },
+        "promo": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "remit_partner",
+        "destination_country",
+        "remit_type",
+        "amount"
+      ]
+    },
+    "feeFeeInquiryResponse": {
+      "type": "object",
+      "properties": {
+        "fees": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "terminalSendAmount": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string",
+          "description": "Monetary amount in the smallest currency denomination.  Example: USD $10.25 =\u003e \"1025\"."
+        },
+        "source_country": {
+          "type": "string",
+          "description": "Source country code using ISO-3166 2-letter codes."
+        },
+        "source_currency": {
+          "type": "string",
+          "description": "Source currency code using ISO-4217 3-letter codes."
+        },
+        "destination_country": {
+          "type": "string",
+          "description": "Destination country code using ISO-3166 2-letter codes."
+        },
+        "destination_currency": {
+          "type": "string",
+          "description": "Destination currency code using ISO-4217 3-letter codes."
+        },
+        "destination_amount": {
+          "type": "boolean",
+          "description": "Use destination currency to calculate the remittance principal.\nPricipal amount will be adjusted for exchange rate."
+        }
+      },
+      "required": [
+        "amount",
+        "source_currency",
+        "destination_currency",
+        "destination_country"
+      ]
+    }
+  }
+}

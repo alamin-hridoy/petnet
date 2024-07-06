@@ -1,0 +1,530 @@
+# use buildkit
+# export COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1
+version: "3"
+
+volumes:
+  petnet_usermgm:
+  petnet_postgresql:
+  petnet_elector_sock:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+
+services:
+  postgresd:
+    container_name: petnet_postgresd
+    image: postgres:13-alpine
+    ports:
+      - "5435:5432"
+    volumes:
+      - petnet_postgresql:/var/lib/postgresql/data
+      - ./create-petnet-database.sh:/docker-entrypoint-initdb.d/create-petnet-database.sh
+    command: ["postgres", "-c", "log_statement=all"]
+    environment:
+      TZ: "${TZ:-Asia/Manila}" # philippine time
+      PGTZ: "${TZ:-Asia/Manila}" # philippine time
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: postgres
+      CREATE_EXTENSION: uuid-ossp
+    restart: unless-stopped
+
+  petnet-cms:
+    container_name: petnet_cms
+    depends_on:
+      local-setup:
+        condition: service_completed_successfully
+    build:
+      context: ../..
+      dockerfile: deploy/compose/Dockerfile.cms
+    volumes:
+      - ../../cms/assets:/src/cms/assets
+    environment:
+      TZ: "${TZ:-Asia/Manila}"
+      RUNTIME_ENVIRONMENT: "staging"
+      RUNTIME_LOGFORMAT: json
+      SERVER_HOST: ""
+      SERVER_PORT: "80"
+      AUTH_CLIENTID: rbac-dev
+      AUTH_CLIENTSECRET: secret
+      AUTH_SYSTEMCLIENTID: "bootstrap"
+      AUTH_SYSTEMCLIENTSECRET: "secret"
+      AUTH_ISSUER: "${AUTH_ISSUER:-http://hydra-public.localhost/}"
+      AUTH_OAUTHURL: "${AUTH_OAUTHURL:-http://cms.localhost/oauth2}"
+      AUTH_URL: "${AUTH_URL:-http://hydra:4444}"
+      CSRF_SECRET: somethingsecret
+      HYDRA_AUDIENCE: "cms.localhost"
+      HYDRA_ADMINURL: http://hydra:4445
+      PROFILE_INTERNAL: "petnet-profile:3030"
+      GCS_BUCKETNAME: ""
+      SERVER_BASEURL: "${SERVER_BASEURL:-http://cms.localhost}"
+      IDENTITY_INTERNAL: rbac-usermgm:3030
+      IDENTITY_EXTERNAL: rbac-usermgm:3000
+      DRP_SANDBOXINTERNAL: petnet-drp-sandbox:3030
+      DRP_LIVEINTERNAL: petnet-drp-live:3030
+      DRP_LIVEMOCK: "false"
+      TEMPLATES_LOGINURL: "${TEMPLATES_LOGINURL:-http://hydra-public.localhost}"
+      LOCAL_DISABLEACTIONMFA: "true"
+      TRACE_COLLECTORHOST: "otel-collector:4317"
+      # OTEL_LOG_LEVEL: debug
+      # GRPC_GO_LOG_SEVERITY_LEVEL: info
+      # GRPC_GO_LOG_VERBOSITY_LEVEL: '99'
+    labels:
+      traefik.enable: true
+      traefik.http.services.cms.loadbalancer.server.port: 80
+      traefik.http.routers.cms.rule: Host(`cms.localhost`)
+    restart: unless-stopped
+
+  petnet-drp-sandbox:
+    container_name: petnet_drp_sandbox
+    depends_on:
+      - postgresd
+    build:
+      context: ../..
+      dockerfile: deploy/compose/Dockerfile.drp
+    environment:
+      TZ: "${TZ:-Asia/Manila}"
+      RUNTIME_ENVIRONMENT: "sandbox"
+      RUNTIME_LOGLEVEL: debug
+      RUNTIME_LOGFORMAT: json
+      PERAHUB_BASEURL: https://newkycgateway.dev.perahub.com.ph/gateway/
+      PERAHUB_NONEXURL: https://privatedrp.dev.perahub.com.ph/v1/remit/nonex/
+      PERAHUB_REVCOMMURL: https://privatedrp.dev.perahub.com.ph/v1/drp/
+      PERAHUB_RTAURL: https://privatedrp.dev.perahub.com.ph/v1/banks/
+      PERAHUB_BILLSURL: https://privatedrp.dev.perahub.com.ph/v1/billspay/
+      PERAHUB_CICOURL: https://privatedrp.dev.perahub.com.ph/v1/cico/wrapper/
+      PERAHUB_REMITTANCEURL: https://privatedrp.dev.perahub.com.ph/v1/remit/dmt/
+      PERAHUB_MICINSURL: https://privatedrp.dev.perahub.com.ph/v1/insurance/ruralnet/
+      PERAHUB_DEFAULTAPIKEY: "${PERAHUB_DEFAULTAPIKEY:-replaceme}"
+      PERAHUB_NONEXAPIKEY: "${PERAHUB_NONEXAPIKEY:-replaceme}"
+      PERAHUB_HTTPMOCK: "${PERAHUB_SANDBOX_HTTPMOCK:-true}"
+      PERAHUB_AUTHMOCK: "${PERAHUB_SANDBOX_AUTHMOCK:-true}"
+      PERAHUB_WISECLIENTID: "${PERAHUB_WISECLIENTID:-replaceme}"
+      PERAHUB_WISECLIENTSECRET: "${PERAHUB_WISECLIENTSECRET:-replaceme}"
+      SERVER_HOST: 127.0.0.1
+      SERVER_PORT: "3000"
+      DATABASE_HOST: postgresd
+      DATABASE_PORT: "5432"
+      DATABASE_USER: petnetdb_sandbox_user
+      DATABASE_DBNAME: petnetdb_sandbox
+      DATABASE_PASSWORD: secret
+      HYDRA_AUDIENCE: "127.0.0.1:4040"
+      HYDRA_ADMINURL: http://hydra:4445
+      API_HOST: "127.0.0.1"
+      API_PORT: "3030"
+      API_AUTHHOST: "127.0.0.1:3000"
+      IDENTITY_INTERNAL: rbac-usermgm:3030
+      PROFILE_INTERNAL: petnet-profile:3030
+      CORS_ORIGINS: "${CORS_ORIGINS:-https://petnet.brank.as,*.petnet.brank.as}"
+      AUTH_OAUTHURL: "${AUTH_OAUTHURL:-http://cms.localhost/oauth2}"
+      AUTH_ISSUER: "${AUTH_ISSUER:-http://hydra:4444/}"
+      AUTH_TOKEN: "${AUTH_TOKEN:-http://hydra:4444/oauth2/token}"
+      TRACE_COLLECTORHOST: "otel-collector:4317"
+      # OTEL_LOG_LEVEL: debug
+      # GRPC_GO_LOG_SEVERITY_LEVEL: info
+      # GRPC_GO_LOG_VERBOSITY_LEVEL: '99'
+    labels:
+      traefik.enable: true
+      # internal
+      traefik.http.routers.drp-sb-in.rule: Host(`drp-sandbox.localhost`)
+      traefik.http.routers.drp-sb-in.entrypoints: internal
+      traefik.http.routers.drp-sb-in.service: drp-sb-in
+      traefik.http.services.drp-sb-in.loadbalancer.server.port: 3030
+
+      # external
+      traefik.http.routers.drp-sb.rule: Host(`drp-sandbox.localhost`)
+      traefik.http.routers.drp-sb.entrypoints: web
+      traefik.http.routers.drp-sb.service: drp-sb
+      traefik.http.services.drp-sb.loadbalancer.server.port: 3000
+    restart: unless-stopped
+
+  petnet-drp-live:
+    container_name: petnet_api_live
+    depends_on:
+      - postgresd
+    build:
+      context: ../..
+      dockerfile: deploy/compose/Dockerfile.drp
+    environment:
+      TZ: "${TZ:-Asia/Manila}"
+      RUNTIME_ENVIRONMENT: "live"
+      RUNTIME_LOGLEVEL: debug
+      RUNTIME_LOGFORMAT: json
+      PERAHUB_BASEURL: https://newkycgateway.dev.perahub.com.ph/gateway/
+      PERAHUB_NONEXURL: https://privatedrp.dev.perahub.com.ph/v1/remit/nonex/
+      PERAHUB_REVCOMMURL: https://privatedrp.dev.perahub.com.ph/v1/drp/
+      PERAHUB_BILLSURL: https://privatedrp.dev.perahub.com.ph/v1/billspay/
+      PERAHUB_CICOURL: https://privatedrp.dev.perahub.com.ph/v1/cico/wrapper/
+      PERAHUB_REMITTANCEURL: https://privatedrp.dev.perahub.com.ph/v1/remit/dmt/
+      PERAHUB_MICINSURL: https://privatedrp.dev.perahub.com.ph/v1/insurance/ruralnet/
+      PERAHUB_DEFAULTAPIKEY: "${PERAHUB_DEFAULTAPIKEY:-replaceme}"
+      PERAHUB_NONEXAPIKEY: "${PERAHUB_NONEXAPIKEY:-replaceme}"
+      PERAHUB_HTTPMOCK: "${PERAHUB_LIVE_HTTPMOCK:-true}"
+      PERAHUB_AUTHMOCK: "${PERAHUB_LIVE_AUTHMOCK:-false}"
+      PERAHUB_WISECLIENTID: "${PERAHUB_WISECLIENTID:-replaceme}"
+      PERAHUB_WISECLIENTSECRET: "${PERAHUB_WISECLIENTSECRET:-replaceme}"
+      SERVER_HOST: 127.0.0.1
+      SERVER_PORT: "3000"
+      DATABASE_HOST: postgresd
+      DATABASE_PORT: "5432"
+      DATABASE_USER: petnetdb_live_user
+      DATABASE_DBNAME: petnetdb_live
+      DATABASE_PASSWORD: secret
+      HYDRA_AUDIENCE: "127.0.0.1:4040"
+      HYDRA_ADMINURL: http://hydra:4445
+      API_HOST: "127.0.0.1"
+      API_PORT: "3030"
+      API_AUTHHOST: "127.0.0.1:3000"
+      IDENTITY_INTERNAL: rbac-usermgm:3030
+      PROFILE_INTERNAL: petnet-profile:3030
+      CORS_ORIGINS: "${CORS_ORIGINS:-https://petnet.brank.as,*.petnet.brank.as}"
+      AUTH_OAUTHURL: "${AUTH_OAUTHURL:-http://cms.localhost/oauth2}"
+      AUTH_ISSUER: "${AUTH_ISSUER:-http://hydra:4444/}"
+      AUTH_TOKEN: "${AUTH_TOKEN:-http://hydra:4444/oauth2/token}"
+      TRACE_COLLECTORHOST: "otel-collector:4317"
+      # OTEL_LOG_LEVEL: debug
+      # GRPC_GO_LOG_SEVERITY_LEVEL: info
+      # GRPC_GO_LOG_VERBOSITY_LEVEL: '99'
+    labels:
+      traefik.enable: true
+      # internal
+      traefik.http.routers.drp-lv-in.rule: Host(`drp-live.localhost`)
+      traefik.http.routers.drp-lv-in.entrypoints: internal
+      traefik.http.routers.drp-lv-in.service: drp-lv-in
+      traefik.http.services.drp-lv-in.loadbalancer.server.port: 3030
+
+      # external
+      traefik.http.routers.drp-lv.rule: Host(`drp-live.localhost`)
+      traefik.http.routers.drp-lv.entrypoints: web
+      traefik.http.routers.drp-lv.service: drp-lv
+      traefik.http.services.drp-lv.loadbalancer.server.port: 3000
+    restart: unless-stopped
+
+  petnet-profile:
+    container_name: petnet_profile
+    depends_on:
+      - postgresd
+      - rbac-usermgm
+    build:
+      context: ../..
+      dockerfile: deploy/compose/Dockerfile.profile
+    environment:
+      TZ: "${TZ:-Asia/Manila}"
+      RUNTIME_ENVIRONMENT: "staging"
+      RUNTIME_LOGFORMAT: json
+      SERVER_HOST: 127.0.0.1
+      SERVER_PORT: "3000"
+      SERVER_ADMINPORT: "3030"
+      AUTH_URL: "${AUTH_URL:-http://hydra:4444}"
+      CMS_URL: "${CMS_URL:-http://cms.localhost}"
+      DATABASE_HOST: postgresd
+      DATABASE_PORT: "5432"
+      DATABASE_USER: profiledb_user
+      DATABASE_DBNAME: profiledb
+      DATABASE_PASSWORD: secret
+      SMTP_USERNAME: "${SMTP_USERNAME:-placeholder}"
+      SMTP_PASSWORD: "${SMTP_PASSWORD:-placeholder}"
+      SMTP_HOST: "smtp.gmail.com"
+      SMTP_PORT: "587"
+      SMTP_FROMNAME: "PETNET"
+      USERMGM_ADMIN: "rbac-usermgm:3030"
+      USERMGM_API: "rbac-usermgm:3000"
+      USERMGM_MOCK: "false"
+      HYDRA_AUDIENCE: "127.0.0.1:5050"
+      HYDRA_ADMINURL: http://hydra:4445
+      AUTH_CLIENTID: "bootstrap"
+      AUTH_CLIENTSECRET: "secret"
+      LOCAL_DISABLELOGINMFA: "true"
+      LOCAL_DISABLEPERMISSIONBOOTSTRAP: "true"
+      TRACE_COLLECTORHOST: "otel-collector:4317"
+      # OTEL_LOG_LEVEL: debug
+      # GRPC_GO_LOG_SEVERITY_LEVEL: info
+      # GRPC_GO_LOG_VERBOSITY_LEVEL: '99'
+    labels:
+      traefik.enable: true
+      traefik.http.routers.profile.rule: Host(`profile.localhost`)
+      traefik.http.routers.profile.entrypoints: web
+      traefik.http.services.profile.loadbalancer.server.port: 3030
+    restart: "always"
+
+  rbac-usermgm:
+    container_name: petnet_usermgm
+    extends:
+      file: ../../RBAC/deploy/compose/base-services.yml
+      service: usermgm
+    depends_on:
+      hydra-migrate:
+        condition: service_completed_successfully
+    volumes:
+      - petnet_usermgm:/tmp
+      - ../rbac/usermgm/email-assets:/src/usermgm/integrations/email/assets
+    environment:
+      TZ: "${TZ:-Asia/Manila}"
+      MAILER_SIGNUPURL: "${MAILER_SIGNUPURL:-http://cms.localhost/registration/account-details}"
+      MAILER_EMAILCONFIRMURL: "${MAILER_EMAILCONFIRMURL:-http://cms.localhost/registration/preliminary-screen}"
+      USER_EXISTERROR: "true"
+      MAILER_MOCK: "${MAILER_MOCK:-true}"
+      HYDRA_ADMINURL: http://hydra:4445
+      IDP_URL: "${IDP_URL:-http://idp.localhost}"
+      BOOTSTRAP_ENVLIST: "sandbox live"
+      BOOTSTRAP_STARTUP: true
+    labels:
+      traefik.enable: true
+      # internal
+      traefik.http.routers.usermgm-in.rule: Host(`usermgm.localhost`)
+      traefik.http.routers.usermgm-in.entrypoints: internal
+      traefik.http.routers.usermgm-in.service: usermgm-in
+      traefik.http.services.usermgm-in.loadbalancer.server.port: 3030
+
+      # external
+      traefik.http.routers.usermgm.rule: Host(`usermgm.localhost`)
+      traefik.http.routers.usermgm.entrypoints: web
+      traefik.http.routers.usermgm.service: usermgm
+      traefik.http.services.usermgm.loadbalancer.server.port: 3000
+
+  rbac-idp:
+    container_name: petnet_idp
+    extends:
+      file: ../../RBAC/deploy/compose/base-services.yml
+      service: idp
+    depends_on:
+      - hydra-migrate
+    volumes:
+      - ../../idp/assets:/src/idp/assets
+      - petnet_elector_sock:/var/lib/leaderelex
+    environment:
+      TZ: "${TZ:-Asia/Manila}"
+      RUNTIME_ENV: "development"
+      RUNTIME_ENVIRONMENT: "local"
+      AUTHENTICATOR_NAMES: usermgm perahub
+      AUTHENTICATOR_DEFAULT: usermgm
+      AUTHENTICATOR_USERMGM_TYPE: session
+      AUTHENTICATOR_USERMGM_HOST: petnet-profile:3030
+      AUTHENTICATOR_USERMGM_DURATION: 24h
+      AUTHENTICATOR_PERAHUB_TYPE: session
+      AUTHENTICATOR_PERAHUB_HOST: petnet-drp-sandbox:3030
+      AUTHENTICATOR_PERAHUB_DURATION: 24h
+      AUTH_CLIENTID: "${AUTH_CLIENTID:-bootstrap}"
+      AUTH_CLIENTSECRET: "${AUTH_CLIENTSECRET:-secret}"
+      SITE_URL: "${SITE_URL:-http://cms.localhost}"
+      SIGNUP_URL: "${SIGNUP_URL:-http://cms.localhost/registration/account-details}"
+      LOGIN_URL: "${LOGIN_URL:-http://cms.localhost/login}"
+      USERMGM_API: petnet-profile:3030
+      AUTH_URL: "${HYDRA_HOST:-http://hydra:4444}"
+    labels:
+      traefik.enable: true
+      traefik.http.services.rbac-idp.loadbalancer.server.port: 3000
+      traefik.http.routers.rbac-idp.rule: Host(`idp.localhost`)
+
+  hydra-migrate:
+    container_name: petnet_hydra-migrate
+    extends:
+      file: ../../RBAC/deploy/compose/base-services.yml
+      service: hydra-migrate
+    depends_on:
+      - postgresd
+
+  hydra:
+    container_name: petnet_hydra
+    extends:
+      file: ../../RBAC/deploy/compose/base-services.yml
+      service: hydra
+    command: serve all --dangerous-force-http --sqa-opt-out --dangerous-allow-insecure-redirect-urls http://cms.localhost/oauth2/callback,http://dsa-sim.localhost/oauth2/callback
+    depends_on:
+      hydra-migrate:
+        condition: service_completed_successfully
+    environment:
+      TZ: "${TZ:-Asia/Manila}"
+      CORS_ENABLED: true
+      URLS_POST_LOGOUT_REDIRECT: ${URLS_POST_LOGOUT_REDIRECT:-http://cms.localhost/}
+      CORS_ALLOWED_ORIGINS: http://cms.localhost:*,http://dsa-sim.localhost:*
+      URLS_SELF_ISSUER: ${URLS_SELF_ISSUER:-http://hydra-public.localhost}
+      URLS_CONSENT: ${URLS_CONSENT:-http://idp.localhost/consent}
+      URLS_LOGIN: ${URLS_LOGIN:-http://idp.localhost/login}
+      URLS_LOGOUT: ${URLS_LOGOUT:-http://idp.localhost/logout}
+      DSN: postgres://hydradb_user:secret@postgresd:5432/hydradb?sslmode=disable&max_conns=20&max_idle_conns=4
+      SECRETS_SYSTEM: youReallyNeedToChangeThis
+      OIDC_SUBJECT_TYPES_SUPPORTED: public,pairwise
+      OIDC_SUBJECT_TYPE_PAIRWISE_SALT: youReallyNeedToChangeThis
+      OAUTH2_EXPOSE_INTERNAL_ERRORS: true
+      TTL_ACCESS_TOKEN: 1h # shorter for testing expiry
+      LOG_FORMAT: json
+      LOG_LEVEL: debug
+      LOG_LEAK_SENSITIVE_VALUES: true
+      OAUTH2_SHARE_ERROR_DEBUG: 1
+      SERVE_COOKIES_SAME_SITE_MODE: Lax
+    labels:
+      traefik.enable: true
+      traefik.http.routers.hydra-public.rule: Host(`hydra-public.localhost`)
+      traefik.http.routers.hydra-public.entrypoints: web
+      traefik.http.routers.hydra-public.service: hydra-public
+      traefik.http.services.hydra-public.loadbalancer.server.port: 4444
+
+      traefik.http.routers.hydra-admin.rule: Host(`hydra-admin.localhost`)
+      traefik.http.routers.hydra-admin.entrypoints: web
+      traefik.http.routers.hydra-admin.service: hydra-admin
+      traefik.http.services.hydra-admin.loadbalancer.server.port: 4445
+
+  keto-migrate:
+    container_name: petnet_keto-migrate
+    extends:
+      file: ../../RBAC/deploy/compose/base-services.yml
+      service: keto-migrate
+    depends_on:
+      - postgresd
+
+  keto:
+    image: rbac/keto:latest
+    container_name: petnet_keto
+    extends:
+      file: ../../RBAC/deploy/compose/base-services.yml
+      service: keto
+    depends_on:
+      keto-migrate:
+        condition: service_completed_successfully
+    environment:
+      TZ: "${TZ:-Asia/Manila}"
+      LOG_FORMAT: json
+    labels:
+      traefik.enable: true
+      traefik.http.routers.keto.rule: Host(`keto.localhost`)
+      traefik.http.routers.keto.entrypoints: web
+      traefik.http.services.keto.loadbalancer.server.port: 4466
+
+  jaeger:
+    container_name: petnet_jaeger
+    extends:
+      file: ../../RBAC/deploy/compose/base-services.yml
+      service: jaeger
+    labels:
+      traefik.enable: true
+      traefik.http.routers.trace.rule: Host(`trace.localhost`)
+      traefik.http.routers.trace.entrypoints: web
+      traefik.http.services.trace.loadbalancer.server.port: 16686
+
+  otel-collector:
+    container_name: petnet_otel-collector
+    extends:
+      file: ../../RBAC/deploy/compose/base-services.yml
+      service: otel-collector
+    ports:
+      - "4317" # OTLP gRPC receiver
+      - "1777:1777" # pprof extension
+      - "55679:55679" # zpages extension
+      - "13133" # health_check
+
+  local-setup:
+    container_name: petnet_local-setup
+    depends_on:
+      - postgresd
+      - petnet-profile
+    build:
+      context: ../
+      dockerfile: compose/Dockerfile.local-setup
+    environment:
+      TZ: "${TZ:-Asia/Manila}"
+      RUNTIME_ENVIRONMENT: "development"
+      RUNTIME_LOGFORMAT: json
+      SERVER_URL: "http://setup.localhost"
+      DATABASE_HOST: postgresd
+      DATABASE_PORT: "5432"
+      DATABASE_PROFILEUSER: profiledb_user
+      DATABASE_PROFILEDBNAME: profiledb
+      DATABASE_PROFILEPASSWORD: secret
+      DATABASE_IDENTITYUSER: usermgmdb_user
+      DATABASE_IDENTITYDBNAME: usermgmdb
+      DATABASE_IDENTITYPASSWORD: secret
+
+      IDENTITY_INTERNAL: "rbac-usermgm:3030"
+      IDENTITY_EXTERNAL: "rbac-usermgm:3000"
+      PROFILE_INTERNAL: "petnet-profile:3030"
+
+      CMS_CLIENTID: rbac-dev
+      CMS_CLIENTSECRET: secret
+
+      AUTH_CLIENTID: "bootstrap"
+      AUTH_CLIENTSECRET: "secret"
+      AUTH_URL: "${AUTH_URL:-http://hydra:4444}"
+      HYDRA_ADMINURL: http://hydra:4445
+      AUTH_REDIRECTURL: http://setup.localhost/oauth2/callback
+      AUTH_ISSUER: "${AUTH_HOST:-http://hydra:4444}"
+      AUTH_TOKEN: "${HYDRA_ADMINURL:-http://hydra:4444}"
+
+      DSA_EMAIL: "${DSA_EMAIL:-dsa@sharklasers.com}"
+      DSA_PASSWORD: "${DSA_PASSWORD:-password1}"
+      DSA_APIKEYSTG: "${DSA_APIKEYSTG:-api-key-sandbox}"
+      DSA_APISECRETSTG: "${DSA_APISECRETSTG:-secret}"
+      DSA_APIKEYLIVE: "${DSA_APIKEYLIVE:-api-key-live}"
+      DSA_APISECRETLIVE: "${DSA_APISECRETLIVE:-secret}"
+      DSA_SIMAUTHID: "${DSA_SIMAUTHID:-dsaauth}"
+      DSA_SIMAUTHSECRET: "${DSA_SIMAUTHSECRET:-secret}"
+      ADMIN_EMAIL: "${ADMIN_EMAIL:-petnet@sharklasers.com}"
+      ADMIN_PASSWORD: "${ADMIN_PASSWORD:-password1}"
+
+      COMMON_DISABLELOGINMFA: "true"
+      # GRPC_GO_LOG_SEVERITY_LEVEL: info
+      # GRPC_GO_LOG_VERBOSITY_LEVEL: '99'
+    labels:
+      traefik.enable: true
+      traefik.http.services.local-setup.loadbalancer.server.port: 80
+      traefik.http.routers.local-setup.rule: Host(`setup.localhost`)
+    restart: "no"
+
+  dsa-sim:
+    container_name: dsa_sim
+    build:
+      context: ../..
+      dockerfile: deploy/compose/Dockerfile.dsa-sim
+    environment:
+      TZ: "${TZ:-Asia/Manila}"
+      RUNTIME_ENVIRONMENT: "development"
+      RUNTIME_LOGFORMAT: json
+      SERVER_HOST: ""
+      SERVER_PORT: "80"
+
+      DATABASE_HOST: postgresd
+      DATABASE_PORT: "5432"
+      DATABASE_USER: dsasimdb_user
+      DATABASE_DBNAME: dsasimdb
+      DATABASE_PASSWORD: secret
+
+      API_EXTERNAL: petnet-drp-sandbox:3000
+      HYDRA_ADMINURL: http://hydra:4445
+      SCOPES_HOST: "${USERMGM_INTERNAL:-rbac-usermgm:3030}"
+      AUTH_ISSUER: "${AUTH_HOST:-http://hydra:4444}"
+      AUTH_TOKEN: "${AUTH_ADMINURL:-http://hydra:4444}"
+      AUTH_URL: "${AUTH_URL:-http://hydra:4444}"
+      AUTH_COOKIENAME: localdev
+      AUTH_COOKIESECRET: "${AUTH_COOKIESECRET}:-secret}"
+      AUTH_CLIENTID: "${AUTH_CLIENTID:-dsaauth}"
+      AUTH_CLIENTSECRET: "${AUTH_CLIENTSECRET:-secret}"
+      AUTH_REDIRECTURL: http://dsa-sim.localhost/oauth2/callback
+      AUTH_OAUTHURL: "${AUTH_OAUTHURL:-http://dsa-sim.localhost/oauth2}"
+
+      DSA_CLIENTID: "${DSA_APIKEYSTG:-api-key-sandbox}"
+      DSA_CLIENTSECRET: "${DSA_APISECRETSTG:-secret}"
+      CSRF_SECRET: somethingsecret
+    labels:
+      traefik.enable: true
+      traefik.http.services.dsa-sim.loadbalancer.server.port: 80
+      traefik.http.routers.dsa-sim.rule: Host(`dsa-sim.localhost`)
+    restart: unless-stopped
+
+  traefik:
+    image: traefik:v2.5.5
+    command:
+      - --log.level=DEBUG
+      - --api.insecure=true
+      - --entrypoints.web.address=:80
+      - --entrypoints.internal.address=:3030
+      - --providers.docker.exposedbydefault=false
+      - --providers.docker=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      traefik.enable: true
+      traefik.http.routers.dash.rule: Host(`dash.localhost`)
+      traefik.http.routers.dash.service: api@internal
+    ports:
+      - "80:80"
+      - "3030:3030"

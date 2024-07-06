@@ -1,0 +1,18 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Logout</title>
+</head>
+<body>
+<h1>Do you wish to log out?</h1>
+<form action="/logout" method="post">
+    {{ .CSRFField }}
+    <input type="hidden" name="challenge" value="{{ .Challenge }}">
+    <button type="submit" id="accept" name="accept" value="true">Yes</button>
+    <button type="submit" id="reject" name="accept" value="false">No</button>
+</form>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>API Key</title>
+</head>
+
+<body class="font-sans">
+    <div class="flex">
+        <!-- sidebar-start -->
+        {{ template "dsa-sidenav-menu.html" dict "Type" "api-pages" "Data" .}}
+        <!-- sidebar-end -->
+        <!-- right-top-header-start -->
+        <div class="min-h-screen w-full flex bg-petnetgray">
+            <div class="w-full">
+                {{ template "api-head.html" dict "Env" .Environment "RouteName" "api-key" "UserInfo" .UserInfo "CompanyName" .CompanyName "OnboardingIncompleteStatus" .OnboardingIncompleteStatus "HasLiveAccess" .HasLiveAccess}}
+                <div class="">
+                    <div>
+                        <!-- first-section-start -->
+                        <div class="px-6 lg:px-32 py-10 flex flex-wrap">
+                            <div class="w-1/4 pr-2 flex flex-col">
+                                {{ template "api-sidenav.html" . }}
+                            </div>
+                            <div class="w-3/4 pl-2">
+                                <div class="bg-white rounded mb-3">
+                                    <div class="border-b flex items-center justify-between">
+                                        <h4 class="text-xl font-bold text-petnetblue pt-7 px-6 pb-4">Client ID</h4>
+                                        <a href="/api-key/generate/{{.Environment}}"
+                                            class="bg-petnetyellow rounded-lg h-14 font-bold text-lg m-6 p-4 text-petnetblue">
+                                            Generate Client ID & Secret
+                                        </a>
+                                    </div>
+                                    <div class="p-4">
+                                        <table class="w-full">
+                                            <thead class="">
+                                                <tr>
+                                                    <td class="font-semibold text-lg p-2 w-32">
+                                                        Date Created
+                                                    </td>
+                                                    <td class=" font-semibold text-lg p-2">
+                                                        Client ID
+                                                    </td>
+                                                    <td></td>
+                                                    <td class=" font-semibold text-lg p-2">Environment</td>
+                                                    <td class=" font-semibold text-lg p-2">Type</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{range .AccountApiKeys}}
+                                                <tr>
+                                                    <td class="text-lg p-2 w-40">
+                                                        {{formatTimestamp .Created "January 02, 2006"}}
+                                                    </td>
+                                                    <td class="p-2">
+                                                        <div clas="flex items-center">
+                                                            <span
+                                                                class="bg-petnetgreen h-2 w-2 rounded-full mr-3 inline-block"></span>
+                                                            <span class="inline-block">{{.ClientID}}</span>
+                                                        </div>
+                                                    </td>
+                                                    <td class="p-2">
+                                                        <a onclick="copyClientId('{{.ClientID}}',event)"
+                                                            href="javascript:;"
+                                                            class="bg-petnetlightyellow rounded-lg py-1 px-4 text-sm w-20 text-center inline-block">
+                                                            Copy
+                                                        </a>
+                                                    </td>
+                                                    <td class="p-2">
+                                                        {{.Environment}}
+                                                    </td>
+                                                    <td class="p-2">
+                                                        {{.TransactionType}}
+                                                    </td>
+                                                </tr>
+                                                {{end}}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function copyClientId(id, event) {
+            event.target.innerText = "Copied"
+            const el = document.createElement('textarea');
+            el.value = id;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            setTimeout(function () {
+                event.target.innerText = "Copy"
+            }, 1000);
+        }
+
+        function dropdownToggle(event) {
+            let targetItem = event.target;
+            while (!targetItem.classList.contains('dropdown-toggle')) {
+                targetItem = targetItem.parentElement;
+            }
+            targetItem = targetItem.nextElementSibling;
+
+            if (targetItem.classList.contains('hidden')) {
+                targetItem.classList.remove("hidden");
+            } else {
+                targetItem.classList.add("hidden");
+            }
+            let x = document.getElementsByClassName("dropdown-item");
+            for (let i = 0; i < x.length; i++) {
+                if (x[i] != targetItem) {
+                    x[i].classList.add("hidden")
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

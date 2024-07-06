@@ -1,0 +1,30 @@
+<div
+    class="inline-flex items-center justify-center uppercase w-9 h-9 rounded-full {{if eq .UserInfo.ProfileImage "" }} {{if .UserInfo}}bg-pink-500 {{end}} {{end}} {{if stringContains .UserInfo.ProfileImage "https://petnet.bnk.to/file"}}bg-pink-500{{end}} text-white ">
+    {{if eq .UserInfo.ProfileImage ""}}
+    {{if and (eq .UserInfo.FirstName "placeholder") (.CompanyName)}}
+    {{printf "%c%c" (index .CompanyName 0) (index .CompanyName 1)}}
+    {{else if ne .UserInfo.FirstName "placeholder"}}
+    {{printf "%c%c" (index .UserInfo.FirstName 0) (index .UserInfo.LastName 0)}}
+    {{else}}
+    <span class="bg-pink-500">AC</span>
+    {{end}}
+    {{end}}
+
+    {{if ne .UserInfo.ProfileImage ""}}
+        {{if .UserInfo.ProfileImage}}
+            {{if stringContains .UserInfo.ProfileImage "https://petnet.bnk.to/file"}}
+                {{if and (eq .UserInfo.FirstName "placeholder") (.CompanyName)}}
+                    <span class="bg-pink-500">{{printf "%c%c" (index .CompanyName 0) (index .CompanyName 1)}}</span>
+                {{else if ne .UserInfo.FirstName "placeholder"}}
+                    <span class="bg-pink-500">{{printf "%c%c" (index .UserInfo.FirstName 0) (index .UserInfo.LastName 0)}}</span>
+                {{else}}
+                    <span class="bg-pink-500">AC</span>
+                {{end}}
+            {{else}}
+                <img class="rounded-full cursor-pointer" id="PP" src="/u/files/{{ .UserInfo.ProfileImage }}" alt="">
+            {{end}}
+        {{else}}
+            <img class="rounded-full cursor-pointer" id="PP" src="{{ assetHash "/images/profile.svg" }}" alt="">
+        {{end}}
+    {{end}}
+</div>

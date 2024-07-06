@@ -1,0 +1,576 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/dsa/v2/revenuesharingreport/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "RevenueSharingReportService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v2/revenue-sharing-report": {
+      "get": {
+        "summary": "List Revenue Sharing Report.",
+        "description": "List all created Revenue Sharing Report.",
+        "operationId": "RevenueSharingReportService_GetRevenueSharingReportList",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/RevenueSharingReportServiceGetRevenueSharingReportListResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "org_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "created",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "updated",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "DESC",
+              "ASC"
+            ],
+            "default": "DESC"
+          },
+          {
+            "name": "sort_by_column",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "OmitSortByColumn",
+              "OrgID"
+            ],
+            "default": "OmitSortByColumn"
+          },
+          {
+            "name": "remittance_count",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "cico_count",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "bills_payment_count",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "insurance_count",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "dsa_commission",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "dsa_commission_type",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "dsa_code",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "year_month",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Revenue Sharing Report"
+        ]
+      },
+      "post": {
+        "summary": "Revenue Sharing Report.",
+        "description": "Create Revenue Sharing Report.",
+        "operationId": "RevenueSharingReportService_CreateRevenueSharingReport",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/RevenueSharingReportServiceCreateRevenueSharingReportResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/revenuesharingreportCreateRevenueSharingReportRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Revenue Sharing Report"
+        ]
+      },
+      "put": {
+        "summary": "Revenue Sharing Report.",
+        "description": "Update Revenue Sharing Report.",
+        "operationId": "RevenueSharingReportService_UpdateRevenueSharingReport",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/RevenueSharingReportServiceUpdateRevenueSharingReportResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/revenuesharingreportUpdateRevenueSharingReportRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Revenue Sharing Report"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "revenuesharingreportCreateRevenueSharingReportRequest": {
+      "type": "object",
+      "properties": {
+        "org_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "remittance_count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "cico_count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "bills_payment_count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "insurance_count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "dsa_commission": {
+          "type": "string"
+        },
+        "dsa_commission_type": {
+          "type": "string"
+        },
+        "dsa_code": {
+          "type": "string"
+        },
+        "year_month": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "org_id"
+      ]
+    },
+    "revenuesharingreportCreateRevenueSharingReportResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "remittance_count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "cico_count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "bills_payment_count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "insurance_count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "dsa_commission": {
+          "type": "string"
+        },
+        "dsa_commission_type": {
+          "type": "string"
+        },
+        "dsa_code": {
+          "type": "string"
+        },
+        "year_month": {
+          "type": "string"
+        }
+      }
+    },
+    "revenuesharingreportGetRevenueSharingReportListResponse": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/revenuesharingreportRevenueSharingReport"
+          }
+        }
+      }
+    },
+    "revenuesharingreportRevenueSharingReport": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "remittance_count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "cico_count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "bills_payment_count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "insurance_count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "dsa_commission": {
+          "type": "string"
+        },
+        "dsa_commission_type": {
+          "type": "string"
+        },
+        "dsa_code": {
+          "type": "string"
+        },
+        "year_month": {
+          "type": "string"
+        }
+      }
+    },
+    "revenuesharingreportSortByColumn": {
+      "type": "string",
+      "enum": [
+        "OmitSortByColumn",
+        "OrgID"
+      ],
+      "default": "OmitSortByColumn"
+    },
+    "revenuesharingreportSortOrder": {
+      "type": "string",
+      "enum": [
+        "DESC",
+        "ASC"
+      ],
+      "default": "DESC"
+    },
+    "revenuesharingreportUpdateRevenueSharingReportRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "remittance_count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "cico_count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "bills_payment_count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "insurance_count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "dsa_commission": {
+          "type": "string"
+        },
+        "dsa_commission_type": {
+          "type": "string"
+        },
+        "dsa_code": {
+          "type": "string"
+        },
+        "year_month": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "org_id",
+        "year_month"
+      ]
+    },
+    "revenuesharingreportUpdateRevenueSharingReportResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "remittance_count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "cico_count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "bills_payment_count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "insurance_count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "dsa_commission": {
+          "type": "string"
+        },
+        "dsa_commission_type": {
+          "type": "string"
+        },
+        "dsa_code": {
+          "type": "string"
+        },
+        "year_month": {
+          "type": "string"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

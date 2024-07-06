@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dsa-sim-config
+data:
+  RUNTIME_ENVIRONMENT: 'staging'
+  SERVER_HOST: ""
+  SERVER_PORT: '3000'
+
+  API_EXTERNAL: drp-api:80
+  HYDRA_ADMINURL: http://hydra-admin
+  AUTH_ISSUER: https://auth.staging.petnet.dev
+  AUTH_TOKEN: https://auth.staging.petnet.dev
+  AUTH_REDIRECTURL: https://dsa-sim.staging.petnet.dev/oauth2/callback
+  AUTH_URL: https://auth.staging.petnet.dev
+  AUTH_OAUTHURL: https://staging.petnet.dev/oauth2

@@ -1,0 +1,556 @@
+			<form method="POST" action="/create-remit">
+				{{ .CSRFField }}
+				<input name="Types" value="{{.Types}}" type="hidden">
+				<div>
+					<button type="submit">Create Remit</button>
+				</div>
+				<br>
+				<input name="Partner" value="{{.Partner}}" type="hidden">
+				<input name="Type" value="{{.Type}}" type="hidden">
+				<div>
+					<label>Remit Type</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.RemitType" {{if .CreateRemitReq.RemitType}}value="{{.CreateRemitReq.RemitType}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<h3>Amount</h3>
+				</div>
+				<div>
+					<label>Amount</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Amount.Amount" {{if .CreateRemitReq.Amount.Amount}}value="{{.CreateRemitReq.Amount.Amount}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Source Country</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Amount.SourceCountry" {{if .CreateRemitReq.Amount.SourceCountry}}value="{{.CreateRemitReq.Amount.SourceCountry}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Source Currency</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Amount.SourceCurrency" {{if .CreateRemitReq.Amount.SourceCurrency}}value="{{.CreateRemitReq.Amount.SourceCurrency}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Destination Currency</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Amount.DestinationCurrency" {{if .CreateRemitReq.Amount.DestinationCurrency}}value="{{.CreateRemitReq.Amount.DestinationCurrency}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Destination Amount</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Amount.DestinationAmount" {{if .CreateRemitReq.Amount.DestinationAmount}}value="{{.CreateRemitReq.Amount.DestinationAmount}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Destination Country</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Amount.DestinationCountry" {{if .CreateRemitReq.Amount.DestinationCountry}}value="{{.CreateRemitReq.Amount.DestinationCountry}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Message</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Message" {{if .CreateRemitReq.Message}}value="{{.CreateRemitReq.Message}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<h3>Sender</h3>
+				</div>
+				<div>
+					<label>First Name</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.ContactInfo.FirstName" {{if .CreateRemitReq.Remitter.ContactInfo.FirstName}}value="{{.CreateRemitReq.Remitter.ContactInfo.FirstName}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Middle Name</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.ContactInfo.MiddleName" {{if .CreateRemitReq.Remitter.ContactInfo.MiddleName}}value="{{.CreateRemitReq.Remitter.ContactInfo.MiddleName}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Last Name</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.ContactInfo.LastName" {{if .CreateRemitReq.Remitter.ContactInfo.LastName}}value="{{.CreateRemitReq.Remitter.ContactInfo.LastName}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Phone Country Code</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.ContactInfo.Phone.CountryCode" {{if .CreateRemitReq.Remitter.ContactInfo.Phone.CountryCode}}value="{{.CreateRemitReq.Remitter.ContactInfo.Phone.CountryCode}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Phone Number</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.ContactInfo.Phone.Number" {{if .CreateRemitReq.Remitter.ContactInfo.Phone.Number}}value="{{.CreateRemitReq.Remitter.ContactInfo.Phone.Number}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Mobile Country Code</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.ContactInfo.Mobile.CountryCode" {{if .CreateRemitReq.Remitter.ContactInfo.Mobile.CountryCode}}value="{{.CreateRemitReq.Remitter.ContactInfo.Mobile.CountryCode}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Mobile Number</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.ContactInfo.Mobile.Number" {{if .CreateRemitReq.Remitter.ContactInfo.Mobile.Number}}value="{{.CreateRemitReq.Remitter.ContactInfo.Mobile.Number}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Address1</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.ContactInfo.Address.Address1" {{if .CreateRemitReq.Remitter.ContactInfo.Address.Address1}}value="{{.CreateRemitReq.Remitter.ContactInfo.Address.Address1}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Address2</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.ContactInfo.Address.Address2" {{if .CreateRemitReq.Remitter.ContactInfo.Address.Address2}}value="{{.CreateRemitReq.Remitter.ContactInfo.Address.Address2}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>City</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.ContactInfo.Address.City" {{if .CreateRemitReq.Remitter.ContactInfo.Address.City}}value="{{.CreateRemitReq.Remitter.ContactInfo.Address.City}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>State</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.ContactInfo.Address.State" {{if .CreateRemitReq.Remitter.ContactInfo.Address.State}}value="{{.CreateRemitReq.Remitter.ContactInfo.Address.State}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Province</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.ContactInfo.Address.Province" {{with $v:=.CreateRemitReq.Remitter.ContactInfo}}{{if $v}}value="{{$v.Address.Province}}"{{else}}disabled="disabled"{{end}}{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Postal Code</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.ContactInfo.Address.PostalCode" {{if .CreateRemitReq.Remitter.ContactInfo.Address.PostalCode}}value="{{.CreateRemitReq.Remitter.ContactInfo.Address.PostalCode}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Zone</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.ContactInfo.Address.Zone" {{with $v:=.CreateRemitReq.Remitter.ContactInfo}}{{if $v}}value="{{$v.Address.Zone}}"{{else}}disabled="disabled"{{end}}{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Country</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.ContactInfo.Address.Country" {{if .CreateRemitReq.Remitter.ContactInfo.Address.Country}}value="{{.CreateRemitReq.Remitter.ContactInfo.Address.Country}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>ID Type</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.Identification.Type" {{if .CreateRemitReq.Remitter.Identification.Type}}value="{{.CreateRemitReq.Remitter.Identification.Type}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>ID Number</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.Identification.Number" {{if .CreateRemitReq.Remitter.Identification.Number}}value="{{.CreateRemitReq.Remitter.Identification.Number}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>ID Country</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.Identification.Country" {{if .CreateRemitReq.Remitter.Identification.Country}}value="{{.CreateRemitReq.Remitter.Identification.Country}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>ID Issued Year</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.Identification.Issued.Year" {{if .CreateRemitReq.Remitter.Identification.Issued.Year}}value="{{.CreateRemitReq.Remitter.Identification.Issued.Year}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>ID Issued Month</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.Identification.Issued.Month" {{if .CreateRemitReq.Remitter.Identification.Issued.Month}}value="{{.CreateRemitReq.Remitter.Identification.Issued.Month}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>ID Issued Day</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.Identification.Issued.Day" {{if .CreateRemitReq.Remitter.Identification.Issued.Day}}value="{{.CreateRemitReq.Remitter.Identification.Issued.Day}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>ID Expiration Year</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.Identification.Expiration.Year" {{if .CreateRemitReq.Remitter.Identification.Expiration.Year}}value="{{.CreateRemitReq.Remitter.Identification.Expiration.Year}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>ID Expiration Month</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.Identification.Expiration.Month" {{if .CreateRemitReq.Remitter.Identification.Expiration.Month}}value="{{.CreateRemitReq.Remitter.Identification.Expiration.Month}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>ID Expiration Day</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.Identification.Expiration.Day" {{if .CreateRemitReq.Remitter.Identification.Expiration.Day}}value="{{.CreateRemitReq.Remitter.Identification.Expiration.Day}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Occupation</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.Employment.Occupation" {{if .CreateRemitReq.Remitter.Employment.Occupation}}value="{{.CreateRemitReq.Remitter.Employment.Occupation}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Birth Year</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.Birthdate.Year" {{if .CreateRemitReq.Remitter.Birthdate.Year}}value="{{.CreateRemitReq.Remitter.Birthdate.Year}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Birth Month</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.Birthdate.Month" {{if .CreateRemitReq.Remitter.Birthdate.Month}}value="{{.CreateRemitReq.Remitter.Birthdate.Month}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Birth Day</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.Birthdate.Day" {{if .CreateRemitReq.Remitter.Birthdate.Day}}value="{{.CreateRemitReq.Remitter.Birthdate.Day}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Birth Country</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.BirthCountry" {{if .CreateRemitReq.Remitter.BirthCountry}}value="{{.CreateRemitReq.Remitter.BirthCountry}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Birth Place</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.BirthPlace" {{with $v:=.CreateRemitReq.Remitter}}{{if $v}}value="{{$v.BirthPlace}}"{{else}}disabled="disabled"{{end}}{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>KYC Verified</label>
+				</div>
+				<div>
+					<input name="KYCVerified" {{with $v:=.CreateRemitReq.Remitter}}{{if $v}}value="{{$v.KYCVerified}}"{{else}}disabled="disabled"{{end}}{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Gender</label>
+				</div>
+				<div>
+					<input name="Gender" {{if .CreateRemitReq.Remitter.Gender}}value="{{.CreateRemitReq.Remitter.Gender}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Nationality</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.Nationality" {{if .CreateRemitReq.Remitter.Nationality}}value="{{.CreateRemitReq.Remitter.Nationality}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Source Funds</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.SourceFunds" {{if .CreateRemitReq.Remitter.SourceFunds}}value="{{.CreateRemitReq.Remitter.SourceFunds}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Transaction Purpose</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.TransactionPurpose" {{if .CreateRemitReq.Remitter.TransactionPurpose}}value="{{.CreateRemitReq.Remitter.TransactionPurpose}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Email</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.Email" {{if .CreateRemitReq.Remitter.Email}}value="{{.CreateRemitReq.Remitter.Email}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Partner Member ID</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.PartnerMemberID" {{if .CreateRemitReq.Remitter.PartnerMemberID}}value="{{.CreateRemitReq.Remitter.PartnerMemberID}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Receiver Relation</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Remitter.ReceiverRelation" {{if .CreateRemitReq.Remitter.ReceiverRelation}}value="{{.CreateRemitReq.Remitter.ReceiverRelation}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<h3>Receiver</h3>
+				</div>
+
+				<br>
+				<div>
+					<label>Account Holder Name</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Receiver.AccountHolderName" {{if .CreateRemitReq.Receiver.AccountHolderName}}value="{{.CreateRemitReq.Receiver.AccountHolderName}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Recipient ID</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Receiver.RecipientID" {{if .CreateRemitReq.Receiver.RecipientID}}value="{{.CreateRemitReq.Receiver.RecipientID}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Source Account Number</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Receiver.SourceAccountNumber" {{if .CreateRemitReq.Receiver.SourceAccountNumber}}value="{{.CreateRemitReq.Receiver.SourceAccountNumber}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>First Name</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Receiver.ContactInfo.FirstName" {{if .CreateRemitReq.Receiver.ContactInfo.FirstName}}value="{{.CreateRemitReq.Receiver.ContactInfo.FirstName}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Middle Name</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Receiver.ContactInfo.MiddleName" {{if .CreateRemitReq.Receiver.ContactInfo.MiddleName}}value="{{.CreateRemitReq.Receiver.ContactInfo.MiddleName}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Last Name</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Receiver.ContactInfo.LastName" {{if .CreateRemitReq.Receiver.ContactInfo.LastName}}value="{{.CreateRemitReq.Receiver.ContactInfo.LastName}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Phone Country Code</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Receiver.ContactInfo.Phone.CountryCode" {{if .CreateRemitReq.Receiver.ContactInfo.Phone.CountryCode}}value="{{.CreateRemitReq.Receiver.ContactInfo.Phone.CountryCode}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Phone Number</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Receiver.ContactInfo.Phone.Number" {{if .CreateRemitReq.Receiver.ContactInfo.Phone.Number}}value="{{.CreateRemitReq.Receiver.ContactInfo.Phone.Number}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Mobile Country Code</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Receiver.ContactInfo.Mobile.CountryCode" {{if .CreateRemitReq.Receiver.ContactInfo.Mobile.CountryCode}}value="{{.CreateRemitReq.Receiver.ContactInfo.Mobile.CountryCode}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Mobile Number</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Receiver.ContactInfo.Mobile.Number" {{if .CreateRemitReq.Receiver.ContactInfo.Mobile.Number}}value="{{.CreateRemitReq.Receiver.ContactInfo.Mobile.Number}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Address1</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Receiver.ContactInfo.Address.Address1" {{if .CreateRemitReq.Receiver.ContactInfo.Address.Address1}}value="{{.CreateRemitReq.Receiver.ContactInfo.Address.Address1}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Address2</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Receiver.ContactInfo.Address.Address2" {{if .CreateRemitReq.Receiver.ContactInfo.Address.Address2}}value="{{.CreateRemitReq.Receiver.ContactInfo.Address.Address2}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>City</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Receiver.ContactInfo.Address.City" {{if .CreateRemitReq.Receiver.ContactInfo.Address.City}}value="{{.CreateRemitReq.Receiver.ContactInfo.Address.City}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>State</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Receiver.ContactInfo.Address.State" {{if .CreateRemitReq.Receiver.ContactInfo.Address.State}}value="{{.CreateRemitReq.Receiver.ContactInfo.Address.State}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Province</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Receiver.ContactInfo.Address.Province" {{if .CreateRemitReq.Receiver.ContactInfo.Address.Province}}value="{{.CreateRemitReq.Receiver.ContactInfo.Address.Province}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Zone</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Receiver.ContactInfo.Address.Zone" {{if .CreateRemitReq.Receiver.ContactInfo.Address.Zone}}value="{{.CreateRemitReq.Receiver.ContactInfo.Address.Zone}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Postal Code</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Receiver.ContactInfo.Address.PostalCode" {{if .CreateRemitReq.Receiver.ContactInfo.Address.PostalCode}}value="{{.CreateRemitReq.Receiver.ContactInfo.Address.PostalCode}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>Country</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Receiver.ContactInfo.Address.Country" {{if .CreateRemitReq.Receiver.ContactInfo.Address.Country}}value="{{.CreateRemitReq.Receiver.ContactInfo.Address.Country}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+
+{{with $v:=.CreateRemitReq.Receiver.Identification}}{{if $v}}
+				<br>
+				<div>
+					<label>ID Type</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Receiver.Identification.Type" {{if .CreateRemitReq.Receiver.Identification.Type}}value="{{.CreateRemitReq.Receiver.Identification.Type}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>ID Number</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Receiver.Identification.Number" {{if .CreateRemitReq.Receiver.Identification.Number}}value="{{.CreateRemitReq.Receiver.Identification.Number}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>ID Country</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Receiver.Identification.Country" {{if .CreateRemitReq.Receiver.Identification.Country}}value="{{.CreateRemitReq.Receiver.Identification.Country}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>ID Issued Year</label>
+				</div>
+{{with $v:=.CreateRemitReq.Receiver.Identification.Issued}}{{if $v}}
+				<div>
+					<input name="CreateRemitReq.Receiver.Identification.Issued.Year" {{if .CreateRemitReq.Receiver.Identification.Issued.Year}}value="{{.CreateRemitReq.Receiver.Identification.Issued.Year}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>ID Issued Month</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Receiver.Identification.Issued.Month" {{if .CreateRemitReq.Receiver.Identification.Issued.Month}}value="{{.CreateRemitReq.Receiver.Identification.Issued.Month}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>ID Issued Day</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Receiver.Identification.Issued.Day" {{if .CreateRemitReq.Receiver.Identification.Issued.Day}}value="{{.CreateRemitReq.Receiver.Identification.Issued.Day}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+{{else}}{{end}}{{end}}
+{{with $v:=.CreateRemitReq.Receiver.Identification.Expiration}}{{if $v}}
+				<br>
+				<div>
+					<label>ID Expiration Year</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Receiver.Identification.Expiration.Year" {{if .CreateRemitReq.Receiver.Identification.Expiration.Year}}value="{{.CreateRemitReq.Receiver.Identification.Expiration.Year}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>ID Expiration Month</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Receiver.Identification.Expiration.Month" {{if .CreateRemitReq.Receiver.Identification.Expiration.Month}}value="{{.CreateRemitReq.Receiver.Identification.Expiration.Month}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<br>
+				<div>
+					<label>ID Expiration Day</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Receiver.Identification.Expiration.Day" {{if .CreateRemitReq.Receiver.Identification.Expiration.Day}}value="{{.CreateRemitReq.Receiver.Identification.Expiration.Day}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+{{else}}{{end}}{{end}}
+{{else}}{{end}}{{end}}
+
+				<br>
+				<div>
+					<h3>Agent</h3>
+				</div>
+				<br>
+				<div>
+					<label>User ID</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Agent.UserID" {{if .CreateRemitReq.Agent.UserID}}value="{{.CreateRemitReq.Agent.UserID}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+				<div>
+					<label>User ID</label>
+				</div>
+				<div>
+					<input name="CreateRemitReq.Agent.IPAddress" {{if .CreateRemitReq.Agent.IPAddress}}value="{{.CreateRemitReq.Agent.IPAddress}}"{{else}}disabled="disabled"{{end}}>
+				</div>
+			</form>

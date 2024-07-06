@@ -1,0 +1,16 @@
+- op: add
+  path: /metadata/annotations/cert-manager.io~1cluster-issuer
+  value: letsencrypt-real
+
+- op: replace
+  path: /spec/tls/0/hosts
+  value:
+    - api.sandbox.uat.petnet.dev
+
+- op: replace
+  path: /spec/tls/0/secretName
+  value: cert-uat-sandbox
+
+- op: replace
+  path: /spec/rules/0/host
+  value: api.sandbox.uat.petnet.dev

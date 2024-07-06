@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+# This script pushes a Docker image following our conventions. To see how the
+# image tag is worked out, see the docker-image-tag script.
+
+# In CI, this script must follow the docker-build script.
+# Credentials for image repository are set up there.
+
+dir=$1
+
+if [[ -z "$IMAGE_NAME" ]]; then
+	IMAGE_NAME=$(cat $dir/image-name)
+fi
+
+echo "Pushing $IMAGE_NAME"
+let try=1
+while true; do
+	if docker push $IMAGE_NAME; then
+		break
+	fi
+	if [[ $try -ge 3 ]]; then
+		echo "Giving up after 3 tries"
+		exit 1
+	fi
+	let try++
+	echo "Trying again..."
+done

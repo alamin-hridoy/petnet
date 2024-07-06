@@ -1,0 +1,34 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rbac-idp
+  labels:
+    app.kubernetes.io/instance: rbac-idp
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: rbac-idp
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: rbac-idp
+    spec:
+      containers:
+      - name: idp
+        image: rbac/idp:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+        envFrom:
+        - configMapRef:
+            name: idp-config
+        - secretRef:
+            name: idp-secret
+
+...

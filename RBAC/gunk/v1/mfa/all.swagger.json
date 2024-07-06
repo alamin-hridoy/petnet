@@ -1,0 +1,626 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/rbac/gunk/v1/mfa/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "MFAService"
+    },
+    {
+      "name": "MFAAuthService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/mfa/{event_id}": {
+      "patch": {
+        "summary": "Record external MFA.",
+        "description": "External MFA systems (esp SMS and e-mail) that generate codes can be integrated using an update to record the new code.",
+        "operationId": "MFAAuthService_ExternalMFA",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/mfaExternalMFAResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "event_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/mfaExternalMFARequest"
+            }
+          }
+        ],
+        "tags": [
+          "MFA"
+        ]
+      }
+    },
+    "/v1/mfa/{user_id}": {
+      "get": {
+        "summary": "Get MFA.",
+        "description": "Get all multi-factor auth sources associated the user ID.",
+        "operationId": "MFAService_GetRegisteredMFA",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/mfaGetRegisteredMFAResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MFA"
+        ]
+      },
+      "post": {
+        "summary": "Enable MFA Source.",
+        "description": "Enable source as an MFA associated with the user ID.",
+        "operationId": "MFAService_EnableMFA",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/mfaEnableMFAResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/mfaEnableMFARequest"
+            }
+          }
+        ],
+        "tags": [
+          "MFA"
+        ]
+      }
+    },
+    "/v1/mfa/{user_id}/initiate": {
+      "post": {
+        "summary": "Initiate MFA event.",
+        "description": "Create an event entry for valiating user identity with MFA.",
+        "operationId": "MFAAuthService_InitiateMFA",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/mfaInitiateMFAResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/mfaInitiateMFARequest"
+            }
+          }
+        ],
+        "tags": [
+          "MFA"
+        ]
+      }
+    },
+    "/v1/mfa/{user_id}/retry": {
+      "post": {
+        "summary": "Retry MFA event.",
+        "description": "Reset event and retry MFA for valiating user identity with MFA.",
+        "operationId": "MFAAuthService_RetryMFA",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/mfaInitiateMFAResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/mfaRetryMFARequest"
+            }
+          }
+        ],
+        "tags": [
+          "MFA"
+        ]
+      }
+    },
+    "/v1/mfa/{user_id}/source/{mfa_id}": {
+      "delete": {
+        "summary": "Disable MFA Source.",
+        "description": "Disable source as an MFA associated with the user ID.",
+        "operationId": "MFAService_DisableMFA",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/mfaDisableMFAResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "mfa_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MFA"
+        ]
+      }
+    },
+    "/v1/mfa/{user_id}/validate": {
+      "post": {
+        "summary": "Validate MFA.",
+        "description": "Validate MFA code associated with the user ID.",
+        "operationId": "MFAAuthService_ValidateMFA",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/mfaValidateMFAResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/mfaValidateMFARequest"
+            }
+          }
+        ],
+        "tags": [
+          "MFA"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "mfaDisableMFAResponse": {
+      "type": "object",
+      "properties": {
+        "disabled": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "mfaEnableMFARequest": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/mfaMFA"
+        },
+        "source": {
+          "type": "string"
+        }
+      }
+    },
+    "mfaEnableMFAResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "initialize_code": {
+          "type": "string"
+        },
+        "event_id": {
+          "type": "string"
+        },
+        "codes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "mfaExternalMFARequest": {
+      "type": "object",
+      "properties": {
+        "event_id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "source_id": {
+          "type": "string"
+        }
+      }
+    },
+    "mfaExternalMFAResponse": {
+      "type": "object",
+      "properties": {
+        "event_id": {
+          "type": "string"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "mfaGetRegisteredMFAResponse": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string"
+        },
+        "mfa": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mfaMFAEntry"
+          }
+        }
+      }
+    },
+    "mfaInitiateMFARequest": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/mfaMFA"
+        },
+        "source_id": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "mfaInitiateMFAResponse": {
+      "type": "object",
+      "properties": {
+        "event_id": {
+          "type": "string"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mfaMFAEntry"
+          }
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "mfaMFA": {
+      "type": "string",
+      "enum": [
+        "PASS",
+        "TOTP",
+        "CODE",
+        "SMS",
+        "RECOVERY",
+        "EMAIL"
+      ],
+      "default": "PASS"
+    },
+    "mfaMFAEntry": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/mfaMFA"
+        },
+        "source": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "disabled": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "mfaRetryMFARequest": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string"
+        },
+        "event_id": {
+          "type": "string"
+        }
+      }
+    },
+    "mfaRetryMFAResponse": {
+      "type": "object",
+      "properties": {
+        "event_id": {
+          "type": "string"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mfaMFAEntry"
+          }
+        },
+        "value": {
+          "type": "string"
+        },
+        "attempt": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "mfaValidateMFARequest": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/mfaMFA"
+        },
+        "token": {
+          "type": "string"
+        },
+        "event_id": {
+          "type": "string"
+        }
+      }
+    },
+    "mfaValidateMFAResponse": {
+      "type": "object",
+      "properties": {
+        "event_id": {
+          "type": "string"
+        },
+        "validated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "external_id": {
+          "type": "string"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

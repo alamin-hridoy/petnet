@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{.ProjectName}} - OTP Verify</title>
+  <meta name="keywords" content="{{.ProjectName}}" />
+  <meta name="description" content="{{.ProjectName}}" />
+  <link rel="stylesheet" href="{{ assetHash "/assets/css/app.min.css" }}" />
+</head>
+
+<body>
+  <main>
+    <div class="bg-blue-dark-15 relative z-0">
+      <div class="container justify-center items-center m-auto flex flex-wrap">
+        <div class="w-full md:w-1/2 min-h-screen flex items-center justify-center py-24 px-6">
+          <div class="w-full max-w-420 m-auto">
+            <h1 class="mb-6 text-3xl text-white text-center font-medium">
+              One Time Password (OTP)
+            </h1>
+            <p class="mb-8 text-white text-center">
+              Enter the OTP code. Check your email for the OTP.
+            </p>
+            <form action="{{ .OTPForm.ProcessEndpoint }}" method="POST" class="form-wrapper" data-abide novalidate>
+              {{ .OTPForm.CSRFField }}
+              {{if .OTPForm.CodeError}}
+              <div
+                class="flex justify-between invalid-message py-2 px-4 mb-2 items-center text-red text-sm border rounded border-red">
+                <label>{{.OTPForm.CodeError}}</label>
+                <button id="close-button" class="close-button">
+                  <img class="inline-block" alt="close" width="14" src="{{ assetHash "/assets/images/icons/close-red.png" }}">
+                </button>
+              </div>
+              {{end}}
+              <div class="input password relative mb-5">
+                <img src="{{ assetHash "/assets/images/icons/lock.svg" }}" width="16" class="absolute top-0 left-0 mt-5 ml-5" />
+                <input type="text" id="email" name="code" pattern="^[0-9]+$" placeholder="OTP Code"
+                  class="mb-3 pl-12 pr-4 h-14 w-full border rounded border-grey-dark-10 focus:border-blue-light-5 bg-blue-dark-15 focus:bg-blue-dark-20 text-white"
+                  required />
+              </div>
+              <button type="submit"
+                class="mb-4 w-full h-14 rounded bg-blue hover:bg-blue-dark-5 text-white font-medium">
+                Verify
+              </button>
+              <button type="submit"
+		      name="retry"
+		      value="retry"
+		      class="mb-3 w-full block text-green text-center hover:underline">
+		<span>
+                  Resend OTP
+		</span>
+              </button>
+              <a href="{{.LoginURL}}" class="mb-3 block text-green text-center hover:underline">
+		<img src="{{ assetHash "/assets/images/icons/arrow-left-green.svg" }}" class="inline-block text-blue" />
+		<span>
+                  Back to Log in
+		</span>
+              </a>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+<script src="{{ assetHash "/assets/js/app.js" }}"></script>
+
+</html>

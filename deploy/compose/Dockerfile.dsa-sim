@@ -1,0 +1,15 @@
+FROM golang:1.17-alpine
+
+WORKDIR /src
+
+ENV VERSION=localdev
+
+COPY . .
+
+WORKDIR dsa-sim
+
+RUN go build -mod=vendor -ldflags="-w -s -X main.version=$VERSION" -o dsa-sim && \
+	if [ ! -f env/config ]; then cp env/sample.config env/config ; fi
+
+CMD ["sh", "-c", "./dsa-sim"]
+

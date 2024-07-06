@@ -1,0 +1,194 @@
+package permissions
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+)
+
+type SortBy int
+
+const (
+	DESC SortBy = iota
+	ASC
+)
+
+type CreateRoleRequest struct {
+	Name        string `pb:"1" json:"name"`
+	Description string `pb:"2" json:"description"`
+}
+
+type CreateRoleResponse struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type ListUserRolesRequest struct {
+	// UserID will filter by user id to show those roles.
+	UserID []string `pb:"5" json:"user_id"`
+}
+
+type ListUserRolesResponse struct {
+	Roles map[string]UserRoles `pb:"1" json:"roles"`
+}
+
+type UserRoles struct {
+	UserRoles []string `pb:"1" json:"userroles"`
+}
+
+type ListRoleRequest struct {
+	// OrgID will show the given org if allowed.
+	OrgID string `pb:"1" json:"org_id"`
+	// ID will filter to show those roles.
+	ID     []string `pb:"2" json:"id"`
+	SortBy SortBy   `pb:"3" json:"sort_by"`
+	Name   string   `pb:"4" json:"name"`
+	// UserID will filter by user id to show those roles.
+	UserID string `pb:"5" json:"user_id"`
+	Limit  int32  `pb:"6" json:"limit"`
+	Offset int32  `pb:"7" json:"offset"`
+}
+
+type Role struct {
+	ID          string `pb:"1" json:"id"`
+	OrgID       string `pb:"2" json:"org_id"`
+	Name        string `pb:"3" json:"name"`
+	Description string `pb:"4" json:"description"`
+	// Members is the list of user IDs with this role.
+	Members []string `pb:"5" json:"members"`
+	// Permissions is the list of permission IDs assigned to this role.
+	Permissions []string  `pb:"6" json:"permissions"`
+	CreateUID   string    `pb:"7" json:"createuid"`
+	DeleteUID   string    `pb:"8" json:"deleteuid"`
+	Created     time.Time `pb:"9" json:"created"`
+	UpdatedUID  string    `pb:"10" json:"updateduid"`
+	Updated     time.Time `pb:"11" json:"updated"`
+}
+
+type ListRoleResponse struct {
+	Roles []Role `pb:"1" json:"roles"`
+	Total int32  `pb:"2" json:"total"`
+}
+
+type UpdateRoleRequest struct {
+	ID          string `pb:"1" json:"id"`
+	Name        string `pb:"2" json:"name"`
+	Description string `pb:"3" json:"description"`
+}
+
+type UpdateRoleResponse struct {
+	// Role is the updated role.
+	Role    Role      `pb:"1" json:"role"`
+	Updated time.Time `pb:"2" json:"updated"`
+}
+
+type DeleteRoleRequest struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type DeleteRoleResponse struct {
+	Deleted time.Time `pb:"1" json:"deleted"`
+}
+
+type AssignRolePermissionRequest struct {
+	RoleID     string `pb:"1" json:"role_id"`
+	Permission string `pb:"2" json:"permission"`
+}
+
+type AssignRolePermissionResponse struct {
+	// Role is the updated role.
+	Role    Role      `pb:"1" json:"role"`
+	Updated time.Time `pb:"2" json:"updated"`
+}
+
+type RevokeRolePermissionRequest struct {
+	RoleID     string `pb:"1" json:"role_id"`
+	Permission string `pb:"2" json:"permission"`
+}
+
+type RevokeRolePermissionResponse struct {
+	// Role is the updated role.
+	Role    Role      `pb:"1" json:"role"`
+	Updated time.Time `pb:"2" json:"updated"`
+}
+
+type AddUserRequest struct {
+	RoleID string `pb:"1" json:"role_id"`
+	UserID string `pb:"2" json:"user_id"`
+}
+
+type AddUserResponse struct {
+	// Role is the updated role.
+	Role    Role      `pb:"1" json:"role"`
+	Updated time.Time `pb:"2" json:"updated"`
+}
+
+type RemoveUserRequest struct {
+	RoleID string `pb:"1" json:"role_id"`
+	UserID string `pb:"2" json:"user_id"`
+}
+
+type RemoveUserResponse struct {
+	// Role is the updated role.
+	Role    Role      `pb:"1" json:"role"`
+	Updated time.Time `pb:"2" json:"updated"`
+}
+
+type RoleService interface {
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/role",
+	//         Body:   "*",
+	// }
+	CreateRole(CreateRoleRequest) CreateRoleResponse
+
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/role",
+	// }
+	ListRole(ListRoleRequest) ListRoleResponse
+
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/userroles",
+	// }
+	ListUserRoles(ListUserRolesRequest) ListUserRolesResponse
+
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v1/role/{ID}",
+	//         Body:   "*",
+	// }
+	UpdateRole(UpdateRoleRequest) UpdateRoleResponse
+
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v1/role/{ID}",
+	// }
+	DeleteRole(DeleteRoleRequest) DeleteRoleResponse
+
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/role/{RoleID}/permission",
+	//         Body:   "*",
+	// }
+	AssignRolePermission(AssignRolePermissionRequest) AssignRolePermissionResponse
+
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v1/role/{RoleID}/permission/{Permission}",
+	// }
+	RevokeRolePermission(RevokeRolePermissionRequest) RevokeRolePermissionResponse
+
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/role/{RoleID}/user",
+	//         Body:   "*",
+	// }
+	AddUser(AddUserRequest) AddUserResponse
+
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v1/role/{RoleID}/user/{UserID}",
+	// }
+	RemoveUser(RemoveUserRequest) RemoveUserResponse
+}

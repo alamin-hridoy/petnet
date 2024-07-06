@@ -1,0 +1,1003 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>Service Details</title>
+    <style>
+        .checkboxCustome {
+          display: block;
+          position: relative;
+          padding-left: 35px;
+          margin-bottom: 12px;
+          cursor: pointer;
+        }
+        .checkboxCustome input {
+          position: absolute;
+          opacity: 0;
+          height: 0;
+          width: 0;
+        }
+        .checkmark {
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 20px;
+          width: 20px;
+          border: 1px solid #000;
+          border-radius: 3px;
+        }
+        .checkboxCustome input:checked ~ .checkmark {
+          background-color: #000;
+        }
+        .checkmark:after {
+          content: "";
+          position: absolute;
+          display: none;
+        }
+        .checkboxCustome input:checked ~ .checkmark:after {
+          display: block;
+        }
+        .checkboxCustome .checkmark:after {
+            left: 7px;
+            top: 3px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+        </style>
+</head>
+<body>
+    <div class="flex">
+        <!-- left-section -->
+        <div class="bg-petnetblue w-32 min-h-screen">
+            <div class="min-h-screen">
+                <img src="{{ assetHash "/images/DRP-Vertical.svg" }}" class="mx-auto my-5">
+                <!-- Sidebar menu start -->
+                {{ template "admin-sidenav-menu.html" dict "Type" "service-req" "Data" .}}
+                <!-- Sidebar menu end -->
+            </div>
+        </div>
+        <!-- right-section -->
+        <div class="min-h-screen w-full flex bg-petnetgray">
+            <div class="w-full">
+              <div class="px-6 lg:px-32 py-10 shadow-md relative z-10 bg-white">
+	            <ul class="flex justify-end items-center space-x-4 mb-10">
+		            <li class="mr-auto">
+			            <a href="/dashboard/service-req" class="inline-flex text-petnetlightblue text-base items-center font-semibold">
+				            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+				            </svg>
+				            Back to Services
+			            </a>
+		            </li>
+		            <li>
+			        <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+				        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+			        </svg>
+		            </li>
+		            <li>
+                        {{ template "top-head-profile.html" dict "UserInfo" .UserInfo "CompanyName" "" .}}
+                    </li>
+		            <li>
+			            <div class="relative" id="topDropdownBox">
+				            <a href="javascript:;" onclick="toggleTopButton('openTopDropdown')">
+					        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+						        viewBox="0 0 24 24" stroke="currentColor">
+						        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+					        </svg>
+				            </a>
+				        <div class="absolute right-0 top-12 hidden" id="openTopDropdown">
+					    <div class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+					    </div>
+					    <div class="shadow-lg  absolute top-3 -right-5 rounded">
+						<div class="relative z-20 p-3 w-36 bg-white rounded space-y-2">
+							<a class="flex text-sm items-center" href="/profile">
+								<svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path fill-rule="evenodd" clip-rule="evenodd" d="M16 8C16 10.21 14.21 12 12 12C9.79 12 8 10.21 8 8C8 5.79 9.79 4 12 4C14.21 4 16 5.79 16 8ZM4 18C4 15.34 9.33 14 12 14C14.67 14 20 15.34 20 18V19C20 19.55 19.55 20 19 20H5C4.45 20 4 19.55 4 19V18Z" fill="#333333"/>
+								</svg>
+								Profile
+							</a>
+							<a href="/logout" class="flex text-sm">
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
+									viewBox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round"
+										stroke-width="2"
+										d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+								</svg>
+								Logout
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</li>
+	            </ul>
+                <div class="">
+                    <h2 class="text-5xl text-petnetblue mr-4 font-semibold">{{.CompanyName}}</h2>
+                </div>
+              </div>
+                <div class="px-6 lg:px-32 py-10 bg-petnetgray flex flex-wrap">
+                    <div class="w-1/4 pr-2 flex flex-col">
+                        <div class="mb-8">
+                             <div class="bg-white rounded">
+                                <h4 class="text-xl font-semibold text-petnetblue pt-7 px-12 pb-4 border-b">Summary</h4>
+                        <!-- Summary list start -->
+                            <ul>
+                                <li>
+                                    <a href="/dashboard/services-details/{{.OrgID}}" class="nav-anchor">
+                                    <span class="w-12 inline-block">
+                                        <img src="{{assetHash "/images/ser-log.png"}}" alt="">
+                                    </span>
+                                    <span class="font-semibold text-base">Remittances</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/dashboard/services-details-bills-payment/{{.OrgID}}" class="nav-anchor ">
+                                    <span class="w-12 inline-block">
+                                        <img src="{{assetHash "/images/ser-log.png"}}" alt="">
+                                    </span>
+                                    <span class="font-semibold text-base">Bills Payment</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/dashboard/services-details-cico/{{.OrgID}}" class="nav-anchor ">
+                                    <span class="w-12 inline-block">
+                                        <img src="{{assetHash "/images/ser-log.png"}}" alt="">
+                                    </span>
+                                    <span class="font-semibold text-base">Cash In/Cash Out</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/dashboard/services-details-mi/{{.OrgID}}" class="nav-anchor ">
+                                    <span class="w-12 inline-block">
+                                        <img src="{{assetHash "/images/ser-log.png"}}" alt="">
+                                    </span>
+                                    <span class="font-semibold text-base">Micro Insurance</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        <!-- Summary list end -->
+                        </div>
+                      </div>
+                    </div>
+                <div class="w-3/4 pl-2">
+                    <p class="text-xl mb-2">List of Required Documents</p>
+                    <div class="bg-white rounded mb-6">
+                        <div class="border-b py-5 px-6 flex items-center justify-between targetdiv">
+                            <div class="flex items-center">
+                                <h4 class="text-xl text-petnetblue font-semibold pr-4">All Documents</h4>
+                                <span class="bg-petnetheadertext rounded-xl px-3 py-1 hidden">{{.Status}}</span>
+                            </div>
+                            <div>
+                                <button onclick="expandShow(event)">
+                                    <svg class="transform" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9.87492 1.00002L5.99492 4.88002L2.11492 1.00002C1.72492 0.610019 1.09492 0.610019 0.704917 1.00002C0.314917 1.39002 0.314916 2.02002 0.704917 2.41002L5.29492 7.00002C5.68492 7.39002 6.31492 7.39002 6.70492 7.00002L11.2949 2.41002C11.4822 2.22319 11.5874 1.96954 11.5874 1.70502C11.5874 1.4405 11.4822 1.18685 11.2949 1.00002C10.9049 0.620019 10.2649 0.610019 9.87492 1.00002Z" fill="#333333"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mb-4 mx-8 pb-8 {{if ne .ActivePartnerName "ALL"}}hidden{{end}}">
+                            <div class="pt-9">
+                                <div>
+                                    <label class="checkboxCustome text-base"> Non-Disclosure Agreement
+                                        <input data-filename="CICO_nda" type="checkbox" class="allDocumentCheck" {{ if eq (len .Files.CICO_nda) 0 }}disabled{{end}} {{if eq .FileStatus.CICO_nda "ACCEPTED"}}checked{{end}}>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="w-7/12">
+                                        {{range $i, $value := .Files.CICO_nda}}
+                                            <p class="pl-16 font-bold py-2">{{getFileName $.Files.CICO_ndaName $value}}</p>
+                                        {{end}}
+                                    </div>
+                                    {{ if eq (len .Files.CICO_nda) 0 }}
+                                    Sorry. No file uploaded
+                                    {{else}}
+                                    <div class="w-5/12">
+                                    <div class="flex flex-wrap justify-end items-center">
+                                        <div class="w-full md:w-5/12">
+                                            {{ range $i, $value := .Files.CICO_nda }}
+                                            <div class="w-full text-right py-2">
+                                            <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold pr-6">
+                                                View
+                                            </a>
+                                            <a target="_blank" {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold">
+                                                Download
+                                            </a>
+                                        </div>
+                                        {{end}}
+                                        </div>
+                                    </div>
+                                </div>
+                                {{end}}
+                                </div>
+                            </div>
+                            <div class="pt-9">
+                                <div>
+                                    <label class="checkboxCustome text-base">PETNET Supplier Information Sheet
+                                        <input data-filename="CICO_sis" type="checkbox" class="allDocumentCheck" {{ if eq (len .Files.CICO_sis) 0 }}disabled{{end}} {{if eq .FileStatus.CICO_sis "ACCEPTED"}}checked{{end}}>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="w-7/12">
+                                        {{range $i, $value := .Files.CICO_sis}}
+                                            <p class="pl-16 font-bold py-2">{{getFileName $.Files.CICO_sisName $value}}</p>
+                                        {{end}}
+                                    </div>
+                                    {{ if eq (len .Files.CICO_sis) 0 }}
+                                                Sorry. No file uploaded
+                                        {{else}}
+                                        <div class="w-5/12">
+                                            <div class="flex flex-wrap justify-end items-center">
+                                                <div class="w-full md:w-5/12">
+                                                {{ range $i, $value := .Files.CICO_sis }}
+                                                   <div class="w-full text-right py-2">
+                                                    <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold pr-6">
+                                                        View
+                                                    </a>
+                                                    <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold">
+                                                        Download
+                                                    </a>
+                                                   </div>
+                                                {{end}}
+                                            </div>
+                                            </div>
+                                        </div>
+                                        {{end}}
+                                    </div>
+                            </div>
+                            <div class="pt-9">
+                                <div>
+                                    <label class="checkboxCustome text-base">Partner Scoping Form
+                                        <input data-filename="CICO_psf" type="checkbox" class="allDocumentCheck" {{ if eq (len .Files.CICO_psf) 0 }}disabled{{end}} {{if eq .FileStatus.CICO_psf "ACCEPTED"}}checked{{end}}>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="w-7/12">
+                                        {{range $i, $value := .Files.CICO_psf}}
+                                            <p class="pl-16 font-bold py-2">{{getFileName $.Files.CICO_psfName $value}}</p>
+                                        {{end}}
+                                </div>
+                                {{ if eq (len .Files.CICO_psf) 0 }}
+                                Sorry. No file uploaded
+                                {{else}}
+                                    <div class="w-5/12">
+                                        <div class="flex flex-wrap justify-end items-center">
+                                            <div class="w-full md:w-5/12">
+                                            {{ range $i, $value := .Files.CICO_psf }}
+                                            <div class="w-full text-right py-2">
+                                                <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold pr-6">
+                                                    View
+                                                </a>
+                                                <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold">
+                                                    Download
+                                                </a>
+                                            </div>
+                                            {{end}}
+                                        </div>
+                                        </div>
+                                    </div>
+                                    {{end}}
+                                </div>
+                            </div>
+                            <div class="pt-9">
+                                <div>
+                                    <label class="checkboxCustome text-base">Product or Service Procedure/Process Flow
+                                        <input data-filename="CICO_pspp" type="checkbox" class="allDocumentCheck" {{ if eq (len .Files.CICO_pspp) 0 }}disabled{{end}} {{if eq .FileStatus.CICO_pspp "ACCEPTED"}}checked{{end}}>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="w-7/12">
+                                        {{range $i, $value := .Files.CICO_pspp}}
+                                            <p class="pl-16 font-bold py-2">{{getFileName $.Files.CICO_psppName $value}}</p>
+                                        {{end}}
+                                </div>
+                                {{ if eq (len .Files.CICO_pspp) 0 }}
+                                Sorry. No file uploaded
+                                {{else}}
+                                    <div class="w-5/12">
+                                        <div class="flex flex-wrap justify-end items-center">
+                                            <div class="w-full md:w-5/12">
+                                            {{ range $i, $value := .Files.CICO_pspp }}
+                                            <div class="w-full text-right py-2">
+                                                <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold pr-6">
+                                                    View
+                                                </a>
+                                                <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold">
+                                                    Download
+                                                </a>
+                                            </div>
+                                            {{end}}
+                                        </div>
+                                        </div>
+                                    </div>
+                                    {{end}}
+                                </div>
+                            </div>
+                           <div class="pt-9">
+                            <div>
+                                <label class="checkboxCustome text-base">SEC Registration
+                                    <input data-filename="CICO_sec" type="checkbox" class="allDocumentCheck" {{ if eq (len .Files.CICO_sec) 0 }}disabled{{end}} {{if eq .FileStatus.CICO_sec "ACCEPTED"}}checked{{end}}>
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="w-7/12">
+                                    {{range $i, $value := .Files.CICO_sec}}
+                                            <p class="pl-16 font-bold py-2">{{getFileName $.Files.CICO_secName $value}}</p>
+                                        {{end}}
+                            </div>
+                            {{ if eq (len .Files.CICO_sec) 0 }}
+                            Sorry. No file uploaded
+                            {{else}}
+                                <div class="w-5/12">
+                                    <div class="flex flex-wrap justify-end items-center">
+                                        <div class="w-full md:w-5/12">
+                                        {{ range $i, $value := .Files.CICO_sec }}
+                                        <div class="w-full text-right py-2">
+                                            <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold pr-6">
+                                                View
+                                            </a>
+                                            <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold">
+                                                Download
+                                            </a>
+                                        </div>
+                                        {{end}}
+                                    </div>
+                                    </div>
+                                </div>
+                                {{end}}
+                            </div>
+                           </div>
+                            
+                            <button onclick="loadMore()" id="loadBtn" class="bg-petnetlighterblue w-full flex items-center justify-center rounded-md">
+                                <p class="text-petnetlightblue font-semibold text-base py-6">Load More</p>
+                            </button>
+                            <div id="items" class="hidden">
+                                <div class="pt-9">
+                                    <div>
+                                        <label class="checkboxCustome text-base">Latest General Information Sheet
+                                            <input data-filename="CICO_gis" type="checkbox" class="allDocumentCheck" {{ if eq (len .Files.CICO_gis) 0 }}disabled{{end}} {{if eq .FileStatus.CICO_gis "ACCEPTED"}}checked{{end}}>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="w-7/12">
+                                            {{range $i, $value := .Files.CICO_gis}}
+                                            <p class="pl-16 font-bold py-2">{{getFileName $.Files.CICO_gisName $value}}</p>
+                                        {{end}}
+                                    </div>
+                                    {{ if eq (len .Files.CICO_gis) 0 }}
+                                    Sorry. No file uploaded
+                                {{else}}
+                                        <div class="w-5/12">
+                                            <div class="flex flex-wrap justify-end items-center">
+                                                <div class="w-full md:w-5/12">
+                                                {{ range $i, $value := .Files.CICO_gis }}
+                                                <div class="w-full text-right py-2">
+                                                    <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold pr-6">
+                                                        View
+                                                    </a>
+                                                    <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold">
+                                                        Download
+                                                    </a>
+                                                </div>
+                                                {{end}}
+                                            </div>
+                                            </div>
+                                        </div>
+                                        {{end}}
+                                    </div>
+                                </div>
+                                <div class="pt-9">
+                                    <div>
+                                        <label class="checkboxCustome text-base">Latest & Prior 1 Year Audited Financial Statements
+                                            <input data-filename="CICO_afs" type="checkbox" class="allDocumentCheck" {{ if eq (len .Files.CICO_afs) 0 }}disabled{{end}} {{if eq .FileStatus.CICO_afs "ACCEPTED"}}checked{{end}}>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="w-7/12">
+                                            {{range $i, $value := .Files.CICO_afs}}
+                                            <p class="pl-16 font-bold py-2">{{getFileName $.Files.CICO_afsName $value}}</p>
+                                        {{end}}
+                                    </div>
+                                    {{ if eq (len .Files.CICO_afs) 0 }}
+                                            Sorry. No file uploaded
+                                        {{else}}
+                                        <div class="w-5/12">
+                                            <div class="flex flex-wrap justify-end items-center">
+                                                <div class="w-full md:w-5/12">
+                                                {{ range $i, $value := .Files.CICO_afs }}
+                                                <div class="w-full text-right py-2">
+                                                    <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold pr-6">
+                                                        View
+                                                    </a>
+                                                    <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold">
+                                                        Download
+                                                    </a>
+                                                </div>
+                                                {{end}}
+                                            </div>
+                                            </div>
+                                        </div>
+                                        {{end}}
+                                    </div>
+                                </div>
+                                <div class="pt-9">
+                                    <div>
+                                        <label class="checkboxCustome text-base"> BIR Registration
+                                            <input data-filename="CICO_bir" type="checkbox" class="allDocumentCheck" {{ if eq (len .Files.CICO_bir) 0 }}disabled{{end}} {{if eq .FileStatus.CICO_bir "ACCEPTED"}}checked{{end}}>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="w-7/12">
+                                            {{range $i, $value := .Files.CICO_bir}}
+                                            <p class="pl-16 font-bold py-2">{{getFileName $.Files.CICO_birName $value}}</p>
+                                        {{end}}
+                                    </div>
+                                    {{ if eq (len .Files.CICO_bir) 0 }}
+                                            Sorry. No file uploaded
+                                        {{else}}
+                                        <div class="w-5/12">
+                                            <div class="flex flex-wrap justify-end items-center">
+                                                <div class="w-full md:w-5/12">
+                                                {{ range $i, $value := .Files.CICO_bir }}
+                                                <div class="w-full text-right py-2">
+                                                    <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold pr-6">
+                                                        View
+                                                    </a>
+                                                    <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold">
+                                                        Download
+                                                    </a>
+                                                </div>
+                                                {{end}}
+                                            </div>
+                                            </div>
+                                        </div>
+                                        {{end}}
+                                    </div>
+                                </div>
+                                <div class="pt-9">
+                                    <div>
+                                        <label class="checkboxCustome text-base">BSP Registration (if applicable)
+                                            <input data-filename="CICO_bsp" type="checkbox" class="" {{ if eq (len .Files.CICO_bsp) 0 }}disabled{{end}} {{if eq .FileStatus.CICO_bsp "ACCEPTED"}}checked{{end}}>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="w-7/12">
+                                            {{range $i, $value := .Files.CICO_bsp}}
+                                            <p class="pl-16 font-bold py-2">{{getFileName $.Files.CICO_bspName $value}}</p>
+                                        {{end}}
+                                    </div>
+                                    {{ if eq (len .Files.CICO_bsp) 0 }}
+                                            Sorry. No file uploaded
+                                        {{else}}
+                                        <div class="w-5/12">
+                                            <div class="flex flex-wrap justify-end items-center">
+                                                <div class="w-full md:w-5/12">
+                                                {{ range $i, $value := .Files.CICO_bsp }}
+                                                <div class="w-full text-right py-2">
+                                                    <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold pr-6">
+                                                        View
+                                                    </a>
+                                                    <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold">
+                                                        Download
+                                                    </a>
+                                                </div>
+                                                {{end}}
+                                            </div>
+                                            </div>
+                                        </div>
+                                        {{end}}
+                                    </div>
+                                </div>
+                               <div class="pt-9">
+                                <div>
+                                    <label class="checkboxCustome text-base">Anti-Money Laundering (AML) Registration (if applicable)
+                                        <input data-filename="CICO_aml" type="checkbox" class="" {{ if eq (len .Files.CICO_aml) 0 }}disabled{{end}} {{if eq .FileStatus.CICO_aml "ACCEPTED"}}checked{{end}}>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="w-7/12">
+                                    {{range $i, $value := .Files.CICO_aml}}
+                                            <p class="pl-16 font-bold py-2">{{getFileName $.Files.CICO_amlName $value}}</p>
+                                        {{end}}
+                                </div>
+                                {{ if eq (len .Files.CICO_aml) 0 }}
+                                        Sorry. No file uploaded
+                                    {{else}}
+                                    <div class="w-5/12">
+                                        <div class="flex flex-wrap justify-end items-center">
+                                            <div class="w-full md:w-5/12">
+                                            {{ range $i, $value := .Files.CICO_aml }}
+                                            <div class="w-full text-right py-2">
+                                                <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold pr-6">
+                                                    View
+                                                </a>
+                                                <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold">
+                                                    Download
+                                                </a>
+                                            </div>
+                                            {{end}}
+                                        </div>
+                                        </div>
+                                    </div>
+                                    {{end}}
+                                </div>
+                               </div>
+                               <div class="pt-9">
+                                <div>
+                                    <label class="checkboxCustome text-base">Secretary's Certificate for Company's Authorized Signatory
+                                        <input data-filename="CICO_sccas" type="checkbox" class="allDocumentCheck" {{ if eq (len .Files.CICO_sccas) 0 }}disabled{{end}} {{if eq .FileStatus.CICO_sccas "ACCEPTED"}}checked{{end}}>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="w-7/12">
+                                        {{range $i, $value := .Files.CICO_sccas}}
+                                        <p class="pl-16 font-bold py-2">{{getFileName $.Files.CICO_sccasName $value}}</p>
+                                    {{end}}
+                                </div>
+                                {{ if eq (len .Files.CICO_sccas) 0 }}
+                                        Sorry. No file uploaded
+                                    {{else}}
+                                    <div class="w-5/12">
+                                        <div class="flex flex-wrap justify-end items-center">
+                                            <div class="w-full md:w-5/12">
+                                            {{ range $i, $value := .Files.CICO_sccas }}
+                                            <div class="w-full text-right py-2">
+                                                <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold pr-6">
+                                                    View
+                                                </a>
+                                                <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold">
+                                                    Download
+                                                </a>
+                                            </div>
+                                            {{end}}
+                                        </div>
+                                        </div>
+                                    </div>
+                                    {{end}}
+                                </div>
+                               </div>
+                                <div class="pt-9">
+                                    <div>
+                                        <label class="checkboxCustome text-base"> Valid government-issued ID of Authorized Signatory
+                                            <input data-filename="CICO_vgid" type="checkbox" class="allDocumentCheck" {{ if eq (len .Files.CICO_vgid) 0 }}disabled{{end}} {{if eq .FileStatus.CICO_vgid "ACCEPTED"}}checked{{end}}>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="w-7/12">
+                                            {{range $i, $value := .Files.CICO_vgid}}
+                                            <p class="pl-16 font-bold py-2">{{getFileName $.Files.CICO_vgidName $value}}</p>
+                                        {{end}}
+                                    </div>
+                                    {{ if eq (len .Files.CICO_vgid) 0 }}
+                                            Sorry. No file uploaded
+                                        {{else}}
+                                        <div class="w-5/12">
+                                            <div class="flex flex-wrap justify-end items-center">
+                                                <div class="w-full md:w-5/12">
+                                                {{ range $i, $value := .Files.CICO_vgid }}
+                                                <div class="w-full text-right py-2">
+                                                    <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold pr-6">
+                                                        View
+                                                    </a>
+                                                    <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold">
+                                                        Download
+                                                    </a>
+                                                </div>
+                                                {{end}}
+                                            </div>
+                                            </div>
+                                        </div>
+                                        {{end}}
+                                    </div>
+                                </div>
+                                <div class="pt-9">
+                                    <div>
+                                        <label class="checkboxCustome text-base">Company Profile
+                                            <input data-filename="CICO_cp" type="checkbox" class="allDocumentCheck" {{ if eq (len .Files.CICO_cp) 0 }}disabled{{end}} {{if eq .FileStatus.CICO_cp "ACCEPTED"}}checked{{end}}>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="w-7/12">
+                                            {{range $i, $value := .Files.CICO_cp}}
+                                            <p class="pl-16 font-bold py-2">{{getFileName $.Files.CICO_cpName $value}}</p>
+                                        {{end}}
+                                    </div>
+                                    {{ if eq (len .Files.CICO_cp) 0 }}
+                                            Sorry. No file uploaded
+                                        {{else}}
+                                        <div class="w-5/12">
+                                            <div class="flex flex-wrap justify-end items-center">
+                                                <div class="w-full md:w-5/12">
+                                                {{ range $i, $value := .Files.CICO_cp }}
+                                                <div class="w-full text-right py-2">
+                                                    <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold pr-6">
+                                                        View
+                                                    </a>
+                                                    <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold">
+                                                        Download
+                                                    </a>
+                                                </div>
+                                                {{end}}
+                                            </div>
+                                            </div>
+                                        </div>
+                                        {{end}}
+                                    </div>
+                                </div>
+                               <div class="pt-9">
+                                <div>
+                                    <label class="checkboxCustome text-base">MOA Draft
+                                        <input data-filename="CICO_moa" type="checkbox" class="allDocumentCheck" {{ if eq (len .Files.CICO_moa) 0 }}disabled{{end}} {{if eq .FileStatus.CICO_moa "ACCEPTED"}}checked{{end}}>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="w-7/12">
+                                        {{range $i, $value := .Files.CICO_moa}}
+                                        <p class="pl-16 font-bold py-2">{{getFileName $.Files.CICO_moaName $value}}</p>
+                                    {{end}}
+                                </div>
+                                {{ if eq (len .Files.CICO_moa) 0 }}
+                                        Sorry. No file uploaded
+                                    {{else}}
+                                    <div class="w-5/12">
+                                        <div class="flex flex-wrap justify-end items-center">
+                                            <div class="w-full md:w-5/12">
+                                            {{ range $i, $value := .Files.CICO_moa }}
+                                            <div class="w-full text-right py-2">
+                                                <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold pr-6">
+                                                    View
+                                                </a>
+                                                <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold">
+                                                    Download
+                                                </a>
+                                            </div>
+                                            {{end}}
+                                        </div>
+                                        </div>
+                                    </div>
+                                    {{end}}
+                                </div>
+                               </div>
+                                <div class="pt-9">
+                                    <div>
+                                        <label class="checkboxCustome text-base">AMLA Training Certificate of Directors
+                                            <input data-filename="CICO_amla" type="checkbox" class="allDocumentCheck" {{ if eq (len .Files.CICO_amla) 0 }}disabled{{end}} {{if eq .FileStatus.CICO_amla "ACCEPTED"}}checked{{end}}>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="w-7/12">
+                                            {{range $i, $value := .Files.CICO_amla}}
+                                            <p class="pl-16 font-bold py-2">{{getFileName $.Files.CICO_amlaName $value}}</p>
+                                        {{end}}
+                                    </div>
+                                    {{ if eq (len .Files.CICO_amla) 0 }}
+                                            Sorry. No file uploaded
+                                        {{else}}
+                                        <div class="w-5/12">
+                                            <div class="flex flex-wrap justify-end items-center">
+                                                <div class="w-full md:w-5/12">
+                                                {{ range $i, $value := .Files.CICO_amla }}
+                                                <div class="w-full text-right py-2">
+                                                    <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold pr-6">
+                                                        View
+                                                    </a>
+                                                    <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold">
+                                                        Download
+                                                    </a>
+                                                </div>
+                                                {{end}}
+                                            </div>
+                                            </div>
+                                        </div>
+                                        {{end}}
+                                    </div>
+                                </div>
+                                <div class="pt-9">
+                                    <div>
+                                        <label class="checkboxCustome text-base">MTPP-Money Laundering and Terrorist Financing Prevention Program Manual
+                                            <input data-filename="CICO_mtpp" type="checkbox" class="allDocumentCheck" {{ if eq (len .Files.CICO_mtpp) 0 }}disabled{{end}} {{if eq .FileStatus.CICO_mtpp "ACCEPTED"}}checked{{end}}>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="w-7/12">
+                                            {{range $i, $value := .Files.CICO_mtpp}}
+                                            <p class="pl-16 font-bold py-2">{{getFileName $.Files.CICO_mtppName $value}}</p>
+                                        {{end}}
+                                    </div>
+                                    {{ if eq (len .Files.CICO_mtpp) 0 }}
+                                            Sorry. No file uploaded
+                                        {{else}}
+                                        <div class="w-5/12">
+                                            <div class="flex flex-wrap justify-end items-center">
+                                                <div class="w-full md:w-5/12">
+                                                {{ range $i, $value := .Files.CICO_mtpp }}
+                                                <div class="w-full text-right py-2">
+                                                    <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold pr-6">
+                                                        View
+                                                    </a>
+                                                    <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold">
+                                                        Download
+                                                    </a>
+                                                </div>
+                                                {{end}}
+                                            </div>
+                                            </div>
+                                        </div>
+                                        {{end}}
+                                    </div>
+                                </div>
+                                <div class="pt-9">
+                                    <div>
+                                        <label class="checkboxCustome text-base">Scanned copy of IDs of Signatories
+                                            <input data-filename="CICO_is" type="checkbox" class="allDocumentCheck" {{ if eq (len .Files.CICO_is) 0 }}disabled{{end}} {{if eq .FileStatus.CICO_is "ACCEPTED"}}checked{{end}}>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="w-7/12">
+                                            {{range $i, $value := .Files.CICO_is}}
+                                            <p class="pl-16 font-bold py-2">{{getFileName $.Files.CICO_isName $value}}</p>
+                                        {{end}}
+                                    </div>
+                                    {{ if eq (len .Files.CICO_is) 0 }}
+                                            Sorry. No file uploaded
+                                        {{else}}
+                                        <div class="w-5/12">
+                                            <div class="flex flex-wrap justify-end items-center">
+                                                <div class="w-full md:w-5/12">
+                                                {{ range $i, $value := .Files.CICO_is }}
+                                                <div class="w-full text-right py-2">
+                                                    <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold pr-6">
+                                                        View
+                                                    </a>
+                                                    <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold">
+                                                        Download
+                                                    </a>
+                                                </div>
+                                                {{end}}
+                                            </div>
+                                            </div>
+                                        </div>
+                                        {{end}}
+                                    </div>
+                                </div>
+                                <div class="pt-9">
+                                    <div>
+                                        <label class="checkboxCustome text-base"> Enhanced Due Diligence (if applicable)
+                                            <input data-filename="CICO_edd" type="checkbox" class="" {{ if eq (len .Files.CICO_edd) 0 }}disabled{{end}} {{if eq .FileStatus.CICO_edd "ACCEPTED"}}checked{{end}}>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="w-7/12">
+                                            {{range $i, $value := .Files.CICO_edd}}
+                                            <p class="pl-16 font-bold py-2">{{getFileName $.Files.CICO_eddName $value}}</p>
+                                        {{end}}
+                                    </div>
+                                    {{ if eq (len .Files.CICO_edd) 0 }}
+                                            Sorry. No file uploaded
+                                        {{else}}
+                                        <div class="w-5/12">
+                                            <div class="flex flex-wrap justify-end items-center">
+                                                <div class="w-full md:w-5/12">
+                                                {{ range $i, $value := .Files.CICO_edd }}
+                                                <div class="w-full text-right py-2">
+                                                    <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold pr-6">
+                                                        View
+                                                    </a>
+                                                    <a {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} class="text-petnetlightblue font-semibold">
+                                                        Download
+                                                    </a>
+                                                </div>
+                                                {{end}}
+                                            </div>
+                                            </div>
+                                        </div>
+                                        {{end}}
+                                    </div>
+                                </div>
+                                
+                                <button onclick="showLess()" id="showLess" class="bg-petnetlighterblue w-full flex items-center justify-center rounded-md">
+                                    <p class="text-petnetlightblue font-semibold text-base py-6">Show Less</p>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded py-6">
+                    {{range .ServiceRequestsCico}}
+                    <div class="bg-white rounded mb-6 flex justify-between">
+                        <div class="py-5 px-6 flex items-center justify-between targetdiv">
+                            <div class="flex items-center">
+                                <h4 class="text-xl text-gray-500 font-semibold pr-4">{{.PartnerName}}</h4>
+                            </div>
+                        </div>
+                        <div class="w-32 flex items-center">
+                            <div class="relative dropdown pl-2 pr-6 py-2  rounded-xl bg-petnetlightblue bg-opacity-30">
+                                <button id="allDocument" class="button-all-doc dropdown-toggle focus:outline-none font-semibold flex w-20"
+                                    onclick="dropdownToggle(event)">
+                                    {{if .Status}}
+                                        <p>{{.Status}}</p>
+                                    {{else}} 
+                                        <p>Verify</p>
+                                    {{end}}
+                                    <svg class="transform absolute top-3.5 -right-1 pr-2" width="20" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9.87492 1.00002L5.99492 4.88002L2.11492 1.00002C1.72492 0.610019 1.09492 0.610019 0.704917 1.00002C0.314917 1.39002 0.314916 2.02002 0.704917 2.41002L5.29492 7.00002C5.68492 7.39002 6.31492 7.39002 6.70492 7.00002L11.2949 2.41002C11.4822 2.22319 11.5874 1.96954 11.5874 1.70502C11.5874 1.4405 11.4822 1.18685 11.2949 1.00002C10.9049 0.620019 10.2649 0.610019 9.87492 1.00002Z" fill="#333333"/>
+                                    </svg>
+                                </button>
+                                <div class="absolute right-0 top-10 hidden dropdown-item">
+                                    <div
+                                        class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                    </div>
+                                    <div class="shadow absolute top-3 -right-5 rounded">
+                                        <div class="relative z-20 pt-3 w-28 bg-white rounded flex flex-col">
+                                            <a href="/dashboard/status-service-req-cico/accept/{{.OrgID}}/{{.Partner}}" class="px-6 py-2 text-petnetgreen">Accept</a>
+                                            <a href="/dashboard/status-service-req-cico/reject/{{.OrgID}}/{{.Partner}}" class="px-6 py-2 text-petnetred">Reject</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{end}}
+                </div>
+                </div>
+              </div> 
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+  let navAnchors = document.getElementsByClassName("nav-anchor");
+  let currentPath = window.location.href.split('?')[0];
+  let OrgID = "{{.OrgID}}";
+  for (let i = 0; i < navAnchors.length; i++) {
+      if (navAnchors[i].href == currentPath) {
+          navAnchors[i].classList.add("active-nav-anchor")
+      }
+  }
+  function loadMore(){
+    let loadBtn = document.getElementById("loadBtn");
+    let items = document.getElementById("items");
+    if(items.classList.contains("hidden")){
+        items.classList.remove("hidden")
+        loadBtn.classList.add("hidden")
+    }
+  }
+  function showLess(){
+    let showLess = document.getElementById("showLess");
+    let loadBtn = document.getElementById("loadBtn");
+    let items = document.getElementById("items");
+    if(loadBtn.classList.contains("hidden")){
+        items.classList.add("hidden")
+        loadBtn.classList.remove("hidden")
+    }
+  }
+</script>
+<script>
+	function dropdownToggle(event) {
+		let targetItem = event.target;
+		while (!targetItem.classList.contains('dropdown-toggle')) {
+				targetItem = targetItem.parentElement;
+			}
+		targetItem = targetItem.nextElementSibling;
+		if (targetItem.classList.contains('hidden')) {
+				targetItem.classList.remove("hidden");
+			} else {
+					targetItem.classList.add("hidden");
+				}
+		let x = document.getElementsByClassName("dropdown-item");
+		for (let i = 0; i < x.length; i++) {
+				if(x[i]!=targetItem){
+						x[i].classList.add("hidden")
+					}
+			} 
+	}
+	function toggleTopButton(id) {
+        let getDropdownItem = document.getElementById(id)
+        let isHiddenClass = getDropdownItem.classList.contains('hidden');
+        if (!isHiddenClass) {
+            getDropdownItem.classList.add("hidden");
+        } else {
+            getDropdownItem.classList.remove("hidden");
+        }
+    }
+    function expandShow(event) {
+        let targetItem = event.target;
+        let loadBtn = document.getElementById("loadBtn");
+        let items = document.getElementById("items");
+        targetItem = targetItem.closest(".targetdiv").nextElementSibling;
+        if (targetItem.classList.contains('hidden')) {
+            targetItem.classList.remove("hidden");
+            event.target.classList.add('rotate-180')
+            loadBtn.classList.remove("hidden")
+            items.classList.add("hidden")
+        } else {
+            targetItem.classList.add("hidden");
+            event.target.classList.remove('rotate-180')
+        }
+    }
+    let allDocument = document.querySelectorAll('.button-all-doc');
+    let allDocumentCheck = document.querySelectorAll('.allDocumentCheck');
+    function checked(){
+        let allChecked = true
+        for (let i=0 ; i<allDocumentCheck.length; i++){
+            if(allDocumentCheck[i].checked === false){
+                allChecked = false
+                break
+            }
+        }
+        if (allChecked == true){
+            allDocument.forEach((item)=>{
+                item.disabled = false
+            })
+        }
+        else{
+            allDocument.forEach((item)=>{
+                item.disabled = true
+            })
+        }
+    }
+    function getAjaxReqChangeStatus(fileName = "", status = "accept", partner = "ALL"){
+        let url = '/dashboard/ajax-status-service-req-cico/'+status+'/'+OrgID+'/'+partner+'/'+fileName;
+        if (fileName == "") {
+            return false;
+        }
+        fetch(url).then(function(response) {
+            return response.json();
+        }).then(function(myJson) {
+            console.log(myJson);
+            let allDocumentCheck = document.querySelectorAll('.allDocumentCheck')
+            let buttonallDocument = document.querySelectorAll('.button-all-doc');
+            for (let i=0; i<allDocumentCheck.length;i++){
+               if(allDocumentCheck[i].checked == false){
+                for(let i=0; i<buttonallDocument.length; i++){
+                    buttonallDocument[i].disabled = true;
+                }
+               break;
+               }else{
+                for(let i=0; i<buttonallDocument.length; i++){
+                    buttonallDocument[i].disabled = false;
+                }
+               }
+            }
+        });
+    }
+    function ajaxCall(){
+        var allDocuments = document.querySelectorAll('.allDocumentCheck');
+        for (let i=0 ; i<allDocuments.length; i++){
+            allDocuments[i].addEventListener('change', function(elm){
+                let fileName = elm.target.getAttribute("data-filename");
+                if(elm.target.checked === true){
+                    getAjaxReqChangeStatus(fileName, "accept");
+                } else if(elm.target.checked === false){
+                    getAjaxReqChangeStatus(fileName, "reject");
+                }
+            });
+        }
+    }
+    checked();
+    ajaxCall();
+</script>
+</html>

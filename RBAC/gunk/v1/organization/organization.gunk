@@ -1,0 +1,163 @@
+package organization
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+
+	"brank.as/rbac/gunk/v1/mfa"
+)
+
+type GetOrganizationRequest struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type GetOrganizationResponse struct {
+	Organization []Organization `pb:"1" json:"organization"`
+}
+
+type Organization struct {
+	ID       string    `pb:"1" json:"id"`
+	Name     string    `pb:"2" json:"name"`
+	Email    string    `pb:"3" json:"email"`
+	Phone    string    `pb:"4" json:"phone"`
+	Active   bool      `pb:"5" json:"active"`
+	LoginMFA bool      `pb:"6" json:"login_mfa"`
+	Created  time.Time `pb:"7" json:"created"`
+	Updated  time.Time `pb:"8" json:"updated"`
+}
+
+type EnableOpt int32
+
+const (
+	NoChange EnableOpt = iota
+	Enable
+	Disable
+)
+
+type UpdateOrganizationRequest struct {
+	// Organization unique identifier.
+	OrganizationID string `pb:"1" json:"organization_id"`
+	// Name of the organization.
+	Name string `pb:"2" json:"name"`
+	// Email address that will be used for contacting the organization,
+	// including service alerts, billing, and updates.
+	Email string `pb:"3" json:"email"`
+	// Contact phone number for the organization.
+	Phone string `pb:"4" json:"phone"`
+	// Require MFA challenge on login.
+	// All users in the organization will be
+	// required to enable and use MFA for login authentication.
+	LoginMFA EnableOpt `pb:"5" json:"login_mfa"`
+}
+
+type UpdateOrganizationResponse struct {
+	// Returned when MFA confirmation is required before the change is applied.
+	MFAEventID string `pb:"1" json:"mfa_event_id"`
+	// Expected type of MFA.
+	MFAType mfa.MFA `pb:"2" json:"mfa_type"`
+	// Update confirmation timestamp.
+	Updated time.Time `pb:"3"`
+}
+
+type ConfirmUpdateRequest struct {
+	// Organization unique identifier.
+	OrganizationID string `pb:"1" json:"organization_id"`
+	// MFA event identifier for confirming organization identity.
+	MFAEventID string `pb:"2" json:"mfa_event_id"`
+	// Expected type of MFA.
+	MFAType mfa.MFA `pb:"3" json:"mfa_type"`
+	// MFA Token for authentication.
+	MFAToken string `pb:"4" json:"mfa_token"`
+}
+
+type ConfirmUpdateResponse struct {
+	// Uptate confirmation timestamp.
+	Updated time.Time `pb:"1"`
+}
+
+type OrganizationService interface {
+	// Get organization by ID.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/organization",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Organization"},
+	//         Description: "Get organization.",
+	//         Summary:     "Get organization profile record.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/organizationGetOrganizationResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	GetOrganization(GetOrganizationRequest) GetOrganizationResponse
+
+	// Update a organization record.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/organization/{OrganizationID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Organization"},
+	//         Description: "Update Organization.",
+	//         Summary:     "Change the organization's record.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/organizationUpdateOrganizationResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	UpdateOrganization(UpdateOrganizationRequest) UpdateOrganizationResponse
+
+	// Confirmation of change using MFA validation.
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v1/organization/{MFAEventID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Organization"},
+	//         Description: "Confirm Update.",
+	//         Summary:     "Confirm identity to apply the submitted changes.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/organizationConfirmUpdateResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	ConfirmUpdate(ConfirmUpdateRequest) ConfirmUpdateResponse
+}

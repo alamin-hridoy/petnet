@@ -1,0 +1,460 @@
+package bills_payment
+
+import (
+	"encoding/json"
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "amount",
+//                 "bill_id",
+//                 "biller_tag",
+//                 "trx_date",
+//                 "user_id",
+//                 "customer_id",
+//                 "location_id",
+//                 "location_name",
+//                 "coy",
+//                 "currency_id",
+//                 "form_type",
+//                 "form_number",
+//                 "account_number",
+//                 "identifier",
+//                 "service_charge",
+//                 "total_amount",
+//                 "client_reference_number",
+//                 "partner",
+//         },
+// }}
+type BPTransactRequest struct {
+	BillerTag               string              `pb:"1" json:"biller_tag"`
+	RemoteUserID            string              `pb:"2" json:"remote_user_id"`
+	LocationID              string              `pb:"3" json:"location_id"`
+	RemoteLocationID        string              `pb:"4" json:"remote_location_id"`
+	CurrencyID              string              `pb:"5" json:"currency_id"`
+	FormType                string              `pb:"6" json:"form_type"`
+	FormNumber              string              `pb:"7" json:"form_number"`
+	Identifier              string              `pb:"8" json:"identifier"`
+	TotalAmount             int                 `pb:"9" json:"total_amount"`
+	ClientReferenceNumber   string              `pb:"10" json:"client_reference_number"`
+	UserID                  string              `pb:"11" json:"user_id"`
+	CustomerID              int                 `pb:"12" json:"customer_id"`
+	LocationName            string              `pb:"13" json:"location_name"`
+	Coy                     string              `pb:"14" json:"coy"`
+	CallbackURL             string              `pb:"15" json:"callback_url"`
+	BillID                  string              `pb:"16" json:"bill_id"`
+	BillerName              string              `pb:"17" json:"biller_name"`
+	TrxDate                 string              `pb:"18" json:"trx_date"`
+	Amount                  string              `pb:"19" json:"amount"`
+	ServiceCharge           string              `pb:"20" json:"service_charge"`
+	PartnerCharge           string              `pb:"21" json:"partner_charge"`
+	AccountNumber           string              `pb:"22" json:"account_number"`
+	PaymentMethod           string              `pb:"23" json:"payment_method"`
+	ReferenceNumber         string              `pb:"24" json:"reference_number"`
+	ValidationNumber        string              `pb:"25" json:"validation_number"`
+	ReceiptValidationNumber string              `pb:"26" json:"receipt_validation_number"`
+	TpaID                   string              `pb:"27" json:"tpa_id"`
+	OtherInfo               BPTransactOtherInfo `pb:"28" json:"other_info"`
+	Type                    string              `pb:"29" json:"type"`
+	Txnid                   string              `pb:"30" json:"txnid"`
+	Partner                 string              `pb:"31" json:"partner"`
+}
+
+type BPTransactOtherInfo struct {
+	LastName        string `pb:"1" json:"last_name"`
+	FirstName       string `pb:"2" json:"first_name"`
+	MiddleName      string `pb:"3" json:"middle_name"`
+	PaymentType     string `pb:"4" json:"payment_type"`
+	Course          string `pb:"5" json:"course"`
+	TotalAssessment string `pb:"6" json:"total_assessment"`
+	SchoolYear      string `pb:"7" json:"school_year"`
+	Term            string `pb:"8" json:"term"`
+	Name            string `pb:"9" json:"name"`
+}
+
+type BPTransactResponse struct {
+	Code    string           `pb:"1" json:"code"`
+	Message string           `pb:"2" json:"message"`
+	Result  BPTransactResult `pb:"3" json:"result"`
+	RemcoID int              `pb:"4" json:"remco_id"`
+}
+
+type BPTransactResult struct {
+	Status          string    `pb:"1" json:"status"`
+	Message         string    `pb:"2" json:"message"`
+	ServiceCharge   int       `pb:"3" json:"service_charge"`
+	Timestamp       string    `pb:"4" json:"timestamp"`
+	ReferenceNumber string    `pb:"5" json:"reference_number"`
+	TransactionID   string    `pb:"6" json:"transaction_id"`
+	ClientReference string    `pb:"7" json:"client_reference"`
+	BillerReference string    `pb:"8" json:"biller_reference"`
+	PaymentMethod   string    `pb:"9" json:"payment_method"`
+	Amount          string    `pb:"10" json:"amount"`
+	OtherCharges    string    `pb:"11" json:"other_charges"`
+	Details         []Details `pb:"14" json:"details"`
+	CreatedAt       string    `pb:"15" json:"created_at"`
+	URL             string    `pb:"16" json:"url"`
+}
+
+type Details struct {
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "partner",
+//         },
+// }}
+type BPTransactInquireRequest struct {
+	Code            string `pb:"1" json:"code"`
+	ClientReference string `pb:"2" json:"client_reference"`
+	AccountNumber   string `pb:"3" json:"account_number"`
+	Amount          int    `pb:"4" json:"amount"`
+	ContactNumber   string `pb:"5" json:"contact_number"`
+	Partner         string `pb:"6" json:"partner"`
+}
+
+type BPTransactInquireResponse struct {
+	Code    int                     `pb:"1" json:"code"`
+	Message string                  `pb:"2" json:"message"`
+	Result  BPTransactInquireResult `pb:"3" json:"result"`
+	RemcoID int                     `pb:"4" json:"remco_id"`
+	Status  int                     `pb:"5" json:"status"`
+	Reason  string                  `pb:"6" json:"reason"`
+}
+
+type BPTransactInquireResult struct {
+	TransactionID   string                   `pb:"1" json:"transaction_id"`
+	ReferenceNumber string                   `pb:"2" json:"reference_number"`
+	ClientReference string                   `pb:"3" json:"client_reference"`
+	BillerReference string                   `pb:"4" json:"biller_reference"`
+	PaymentMethod   string                   `pb:"5" json:"payment_method"`
+	Amount          string                   `pb:"6" json:"amount"`
+	OtherCharges    string                   `pb:"7" json:"other_charges"`
+	Status          string                   `pb:"8" json:"status"`
+	Message         BPTransactInquireMessage `pb:"9" json:"message"`
+	Details         []Details                `pb:"10" json:"details"`
+	CreatedAt       string                   `pb:"11" json:"created_at"`
+	AccountNumber   string                   `pb:"12" json:"account_number"`
+	Biller          string                   `pb:"14" json:"biller"`
+}
+
+type BPTransactInquireMessage struct {
+	Header  string `pb:"1" json:"header"`
+	Message string `pb:"2" json:"message"`
+	Footer  string `pb:"3" json:"footer"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "account_no",
+//                 "identifier",
+//                 "biller_tag",
+//                 "partner",
+//         },
+// }}
+type BPValidateRequest struct {
+	AccountNo     string              `pb:"1" json:"account_no"`
+	Identifier    string              `pb:"2" json:"identifier"`
+	BillerTag     string              `pb:"3" json:"biller_tag"`
+	BillPartnerID int                 `pb:"4" json:"bill_partner_id"`
+	Code          string              `pb:"5" json:"code"`
+	AccountNumber string              `pb:"6" json:"account_number"`
+	PaymentMethod string              `pb:"7" json:"payment_method"`
+	OtherCharges  string              `pb:"8" json:"other_charges"`
+	Amount        int                 `pb:"9" json:"amount"`
+	OtherInfo     BPTransactOtherInfo `pb:"10" json:"other_info"`
+	ContactNumber string              `pb:"11" json:"contact_number"`
+	Partner       string              `pb:"12" json:"partner"`
+}
+
+type BPValidateResponse struct {
+	Code    int              `pb:"1" json:"code"`
+	Message string           `pb:"2" json:"message"`
+	Result  BPValidateResult `pb:"3" json:"result"`
+	RemcoID int              `pb:"4" json:"remco_id"`
+	Status  int              `pb:"5" json:"status"`
+	Reason  string           `pb:"6" json:"reason"`
+}
+
+type BPValidateResult struct {
+	Valid            bool      `pb:"1" json:"valid"`
+	Code             int       `pb:"2" json:"code"`
+	Account          string    `pb:"3" json:"account"`
+	Details          []Details `pb:"4" json:"details"`
+	ValidationNumber string    `pb:"5" json:"validation_number"`
+	Message          string    `pb:"6" json:"message"`
+	Refno            string    `pb:"7" json:"refno"`
+	Txnid            string    `pb:"8" json:"txnid"`
+	Biller           string    `pb:"9" json:"biller"`
+	Meta             []Details `pb:"10" json:"meta"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "partner",
+//         },
+// }}
+type BPBillerListRequest struct {
+	Partner string `pb:"1" json:"partner"`
+}
+
+type BPBillerListResult struct {
+	BillerTag         string                  `pb:"1" json:"biller_tag"`
+	Description       string                  `pb:"2" json:"description"`
+	FirstField        string                  `pb:"3" json:"first_field"`
+	FirstFieldFormat  string                  `pb:"4" json:"first_field_format"`
+	FirstFieldWidth   string                  `pb:"5" json:"first_field_width"`
+	SecondField       string                  `pb:"6" json:"second_field"`
+	SecondFieldFormat string                  `pb:"7" json:"second_field_format"`
+	SecondFieldWidth  string                  `pb:"8" json:"second_field_width"`
+	ServiceCharge     int                     `pb:"9" json:"service_charge"`
+	Name              string                  `pb:"10" json:"name"`
+	Code              string                  `pb:"11" json:"code"`
+	Category          string                  `pb:"13" json:"category"`
+	Type              string                  `pb:"14" json:"type"`
+	Logo              string                  `pb:"15" json:"logo"`
+	IsMultipleBills   int                     `pb:"16" json:"is_multiple_bills"`
+	IsCde             int                     `pb:"17" json:"is_cde"`
+	IsAsync           int                     `pb:"18" json:"is_async"`
+	PartnerID         int                     `pb:"19" json:"partner_id"`
+	FieldList         []BPBillerListFieldList `pb:"21" json:"field_list"`
+}
+
+type BPBillerListFieldList struct {
+	ID          string              `pb:"1" json:"id"`
+	Type        string              `pb:"2" json:"type"`
+	Label       string              `pb:"3" json:"label"`
+	Order       int                 `pb:"4" json:"order"`
+	Rules       []BPBillerListRules `pb:"5" json:"rules"`
+	Description string              `pb:"6" json:"description"`
+	Placeholder string              `pb:"7" json:"placeholder"`
+}
+
+type BPBillerListRules struct {
+	Code    int    `pb:"1" json:"code"`
+	Type    string `pb:"2" json:"type"`
+	Value   string `pb:"3" json:"value"`
+	Format  string `pb:"4" json:"format"`
+	Message string `pb:"5" json:"message"`
+	Options string `pb:"6" json:"options"`
+}
+
+type BPBillerListResponse struct {
+	Code    int                  `pb:"1" json:"code"`
+	Message string               `pb:"2" json:"message"`
+	Result  []BPBillerListResult `pb:"3" json:"result"`
+	RemcoID int                  `pb:"4" json:"remco_id"`
+}
+
+type SortOrder int
+
+const (
+	DESC SortOrder = iota
+	ASC
+)
+
+type SortByColumn int
+
+const (
+	OmitSortByColumn SortByColumn = iota
+	ReferenceNumber
+	GrossAmount
+	TransactionCompletedTime
+	Partner
+	Fee
+	Commission
+)
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "org_id",
+//         },
+// }}
+type BillsPaymentTransactListRequest struct {
+	From            string       `pb:"1" json:"from"`
+	Until           string       `pb:"2" json:"until"`
+	Limit           int32        `pb:"3" json:"limit"`
+	Offset          int32        `pb:"4" json:"offset"`
+	SortOrder       SortOrder    `pb:"5" json:"sort_order"`
+	SortByColumn    SortByColumn `pb:"6" json:"sort_by_column"`
+	ReferenceNumber string       `pb:"7" json:"reference_number"`
+	ExcludePartners []string     `pb:"8" json:"exclude_partner"`
+	OrgID           string       `pb:"9" json:"org_id"`
+}
+
+type BillsPaymentTransactListResponse struct {
+	Next          int32          `pb:"1" json:"next"`
+	BillsPayments []BillsPayment `pb:"2" json:"bills_payments"`
+	Total         int32          `pb:"3" json:"total"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "amount",
+//                 "currency",
+//         },
+// }}
+type Amount struct {
+	// Monetary amount in the smallest currency denomination.  Example: USD $10.25 => "1025".
+	Amount string `pb:"1" json:"amount"`
+	// Currency code using ISO-4217 3-letter codes.
+	Currency string `pb:"2" json:"currency"`
+}
+
+type BillsPayment struct {
+	ReferenceNumber          string    `pb:"1" json:"reference_number"`
+	Partner                  string    `pb:"2" json:"partner"`
+	TotalAmount              Amount    `pb:"3" json:"total_amount"`
+	TransactFee              Amount    `pb:"4" json:"transact_fee"`
+	TransactCommission       Amount    `pb:"5" json:"transact_commission"`
+	TransactionCompletedTime time.Time `pb:"6" json:"transaction_completed_time"`
+}
+
+type BillspaymentService interface {
+	// billspayment transact.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/bills-payment/transact",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"BillsPayment"},
+	//         Description: "Bills Payment Transact",
+	//         Summary:     "Bills Payment Transact",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/bills_paymentBPTransactResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when not found.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 400, \"message\": \"BillsPayment Transact Error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	BPTransact(BPTransactRequest) BPTransactResponse
+
+	// billspayment transact inquire.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/bills-payment/transactinquire",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"BillsPayment"},
+	//         Description: "Bills Payment Transact Inquire",
+	//         Summary:     "Bills Payment Transact Inquire",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/bills_paymentBPTransactInquireResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when not found.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 400, \"message\": \"BillsPayment Transact Inquire Error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	BPTransactInquire(BPTransactInquireRequest) BPTransactInquireResponse
+
+	// billspayment validate.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/bills-payment/validate",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"BillsPayment"},
+	//         Description: "Bills Payment Validate",
+	//         Summary:     "Bills Payment Validate",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/bills_paymentBPValidateResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when not found.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 400, \"message\": \"BillsPayment Validate Error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	BPValidate(BPValidateRequest) BPValidateResponse
+
+	// billspayment biller list.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/bills-payment/billerlist/{Partner}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"BillsPayment"},
+	//         Description: "Bills Payment Biller List",
+	//         Summary:     "Bills Payment Biller List",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/bills_paymentBPBillerListResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when not found.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 400, \"message\": \"BillsPayment Biller List Error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	BPBillerList(BPBillerListRequest) BPBillerListResponse
+
+	// Get Transaction List for BillsPayment
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/bills-payment/billerlist",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Transaction List for BillsPayment"},
+	//         Description: "Get Transaction List for BillsPayment.",
+	//         Summary:     "Get Transaction history for BillsPayment.",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/bills_paymentBillsPaymentTransactListResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when not found.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 400, \"message\": \"BillsPayment Biller List Error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	BillsPaymentTransactList(BillsPaymentTransactListRequest) BillsPaymentTransactListResponse
+}

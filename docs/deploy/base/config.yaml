@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: docs-config
+data:
+  AUTH_ISSUER: "http://127.0.0.1:4444/"
+  BASE_URL: "http://127.0.0.1:3000"
+  SHUTDOWN_TIMEOUT: 3s
+
+...

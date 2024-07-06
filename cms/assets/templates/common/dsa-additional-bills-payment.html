@@ -1,0 +1,930 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>DSA Services</title>
+    <style>
+        .hasError .border.border-gray-300{
+            --tw-border-opacity: 1 !important;
+            border-color: rgba(185, 28, 28, var(--tw-border-opacity)) !important;
+        }
+    </style>
+</head>
+<body class="font-sans">
+        <div class="flex">
+            <!-- sidebar-left-start -->
+            {{ template "dsa-sidenav-menu.html" dict "Type" "dsa-select-partners" "Data" .}}
+            <!-- sidebarleft-end -->
+            
+            <!-- top-header-start -->
+            <div class="min-h-screen w-full flex bg-petnetgray ">
+                <div class="w-full">
+                  <div class="px-16 py-4 shadow-md bg-white">
+                    <ul class="flex justify-end items-center space-x-4 mb-16">
+                      <li class="mr-auto">
+                            <a href="/dsa-services" class="inline-flex text-petnetlightblue text-sm items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-4" fill="none"
+                                                                                                                 viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                                                          d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                                </svg>
+                                Back to List
+                            </a>
+                      </li>
+                      <li>
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" fill="none" viewBox="0 0 24 24"
+                              stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                          </svg>
+                      </li>
+                      <li>
+                        {{ template "top-head-profile.html" dict "UserInfo" .UserInfo "CompanyName" .CompanyName .}}
+                      </li>
+                      <li>
+                          <div class="relative" id="topDropdownBox">
+                              <a href="javascript:;" onclick="toggleTopButton('openTopDropdown')">
+                                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                      viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M19 9l-7 7-7-7" />
+                                  </svg>
+                              </a>
+                              <div class="absolute right-0 top-12 hidden" id="openTopDropdown">
+                                  <div
+                                      class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                  </div>
+                                  <div class="shadow-lg  absolute top-3 -right-5 rounded">
+                                      <div class="relative z-20 p-3 w-36 bg-white rounded space-y-2">
+                                          <a class="flex text-sm items-center" href="/profile">
+                                              <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                  <path fill-rule="evenodd" clip-rule="evenodd" d="M16 8C16 10.21 14.21 12 12 12C9.79 12 8 10.21 8 8C8 5.79 9.79 4 12 4C14.21 4 16 5.79 16 8ZM4 18C4 15.34 9.33 14 12 14C14.67 14 20 15.34 20 18V19C20 19.55 19.55 20 19 20H5C4.45 20 4 19.55 4 19V18Z" fill="#333333"/>
+                                              </svg>
+                                              Profile
+                                          </a>
+                                          <a href="/logout" class="flex text-sm pl-1">
+                                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
+                                                  viewBox="0 0 24 24" stroke="currentColor">
+                                                  <path stroke-linecap="round" stroke-linejoin="round"
+                                                      stroke-width="2"
+                                                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                              </svg>
+                                              Logout
+                                          </a>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </li>
+                  </ul>
+                <div class="mb-4">
+                    <h2 class="sm:text-5xl text-petnetblue font-semibold">Request Service</h2>
+                </div>
+                  </div>
+                    <!-- top-header-end -->
+                    <!-- main content-start -->
+                    <div class="px-24 xl:px-40 2xl:px-56 py-20 w-full">
+                      <div class="shadow overflow-hidden bg-white">
+                        <div class="rounded">
+                          <!-- step area -->
+                          <div class="flex bg-petnetheader bg-opacity-60 rounded-t">
+                            <div class="flex px-2 bg-petnetpink justify-center items-center rounded-tl w-1/2 h-12">
+                                <span
+                                    class="text-white text-sm rounded-full border-white border h-8 w-8 inline-flex justify-center items-center mr-2">1</span>
+                                <p class="text-white text-sm font-normal">Select Partners</p>
+                            </div>
+                            <div class="flex px-2 justify-center items-center bg-petnetorange w-1/2 h-12">
+                                <span
+                                    class="text-white text-sm rounded-full border-white border h-8 w-8 inline-flex justify-center items-center mr-2">2</span>
+                                <p class="text-white text-sm ">Required Documents</p>
+                            </div>
+                        </div> 
+                          <!-- form area -->
+                          <form method="POST" action="/dsa-additional-docs-bills-payment" enctype="multipart/form-data" name="dsaAdsDocsForm">
+                            {{ .CSRFField }}
+                                  <!-- header text -->
+                            <p class="pt-20 pb-3 pl-20 text-2xl font-bold">Upload Service Documents</p>
+                            <div class="px-20">
+                                    <p class="pt-4 pb-1 text-base font-normal">Non-Disclosure Agreement<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-BP_nda" class="w-full bg-petnetgray {{with .Errors.BP_nda}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-BP_nda" id="err-BP_nda"></p>
+                                    {{with .Errors.BP_nda}}
+                                        <p class="text-red-700 mt-2 all-errs-BP_nda">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">PETNET Supplier Information Sheet<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-BP_sis" class="w-full bg-petnetgray {{with .Errors.BP_sis}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-BP_sis" id="err-BP_sis"></p>
+                                    {{with .Errors.BP_sis}}
+                                        <p class="text-red-700 mt-2 all-errs-BP_sis">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">Partner Scoping Form<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-BP_psf" class="w-full bg-petnetgray {{with .Errors.BP_psf}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-BP_psf" id="err-BP_psf"></p>
+                                    {{with .Errors.BP_psf}}
+                                        <p class="text-red-700 mt-2 all-errs-BP_psf">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">Product or Service Procedure/Process Flow<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-BP_psp" class="w-full bg-petnetgray {{with .Errors.BP_psp}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-BP_psp" id="err-BP_psp"></p>
+                                    {{with .Errors.BP_psp}}
+                                        <p class="text-red-700 mt-2 all-errs-BP_psp">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">SEC Registration<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-BP_sec" class="w-full bg-petnetgray {{with .Errors.BP_sec}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-BP_sec" id="err-BP_sec"></p>
+                                    {{with .Errors.BP_sec}}
+                                        <p class="text-red-700 mt-2 all-errs-BP_sec">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">Latest General Information Sheet<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-BP_gis" class="w-full bg-petnetgray {{with .Errors.BP_gis}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-BP_gis" id="err-BP_gis"></p>
+                                    {{with .Errors.BP_gis}}
+                                        <p class="text-red-700 mt-2 all-errs-BP_gis">{{.}}</p>
+                                    {{end}} 
+
+                                    <p class="pt-4 pb-1 text-base font-normal">Latest & Prior 1 Year Audited Financial Statements<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-BP_lpafs" class="w-full bg-petnetgray {{with .Errors.BP_lpafs}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-BP_lpafs" id="err-BP_lpafs"></p>
+                                    {{with .Errors.BP_lpafs}}
+                                        <p class="text-red-700 mt-2 all-errs-BP_lpafs">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">BIR Registration<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-BP_bir" class="w-full bg-petnetgray {{with .Errors.BP_bir}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-BP_bir" id="err-BP_bir"></p>
+                                    {{with .Errors.BP_bir}}
+                                        <p class="text-red-700 mt-2 all-errs-BP_bir">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">BSP Registration</span></p>
+                                    <div id="file-upload-BP_bsp" class="w-full bg-petnetgray"></div>
+                                   
+                                    <p class="pt-4 pb-1 text-base font-normal">Anti-Money Laundering (AML) Registration</p>
+                                    <div id="file-upload-BP_aml" class="w-full bg-petnetgray"></div>
+                                    
+                                    <p class="pt-4 pb-1 text-base font-normal">Secretary's Certificate for Company's Authorized Signatory<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-BP_sccas" class="w-full bg-petnetgray {{with .Errors.BP_sccas}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-BP_sccas" id="err-BP_sccas"></p>
+                                    {{with .Errors.BP_sccas}}
+                                        <p class="text-red-700 mt-2 all-errs-BP_sccas">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">Valid government-issued ID of Authorized Signatory<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-BP_vg" class="w-full bg-petnetgray {{with .Errors.BP_vg}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-BP_vg" id="err-BP_vg"></p>
+                                    {{with .Errors.BP_vg}}
+                                        <p class="text-red-700 mt-2 all-errs-BP_vg">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">Company Profile<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-BP_cp" class="w-full bg-petnetgray {{with .Errors.BP_cp}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-BP_cp" id="err-BP_cp"></p>
+                                    {{with .Errors.BP_cp}}
+                                        <p class="text-red-700 mt-2 all-errs-BP_cp">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">MOA Draft<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-BP_moa" class="w-full bg-petnetgray {{with .Errors.BP_moa}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-BP_moa" id="err-BP_moa"></p>
+                                    {{with .Errors.BP_moa}}
+                                        <p class="text-red-700 mt-2 all-errs-BP_moa">{{.}}</p>
+                                    {{end}}
+
+                                    <p class="pt-4 pb-1 text-base font-normal">AMLA Training Certificate of Directors<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-BP_amla" class="w-full bg-petnetgray {{with .Errors.BP_amla}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-BP_amla" id="err-BP_amla"></p>
+                                    {{with .Errors.BP_amla}}
+                                        <p class="text-red-700 mt-2 all-errs-BP_amla">{{.}}</p>
+                                    {{end}}
+
+                                    <p class="pt-4 pb-1 text-base font-normal">MTPP-Money Laundering and Terrorist Financing Prevention Program Manual<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-BP_mttp" class="w-full bg-petnetgray {{with .Errors.BP_mttp}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-BP_mttp" id="err-BP_mttp"></p>
+                                    {{with .Errors.BP_mttp}}
+                                        <p class="text-red-700 mt-2 all-errs-BP_mttp">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">Scanned copy of IDs of Signatories<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-BP_sci" class="w-full bg-petnetgray {{with .Errors.BP_sci}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-BP_sci" id="err-BP_sci"></p>
+                                    {{with .Errors.BP_sci}}
+                                        <p class="text-red-700 mt-2 all-errs-BP_sci">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">Enhanced Due Diligence</span></p>
+                                    <div id="file-upload-BP_edd" class="w-full bg-petnetgray"></div>
+                                    
+                                <div class="flex flex-wrap pt-6 justify-between bg-white pb-20">
+                                    <div class="lg:w-auto w-full text-center">
+                                        <a href="/dsa-req-docs-bills-payment" class="rounded-md font-normal text-sm text-petnetblue border border-petnetblue  py-3 my-3 text-center w-44 inline-block">
+                                        Back
+                                        </a>
+                                    </div>
+                                       <div class="lg:w-auto w-full lg:ml-auto text-center">
+                                        <button id="SaveDraft" name="SaveDraft" value="SaveDraft" type="submit" class="bg-petnetlightblue border border-petnetlightblue text-sm text-white  py-3 rounded-md font-normal my-3 text-center w-44 ml-auto">
+                                        Save as Draft 
+                                        </button>
+                                      </div>
+                                      <div class="lg:w-auto w-full text-center">
+                                        <button id="SaveContinue" name="SaveContinue" value="SaveContinue" type="submit" class="bg-petnetyellow border border-petnetyellow text-sm text-petnetblue  py-3 rounded-md font-normal my-3 text-center w-44 ml-0 lg:ml-4">                                
+                                            Request Service
+                                        </button>
+                                    </div>
+                                </div>
+                              </div>
+                              </form>
+                      </div>
+                      </div>
+                    </div>
+                    <!-- main content-end -->
+                </div>
+            </div>
+        </div>
+</body>
+<script src="{{ assetHash "/js/fileupload.js" }}"></script>
+<script>
+    let tags = document.querySelectorAll(".upin");
+    tags.forEach((item) => {
+        item.addEventListener('change', ()=>{
+            let hasValue = false;
+            for (var i = 0; i < tags.length; i++) {
+                if (tags[i].value !== "") {
+                    hasValue = true;
+                    break
+                }
+            }
+            if(hasValue) {
+                console.log("field has value");
+            }
+        })
+    })
+</script>
+<script>
+    var BP_ndaID = "{{.BP_ndaID}}"
+    var BP_ndaForms = "{{.BP_ndaForms}}"
+    var BP_sisID = "{{.BP_sisID}}"
+    var BP_sisForms = "{{.BP_sisForms}}"
+    var BP_psfID = "{{.BP_psfID}}"
+    var BP_psfForms = "{{.BP_psfForms}}"
+    var BP_pspID = "{{.BP_pspID}}"
+    var BP_pspForms = "{{.BP_pspForms}}"
+    var BP_secID = "{{.BP_secID}}"
+    var BP_secForms = "{{.BP_secForms}}"
+    var BP_gisID = "{{.BP_gisID}}"
+    var BP_gisForms = "{{.BP_gisForms}}"
+    var BP_lpafsID = "{{.BP_lpafsID}}"
+    var BP_lpafsForms = "{{.BP_lpafsForms}}"
+    var BP_birID = "{{.BP_birID}}"
+    var BP_birForms = "{{.BP_birForms}}"
+    var BP_bspID = "{{.BP_bspID}}"
+    var BP_bspForms = "{{.BP_bspForms}}"
+    var BP_amlID = "{{.BP_amlID}}"
+    var BP_amlForms = "{{.BP_amlForms}}"
+    var BP_sccasID = "{{.BP_sccasID}}"
+    var BP_sccasForms = "{{.BP_sccasForms}}"
+    var BP_vgID = "{{.BP_vgID}}"
+    var BP_vgForms = "{{.BP_vgForms}}"
+    var BP_cpID = "{{.BP_cpID}}"
+    var BP_cpForms = "{{.BP_cpForms}}"
+    var BP_moaID = "{{.BP_moaID}}"
+    var BP_moaForms = "{{.BP_moaForms}}"
+    var BP_amlaID = "{{.BP_amlaID}}"
+    var BP_amlaForms = "{{.BP_amlaForms}}"
+    var BP_mttpID = "{{.BP_mttpID}}"
+    var BP_mttpForms = "{{.BP_mttpForms}}"
+    var BP_sciID = "{{.BP_sciID}}"
+    var BP_sciForms = "{{.BP_sciForms}}"
+    var BP_eddID = "{{.BP_eddID}}"
+    var BP_eddForms = "{{.BP_eddForms}}"
+    var CSRFFieldValue = "{{.CSRFFieldValue}}";
+
+</script>
+<script>
+        function isFileSelected(el) {
+        if (!el) {
+            console.log("file input not present");
+            return false;
+        }
+
+        // If files are uploaded previously, then that file is not requireds
+        if (document.getElementsByName("uploaded-" + el.name).length > 0) {
+            return true
+        }
+
+        // if not multiple
+        if (el.files && el.files.length > 0) {
+            return true;
+        }
+
+        // if multiple
+        for (let i = 0; i < el.length; i++) {
+            if (el[i].files.length > 0) {
+                return true;
+            }
+        }
+
+        return false
+    }
+        function addDocErrorMessage(field, msg) {
+        if (field == "") {
+            return;
+        }
+
+        let fieldContainer = document.getElementById("file-upload-" + field);
+        if (!fieldContainer) {
+            return;
+        }
+
+        // remove errors if no error msg
+        let allContainer = document.getElementById("err-" + field);
+        let blankErrMsg = allContainer.nextElementSibling.innerHTML
+        if (blankErrMsg == "" && allContainer.previousElementSibling.classList.contains("hasError")){
+            allContainer.previousElementSibling.classList.remove('hasError')
+        }
+        if (msg == "") {
+            fieldContainer.classList.remove("border-red-500", "border");
+            let allDocErrs = document.querySelector(".all-errs-" + field);
+            if (allDocErrs) {
+                allDocErrs.innerHTML = "";
+            }
+
+            return;
+        }
+
+        // for error
+        fieldContainer.classList.add("border-red-500", "border");
+        document.getElementById("err-" + field).innerHTML = msg
+    }
+
+        const bp_nda = [];
+        var BP_ndaFormsSL = BP_ndaForms.split(",");
+        if(BP_ndaFormsSL.length > 0){
+            BP_ndaFormsSL.forEach(function(item){
+                if(item != ""){
+                    bp_nda.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':BP_ndaID,
+                        'video':false
+                        
+                    });
+                }
+            });
+        }
+        new FileUpload("BP_nda", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", bp_nda, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("BP_nda", "")
+            }
+        });
+
+        const bp_sis = [];
+        var BP_sisFormsSL = BP_sisForms.split(",");
+        if(BP_sisFormsSL.length > 0){
+            BP_sisFormsSL.forEach(function(item){
+                if(item != ""){
+                    bp_sis.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':BP_sisID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("BP_sis", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", bp_sis, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("BP_sis", "")
+            }
+        });
+
+        const bp_psf = [];
+        var BP_psfFormsSL = BP_psfForms.split(",");
+        if(BP_psfFormsSL.length > 0){
+            BP_psfFormsSL.forEach(function(item){
+                if(item != ""){
+                    bp_psf.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':BP_psfID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("BP_psf", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", bp_psf, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("BP_psf", "")
+            }
+        });
+       
+
+        const bp_psp = [];
+        var BP_pspFormsSL = BP_pspForms.split(",");
+        if(BP_pspFormsSL.length > 0){
+            BP_pspFormsSL.forEach(function(item){
+                if(item != ""){
+                    bp_psp.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':BP_pspID,
+                        'video':false,
+                        
+                    });
+                }
+            });
+        }
+        new FileUpload("BP_psp", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", bp_psp, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("BP_psp", "")
+            }
+        });
+       
+        const bp_sec = [];
+        var BP_secFormsSL = BP_secForms.split(",");
+        if(BP_secFormsSL.length > 0){
+            BP_secFormsSL.forEach(function(item){
+                if(item != ""){
+                    bp_sec.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':BP_secID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("BP_sec", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", bp_sec, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                            return addDocErrorMessage("BP_sec", "")
+                        }
+        });
+
+        const bp_gis = [];
+        var BP_gisFormsSL = BP_gisForms.split(",");
+        if(BP_gisFormsSL.length > 0){
+            BP_gisFormsSL.forEach(function(item){
+                if(item != ""){
+                    bp_gis.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':BP_gisID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("BP_gis", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", bp_gis, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("BP_gis", "")
+            }
+        });
+        
+        const bp_lpafs = [];
+        var BP_lpafsFormsSL = BP_lpafsForms.split(",");
+        if(BP_lpafsFormsSL.length > 0){
+            BP_lpafsFormsSL.forEach(function(item){
+                if(item != ""){
+                    bp_lpafs.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':BP_lpafsID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("BP_lpafs", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", bp_lpafs, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("BP_lpafs", "")
+            }
+        });
+        
+        const bp_bir = [];
+        var BP_birFormsSL = BP_birForms.split(",");
+        if(BP_birFormsSL.length > 0){
+            BP_birFormsSL.forEach(function(item){
+                if(item != ""){
+                    bp_bir.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':BP_birID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("BP_bir", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", bp_bir, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("BP_bir", "")
+            }
+        });
+        
+        const bp_bsp = [];
+        var BP_bspFormsSL = BP_bspForms.split(",");
+        if(BP_bspFormsSL.length > 0){
+            BP_bspFormsSL.forEach(function(item){
+                if(item != ""){
+                    bp_bsp.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':BP_bspID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("BP_bsp", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", bp_bsp, '', {
+            'previewImages': true,
+            'multiple': true
+        });
+        
+        const bp_aml = [];
+        var BP_amlFormsSL = BP_amlForms.split(",");
+        if(BP_amlFormsSL.length > 0){
+            BP_amlFormsSL.forEach(function(item){
+                if(item != ""){
+                    bp_aml.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':BP_amlID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("BP_aml", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", bp_aml, '', {
+            'previewImages': true,
+            'multiple': true
+            
+        });
+        const bp_sccas = [];
+        var BP_sccasFormsSL = BP_sccasForms.split(",");
+        if(BP_sccasFormsSL.length > 0){
+            BP_sccasFormsSL.forEach(function(item){
+                if(item != ""){
+                    bp_sccas.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':BP_sccasID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("BP_sccas", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", bp_sccas, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("BP_sccas", "")
+            }
+        });
+        
+        const bp_vg = [];
+        var BP_vgFormsSL = BP_vgForms.split(",");
+        if(BP_vgFormsSL.length > 0){
+            BP_vgFormsSL.forEach(function(item){
+                if(item != ""){
+                    bp_vg.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':BP_vgID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("BP_vg", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", bp_vg, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("BP_vg", "")
+            }
+        });
+        
+        const bp_cp = [];
+        var BP_cpFormsSL = BP_cpForms.split(",");
+        if(BP_cpFormsSL.length > 0){
+            BP_cpFormsSL.forEach(function(item){
+                if(item != ""){
+                    bp_cp.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':BP_cpID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("BP_cp", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", bp_cp, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("BP_cp", "")
+            }
+        });
+        
+        const bp_moa = [];
+        var BP_moaFormsSL = BP_moaForms.split(",");
+        if(BP_moaFormsSL.length > 0){
+            BP_moaFormsSL.forEach(function(item){
+                if(item != ""){
+                    bp_moa.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':BP_moaID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("BP_moa", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", bp_moa, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("BP_moa", "")
+            }
+        });
+        
+        const bp_amla = [];
+        var BP_amlaFormsSL = BP_amlaForms.split(",");
+        if(BP_amlaFormsSL.length > 0){
+            BP_amlaFormsSL.forEach(function(item){
+                if(item != ""){
+                    bp_amla.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':BP_amlaID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("BP_amla", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", bp_amla, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("BP_amla", "")
+            }
+        });
+        const bp_mttp = [];
+        var BP_mttpFormsSL = BP_mttpForms.split(",");
+        if(BP_mttpFormsSL.length > 0){
+            BP_mttpFormsSL.forEach(function(item){
+                if(item != ""){
+                    bp_mttp.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':BP_mttpID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("BP_mttp", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", bp_mttp, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("BP_mttp", "")
+            }
+        });
+        const bp_sci = [];
+        var BP_sciFormsSL = BP_sciForms.split(",");
+        if(BP_sciFormsSL.length > 0){
+            BP_sciFormsSL.forEach(function(item){
+                if(item != ""){
+                    bp_sci.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':BP_sciID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("BP_sci", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", bp_sci, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("BP_sci", "")
+            }
+        });
+        const bp_edd = [];
+        var BP_eddFormsSL = BP_eddForms.split(",");
+        if(BP_eddFormsSL.length > 0){
+            BP_eddFormsSL.forEach(function(item){
+                if(item != ""){
+                    bp_edd.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':BP_eddID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("BP_edd", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", bp_edd, '', {
+            'previewImages': true,
+            'multiple': true,
+        });
+        
+        function loadAjax(url, method, nameV) {
+            var xhttp = new XMLHttpRequest();
+            var data = new FormData();
+            data.append("name", nameV);
+            data.append("gorilla.csrf.Token", CSRFFieldValue);
+            xhttp.open(method, url, true);
+            xhttp.send(data);
+        }
+        function removedUploadedFile() {
+			const removefile = document.getElementsByClassName("remove_file");
+			for (var i = 0; i < removefile.length; i++) {
+				removefile[i].addEventListener("click", function (e) {
+					let file = this.getAttribute("data-file")
+					let fileid = this.getAttribute("data-fileid")
+					if (typeof file !== 'undefined') {
+						if (file != null) {
+							loadAjax("/u/files/" + fileid, "DELETE", file)
+						}
+					}
+					this.closest(".remove_file_wrap").remove();
+				});
+			}
+		}
+		document.addEventListener('DOMContentLoaded', function (event) {
+			removedUploadedFile()
+		});
+		document.body.addEventListener('DOMSubtreeModified', function (event) {
+			removedUploadedFile()
+		});
+        function validateForm() {
+        let IsValid = true;
+        const errMsg = "This is a required document, please upload a file";
+        
+        let bpNdaDoc = document.dsaAdsDocsForm.BP_nda;
+        if (!isFileSelected(bpNdaDoc)) {
+            IsValid = false;
+            addDocErrorMessage("BP_nda", errMsg);
+            bpNdaDoc.focus();
+        }
+        let bPsisDoc = document.dsaAdsDocsForm.BP_sis;
+        if (!isFileSelected(bPsisDoc)) {
+            IsValid = false;
+            addDocErrorMessage("BP_sis", errMsg);
+            bPsisDoc.focus();
+        }
+        let bPpsfDoc = document.dsaAdsDocsForm.BP_psf;
+        if (!isFileSelected(bPpsfDoc)) {
+            IsValid = false;
+            addDocErrorMessage("BP_psf", errMsg);
+            bPpsfDoc.focus();
+        }
+        let bpPspDoc = document.dsaAdsDocsForm.BP_psp;
+        if (!isFileSelected(bpPspDoc)) {
+            IsValid = false;
+            addDocErrorMessage("BP_psp", errMsg);
+            bpPspDoc.focus();
+        }
+        let bpSecDoc = document.dsaAdsDocsForm.BP_sec;
+        if (!isFileSelected(bpSecDoc)) {
+            IsValid = false;
+            addDocErrorMessage("BP_sec", errMsg);
+            bpSecDoc.focus();
+        }
+        let bpAibDoc = document.dsaAdsDocsForm.BP_aib;
+        if (!isFileSelected(bpAibDoc)) {
+            IsValid = false;
+            addDocErrorMessage("BP_aib", errMsg);
+            bpAibDoc.focus();
+        }
+        let bpGisDoc = document.dsaAdsDocsForm.BP_gis;
+        if (!isFileSelected(bpGisDoc)) {
+            IsValid = false;
+            addDocErrorMessage("BP_gis", errMsg);
+            bpGisDoc.focus();
+        }
+        
+        let bpLlpafsDoc = document.dsaAdsDocsForm.BP_lpafs;
+        if (!isFileSelected(bpLlpafsDoc)) {
+            IsValid = false;
+            addDocErrorMessage("BP_lpafs", errMsg);
+            bpLlpafsDoc.focus();
+        }
+        let bpBirDoc = document.dsaAdsDocsForm.BP_bir;
+        if (!isFileSelected(bpBirDoc)) {
+            IsValid = false;
+            addDocErrorMessage("BP_bir", errMsg);
+            bpBirDoc.focus();
+        }
+
+        let bpBpDoc = document.dsaAdsDocsForm.BP_bp;
+        if (!isFileSelected(bpBpDoc)) {
+            IsValid = false;
+            addDocErrorMessage("BP_bp", errMsg);
+            bpBpDoc.focus();
+        }
+
+        let bpSccasDoc = document.dsaAdsDocsForm.BP_sccas;
+        if (!isFileSelected(bpSccasDoc)) {
+            IsValid = false;
+            addDocErrorMessage("BP_sccas", errMsg);
+            bpSccasDoc.focus();
+        }
+        let bpVgDoc = document.dsaAdsDocsForm.BP_vg;
+        if (!isFileSelected(bpVgDoc)) {
+            IsValid = false;
+            addDocErrorMessage("BP_vg", errMsg);
+            bpVgDoc.focus();
+        }
+        let bpCpDoc = document.dsaAdsDocsForm.BP_cp;
+        if (!isFileSelected(bpCpDoc)) {
+            IsValid = false;
+            addDocErrorMessage("BP_cp", errMsg);
+            bpCpDoc.focus();
+        }
+        let bpMoaDoc = document.dsaAdsDocsForm.BP_moa;
+        if (!isFileSelected(bpMoaDoc)) {
+            IsValid = false;
+            addDocErrorMessage("BP_moa", errMsg);
+            bpMoaDoc.focus();
+        }
+
+        let bpAmlaDoc = document.dsaAdsDocsForm.BP_amla;
+        if (!isFileSelected(bpAmlaDoc)) {
+            IsValid = false;
+            addDocErrorMessage("BP_amla", errMsg);
+            bpAmlaDoc.focus();
+        }
+        let bpMttpDoc = document.dsaAdsDocsForm.BP_mttp;
+        if (!isFileSelected(bpMttpDoc)) {
+            IsValid = false;
+            addDocErrorMessage("BP_mttp", errMsg);
+            bpMttpDoc.focus();
+        }
+        let bpSciDoc = document.dsaAdsDocsForm.BP_sci;
+        if (!isFileSelected(bpSciDoc)) {
+            IsValid = false;
+            addDocErrorMessage("BP_sci", errMsg);
+            bpSciDoc.focus();
+        }
+        let bpEddDoc = document.dsaAdsDocsForm.BP_edd;
+        if (!isFileSelected(bpEddDoc)) {
+            IsValid = false;
+            addDocErrorMessage("BP_edd", errMsg);
+            bpEddDoc.focus();
+        }
+       return IsValid;
+    }
+</script>
+<script>
+    const params = new URLSearchParams(window.location.search);
+    function toggleTopButton(id) {
+        let getDropdownItem = document.getElementById(id)
+        let isHiddenClass = getDropdownItem.classList.contains('hidden');
+        if (!isHiddenClass) {
+            getDropdownItem.classList.add("hidden");
+        } else {
+            getDropdownItem.classList.remove("hidden");
+        }
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        let menus = document.querySelectorAll("a");
+        for (let i = 0; i < menus.length; i++) {
+            menus[i].addEventListener("click", function(e){
+                e.preventDefault();
+                let lnk = menus[i].href;
+                menus[i].href = "javascript:;"
+                window.location.href = lnk;
+            });
+        }
+    });
+</script>
+</html>

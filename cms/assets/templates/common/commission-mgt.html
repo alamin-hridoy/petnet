@@ -1,0 +1,1229 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>Commission Management</title>
+    <style>
+		.checkBoxColor { filter: hue-rotate(220deg) }
+        .w-41 {width: 40.5rem;}
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+	</style>
+</head>
+<body class="font-sans">
+    <div>
+        <div class="flex">
+            <!-- sidebar-left-start -->
+            <div class="bg-petnetblue w-32 min-h-screen">
+                <div class="min-h-screen">
+                    <img src="{{ assetHash "/images/DRP-Vertical.svg" }}" class="mx-auto my-5">
+                    <!-- Sidebar menu start -->
+                    {{ template "admin-sidenav-menu.html" dict "Type" "partner-list" "Data" .}}
+                    <!-- Sidebar menu end -->
+                </div>
+            </div>
+            <!-- sidebarleft-end -->
+            <!-- top-header-start -->
+            <div class="min-h-screen w-full flex bg-petnetgray ">
+                <div class="w-full">
+                    <div class="px-6 lg:px-32 py-10 shadow-md relative z-10 bg-white">
+                        <ul class="flex justify-end items-center space-x-4 mb-10">
+                            <li class="mr-auto">
+                                <a href="/dashboard/dsa-applicant-list" class="inline-flex text-petnetlightblue text-base items-center font-semibold">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                                    </svg>
+                                    Back to Services
+                                </a>
+                            </li>
+                            <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                            </svg>
+                            </li>
+                            <li>
+                                {{ template "top-head-profile.html" dict "UserInfo" .UserInfo "CompanyName" "" .}}
+                            </li>
+                            <li>
+                                <div class="relative" id="topDropdownBox">
+                                    <a href="javascript:;" onclick="toggleTopButton('openTopDropdown')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                    </a>
+                                <div class="absolute right-0 top-12 hidden" id="openTopDropdown">
+                                <div class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                </div>
+                                <div class="shadow-lg  absolute top-3 -right-5 rounded">
+                                <div class="relative z-20 p-3 w-36 bg-white rounded space-y-2">
+                                    <a class="flex text-sm items-center" href="/profile">
+                                        <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M16 8C16 10.21 14.21 12 12 12C9.79 12 8 10.21 8 8C8 5.79 9.79 4 12 4C14.21 4 16 5.79 16 8ZM4 18C4 15.34 9.33 14 12 14C14.67 14 20 15.34 20 18V19C20 19.55 19.55 20 19 20H5C4.45 20 4 19.55 4 19V18Z" fill="#333333"/>
+                                        </svg>
+                                        Profile
+                                    </a>
+                                    <a href="/logout" class="flex text-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                        </svg>
+                                        Logout
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                        </ul>
+                        <div class="">
+                            <h2 class="text-5xl text-petnetblue mr-4 font-semibold">Commission Fee</h2>
+                        </div>
+                      </div>
+                    <div class="px-6 lg:px-32 py-10 bg-petnetgray flex flex-wrap">
+                        <div class="w-1/4 pr-2 flex flex-col">
+                            <div class="mb-8">
+                                 <div class="bg-white rounded">
+                                    <h4 class="text-xl font-semibold text-petnetblue pt-7 px-12 pb-4 border-b">Configuration</h4>
+                            <!-- Summary list start -->
+                                <ul>
+                                    <li>
+                                        <a href="/dashboard/partner-services" class="nav-anchor ">
+                                        <span class="w-12 inline-block">
+                                            <img src="{{assetHash "/images/Services.svg"}}" alt="">
+                                        </span>
+                                        <span class="font-semibold text-base">Services</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;" class="nav-anchor active-nav-anchor">
+                                        <span class="w-12 inline-block">
+                                            <img src="{{assetHash "/images/Commission-Fee.svg"}}" alt="">
+                                        </span>
+                                        <span class="font-semibold text-base">Commission Fee</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/dashboard/providers" class="nav-anchor">
+                                        <span class="w-12 inline-block">
+                                            <img src="{{assetHash "/images/hand-holding.svg"}}" alt="">
+                                        </span>
+                                        <span class="font-semibold text-base">Providers</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            <!-- Summary list end -->
+                            </div>
+                          </div>
+                        </div>
+                    <div class="w-3/4 pl-2">
+                        <div class="w-full flex justify-between items-center pb-4">
+                            <div>
+                                <ul class="flex">
+                                    <li class="pr-2">
+                                        <a id="remittance" onclick="handleTabLink(event)" class="tabLink inline-block border-solid border-b-2 border-petnetlightblue py-2 text-petnetlightblue font-normal" href="javascript:;">
+                                            Remittance
+                                        </a>
+                                    </li>
+                                    <li class="px-2">
+                                        <a id="billsPayment" onclick="handleTabLink(event)" class="tabLink inline-block border-solid border-b-2 border-petnetgray hover:border-petnetlightblue py-2 hover:text-petnetlightblue font-normal" href="javascript:;">
+                                            Bills Payment
+                                        </a>
+                                    </li>
+                                    <li class="px-2">
+                                        <a id="microInsurance" onclick="handleTabLink(event)" class="tabLink inline-block border-solid border-b-2 border-petnetgray hover:border-petnetlightblue py-2 hover:text-petnetlightblue font-normal" href="javascript:;">
+                                            Micro Insurance
+                                        </a>
+                                    </li>
+                                    <li class="px-2">
+                                        <a id="cashIO" onclick="handleTabLink(event)" class="tabLink inline-block border-solid border-b-2 border-petnetgray hover:border-petnetlightblue py-2 hover:text-petnetlightblue font-normal" href="javascript:;">
+                                            Cash In/Cash Out
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <a onclick="submitForm(event, 'remittance_form');" class="inline-block py-4 px-8 bg-petnetyellow text-petnetblue rounded-md" href="javascript:;">Save Details</a>
+                            </div>
+                        </div>
+                        <div class="tabLinkSection remittance">
+                            <p id="mainErrorMsg" class="mb-2 text-red-600 italic">
+                                {{.ErrorMsg}}
+                            </p>
+                            <form action="/dashboard/commission-mgt" id="remittance_form" method="POST">
+                            {{.CSRFField}}
+                            {{range .PartnerList}}
+                                <div id="partner-wrap-{{.Stype}}" class="partner-wrap mb-5">
+                                    <div onclick ="handlePartnerTitle(this, event)" class="bg-white rounded border-b-2 border-t py-4 px-4 flex items-center justify-between targetdiv">
+                                        <div>
+                                            <h4 class="font-semibold text-base py-4 pl-4">{{.Name}}</h4>
+                                        </div>
+                                        <div>
+                                            <button class="partnerExpandBtn">
+                                                <svg class="transform" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M9.87492 1.00002L5.99492 4.88002L2.11492 1.00002C1.72492 0.610019 1.09492 0.610019 0.704917 1.00002C0.314917 1.39002 0.314916 2.02002 0.704917 2.41002L5.29492 7.00002C5.68492 7.39002 6.31492 7.39002 6.70492 7.00002L11.2949 2.41002C11.4822 2.22319 11.5874 1.96954 11.5874 1.70502C11.5874 1.4405 11.4822 1.18685 11.2949 1.00002C10.9049 0.620019 10.2649 0.610019 9.87492 1.00002Z" fill="#333333"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="bound-wrap hidden">
+                                        <div onclick="expandBoundShow(this, event)" class="bg-white border-t py-4 px-4 flex items-center justify-between targetdiv boundtargetdiv">
+                                            <div class="flex items-center">
+                                                <h4 class="text-base font-semibold text-gray-500">Inbound</h4>
+                                            </div>
+                                            <div>
+                                                <button>
+                                                    <svg class="transform" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M9.87492 1.00002L5.99492 4.88002L2.11492 1.00002C1.72492 0.610019 1.09492 0.610019 0.704917 1.00002C0.314917 1.39002 0.314916 2.02002 0.704917 2.41002L5.29492 7.00002C5.68492 7.39002 6.31492 7.39002 6.70492 7.00002L11.2949 2.41002C11.4822 2.22319 11.5874 1.96954 11.5874 1.70502C11.5874 1.4405 11.4822 1.18685 11.2949 1.00002C10.9049 0.620019 10.2649 0.610019 9.87492 1.00002Z" fill="#333333"/>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        {{$inb := printf "rmt%sinb" .Stype}}
+                                    {{ template "commission-mgt-remittance.html" dict "Prefix" $inb "Data" .InBound}}
+                                    </div>
+                                    <div class="bound-wrap hidden">
+                                        <div onclick="expandBoundShow(this, event)" class="bg-white border-t py-4 px-4 flex items-center justify-between targetdiv boundtargetdiv">
+                                            <div class="flex items-center">
+                                                <h4 class="text-base font-semibold text-gray-500">Outbound</h4>
+                                            </div>
+                                            <div>
+                                                <button>
+                                                    <svg class="transform" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M9.87492 1.00002L5.99492 4.88002L2.11492 1.00002C1.72492 0.610019 1.09492 0.610019 0.704917 1.00002C0.314917 1.39002 0.314916 2.02002 0.704917 2.41002L5.29492 7.00002C5.68492 7.39002 6.31492 7.39002 6.70492 7.00002L11.2949 2.41002C11.4822 2.22319 11.5874 1.96954 11.5874 1.70502C11.5874 1.4405 11.4822 1.18685 11.2949 1.00002C10.9049 0.620019 10.2649 0.610019 9.87492 1.00002Z" fill="#333333"/>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        {{$otb := printf "rmt%sotb" .Stype}}
+                                        {{ template "commission-mgt-remittance.html" dict "Prefix" $otb "Data" .OutBound}}
+                                    </div>
+                                </div>
+                            {{end}}
+                            </form>
+                        </div>
+                        <div class="tabLinkSection billsPayment hidden">
+                            <div class="bg-white rounded mb-6">
+                                <div class="border-b py-5 px-6 flex items-center justify-between targetdiv">
+                                    <div class="flex items-center">
+                                        <h4 class="text-xl text-petnetblue font-semibold pr-4">Not Available</h4>
+                                        <span class="bg-petnetheadertext rounded-xl px-3 py-1 hidden"></span>
+                                    </div>
+                                    <div>
+                                        <button onclick="expandShow(event)">
+                                            <svg class="transform rotate-180" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M9.87492 1.00002L5.99492 4.88002L2.11492 1.00002C1.72492 0.610019 1.09492 0.610019 0.704917 1.00002C0.314917 1.39002 0.314916 2.02002 0.704917 2.41002L5.29492 7.00002C5.68492 7.39002 6.31492 7.39002 6.70492 7.00002L11.2949 2.41002C11.4822 2.22319 11.5874 1.96954 11.5874 1.70502C11.5874 1.4405 11.4822 1.18685 11.2949 1.00002C10.9049 0.620019 10.2649 0.610019 9.87492 1.00002Z" fill="#333333"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="hidden">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tabLinkSection microInsurance hidden">
+                            <div class="bg-white rounded mb-6">
+                                <div class="border-b py-5 px-6 flex items-center justify-between targetdiv">
+                                    <div class="flex items-center">
+                                        <h4 class="text-xl text-petnetblue font-semibold pr-4">Not Available</h4>
+                                        <span class="bg-petnetheadertext rounded-xl px-3 py-1 hidden"></span>
+                                    </div>
+                                    <div>
+                                        <button onclick="expandShow(event)">
+                                            <svg class="transform rotate-180" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M9.87492 1.00002L5.99492 4.88002L2.11492 1.00002C1.72492 0.610019 1.09492 0.610019 0.704917 1.00002C0.314917 1.39002 0.314916 2.02002 0.704917 2.41002L5.29492 7.00002C5.68492 7.39002 6.31492 7.39002 6.70492 7.00002L11.2949 2.41002C11.4822 2.22319 11.5874 1.96954 11.5874 1.70502C11.5874 1.4405 11.4822 1.18685 11.2949 1.00002C10.9049 0.620019 10.2649 0.610019 9.87492 1.00002Z" fill="#333333"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="hidden">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tabLinkSection cashIO hidden">
+                            <div class="bg-white rounded mb-6">
+                                <div class="border-b py-5 px-6 flex items-center justify-between targetdiv">
+                                    <div class="flex items-center">
+                                        <h4 class="text-xl text-petnetblue font-semibold pr-4">Not Available</h4>
+                                        <span class="bg-petnetheadertext rounded-xl px-3 py-1 hidden"></span>
+                                    </div>
+                                    <div>
+                                        <button onclick="expandShow(event)">
+                                            <svg class="transform rotate-180" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M9.87492 1.00002L5.99492 4.88002L2.11492 1.00002C1.72492 0.610019 1.09492 0.610019 0.704917 1.00002C0.314917 1.39002 0.314916 2.02002 0.704917 2.41002L5.29492 7.00002C5.68492 7.39002 6.31492 7.39002 6.70492 7.00002L11.2949 2.41002C11.4822 2.22319 11.5874 1.96954 11.5874 1.70502C11.5874 1.4405 11.4822 1.18685 11.2949 1.00002C10.9049 0.620019 10.2649 0.610019 9.87492 1.00002Z" fill="#333333"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="hidden">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="hidden">
+        <table>
+            <tbody id="feetirehdn" class="bg-petnetgray">
+                <tr class="text-lg font-normal">
+                    <td class="border-r-2 pl-4 py-1 border-2 border-gray-300 bg-petnetgray">
+                        <input type="hidden" name="ID##Name####id##[##Prefix##]" value="">
+                        <input name="Min##Name####id##[##Prefix##]" onkeyup="onChangeValidate(this)" min="1" class="bg-petnetgray min##### focus:outline-none px-2 w-full" type="number">
+                    </td>
+                    <td class="border-r-2 pl-4 py-1 border-2 border-gray-300 bg-petnetgray">
+                        <input name="Max##Name####id##[##Prefix##]" onkeyup="onChangeValidate(this)" min="1" class="bg-petnetgray max##### focus:outline-none px-2 w-full" type="number">
+                        <input name="rateid##id##" type="hidden" value="">
+                    </td>
+                    <td class="pl-4 py-1 border-2 border-gray-300 bg-petnetgray">
+                        <input name="Fee##Name####id##[##Prefix##]" onkeyup="onChangeValidate(this)" min="0.01" max="##MAX##" class="bg-petnetgray DSAShareV focus:outline-none px-2 w-full" type="number" step="any">
+                    </td>
+                    <td class="pl-3 py-1 w-8"><img class="deleteRow cursor-pointer" onclick='deleteRow(this, "")' src="{{assetHash "/images/cross.svg"}}" alt=""></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        var CSRFFieldValue = "{{.CSRFFieldValue}}";
+        const minError1 = "Minimum amount should not be greater than the maximum amount";
+        const minError2 = "Minimum amount should not be repeated.";
+        const minError3 = "Amount should not be within range of the previous input.";
+        const maxError1 = "Maximum amount should not be less than the minimum amount.";
+        const maxError2 = "Maximum amount should not be repeated.";
+        const maxError3 = "Amount should not be within range of the previous input.";
+        const errMsg = "The Value should be greater than 0 and less than 100";
+        const generalError = "There are errors for some partners";
+        const emptyMsg = "All fields are required";
+        const zeroMsg = "Value must be greater than 0";
+        let navAnchors = document.getElementsByClassName("nav-anchor");
+        let currentPath = window.location.href.split('?')[0];
+        for (let i = 0; i < navAnchors.length; i++) {
+            if (navAnchors[i].href == currentPath) {
+                navAnchors[i].classList.add("active-nav-anchor");
+            }
+        }
+        function dropdownToggle(event) {
+            event.preventDefault();
+            let targetItem = event.target;
+            while (!targetItem.classList.contains('dropdown-toggle')) {
+                    targetItem = targetItem.parentElement;
+                }
+            targetItem = targetItem.nextElementSibling;
+            if (targetItem.classList.contains('hidden')) {
+                    targetItem.classList.remove("hidden");
+                } else {
+                        targetItem.classList.add("hidden");
+                    }
+            let x = document.getElementsByClassName("dropdown-item");
+            for (let i = 0; i < x.length; i++) {
+                    if(x[i]!=targetItem){
+                            x[i].classList.add("hidden");
+                        }
+                } 
+        }
+        function toggleTopButton(id) {
+            let getDropdownItem = document.getElementById(id);
+            let isHiddenClass = getDropdownItem.classList.contains('hidden');
+            if (!isHiddenClass) {
+                getDropdownItem.classList.add("hidden");
+            } else {
+                getDropdownItem.classList.remove("hidden");
+            }
+        }
+        function expandBoundShow(tt, event) {
+            event.preventDefault();
+            if (!tt.classList.contains("boundtargetdiv")) {
+                return;
+            }
+            let btn = tt.lastElementChild.firstElementChild;
+            let curentElm = tt;
+            targetItem = tt.nextElementSibling;
+            let allItems = [];
+            let whichone = false;
+            while(targetItem) {
+                allItems.push(targetItem);
+                targetItem = targetItem.nextElementSibling;
+            }
+            if (allItems.length > 0) {
+                btn.classList.toggle("rotate-180");
+                for (let key in allItems) {
+                    let itemClass = allItems[key].classList;
+                    if (itemClass.contains('hidden')) {
+                        whichone = true;
+                        continue;
+                    }
+                }
+            }
+            let ptnrLists = document.querySelectorAll(".bound-wrap");
+            for (let i = 0; i < ptnrLists.length; i++) {
+                let ptnrChilds = ptnrLists[i].children;
+                if (ptnrChilds.length > 0 ){
+                    for (let j = 0; j < ptnrChilds.length; j++) {
+                        if(!ptnrChilds[j].classList.contains("boundtargetdiv")) {
+                            ptnrChilds[j].classList.add("hidden");
+                        }
+                    }
+                }
+            }
+            if (allItems.length > 0) {
+                for (let key in allItems) {
+                    let itemClass = allItems[key].classList;
+                    if (whichone) {
+                        itemClass.remove("hidden");
+                    } else {
+                        itemClass.add("hidden");
+                    }
+                }
+            }
+        }
+        function expandShow(event) {
+            event.preventDefault();
+        }
+        function handlePartnerTitle(tt, event) {
+            event.preventDefault();
+            if (!tt.classList.contains("targetdiv")) {
+                return;
+            }
+            let btn = tt.lastElementChild.firstElementChild;
+            let curentElm = tt;
+            targetItem = tt.nextElementSibling;
+            let allItems = [];
+            let whichone = false;
+            while(targetItem) {
+                allItems.push(targetItem);
+                targetItem = targetItem.nextElementSibling;
+            }
+            if (allItems.length > 0) {
+                btn.classList.toggle("rotate-180");
+                for (let key in allItems) {
+                    let itemClass = allItems[key].classList;
+                    if (itemClass.contains('hidden')) {
+                        whichone = true;
+                        continue;
+                    }
+                }
+            }
+            let ptnrLists = document.querySelectorAll(".partner-wrap");
+            for (let i = 0; i < ptnrLists.length; i++) {
+                let ptnrChilds = ptnrLists[i].children;
+                if (ptnrChilds.length > 0 ){
+                    for (let j = 0; j < ptnrChilds.length; j++) {
+                        if(!ptnrChilds[j].classList.contains("targetdiv")) {
+                            ptnrChilds[j].classList.add("hidden");
+                        }
+                    }
+                }
+            }
+            if (allItems.length > 0) {
+                for (let key in allItems) {
+                    let itemClass = allItems[key].classList;
+                    if (whichone) {
+                        itemClass.remove("hidden");
+                    } else {
+                        itemClass.add("hidden");
+                    }
+                }
+            }
+            tt.parentElement.scrollIntoView();
+        }
+        function handleTabLink(event) {
+            event.preventDefault();
+            let tabLinkID = event.target.id;
+            handleTabFocus(tabLinkID);
+            let tabLinkSections = document.querySelectorAll(".tabLinkSection");
+            tabLinkSections.forEach(element => {
+                handleShowHideSection(element, tabLinkID);
+            });
+        };
+        function handleTabFocus(tabLinkID) {
+            let tabLinks = document.querySelectorAll('.tabLink');
+            tabLinks.forEach(element => {
+                if (element.id == tabLinkID) {
+                    element.classList.replace("hover:border-petnetlightblue", "border-petnetlightblue");
+                    element.classList.replace("hover:text-petnetlightblue", "text-petnetlightblue");
+                }else{
+                    if (element.classList.contains("border-petnetlightblue")) {
+                        element.classList.replace("text-petnetlightblue", "hover:text-petnetlightblue");
+                        element.classList.replace("border-petnetlightblue", "hover:border-petnetlightblue");
+                    }
+                    if (!element.classList.contains("border-petnetgray")) {
+                        element.classList.add("border-petnetgray");
+                    }
+                }
+            });
+        }
+        function handleShowHideSection(element, tabLinkID) {
+            if (element.classList.contains(tabLinkID)) {
+                element.classList.remove("hidden");
+            }else{
+                if (!element.classList.contains("hidden")) {
+                    element.classList.add("hidden");
+                }
+            }
+        }
+        function setErrMsg(msg, mainwrap) {
+            let vm = document.getElementsByClassName("validMsg");
+            if (mainwrap !== "undefined" && mainwrap != null) {
+                vm = mainwrap.getElementsByClassName("validMsg");
+            }
+            for (let index = 0; index < vm.length; index++) {
+                vm[index].innerHTML = msg;
+            }
+        }
+        function validationCheckOnTierTable(frmelm, currentElm) {
+            let mainwrap = frmelm.closest(".overRadioBtn");
+            setErrMsg("", mainwrap);
+            let minvalcal = frmelm.querySelectorAll(".minvalcal");
+            let maxvalcal = frmelm.querySelectorAll(".maxvalcal");
+            let DSAShareV = frmelm.querySelectorAll(".DSAShareV");
+            let isFrmEmpty = true;
+            let isValid = true;
+            let emptyMessage = emptyMsg
+            if (minvalcal.length > 0) {
+                for (i = 0; i < minvalcal.length; i++) {
+                    if (minvalcal[i].value == "") {
+                        isFrmEmpty = false;
+                        emptyMessage = emptyMsg;
+                        setErrMsg(emptyMsg, mainwrap);
+                        break
+                    }
+                    if (minvalcal[i].value == 0) {
+                        isFrmEmpty = false;
+                        emptyMessage = zeroMsg;
+                        setErrMsg(zeroMsg, mainwrap);
+                        break
+                    }
+                }
+                for (i = 0; i < maxvalcal.length; i++) {
+                    if (maxvalcal[i].value == "") {
+                        isFrmEmpty = false;
+                        emptyMessage = emptyMsg;
+                        setErrMsg(emptyMsg, mainwrap);
+                        break
+                    }
+                    if (maxvalcal[i].value == 0) {
+                        isFrmEmpty = false;
+                        emptyMessage = zeroMsg;
+                        setErrMsg(zeroMsg, mainwrap);
+                        break
+                    }
+                }
+                for (i = 0; i < DSAShareV.length; i++) {
+                    if (DSAShareV[i].value == "") {
+                        isFrmEmpty = false;
+                        emptyMessage = emptyMsg;
+                        setErrMsg(emptyMsg, mainwrap);
+                        break
+                    }
+                    if (DSAShareV[i].value == 0) {
+                        isFrmEmpty = false;
+                        emptyMessage = zeroMsg;
+                        setErrMsg(zeroMsg, mainwrap);
+                        break
+                    }
+                }
+            }
+            if (minvalcal.length > 0) {
+                for (i = 0; i < minvalcal.length; i++) {
+                    if (minvalcal[i].value != "" && maxvalcal[i].value != "" && DSAShareV[i].value != "" && !minvalcal[i].checkValidity()) {
+                        isValid = handleValidation(minvalcal[i], minvalcal, maxvalcal, DSAShareV, mainwrap);
+                    }
+                }
+                for (i = 0; i < maxvalcal.length; i++) {
+                    if (minvalcal[i].value != "" && maxvalcal[i].value != "" && DSAShareV[i].value != "" && !maxvalcal[i].checkValidity()) {
+                        isValid = handleValidation(maxvalcal[i], minvalcal, maxvalcal, DSAShareV, mainwrap);
+                    }
+                }
+                for (i = 0; i < DSAShareV.length; i++) {
+                    if (minvalcal[i].value != "" && maxvalcal[i].value != "" && DSAShareV[i].value != "" && !DSAShareV[i].checkValidity()) {
+                        isValid = handleValidation(DSAShareV[i], minvalcal, maxvalcal, DSAShareV, mainwrap);
+                    }
+                }
+            }
+            if (!isValid) {
+                // isValid = false;
+                setErrMsg(generalError, mainwrap);
+            } 
+            return isValid;
+        }
+        function handleValidation(currentElm, minvalcal, maxvalcal, DSAShareV, mainwrap) {
+            let isMaxChange = true;
+            let isValid = true;
+            if(currentElm.classList.contains('minvalcal')) {
+                isMaxChange = false;
+            }
+            let message = errMsg;
+            if (minvalcal.length > 0) {
+                if(currentElm.classList.contains('minvalcal') || currentElm.classList.contains('maxvalcal')) {
+                    let curVal = parseFloat(currentElm.value);
+                    for (i = 0; i < minvalcal.length; i++) {
+                        if (minvalcal[i] == currentElm) {
+                            if (maxvalcal[i] !== undefined && maxvalcal[i] != null) {
+                                let sameMaxVal = parseFloat(maxvalcal[i].value);
+                                if (curVal >= sameMaxVal) {
+                                    isValid = false;
+                                    message = minError1;
+                                    setErrMsg(minError1, mainwrap);
+                                    break;
+                                }
+                            }
+                            if (maxvalcal[i-1] !== undefined && maxvalcal[i-1] != null) {
+                                let prevMaxVal = parseFloat(maxvalcal[i-1].value);
+                                if (curVal <= prevMaxVal) {
+                                    isValid = false;
+                                    message = minError3;
+                                    setErrMsg(minError3, mainwrap);
+                                    break;
+                                }
+                            }
+                        }else {
+                            if (!isMaxChange && curVal == parseFloat(minvalcal[i].value)) {
+                                isValid = false;
+                                message = minError2;
+                                setErrMsg(minError2, mainwrap);
+                                break;
+                            }
+                        }
+                    }
+                    for (i = 0; i < maxvalcal.length; i++) {
+                        if (maxvalcal[i] == currentElm) {
+                            if (minvalcal[i] !== undefined && minvalcal[i] != null) {
+                                let sameMinVal = parseFloat(minvalcal[i].value);
+                                if (curVal <= sameMinVal) {
+                                    isValid = false;
+                                    message = maxError1;
+                                    setErrMsg(maxError1, mainwrap);
+                                    break;
+                                }
+                            }
+                            if (minvalcal[i+1] !== undefined && minvalcal[i+1] != null) {
+                                let nextMinVal = parseFloat(minvalcal[i+1].value);
+                                if (curVal >= nextMinVal) {
+                                    isValid = false;
+                                    message = maxError3;
+                                    setErrMsg(maxError3, mainwrap);
+                                    break;
+                                }
+                            }
+                        }else {
+                            if (isMaxChange && curVal == parseFloat(maxvalcal[i].value)) {
+                                isValid = false;
+                                message = maxError2;
+                                setErrMsg(maxError2, mainwrap);
+                                break;
+                            }
+                        }
+                    }
+                }
+                for (i = 0; i < DSAShareV.length; i++) {
+                    if (minvalcal[i].value != "" && maxvalcal[i].value != "" && DSAShareV[i].value != "" && !DSAShareV[i].checkValidity()) {
+                        isValid = false;
+                        setErrMsg(errMsg, mainwrap);
+                        break;
+                    }
+                }
+            }
+            return isValid;
+        }
+        function depRicatedchecksAllsField(item) {
+            setMainErrMsg("");
+            let tierMainWrap = item.closest(".tierMainWrap");
+            let mainwrap = tierMainWrap.closest(".overRadioBtn");
+            setErrMsg("", mainwrap);
+            let allInputs = tierMainWrap.querySelectorAll('input');
+            for (let i = 0; i < allInputs.length; i++) {
+                let currentItem = allInputs[i];
+                if (allInputs[i].classList.contains('minvalcal')) {
+                    if (currentItem.closest('tr').previousElementSibling && currentItem.closest('tr').previousElementSibling
+                        .querySelectorAll('maxvalcal')) {
+                        let prevMax = currentItem.closest('tr').previousElementSibling.getElementsByClassName('maxvalcal');
+                        currentItem.setAttribute('min', (parseFloat(prevMax[0].value) + 1));
+                        if (parseFloat(prevMax[0].value) < 0) {
+                            currentItem.setAttribute('min', 1);
+                        }
+                    } else {
+                        currentItem.setAttribute('min', 1);
+                    }
+                } else if (allInputs[i].classList.contains('maxvalcal')) {
+                    let prevMin = currentItem.closest('td').previousElementSibling.getElementsByClassName('minvalcal');
+                    currentItem.setAttribute('min', (parseFloat(prevMin[0].value)+1));
+                    if (parseFloat(prevMin[0].value) < parseFloat(currentItem.value)){
+                        setErrMsg("", mainwrap);
+                        prevMin[0].setAttribute('max', currentItem.value);
+                    }else{
+                        prevMin[0].setAttribute('max', parseFloat(prevMin[0].value+1));
+                        setErrMsg(minError3, mainwrap);
+                        return false;
+                    }
+                    if (parseFloat(prevMin[0].value) < 0) {
+                        currentItem.setAttribute('min', 1);
+                    }
+                    if (parseFloat(currentItem.value) < 0) {
+                        prevMin[0].setAttribute('max', 1);
+                    }
+                }
+            }
+            return validationCheckOnTierTable(tierMainWrap, item);
+        }
+        function ExecuteJs() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("GET", "/profile", true);
+            xhttp.send();
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            setInterval(ExecuteJs, 60000);
+            let srtDates = document.querySelectorAll('.StartDate');
+            let TransactionTypeCls = document.querySelectorAll('.TransactionTypeCls');
+            let TierTypeCls = document.querySelectorAll('.TierTypeCls');
+            for (let i = 0; i < srtDates.length; i++) {
+                dateRangeRefresh(srtDates[i]);
+            }
+            for (let i = 0; i < TransactionTypeCls.length; i++) {
+                handleSectionExpend(TransactionTypeCls[i], true);
+            }
+            for (let i = 0; i < TierTypeCls.length; i++) {
+                handleRadioBtn(TierTypeCls[i], true);
+            }
+        });
+        function loadAjax(url, method) {
+            var xhttp = new XMLHttpRequest();
+            var data = new FormData();
+            data.append("gorilla.csrf.Token", CSRFFieldValue);
+            xhttp.open(method, url, true);
+            xhttp.send(data);
+        }
+        function addRow(name, prefix, tbID) {
+            var feetirehdn = document.getElementById("feetirehdn").innerHTML;
+            let maxText = "";
+            var feetierwrap = document.getElementById(tbID);
+            let mainwrap = feetierwrap.closest(".overRadioBtn");
+            var feetierlen = mainwrap.querySelector(".feetierlen");
+            var tlen = feetierwrap.children.length;
+            feetierlen.value = tlen+1;
+            var htm = feetirehdn.replaceAll("##id##", tlen);
+            var htm = htm.replaceAll("#####", "valcal");
+            var htm = htm.replaceAll("##Name##", name);
+            var htm = htm.replaceAll("##Prefix##", prefix);
+            if (name.includes("Percentage")) {
+                maxText = '100';
+            }
+            var htm = htm.replaceAll("##MAX##", maxText);
+            document.getElementById(tbID).insertAdjacentHTML('beforeend', htm);
+        }
+        function deleteRow(t, id){
+            let wrp = t.closest(".overRadioBtn");
+            if (wrp !== "undefined" && wrp != null) {
+                wrp.querySelector(".validMsg").innerHTML = "";
+            }
+            let row = t.parentNode.parentNode;
+            if (row) {
+                row.remove();
+            }
+            let lenC = wrp.querySelector(".feetierlen").value;
+            wrp.querySelector(".feetierlen").value = lenC - 1;
+            removedTier(id);
+        }
+        function handleSectionExpend(element, isLoad = false) {
+            let targetElement = element.parentElement.nextElementSibling;
+            if (element.checked) {
+                targetElement.classList.remove("hidden");
+            }else{
+                targetElement.classList.add("hidden");
+                if (!isLoad) {
+                    let fm = targetElement.querySelectorAll(".FixedAmount");
+                    fm.forEach(fmelm => {
+                        fmelm.value = "";
+                    });
+                    let fp = targetElement.querySelectorAll(".FixedPercentage");
+                    fp.forEach(fpelm => {
+                        fpelm.value = "";
+                    });
+                    let dr = targetElement.querySelectorAll(".deleteRow");
+                    dr.forEach(drelm => {
+                        drelm.click();
+                    });
+                    let mvc = targetElement.querySelectorAll(".minvalcal");
+                    mvc.forEach(mvcelm => {
+                        mvcelm.value = "";
+                    });
+                    let mxvc = targetElement.querySelectorAll(".maxvalcal");
+                    mxvc.forEach(mxvcelm => {
+                        mxvcelm.value = "";
+                    });
+                    let dsvc = targetElement.querySelectorAll(".DSAShareV");
+                    dsvc.forEach(dsvcelm => {
+                        dsvcelm.value = "";
+                    });
+                    let vm = targetElement.querySelectorAll(".validMsg");
+                    vm.forEach(vmelm => {
+                        vmelm.innerHTML = "";
+                    });
+                    let radioBtn = targetElement.querySelectorAll(".overRadioBtn");
+                    let RadioBtnElm = targetElement.querySelectorAll(".RadioBtnElm");
+                    radioBtn.forEach(elm => {
+                        elm.classList.add("hidden");
+                    });
+                    RadioBtnElm.forEach(rdbelm => {
+                        rdbelm.checked = false;
+                    });
+                }
+            }
+        }
+        function handleRadioBtn(element, isLoad = false) {
+            if(element.checked) {
+                let pElm = element.parentElement.parentElement.parentElement;
+                let radioBtn = pElm.querySelectorAll(".overRadioBtn");
+                let RadioBtnElm = pElm.querySelector(".RadioBtnElm");
+                RadioBtnElm.checked = false;
+                element.checked = true;
+                radioBtn.forEach(elm => {
+                    elm.classList.add("hidden");
+                    if (!isLoad) {
+                        let fm = elm.querySelectorAll(".FixedAmount");
+                        fm.forEach(fmelm => {
+                            fmelm.value = "";
+                        });
+                        let fp = elm.querySelectorAll(".FixedPercentage");
+                        fp.forEach(fpelm => {
+                            fpelm.value = "";
+                        });
+                        let dr = elm.querySelectorAll(".deleteRow");
+                        dr.forEach(drelm => {
+                            drelm.click();
+                        });
+                        let mvc = elm.querySelectorAll(".minvalcal");
+                        mvc.forEach(mvcelm => {
+                            mvcelm.value = "";
+                        });
+                        let mxvc = elm.querySelectorAll(".maxvalcal");
+                        mxvc.forEach(mxvcelm => {
+                            mxvcelm.value = "";
+                        });
+                        let dsvc = elm.querySelectorAll(".DSAShareV");
+                        dsvc.forEach(dsvcelm => {
+                            dsvcelm.value = "";
+                        });
+                        let vm = elm.querySelectorAll(".validMsg");
+                        vm.forEach(vmelm => {
+                            vmelm.innerHTML = "";
+                        });
+                    }
+                });
+                let selectedElm = element.parentElement.nextElementSibling
+                if (selectedElm !== 'undefined') {
+                    selectedElm.classList.remove("hidden");
+                }
+            }
+        }
+        function formatDateAsText(date, pd = false) {
+            if (pd) {
+                date.setDate(date.getDate() + parseInt(1));
+            }
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            if (month < 10) {
+                month = "0" + month;
+            }
+            if (day < 10) {
+                day = "0" + day;
+            }
+            return date.getFullYear() + "-" + month + "-" + day;
+        }
+        function dateRangeRefresh(elm) {
+            if (elm !== "undefined" && elm != null) {
+                let wrap = elm.closest(".overRadioBtn");
+                if (wrap !== "undefined" && wrap != null) {
+                    let sdelm = wrap.querySelector(".StartDate");
+                    let edelm = wrap.querySelector(".EndDate");
+                    let sd = sdelm.value;
+                    let date = new Date(sd);
+                    let tdate = new Date();
+                    fullDate = formatDateAsText(date, true);
+                    edelm.min = fullDate;
+                    edelm.value = fullDate;
+                }
+            }
+        }
+        function handleFixedAmount(elm) {
+            setMainErrMsg("");
+            setGlobalErr(elm, 1);
+            if (elm !== "undefined" && elm != null) {
+                setMsg(elm, "");
+                let elmVal = elm.value;
+                if (!(elmVal > 0)) {
+                    setGlobalErr(elm, 0);
+                    setMsg(elm, "The Value should be greater than 0");
+                    return false;
+                }
+            }
+            return true;
+        }
+        function handlePercentageAmount(elm) {
+            setMainErrMsg("");
+            setGlobalErr(elm, 1);
+            if (elm !== "undefined" && elm != null) {
+                setMsg(elm, "");
+                let elmVal = elm.value;
+                if (!(elmVal > 0 && elmVal <= 100)) {
+                    setGlobalErr(elm, 0);
+                    setMsg(elm, "The Value should be greater than 0 and less than 100");
+                    return false;
+                }
+            }
+            return true;
+        }
+        function setMsg(elm, content) {
+            if (elm !== "undefined" && elm != null) {
+                let msgWrap = elm.closest(".overRadioBtn");
+                if(msgWrap !== "undefined" && msgWrap != null) {
+                    let msg = msgWrap.querySelector(".validMsg"); 
+                    if (msg != "undefined" && msg != null){
+                        msg.innerHTML = content;
+                    }
+                }
+            }
+        }
+        function setMainErrMsg(content) {
+            let msg = document.querySelector("#mainErrorMsg"); 
+            if (msg != "undefined" && msg != null){
+                msg.innerHTML = content;
+            }
+        }
+        function getDataAttr(item, attr) {
+            let details = {
+                "Result": false,
+                "ResultP": false,
+                "ResultF": false,
+                "Name": "",
+                "BoundType": "",
+                "TransactType": "",
+            }
+            let ids = item.getAttribute(attr);
+            let id = ids.split("_");
+            return getPartnerDetails(id[0]);
+        }
+        function checkFormSubmitValidation() {
+            let minvalcal = document.querySelector(".minvalcal");
+            let tierMainWraps = document.querySelectorAll(".tierMainWrap");
+            let details = {
+                "Result": true,
+                "ResultP": false,
+                "ResultF": false,
+                "Name": "",
+                "BoundType": "",
+                "TransactType": "",
+            }
+            for (let i = 0; i < tierMainWraps.length; i++) {
+                let res = validationCheckOnTierTable(tierMainWraps[i], minvalcal);
+                if (!res){
+                    details = getDataAttr(tierMainWraps[i], "id");
+                    details.Result = false;
+                }
+            }
+            return details;
+        }
+        function submitForm(e, id) {
+            e.preventDefault();
+            setMainErrMsg("");
+            let hasErr = 1;
+            let errFieldName = "";
+            let frm = document.getElementById(id);
+            let errFileds = frm.querySelectorAll(".err_field");
+            errFileds.forEach(errfld => {
+                if (errfld.value == 0) {
+                    let errFldName = errfld.name;
+                    let fieldNames = errFldName.split("_");
+                    errFieldName = fieldNames[0];
+                    hasErr = 0;
+                }
+            });
+            if (hasErr == 1){
+                frm.submit();
+            } else {
+                let res = getPartnerDetails(errFieldName);
+                setMainErrMsg("There are errors for "+res.Name+" partner and transaction type "+res.TransactType+" and bound type "+res.BoundType);
+            }
+            return;
+        }
+        function depricatedSubmitForm(e, id) {
+            e.preventDefault();
+            setMainErrMsg("");
+            let fixedPercentages = document.querySelectorAll(".FixedPercentage");
+            let fixedAmounts = document.querySelectorAll(".FixedAmount");
+            let frm = document.getElementById(id);
+            let resP = true;
+            let resF = true;
+            let res = checkFormSubmitValidation();
+            res.ResultF = true;
+            res.ResultP = true;
+            for (let i = 0; i < fixedPercentages.length; i++) {
+                if (fixedPercentages[i].value != "" && !handlePercentageAmount(fixedPercentages[i])) {
+                    res = getDataAttr(fixedPercentages[i], "prefix");
+                    res.ResultP = false;
+                }
+            }
+            for (let i = 0; i < fixedAmounts.length; i++) {
+                if (fixedAmounts[i].value != "" && !handleFixedAmount(fixedAmounts[i])) {
+                    res = getDataAttr(fixedAmounts[i], "prefix");
+                    res.ResultF = false;
+                }
+            }
+            if (res.Result && res.ResultP && res.ResultF){
+                setMainErrMsg("");
+                frm.submit();
+                return;
+            }else{
+                frm.submit();
+                return;
+                if (res.Name != "") {
+                    setMainErrMsg("There are errors for "+res.Name+" partner and transaction type "+res.TransactType+" and bound type "+res.BoundType);
+                    return;
+                } else {
+                    setMainErrMsg(generalError);
+                    return;
+                }
+            }
+            return;
+        }
+        function removedTier(id) {
+            loadAjax("/dashboard/commission-mgt-remove/" + id, "DELETE");
+		}
+        function getPartnerDetails(tierMainWraps){
+            let details = {
+                "Result": false,
+                "ResultP": false,
+                "ResultF": false,
+                "Name": "",
+                "BoundType": "",
+                "TransactType": "",
+            }
+            if (tierMainWraps === undefined) {
+                return details;
+            }
+            tierMainWraps = tierMainWraps.replace('rmt', '');
+            let bt = tierMainWraps.slice(-6);
+            details.Name = tierMainWraps.replace(bt, '');
+            TransactT = bt.slice(-3)
+            if (TransactT == "dgt") {
+                details.TransactType = "Digital";
+            } else if (TransactT == "otc"){
+                details.TransactType = "Over The Counter";
+            }
+            boundT = bt.replace(TransactT, '');
+            if (boundT == "otb") {
+                details.BoundType = "Out Bound";
+            } else if (boundT == "inb"){
+                details.BoundType = "In bound";
+            }
+            return details;
+        }
+        function findPrefix(currentElm) {
+            let name = currentElm.name;
+            let nameArr = name.split("[");
+            if (nameArr.length != 2) {
+                return "";
+            }
+            let pFix = nameArr[1].replaceAll("]", "");
+            let pstFix = "otc";
+            if (nameArr[0].includes("Digital")) {
+                pstFix = "dgt";
+            }
+            return pFix+pstFix;
+        }
+        function setGlobalErr(currentElm, val){
+            let errsSet = document.querySelectorAll(".err_field");
+            errsSet.forEach(erfld => {
+                erfld.value = 1;
+            });
+            let id = findPrefix(currentElm);
+            if (id == "") {
+                return "";
+            }
+            document.getElementById(id+"_err").value = val;
+            return "";
+        }
+        function onChangeValidate(item) {
+            setMainErrMsg("");
+            let tierMainWrap = item.closest(".tierMainWrap");
+            let mainwrap = tierMainWrap.closest(".overRadioBtn");
+            setErrMsg("", mainwrap);
+            let allInputs = tierMainWrap.querySelectorAll('input');
+            for (let i = 0; i < allInputs.length; i++) {
+                let currentItem = allInputs[i];
+                setGlobalErr(currentItem, 1);
+                if (allInputs[i].classList.contains('minvalcal')) {
+                    if (currentItem.closest('tr').previousElementSibling && currentItem.closest('tr').previousElementSibling
+                        .querySelectorAll('maxvalcal')) {
+                        let prevMax = currentItem.closest('tr').previousElementSibling.getElementsByClassName('maxvalcal');
+                        currentItem.setAttribute('min', (parseFloat(prevMax[0].value) + 1));
+                        if (parseFloat(prevMax[0].value) < 0) {
+                            currentItem.setAttribute('min', 1);
+                        }
+                    } else {
+                        currentItem.setAttribute('min', 1);
+                    }
+                } else if (allInputs[i].classList.contains('maxvalcal')) {
+                    let prevMin = currentItem.closest('td').previousElementSibling.getElementsByClassName('minvalcal');
+                    currentItem.setAttribute('min', (parseFloat(prevMin[0].value)+1));
+                    if (parseFloat(prevMin[0].value) < parseFloat(currentItem.value)){
+                        setErrMsg("", mainwrap);
+                        prevMin[0].setAttribute('max', currentItem.value);
+                    }else{
+                        prevMin[0].setAttribute('max', parseFloat(prevMin[0].value+1));
+                        setErrMsg(minError3, mainwrap);
+                        setGlobalErr(currentItem, 0);
+                        return false;
+                    }
+                    if (parseFloat(prevMin[0].value) < 0) {
+                        currentItem.setAttribute('min', 1);
+                    }
+                    if (parseFloat(currentItem.value) < 0) {
+                        prevMin[0].setAttribute('max', 1);
+                    }
+                }
+            }
+            return validateCheckOnTierTable(tierMainWrap, item);
+        }
+        function validateCheckOnTierTable(frmelm, currentElm) {
+            setGlobalErr(currentElm, 1);
+            let mainwrap = frmelm.closest(".overRadioBtn");
+            setErrMsg("", mainwrap);
+            let minvalcal = frmelm.querySelectorAll(".minvalcal");
+            let maxvalcal = frmelm.querySelectorAll(".maxvalcal");
+            let DSAShareV = frmelm.querySelectorAll(".DSAShareV");
+            let isFrmEmpty = true;
+            let isValid = true;
+            let emptyMessage = emptyMsg
+            let curVal = 0;
+            if(currentElm.classList.contains('minvalcal') || currentElm.classList.contains('maxvalcal')) {
+                curVal = parseFloat(currentElm.value);
+            }
+            let isMaxChange = true;
+            if(currentElm.classList.contains('minvalcal')) {
+                isMaxChange = false;
+            }
+            if (minvalcal.length > 0) {
+                for (i = 0; i < minvalcal.length; i++) {
+                    let minO = minvalcal[i];
+                    let maxO = maxvalcal[i];
+                    let dsaO = DSAShareV[i];
+                    let minV = minO.value;
+                    let maxV = maxO.value;
+                    let dsaV = dsaO.value;
+                    if (minV == "" || minV == 0 || maxV == "" || maxV == 0 || dsaV == "" || dsaV == 0) {
+                        isFrmEmpty = false;
+                        emptyMessage = zeroMsg;
+                        setGlobalErr(currentElm, 0);
+                        setErrMsg(zeroMsg, mainwrap);
+                        break
+                    }
+                    if (minO == currentElm) {
+                        if (maxO !== undefined && maxO != null) {
+                            let sameMaxVal = parseFloat(maxV);
+                            if (curVal >= sameMaxVal) {
+                                isValid = false;
+                                message = minError1;
+                                setGlobalErr(currentElm, 0);
+                                setErrMsg(minError1, mainwrap);
+                                break;
+                            }
+                        }
+                        let prevMaxO = maxvalcal[i-1];
+                        let prevMaxV = prevMaxO.value;
+                        if (prevMaxO !== undefined && prevMaxO != null) {
+                            let prevMaxVal = parseFloat(prevMaxV);
+                            if (curVal <= prevMaxVal) {
+                                isValid = false;
+                                message = minError3;
+                                setGlobalErr(currentElm, 0);
+                                setErrMsg(minError3, mainwrap);
+                                break;
+                            }
+                        }
+                    }else {
+                        if (!isMaxChange && curVal == parseFloat(minV)) {
+                            isValid = false;
+                            message = minError2;
+                            setGlobalErr(currentElm, 0);
+                            setErrMsg(minError2, mainwrap);
+                            break;
+                        }
+                    }
+                    if (maxO == currentElm) {
+                        if (minO !== undefined && minO != null) {
+                            let sameMinVal = parseFloat(minV);
+                            if (curVal <= sameMinVal) {
+                                isValid = false;
+                                message = maxError1;
+                                setGlobalErr(currentElm, 0);
+                                setErrMsg(maxError1, mainwrap);
+                                break;
+                            }
+                        }
+                        let nextMinO = minvalcal[i+1];
+                        let nextMinV = nextMinO.value;
+                        if (nextMinO !== undefined && nextMinO != null) {
+                            let nextMinVal = parseFloat(nextMinV);
+                            if (curVal >= nextMinVal) {
+                                isValid = false;
+                                message = maxError3;
+                                setGlobalErr(currentElm, 0);
+                                setErrMsg(maxError3, mainwrap);
+                                break;
+                            }
+                        }
+                    }else {
+                        if (isMaxChange && curVal == parseFloat(maxV)) {
+                            isValid = false;
+                            message = maxError2;
+                            setGlobalErr(currentElm, 0);
+                            setErrMsg(maxError2, mainwrap);
+                            break;
+                        }
+                    }
+                    if (minV != "" && maxV != "" && dsaV != "" && !minO.checkValidity()) {
+                        isValid = false;
+                        message = maxError3;
+                        setGlobalErr(currentElm, 0);
+                        setErrMsg(maxError3, mainwrap);
+                        break;
+                    }
+                    if (minV != "" && maxV != "" && dsaV != "" && !maxO.checkValidity()) {
+                        isValid = false;
+                        message = maxError3;
+                        setGlobalErr(currentElm, 0);
+                        setErrMsg(maxError3, mainwrap);
+                        break;
+                    }
+                    if (minV != "" && maxV != "" && dsaV != "" && !dsaO.checkValidity()) {
+                        isValid = false;
+                        setGlobalErr(currentElm, 0);
+                        setErrMsg(errMsg, mainwrap);
+                        break;
+                    }
+                }
+            }
+            if (!isValid) {
+                setGlobalErr(currentElm, 0);
+                setErrMsg(generalError, mainwrap);
+            } 
+            return isValid;
+        }
+    </script>
+</body>
+</html>

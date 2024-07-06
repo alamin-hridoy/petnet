@@ -1,0 +1,68 @@
+package user // proto "petnet.v1.user"
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+type SignupRequest struct {
+	// Username to be registered
+	Username string `pb:"1" json:"username"`
+	// First Name of the user
+	FirstName string `pb:"2" json:"first_name"`
+	// Last Name of the user
+	LastName string `pb:"3" json:"last_name"`
+	// Email is the email that will be used for subsequent logins
+	// and will also be used to contact the user in future
+	Email string `pb:"4" json:"email"`
+	// Password will be used as the account password
+	Password string `pb:"5" json:"password"`
+	// Invite Code is the invite if the user was invited by an org.
+	InviteCode string `pb:"6" json:"invite_code"`
+	// OrgID is the organization identifier for use in org-specific signups
+	OrgID string `pb:"7" json:"org_id"`
+}
+
+type SignupResponse struct {
+	UserID string `pb:"1" json:"user_id"`
+	OrgID  string `pb:"2" json:"org_id"`
+}
+
+type RetrieveInviteRequest struct {
+	Code string `pb:"1" json:"code"`
+}
+
+type RetrieveInviteResponse struct {
+	ID           string    `pb:"1" json:"id"`
+	OrgID        string    `pb:"2" json:"org_id"`
+	Email        string    `pb:"3" json:"email"`
+	CountryCode  string    `pb:"4" json:"country_code"`
+	Phone        string    `pb:"5" json:"phone"`
+	CompanyName  string    `pb:"7" json:"company_name"`
+	Active       bool      `pb:"8" json:"active"`
+	InviteEmail  string    `pb:"9" json:"invitation_email"`
+	InviteStatus string    `pb:"10" json:"invite_status"`
+	Invited      time.Time `pb:"11" json:"invited"`
+	FirstName    string    `pb:"12" json:"first_name"`
+	LastName     string    `pb:"13" json:"last_name"`
+}
+
+type SignupService interface {
+	// Signup signs up a user using the passed in details
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/signup",
+	//         Body:   "*",
+	// }
+	Signup(SignupRequest) SignupResponse
+	// RetrieveInvite details from platform application.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/invite/{Code}",
+	// }
+	RetrieveInvite(RetrieveInviteRequest) RetrieveInviteResponse
+}

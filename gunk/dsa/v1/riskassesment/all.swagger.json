@@ -1,0 +1,331 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/dsa/v1/riskassesment/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "RiskAssesmentService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/mltfriskassesment": {
+      "get": {
+        "summary": "List  riskassesments.",
+        "description": "List all created  riskassesments.",
+        "operationId": "RiskAssesmentService_ListMlTfQuestion",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/riskassesmentListQuestionResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "qid",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "org_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "qtype",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          " Question"
+        ]
+      }
+    },
+    "/v1/mltfriskassesment/{question.qid}": {
+      "put": {
+        "summary": "Upsert  question.",
+        "description": "Create or update an  question.",
+        "operationId": "RiskAssesmentService_UpsertMlTfQuestion",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/RiskAssesmentQuestionResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "question.qid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/riskassesmentRiskAssesmentQuestionRequest"
+            }
+          }
+        ],
+        "tags": [
+          " Question"
+        ]
+      }
+    },
+    "/v1/riskassesment": {
+      "get": {
+        "summary": "List  riskassesments.",
+        "description": "List all created  riskassesments.",
+        "operationId": "RiskAssesmentService_ListQuestion",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/riskassesmentListQuestionResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "qid",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "org_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "qtype",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          " Question"
+        ]
+      }
+    },
+    "/v1/riskassesment/{question.qid}": {
+      "put": {
+        "summary": "Upsert  question.",
+        "description": "Create or update an  question.",
+        "operationId": "RiskAssesmentService_UpsertQuestion",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/RiskAssesmentQuestionResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "question.qid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/riskassesmentRiskAssesmentQuestionRequest"
+            }
+          }
+        ],
+        "tags": [
+          " Question"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "riskassesmentListQuestionResponse": {
+      "type": "object",
+      "properties": {
+        "question": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/riskassesmentQuestion"
+          }
+        }
+      }
+    },
+    "riskassesmentQuestion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "qid": {
+          "type": "string"
+        },
+        "ans": {
+          "type": "string"
+        },
+        "qtype": {
+          "type": "string"
+        },
+        "customers_total": {
+          "type": "string"
+        },
+        "hr_total": {
+          "type": "string"
+        },
+        "impact_score": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "riskassesmentRiskAssesmentQuestionRequest": {
+      "type": "object",
+      "properties": {
+        "question": {
+          "$ref": "#/definitions/riskassesmentQuestion"
+        }
+      }
+    },
+    "riskassesmentRiskAssesmentQuestionResponse": {
+      "type": "object",
+      "properties": {
+        "question": {
+          "$ref": "#/definitions/riskassesmentQuestion"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

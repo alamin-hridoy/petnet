@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: profile-config
+data:
+  RUNTIME_ENVIRONMENT: 'production'
+  DATABASE_HOST: 172.30.225.22
+  DATABASE_DBNAME: profiledb
+  USERMGM_API: "usermgm:80"
+  USERMGM_ADMIN: "usermgm-admin:80"
+  AUTH_URL: "https://auth.drp.perahub.com.ph"
+  USERMGM_MOCK: "false"
+  CMS_URL: https://drp.perahub.com.ph
+  INFLUXDB_BUCKET: conexprod
+  INFLUXDB_ORGANIZATION: conex
+  HYDRA_ADMINURL: http://hydra-admin
+  HYDRA_AUDIENCE: https://drp.perahub.com.ph

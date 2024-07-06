@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "tailwind build css/app.css -o css/app.min.css"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.2.6",
+    "postcss": "^8.3.4",
+    "tailwindcss": "^2.1.4"
+  }
+}

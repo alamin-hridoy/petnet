@@ -1,0 +1,278 @@
+package user
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+type CreateUserProfileRequest struct {
+	Profile Profile `pb:"1" json:"profile"`
+}
+
+type CreateUserProfileResponse struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type UpdateUserProfileRequest struct {
+	Profile Profile `pb:"1" json:"profile"`
+}
+
+type UpdateUserProfileResponse struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type GetUserProfileRequest struct {
+	UserID string `pb:"1" json:"user_id"`
+}
+
+type GetUserProfileResponse struct {
+	Profile Profile `pb:"1" json:"profile"`
+}
+
+type ListUserProfilesRequest struct {
+	OrgID string `pb:"1" json:"org_id"`
+}
+
+type ListUserProfilesResponse struct {
+	Profiles []Profile `pb:"1" json:"profiles"`
+}
+
+type UpdateUserProfileByOrgIDRequest struct {
+	OldOrgID string `pb:"1" json:"oldOrgID"`
+	NewOrgID string `pb:"2" json:"newOrgID"`
+	UserID   string `pb:"3" json:"user_id"`
+}
+
+type UpdateUserProfileByOrgIDResponse struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type Profile struct {
+	ID             string    `pb:"1" json:"id"`
+	OrgID          string    `pb:"2" json:"org_id"`
+	UserID         string    `pb:"3" json:"user_id"`
+	Email          string    `pb:"4" json:"email"`
+	ProfilePicture string    `pb:"5" json:"profile_picture"`
+	Created        time.Time `pb:"6" json:"created"`
+	Updated        time.Time `pb:"7" json:"updated"`
+	Deleted        time.Time `pb:"8" json:"deleted"`
+}
+
+type DeleteUserProfileRequest struct {
+	UserID string `pb:"1" json:"user_id"`
+}
+
+type DeleteUserProfileResponse struct {
+	UserID string `pb:"1" json:"user_id"`
+}
+
+type EnableUserProfileRequest struct {
+	UserID string `pb:"1" json:"user_id"`
+}
+
+type EnableUserProfileResponse struct {
+	UserID string `pb:"1" json:"user_id"`
+}
+
+type GetUserProfileByEmailRequest struct {
+	Email string `pb:"1" json:"email"`
+}
+
+type GetUserProfileByEmailResponse struct {
+	Profile Profile `pb:"1" json:"profile"`
+}
+
+type UserProfileService interface {
+	// Create user profile.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/userprofile/{Profile.UserID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Profile"},
+	//         Description: "Create a user profile.",
+	//         Summary:     "Create profile.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/profileUpdateProfileResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	CreateUserProfile(CreateUserProfileRequest) CreateUserProfileResponse
+
+	// Update user profile.
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v1/userprofile/{Profile.UserID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Profile"},
+	//         Description: "Update a user profile.",
+	//         Summary:     "Update profile.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/profileUpdateProfileResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	UpdateUserProfile(UpdateUserProfileRequest) UpdateUserProfileResponse
+
+	// Get profile by user ID.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/userprofile/{UserID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Profile"},
+	//         Description: "Get created user profile from user ID.",
+	//         Summary:     "Get profile.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/profileGetProfileResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	GetUserProfile(GetUserProfileRequest) GetUserProfileResponse
+
+	// List user profiles.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/userprofile",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Profile"},
+	//         Description: "List all created user profiles.",
+	//         Summary:     "List profiles.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/profileGetProfileResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	ListUserProfiles(ListUserProfilesRequest) ListUserProfilesResponse
+
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/deleteuser/{UserID}",
+	// }
+	DeleteUserProfile(DeleteUserProfileRequest) DeleteUserProfileResponse
+
+	// Enable user profile.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/enableuser/{UserID}",
+	// }
+	EnableUserProfile(EnableUserProfileRequest) EnableUserProfileResponse
+
+	// Update user profile by OrgID.
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v1/userprofile/{OldOrgID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Profile"},
+	//         Description: "Update a user profile.",
+	//         Summary:     "Update profile.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/profileUpdateProfileByOrgIDResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	UpdateUserProfileByOrgID(UpdateUserProfileByOrgIDRequest) UpdateUserProfileByOrgIDResponse
+
+	// Get profile by user email.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/userprofile/{Email}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Profile"},
+	//         Description: "Get created user profile from user email.",
+	//         Summary:     "Get profile.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/profileGetUserProfileByEmailResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	GetUserProfileByEmail(GetUserProfileByEmailRequest) GetUserProfileByEmailResponse
+}

@@ -1,0 +1,243 @@
+package oauth2 // proto "brankas.rbac.v1.oauth2"
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+type ClientType int32
+
+const (
+	// Private clients should be used for all authentications being processed
+	// by a server backend, where a secret can be kept private.
+	Private ClientType = iota
+	// Public clients are best used for SPA and/or mobile frontends,
+	// where client secret isn't able to be hidden.
+	// PKCE is required for security purposes when using a public client.
+	Public
+)
+
+type CreateClientRequest struct {
+	// Name is the friendly name of the service client to be created
+	Name string `pb:"1" json:"name"`
+	// Audience is the target service for the requested authentication.
+	Audience string `pb:"11" json:"audience"`
+	// Environment is the valid environment for the client.
+	Env string `pb:"2" json:"env"`
+	// Role is the assigned permissions role.
+	Role string `pb:"3" json:"role"`
+	// ClientType is the oauth2 client type.
+	ClientType ClientType `pb:"4" json:"client_type"`
+	// CORS lists the allowed CORS Origins.
+	CORS []string `pb:"5" json:"cors"`
+	// Partner logo url for display on idp.
+	LogoURL string `pb:"6" json:"logo_url"`
+	// Requested scopes for user consent.
+	Scopes []string `pb:"7" json:"scopes"`
+	// Redirect URLs accepted by client.
+	RedirectURL []string `pb:"8" json:"redirect_url"`
+	// URL to redirect user to once logout is complete.
+	LogoutRedirectURL string `pb:"9" json:"logout_redirect_url"`
+	// IdentitySource to use when authenticating user login.
+	IdentitySource string `pb:"10" json:"identity_source"`
+	// Configuration for auth flow.
+	Config ClientConfig `pb:"12" json:"config"`
+}
+
+type ClientConfig struct {
+	LoginTemplate   string `pb:"1" json:"login_template"`
+	OTPTemplate     string `pb:"2" json:"otp_template"`
+	ConsentTemplate string `pb:"3" json:"consent_template"`
+	// Force the user to grant consent for each login.
+	ForceConsent    bool          `pb:"4" json:"force_consent"`
+	SessionDuration time.Duration `pb:"5" json:"session_duration"`
+	// IdentitySource to use when authenticating user login.
+	IdentitySource string `pb:"6" json:"identity_source"`
+}
+
+type CreateClientResponse struct {
+	// OAuth2 Client ID.
+	ClientID string `pb:"1" json:"client_id"`
+	// Client Secret for OAuth2 client.
+	Secret string `pb:"2" json:"secret"`
+}
+
+type UpdateClientRequest struct {
+	// ClientID is the client identifier of the client to be updated
+	ClientID string `pb:"1" json:"clientID"`
+	// Name is the friendly name of the client to be updated
+	Name string `pb:"2" json:"name"`
+	// CORS lists the allowed CORS Origins.
+	CORS []string `pb:"3" json:"cors"`
+	// Partner logo url for display on idp.
+	LogoURL string `pb:"4" json:"logo_url"`
+	// Requested scopes for user consent.
+	Scopes []string `pb:"5" json:"scopes"`
+	// Redirect URLs accepted by client.
+	RedirectURL []string `pb:"6" json:"redirect_url"`
+	// URL to redirect user to once logout is complete.
+	LogoutRedirectURL string `pb:"7" json:"logout_redirect_url"`
+	// Configuration for auth flow.
+	Config ClientConfig `pb:"8" json:"config"`
+}
+
+type UpdateClientResponse struct {
+	Updated time.Time `pb:"1" json:"updated"`
+}
+
+type ListClientsRequest struct {
+	ClientID string `pb:"1" json:"client_id"`
+	Env      string `pb:"2" json:"env"`
+	OrgID    string `pb:"3" json:"org_id"`
+	ListDisable bool `pb:"4" json:"list_disable"`
+}
+
+type Oauth2Client struct {
+	Name              string       `pb:"1" json:"name"`
+	Env               string       `pb:"2" json:"env"`
+	OrgID             string       `pb:"12" json:"org_id"`
+	ClientID          string       `pb:"3" json:"client_id"`
+	LogoURL           string       `pb:"4" json:"logo_url"`
+	Scopes            []string     `pb:"5" json:"scopes"`
+	RedirectURL       []string     `pb:"6" json:"redirect_url"`
+	LogoutRedirectURL string       `pb:"7" json:"logout_redirect_url"`
+	Creator           string       `pb:"8" json:"creator"`
+	Created           time.Time    `pb:"9" json:"created"`
+	Disabled          time.Time    `pb:"10" json:"disabled"`
+	Config            ClientConfig `pb:"11" json:"config"`
+}
+
+type ListClientsResponse struct {
+	Clients []Oauth2Client `pb:"1" json:"clients"`
+}
+
+type DisableClientRequest struct {
+	ClientID string `pb:"1" json:"client_id"`
+}
+
+type DisableClientResponse struct{}
+
+type AuthClientService interface {
+	// Create auth client for authenticating users for an org site or product.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/oauth2client",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"OAuth2 Client"},
+	//         Description: "Create a new OAuth2 client.",
+	//         Summary:     "Create OAuth2 client",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/oauth2CreateClientResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	CreateClient(CreateClientRequest) CreateClientResponse
+
+	// Update auth client for authenticating users for an org site or product.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/oauth2client/{ClientID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"OAuth2 Client"},
+	//         Description: "Update an OAuth2 client.",
+	//         Summary:     "Update OAuth2 client",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/oauth2CreateClientResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	UpdateClient(UpdateClientRequest) UpdateClientResponse
+
+	// List all auth clients.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/oauth2client",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"OAuth2 Client"},
+	//         Description: "List all created OAuth2 clients.",
+	//         Summary:     "List all OAuth2 clients.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/oauth2ListClientsResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	ListClients(ListClientsRequest) ListClientsResponse
+
+	// Disable an auth client.  Client is permanently disabled.
+	//
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v1/oauth2client/{ClientID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"OAuth2 Client"},
+	//         Description: "Permanently Disable OAuth2 client.",
+	//         Summary:     "Disable OAuth2 Client.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/oauth2DisableClientResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when service client is not found.",
+	//                 },
+	//         },
+	// }
+	DisableClient(DisableClientRequest) DisableClientResponse
+}

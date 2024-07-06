@@ -1,0 +1,491 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/dsa/v2/file/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "FileService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v2/file/{fileUploads.org_id}": {
+      "put": {
+        "summary": "Upsert files.",
+        "description": "Upsert a batch of files.",
+        "operationId": "FileService_UpsertFiles",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/fileUpsertFilesResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "fileUploads.org_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/fileUpsertFilesRequest"
+            }
+          }
+        ],
+        "tags": [
+          "FileUpload"
+        ]
+      }
+    },
+    "/v2/file/{id}": {
+      "get": {
+        "summary": "List files.",
+        "description": "List created files by org and/or upload type.",
+        "operationId": "FileService_ListFiles",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/fileListFilesResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "types",
+            "description": " - IDPhoto: business info\n - FinancialStatement: financial info\n - Questionnaire: western union\n - Mbf: Request File Upload for remittance\n - CICO_nda: cico documents\n - BP_nda: BillsPayment documents\n - MI_mbf: MicroInsurance documents",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "UnknownUploadType",
+                "IDPhoto",
+                "Picture",
+                "NBIClearance",
+                "CourtClearance",
+                "IncorporationPapers",
+                "MayorsPermit",
+                "NDA",
+                "FinancialStatement",
+                "BankStatement",
+                "Questionnaire",
+                "Mbf",
+                "Sec",
+                "Gis",
+                "Afs",
+                "Brs",
+                "Bmp",
+                "Scbr",
+                "Via",
+                "Bspr",
+                "Cp",
+                "Aml",
+                "Nnda",
+                "Psf",
+                "Psp",
+                "Kddq",
+                "Sis",
+                "Moa",
+                "WU_cd",
+                "WU_lbp",
+                "WU_sr",
+                "WU_lgis",
+                "WU_dtisspa",
+                "WU_birf",
+                "WU_bspr",
+                "WU_iqa",
+                "WU_bqa",
+                "AYA_dfedr",
+                "AYA_ddf",
+                "AYA_ialaws",
+                "AYA_aialaws",
+                "AYA_mtl",
+                "AYA_cbpr",
+                "AYA_brdcsa",
+                "AYA_gis",
+                "AYA_ccpwi",
+                "AYA_fas",
+                "AYA_am",
+                "AYA_laf",
+                "AYA_birr",
+                "AYA_od",
+                "CICO_nda",
+                "CICO_sis",
+                "CICO_psf",
+                "CICO_pspp",
+                "CICO_sec",
+                "CICO_gis",
+                "CICO_afs",
+                "CICO_bir",
+                "CICO_bsp",
+                "CICO_aml",
+                "CICO_sccas",
+                "CICO_vgid",
+                "CICO_cp",
+                "CICO_moa",
+                "CICO_amla",
+                "CICO_mtpp",
+                "CICO_is",
+                "CICO_edd",
+                "BP_nda",
+                "BP_sis",
+                "BP_psf",
+                "BP_psp",
+                "BP_sec",
+                "BP_aib",
+                "BP_gis",
+                "BP_lpafs",
+                "BP_bir",
+                "BP_bp",
+                "BP_bsp",
+                "BP_aml",
+                "BP_sccas",
+                "BP_vg",
+                "BP_cp",
+                "BP_moa",
+                "BP_amla",
+                "BP_mttp",
+                "BP_sci",
+                "BP_edd",
+                "MI_mbf",
+                "MI_nda",
+                "MI_sec",
+                "MI_gis",
+                "MI_afs",
+                "MI_bir",
+                "MI_scb",
+                "MI_via",
+                "MI_moa"
+              ]
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "tags": [
+          "FileUpload"
+        ]
+      }
+    },
+    "/v2/filedelete/{file_names}/{id}": {
+      "put": {
+        "summary": "Delete File.",
+        "description": "Delete File.",
+        "operationId": "FileService_DeleteFileUpload",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/fileDeleteFileUploadResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "file_names",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "FileUpload"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "fileDeleteFileUploadResponse": {
+      "type": "object"
+    },
+    "fileFileUpload": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "file_name": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "bucket_name": {
+          "type": "string"
+        },
+        "upload_type": {
+          "$ref": "#/definitions/fileUploadType"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "submitted": {
+          "$ref": "#/definitions/profileBoolean"
+        },
+        "checked": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "filename": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "fileListFilesResponse": {
+      "type": "object",
+      "properties": {
+        "files": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/fileFileUpload"
+          }
+        }
+      }
+    },
+    "fileUploadType": {
+      "type": "string",
+      "enum": [
+        "UnknownUploadType",
+        "IDPhoto",
+        "Picture",
+        "NBIClearance",
+        "CourtClearance",
+        "IncorporationPapers",
+        "MayorsPermit",
+        "NDA",
+        "FinancialStatement",
+        "BankStatement",
+        "Questionnaire",
+        "Mbf",
+        "Sec",
+        "Gis",
+        "Afs",
+        "Brs",
+        "Bmp",
+        "Scbr",
+        "Via",
+        "Bspr",
+        "Cp",
+        "Aml",
+        "Nnda",
+        "Psf",
+        "Psp",
+        "Kddq",
+        "Sis",
+        "Moa",
+        "WU_cd",
+        "WU_lbp",
+        "WU_sr",
+        "WU_lgis",
+        "WU_dtisspa",
+        "WU_birf",
+        "WU_bspr",
+        "WU_iqa",
+        "WU_bqa",
+        "AYA_dfedr",
+        "AYA_ddf",
+        "AYA_ialaws",
+        "AYA_aialaws",
+        "AYA_mtl",
+        "AYA_cbpr",
+        "AYA_brdcsa",
+        "AYA_gis",
+        "AYA_ccpwi",
+        "AYA_fas",
+        "AYA_am",
+        "AYA_laf",
+        "AYA_birr",
+        "AYA_od",
+        "CICO_nda",
+        "CICO_sis",
+        "CICO_psf",
+        "CICO_pspp",
+        "CICO_sec",
+        "CICO_gis",
+        "CICO_afs",
+        "CICO_bir",
+        "CICO_bsp",
+        "CICO_aml",
+        "CICO_sccas",
+        "CICO_vgid",
+        "CICO_cp",
+        "CICO_moa",
+        "CICO_amla",
+        "CICO_mtpp",
+        "CICO_is",
+        "CICO_edd",
+        "BP_nda",
+        "BP_sis",
+        "BP_psf",
+        "BP_psp",
+        "BP_sec",
+        "BP_aib",
+        "BP_gis",
+        "BP_lpafs",
+        "BP_bir",
+        "BP_bp",
+        "BP_bsp",
+        "BP_aml",
+        "BP_sccas",
+        "BP_vg",
+        "BP_cp",
+        "BP_moa",
+        "BP_amla",
+        "BP_mttp",
+        "BP_sci",
+        "BP_edd",
+        "MI_mbf",
+        "MI_nda",
+        "MI_sec",
+        "MI_gis",
+        "MI_afs",
+        "MI_bir",
+        "MI_scb",
+        "MI_via",
+        "MI_moa"
+      ],
+      "default": "UnknownUploadType",
+      "title": "- IDPhoto: business info\n - FinancialStatement: financial info\n - Questionnaire: western union\n - Mbf: Request File Upload for remittance\n - CICO_nda: cico documents\n - BP_nda: BillsPayment documents\n - MI_mbf: MicroInsurance documents"
+    },
+    "fileUpsertFilesRequest": {
+      "type": "object",
+      "properties": {
+        "file": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/fileFileUpload"
+          }
+        }
+      }
+    },
+    "fileUpsertFilesResponse": {
+      "type": "object",
+      "properties": {
+        "files": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/fileFileUpload"
+          }
+        }
+      }
+    },
+    "googlerpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "profileBoolean": {
+      "type": "string",
+      "enum": [
+        "UnknownBoolean",
+        "True",
+        "False"
+      ],
+      "default": "UnknownBoolean",
+      "title": "To avoid overrides of boolean on upsert"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    }
+  }
+}

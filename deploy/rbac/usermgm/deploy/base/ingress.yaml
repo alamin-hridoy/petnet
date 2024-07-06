@@ -1,0 +1,24 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: rbac-identity
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/protocol: h2c
+    traefik.ingress.kubernetes.io/router.tls: "true"
+spec:
+  tls:
+  - hosts:
+    - "sso.OVERLAY_ME"
+    secretName: cert-authz
+  rules:
+  - host: sso.OVERLAY_ME
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: usermgm
+          servicePort: 80
+
+...

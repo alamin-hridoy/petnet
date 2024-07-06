@@ -1,0 +1,275 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>DSA Services</title>
+    <style>
+        .multi-select-component{
+            height: 100% !important;
+            min-height: 48px;
+        }
+    </style>
+</head>
+<body class="font-sans">
+        <div class="flex">
+            <!-- sidebar-left-start -->
+            {{ template "dsa-sidenav-menu.html" dict "Type" "dsa-services" "Data" .}}
+            <!-- sidebarleft-end -->
+            <!-- top-header-start -->
+            <div class="min-h-screen w-full flex bg-petnetgray ">
+                <div class="w-full">
+                  <div class="px-16 py-4 shadow-md bg-white">
+                    <ul class="flex justify-end items-center space-x-4 mb-16">
+                      <li class="mr-auto">
+                            <a href="/dsa-services" class="inline-flex text-petnetlightblue text-sm items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-4" fill="none"
+                                                                                                                 viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                                                          d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                                </svg>
+                                Back to List
+                            </a>
+                      </li>
+                      <li>
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" fill="none" viewBox="0 0 24 24"
+                              stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                          </svg>
+                      </li>
+                      <li>
+                        {{ template "top-head-profile.html" dict "UserInfo" .UserInfo "CompanyName" .CompanyName .}}
+                      </li>
+                      <li>
+                          <div class="relative" id="topDropdownBox">
+                              <a href="javascript:;" onclick="toggleTopButton('openTopDropdown')">
+                                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                      viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M19 9l-7 7-7-7" />
+                                  </svg>
+                              </a>
+                              <div class="absolute right-0 top-12 hidden" id="openTopDropdown">
+                                  <div
+                                      class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                  </div>
+                                  <div class="shadow-lg  absolute top-3 -right-5 rounded">
+                                      <div class="relative z-20 p-3 w-36 bg-white rounded space-y-2">
+                                          <a class="flex text-sm items-center" href="/profile">
+                                              <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                  <path fill-rule="evenodd" clip-rule="evenodd" d="M16 8C16 10.21 14.21 12 12 12C9.79 12 8 10.21 8 8C8 5.79 9.79 4 12 4C14.21 4 16 5.79 16 8ZM4 18C4 15.34 9.33 14 12 14C14.67 14 20 15.34 20 18V19C20 19.55 19.55 20 19 20H5C4.45 20 4 19.55 4 19V18Z" fill="#333333"/>
+                                              </svg>
+                                              Profile
+                                          </a>
+                                          <a href="/logout" class="flex text-sm pl-1">
+                                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
+                                                  viewBox="0 0 24 24" stroke="currentColor">
+                                                  <path stroke-linecap="round" stroke-linejoin="round"
+                                                      stroke-width="2"
+                                                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                              </svg>
+                                              Logout
+                                          </a>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </li>
+                    </ul>
+                <div class="mb-4">
+                    <h2 class="sm:text-5xl text-petnetblue font-semibold">Request Service</h2>
+                </div>
+                  </div>
+                    <!-- top-header-end -->
+                    <!-- main content-start -->
+                    <div class="px-24 xl:px-40 2xl:px-56 py-20 w-full">
+                      <div class="shadow overflow-hidden bg-white">
+                        <div class="rounded">
+                          <!-- step area -->
+                          <div class="flex bg-petnetheader bg-opacity-60 rounded-t">
+                              <div class="flex px-2 bg-petnetpink justify-center items-center rounded-tl w-1/2 h-12">
+                                  <span
+                                      class="text-white text-sm rounded-full border-white border h-8 w-8 inline-flex justify-center items-center mr-2">1</span>
+                                  <p class="text-white text-sm font-normal">Choose Partners</p>
+                              </div>
+                              <div class="flex px-2 justify-center items-center bg-petnetheader w-1/2 h-12">
+                                  <span
+                                      class="text-petnetblue text-sm rounded-full border-petnetblue border h-8 w-8 inline-flex justify-center items-center mr-2">2</span>
+                                  <p class="text-petnetblue text-sm ">Required Documents</p>
+                              </div>
+                          </div>
+                          <!-- form area -->
+                          <form action="/dsa-req-docs-bills-payment" method="POST" enctype="multipart/form-data" id="">
+                            {{ .CSRFField }}
+                            <p class="pt-20 pl-20 text-2xl font-bold">Select Partners</p>
+                            <p class="py-2 pl-20 text-base font-normal">Please select atleast 1 partner</p>
+                              <div class="px-20">
+                                  <div>
+                                          <div class="mb-4">
+                                              <div class="relative mt-3 inline-flex w-full">
+                                                  <div id="multiselect" class="container-multi w-full">
+                                                      <select id="PartnerName" multiple data-multi-select-plugin name="PartnerName">
+                                                        {{range .PartnerListApplicants}}
+                                                        <option value="{{.Name}}" {{if selectedCheck .Name $.SelectedPartners}}selected="selected"{{end}}>{{.Name}}</option>
+                                                    {{end}}
+                                                      </select>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                        <div class="flex flex-wrap pt-6 justify-between bg-white pb-20">
+                                            <div class="lg:w-auto w-full text-center">
+                                                <a href="/dsa-services" class="rounded-md font-normal text-sm text-petnetblue border border-petnetblue  py-3 my-3 text-center w-44 inline-block">
+                                                Back
+                                                </a>
+                                            </div>
+                                               <div class="lg:w-auto w-full lg:ml-auto text-center">
+                                                <button id="SaveDraft" name="SaveDraft" value="SaveDraft" type="submit" class="bg-petnetlightblue border border-petnetlightblue text-sm text-white  py-3 rounded-md font-normal my-3 text-center w-44 ml-auto">
+                                                Save as Draft 
+                                                </button>
+                                              </div>
+                                              <div class="lg:w-auto w-full text-center">
+                                                <button id="SaveContinue" name="SaveContinue" value="SaveContinue" type="submit" class="bg-petnetyellow border border-petnetyellow text-sm text-petnetblue  py-3 rounded-md font-normal my-3 text-center w-44 ml-0 lg:ml-4">                                
+                                                    Save and Continue
+                                                </button>
+                                            </div>
+                                        </div>
+                                  </div>
+                              </div>
+                              </form>
+                      </div>
+                      </div>
+                    </div>
+                    <!-- main content-end -->
+                </div>
+            </div>
+        </div>
+</body>
+<script src="{{ assetHash "/js/multi.js" }}"></script>
+<script>
+    const params = new URLSearchParams(window.location.search);
+    function toggleTopButton(id) {
+        let getDropdownItem = document.getElementById(id)
+        let isHiddenClass = getDropdownItem.classList.contains('hidden');
+        if (!isHiddenClass) {
+            getDropdownItem.classList.add("hidden");
+        } else {
+            getDropdownItem.classList.remove("hidden");
+        }
+    }
+    function getLoadMultiSelectVal(){
+        let wrp = document.querySelector("#multiselect");
+        let vv = wrp.querySelectorAll(".selected-wrapper");
+        if (vv !== undefined) {
+            return vv.length;
+        }
+        return 0;
+    }
+    function getMultiSelectVal(){
+        let SaveDraft = document.getElementById("SaveDraft");
+        let SaveContinue= document.getElementById("SaveContinue");
+        let wrp = document.querySelector("#multiselect");
+        let uul = wrp.querySelector("ul");
+        let lli = uul.querySelectorAll("li");
+        if (lli.length > 0){
+            lli.forEach(elm => {
+                elm.addEventListener("click", function (ee) {
+                    let vv = wrp.querySelectorAll(".selected-wrapper");
+                    SaveDraft.classList.add("hidden");
+                    SaveContinue.classList.add("hidden");
+                    if (vv.length > 0){
+                        SaveDraft.classList.remove("hidden");
+                        SaveContinue.classList.remove("hidden");
+                    }
+                });
+            });
+        }
+        removeAllPartnerAtLast()
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        let lres = getLoadMultiSelectVal();
+        let SaveDraft = document.getElementById("SaveDraft");
+        let SaveContinue= document.getElementById("SaveContinue");
+        let PartnerNamex= document.getElementById("PartnerName");
+        let slct = document.querySelector(".selected-input");
+        let mslct = document.querySelector(".multi-select-component");
+        let pslct = document.querySelector("#PartnerName");
+        SaveDraft.classList.add("hidden");
+        SaveContinue.classList.add("hidden");
+        if (lres > 0) {
+            SaveDraft.classList.remove("hidden");
+            SaveContinue.classList.remove("hidden");
+        }
+        slct.addEventListener("click", function (e) {
+            getMultiSelectVal();
+        });
+        mslct.addEventListener("click", function (e) {
+            getMultiSelectVal();
+        });
+        pslct.addEventListener("click", function (e) {
+            getMultiSelectVal();
+        });
+        let menus = document.querySelectorAll("a");
+        for (let i = 0; i < menus.length; i++) {
+            menus[i].addEventListener("click", function(e){
+                e.preventDefault();
+                let lnk = menus[i].href;
+                menus[i].href = "javascript:;"
+                window.location.href = lnk;
+            });
+        }
+    });
+
+    function removeOptions(selectedOptions) {
+        if (selectedOptions.length > 0) {
+            selectedOptions.forEach(element => {
+                if (element.textContent !== "All partners"){
+                   let elm = element.childNodes[1].firstChild;
+                    elm.click();
+                }
+            });
+        }
+    }
+
+    function clickDropdown(e) {
+        isAllPartners = false
+        const selectedOptions = document.querySelectorAll(".selected-wrapper");
+
+        const dropdown = e.target;
+        const wrapper = dropdown.parentNode.parentNode;
+        const input_search = wrapper.querySelector(".selected-input");
+        const select = wrapper.querySelector("select");
+        dropdown.classList.toggle("active");
+
+        if (selectedOptions.length > 0) {
+            selectedOptions.forEach(element => {
+                if (element.textContent == "All partners"){
+                    isAllPartners = true;
+                }
+            });
+        }
+
+        if (dropdown.classList.contains("active") && !isAllPartners) {
+            removePlaceholder(wrapper);
+            input_search.focus();
+
+            if (!input_search.value) {
+                populateAutocompleteList(select, "", true);
+            } else {
+                populateAutocompleteList(select, input_search.value);
+
+            }
+        } else {
+            selectedOptions.forEach(element => {
+                if (element.textContent == "All partners"){
+                    removeOptions(selectedOptions);
+                }
+            });
+            clearAutocompleteList(select);
+            addPlaceholder(wrapper);
+        }
+    }
+
+</script>
+</html>

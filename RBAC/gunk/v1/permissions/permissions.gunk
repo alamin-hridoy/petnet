@@ -1,0 +1,109 @@
+package permissions
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+)
+
+type CreatePermissionRequest struct {
+	ServiceName string              `pb:"1" json:"service_name"`
+	Description string              `pb:"2" json:"description"`
+	Permissions []ServicePermission `pb:"3" json:"permissions"`
+}
+
+type ServicePermission struct {
+	Name        string   `pb:"1" json:"name"`
+	Description string   `pb:"2" json:"description"`
+	Actions     []string `pb:"5" json:"actions"`
+	Resource    string   `pb:"6" json:"resource"`
+}
+
+type CreatePermissionResponse struct {
+	ID        map[string]string `pb:"1" json:"id"`
+	ServiceID string            `pb:"2" json:"service_id"`
+}
+
+type ListPermissionRequest struct {
+	// OrgID will show the given org if allowed.
+	OrgID string `pb:"1" json:"org_id"`
+	// Environment in which to list permissions.
+	Environment string `pb:"6" json:"environment"`
+	// ID will filter to show those permissions.
+	ID []string `pb:"2" json:"id"`
+}
+
+type Permission struct {
+	ID          string   `pb:"1" json:"id"`
+	ServiceName string   `pb:"3" json:"service_name"`
+	Name        string   `pb:"4" json:"name"`
+	Description string   `pb:"5" json:"description"`
+	Environment string   `pb:"6" json:"environment"`
+	Restrict    bool     `pb:"7" json:"restrict"`
+	Action      string   `pb:"8" json:"action"`
+	Resource    string   `pb:"9" json:"resource"`
+	Groups      []string `pb:"10" json:"groups"`
+}
+
+type ListPermissionResponse struct {
+	Permissions []Permission `pb:"1" json:"permissions"`
+}
+
+type DeletePermissionRequest struct {
+	ServiceID   string `pb:"1" json:"service_id"`
+	ServiceName string `pb:"2" json:"service_name"`
+	ID          string `pb:"3" json:"id"`
+	Name        string `pb:"4" json:"name"`
+}
+
+type DeletePermissionResponse struct {
+	Deleted time.Time `pb:"1" json:"deleted"`
+}
+
+type AssignPermissionRequest struct {
+	UserID     string `pb:"1" json:"user_id"`
+	Permission string `pb:"2" json:"permission"`
+}
+
+type AssignPermissionResponse struct{}
+
+type RevokePermissionRequest struct {
+	UserID     string `pb:"1" json:"user_id"`
+	Permission string `pb:"2" json:"permission"`
+}
+
+type RevokePermissionResponse struct{}
+
+type PermissionService interface {
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/permission",
+	//         Body:   "*",
+	// }
+	CreatePermission(CreatePermissionRequest) CreatePermissionResponse
+
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/permission",
+	// }
+	ListPermission(ListPermissionRequest) ListPermissionResponse
+
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v1/permission/{ID}",
+	// }
+	DeletePermission(DeletePermissionRequest) DeletePermissionResponse
+
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/permission/{Permission}/user",
+	//         Body:   "*",
+	// }
+	AssignPermission(AssignPermissionRequest) AssignPermissionResponse
+
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v1/permission/{Permission}/user/{UserID}",
+	// }
+	RevokePermission(RevokePermissionRequest) RevokePermissionResponse
+}

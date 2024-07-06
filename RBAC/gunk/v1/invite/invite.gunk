@@ -1,0 +1,151 @@
+package invite // proto "brankas.rbac.v1.invite"
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+)
+
+type InviteUserRequest struct {
+	OrgID           string            `pb:"1" json:"org_id"`
+	OrgName         string            `pb:"2" json:"org_name"`
+	FirstName       string            `pb:"3" json:"first_name"`
+	LastName        string            `pb:"4" json:"last_name"`
+	Email           string            `pb:"5" json:"email"`
+	Phone           string            `pb:"6" json:"phone"`
+	Role            string            `pb:"7" json:"role"`
+	CustomEmailData map[string]string `pb:"8" json:"template_data"`
+}
+
+type InviteUserResponse struct {
+	// ID is the user identifier in our database
+	ID string `pb:"1" json:"id"`
+	// ID of the user's organization.
+	OrgID string `pb:"2" json:"org_id"`
+	// InvitationCode is the code for validating new signups
+	InvitationCode string `pb:"3" json:"invitation_code"`
+}
+
+type RetrieveInviteRequest struct {
+	ID   string `pb:"1" json:"id"`
+	Code string `pb:"2" json:"code"`
+}
+
+type RetrieveInviteResponse struct {
+	ID           string    `pb:"1" json:"id"`
+	OrgID        string    `pb:"2" json:"org_id"`
+	Email        string    `pb:"3"  json:"email"`
+	CountryCode  string    `pb:"4" json:"country_code"`
+	Phone        string    `pb:"5"  json:"phone"`
+	CompanyName  string    `pb:"6"  json:"company_name"`
+	Active       bool      `pb:"7" json:"active"`
+	InviteEmail  string    `pb:"8" json:"invitation_email"`
+	InviteStatus string    `pb:"9" json:"invite_status"`
+	Invited      time.Time `pb:"10" json:"invited"`
+	FirstName    string    `pb:"11" json:"first_name"`
+	LastName     string    `pb:"12" json:"last_name"`
+}
+
+type ResendRequest struct {
+	// ID is the invite identifier
+	ID string `pb:"1" json:"id"`
+	// CustomEmailData data that needs to added in email template.
+	CustomEmailData map[string]string `pb:"2" json:"template_data"`
+}
+
+type ResendResponse struct{}
+
+type ListInviteRequest struct{}
+
+type Invite struct {
+	ID           string    `pb:"1" json:"id"`
+	OrgID        string    `pb:"2" json:"org_id"`
+	ContactEmail string    `pb:"3" json:"contact_email"`
+	Invited      time.Time `pb:"4" json:"invited"`
+	Role         string    `pb:"5" json:"role"`
+	Status       string    `pb:"6" json:"status"`
+}
+
+type ListInviteResponse struct {
+	Invites []Invite `pb:"1" json:"invites"`
+}
+
+type CancelInviteRequest struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type CancelInviteResponse struct{}
+
+type ApproveRequest struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type ApproveResponse struct{}
+
+type RevokeRequest struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type RevokeResponse struct{}
+
+type InviteService interface {
+	// InviteUser creates a new user (developer) in our database.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/invite/user",
+	//         Body:   "*",
+	// }
+	InviteUser(InviteUserRequest) InviteUserResponse
+
+	// Resend the invite email.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/invite/{ID}/resend",
+	// }
+	Resend(ResendRequest) ResendResponse
+
+	// ListInvite gets a list of invite statuses.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/invite",
+	// }
+	ListInvite(ListInviteRequest) ListInviteResponse
+
+	// RetrieveInvite details from platform application.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/invite/{ID}",
+	// }
+	RetrieveInvite(RetrieveInviteRequest) RetrieveInviteResponse
+
+	// CancelInvite revokes the invite from the platform.
+	//
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v1/invite/{ID}",
+	// }
+	CancelInvite(CancelInviteRequest) CancelInviteResponse
+
+	// Approve the platform application.
+	//
+	// +gunk http.Match{
+	//         Method: "PATCH",
+	//         Path:   "/v1/invite/{ID}",
+	//         Body:   "*",
+	// }
+	Approve(ApproveRequest) ApproveResponse
+
+	// Revoke the platform application. This operation
+	// is valid at any point (even after the platform has been approved)
+	//
+	// +gunk http.Match{
+	//         Method: "PATCH",
+	//         Path:   "/v1/invite/{ID}/revoke",
+	//         Body:   "*",
+	// }
+	Revoke(RevokeRequest) RevokeResponse
+}

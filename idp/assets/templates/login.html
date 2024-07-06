@@ -1,0 +1,157 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ assetHash "/assets/css/app.min.css"}}">
+    <title>PERA HUB DRP Login</title>
+</head>
+
+<body>
+    <div class="flex">
+        <div class="bg-white-600 w-1/2 min-h-screen md:px-28 sm:px-10 px-6 py-20 hidden sm:block">
+            <!-- <div class="min-h-screen flex items-center justify-center"> -->
+            <div>
+                <div><img src="{{assetHash "/assets/images/icons/DRP-colored-horizontal.svg"}}" alt="" srcset="">
+                </div>
+                <div class="text-5xl font-extrabold py-14">
+                    <div class="text-petnetblue">Welcome to</div>
+                    <div class="text-petnetblue">PERA HUB Portal</div>
+                </div>
+                <div class="text-2xl">
+                    <div class="font-semibold">Not registered yet?</div>
+                    <div class="text-petnetlightblue font-semibold"><a href="{{ .SignupURL }}">Create an account here.</a></div>
+                </div>
+            </div>
+            <!-- </div> -->
+        </div>
+        <div class="bg-petnetblue sm:w-1/2 min-h-screen w-full">
+            <div class="min-h-screen flex items-center justify-center sm:py-12 py-4 px-8 sm:px-6 lg:px-8">
+                <div class="max-w-md w-full space-y-4">
+                    <div>
+                        <div class="sm:hidden pb-10">
+                            <img class="" src="{{assetHash "/assets/images/icons/DRP-white-horizontal.svg"}}" alt="" srcset="">
+
+                        </div>
+                        <p class="sm:hidden font-extrabold text-5xl text-petnetyellow pb-10">
+                            Welcome to DRP by PERA HUB
+                        </p>
+                        <h2 class="text-3xl font-semibold text-white mb-6">
+                            Login
+                        </h2>
+                        {{if or (ne (index .LoginErrors "emailError") "") (ne (index .LoginErrors "passwordError") "") (ne (index .LoginErrors "username") "")}}
+                        <div id="alert-show-error" class="flex bg-petnetlightpink rounded-md border-2 border-petnetpink">
+                            <img src="{{assetHash "/assets/images/icons/caution.svg"}}" alt="" class="pl-3">
+                            <div class="pl-3 py-1">
+                                <p class="font-semibold">We do not recognize the email or password.</p>
+                                <p class="font-light">Try entering your information again.</p>
+                            </div>
+                            <a href="javascript:;" class="mr-4 text-black-400 inline-block w-3 ml-auto mt-5"
+                                id="alert-remove-error" onclick="hidealertMessage()">
+                                <svg width="15" height="15" viewBox="0 0 12 12" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M11.25 0.757931C11.0943 0.601887 10.8829 0.514193 10.6625 0.514193C10.442 0.514193 10.2307 0.601887 10.075 0.757931L5.99998 4.8246L1.92498 0.749597C1.76928 0.593553 1.55791 0.505859 1.33748 0.505859C1.11704 0.505859 0.905668 0.593553 0.749976 0.749597C0.424976 1.0746 0.424976 1.5996 0.749976 1.9246L4.82498 5.9996L0.749976 10.0746C0.424976 10.3996 0.424976 10.9246 0.749976 11.2496C1.07498 11.5746 1.59998 11.5746 1.92498 11.2496L5.99998 7.1746L10.075 11.2496C10.4 11.5746 10.925 11.5746 11.25 11.2496C11.575 10.9246 11.575 10.3996 11.25 10.0746L7.17497 5.9996L11.25 1.9246C11.5666 1.60793 11.5666 1.0746 11.25 0.757931Z"
+                                    fill="#BCC3C8" />
+                                </svg>
+                            </a>
+                        </div>
+                        {{end}}
+                        {{if ne (index .LoginErrors "existingSession") ""}}
+                        <div class="flex bg-petnetlightpink rounded-md">
+                            <img src="{{assetHash "/assets/images/icons/caution.svg"}}" alt="" class="pl-3">
+                            <div class="pl-3 py-1">
+                                <p class="font-semibold">You are already logged in.</p>
+                            </div>
+                        </div>
+                        {{end}}
+                    </div>
+                    <form class="mt-4 space-y-6" action="/login" method="POST">
+                        {{ .CSRFField }}
+                        <input type="hidden" name="challenge" value="{{ .Challenge }}" />
+                        <div class="mb-6">
+                            <label for="email" class="block mb-2 text-base text-white">Email
+                                Address</label>
+                            <input type="email" name="email" id="email"
+                                class="w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none {{if or (ne (index .LoginErrors "emailError") "") (ne (index .LoginErrors "username") "")}} border-petnetpink {{end}}"  />
+                        </div>
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-2">
+                                <label for="password" class="text-base text-white">Password</label>
+                            </div>
+                            <div class="relative">
+                                <input type="password" name="password" id="password"
+                                    class="password w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none {{if or (ne (index .LoginErrors "passwordError") "") (ne (index .LoginErrors "username") "")}} border-petnetpink {{end}}" />
+                                <span id="passEyeChange" class="absolute top-2 right-4 z-10 opacity-30 toggle-password cursor-pointer">
+                                    <span id="eyeShow" class="">
+                                        <svg viewBox="0 0 24 24" class="h-7 w-7" fill="#000" xmlns="http://www.w3.org/2000/svg"><path d="M12 5c-7.633 0-9.927 6.617-9.948 6.684L1.946 12l.105.316C2.073 12.383 4.367 19 12 19s9.927-6.617 9.948-6.684l.106-.316-.105-.316C21.927 11.617 19.633 5 12 5zm0 11c-2.206 0-4-1.794-4-4s1.794-4 4-4 4 1.794 4 4-1.794 4-4 4z"/><path d="M12 10c-1.084 0-2 .916-2 2s.916 2 2 2 2-.916 2-2-.916-2-2-2z"/></svg>
+                                    </span>
+                                    <span id="eyeClose" class="hidden">
+                                        <svg viewBox="0 0 24 24" class="h-7 w-7" fill="#000" xmlns="http://www.w3.org/2000/svg"><path d="M8.073 12.194 4.212 8.333c-1.52 1.657-2.096 3.317-2.106 3.351L2 12l.105.316C2.127 12.383 4.421 19 12.054 19c.929 0 1.775-.102 2.552-.273l-2.746-2.746a3.987 3.987 0 0 1-3.787-3.787zM12.054 5c-1.855 0-3.375.404-4.642.998L3.707 2.293 2.293 3.707l18 18 1.414-1.414-3.298-3.298c2.638-1.953 3.579-4.637 3.593-4.679l.105-.316-.105-.316C21.98 11.617 19.687 5 12.054 5zm1.906 7.546c.187-.677.028-1.439-.492-1.96s-1.283-.679-1.96-.492L10 8.586A3.955 3.955 0 0 1 12.054 8c2.206 0 4 1.794 4 4a3.94 3.94 0 0 1-.587 2.053l-1.507-1.507z"/></svg>
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="text-base">
+                                <a href="/forgot-password" class="font-semibold text-white underline fp-modal-show">
+                                    Forgot your password?
+                                </a>
+                            </div>
+                        </div>
+                        <div>
+                            <button type="submit"
+                                class="group relative w-full flex justify-center py-4 px-4 text-sm font-bold rounded-md text-petnetblue bg-petnetyellow focus:outline-none focus:ring-2 focus:ring-offset-2">
+                                Sign In
+                            </button>
+                        </div>
+                    </form>
+                    <div class="text-lg sm:hidden flex justify-center">
+                        <div class="text-petnetlightblue"> <span class="text-white">Not registered yet? </span><a href="{{ .SignupURL }}"> Create an account here.</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bg-black pl-4 sm:hidden">
+        <img src="{{assetHash "/assets/images/icons/DRP-white-horizontal.svg"}}" alt="" srcset=""class="mx-auto">
+
+    </div>
+    <script>
+        // Toggle show password
+        document.addEventListener("DOMContentLoaded", function () {
+          var togglePasswordBtn = document.getElementsByClassName("toggle-password");
+          var passwordInput = document.getElementsByClassName('password');
+          for (let i = 0; i < togglePasswordBtn.length; i++) {
+            let togglePassword = togglePasswordBtn[i]
+            let password = passwordInput[i]
+            togglePassword.addEventListener("click", function () {
+              password.type = (password.type === "password") ? "text" : "password";
+            });
+          }
+        });
+        function hidealertMessage() {
+                var ase = document.getElementById("alert-show-error");
+                var emi = document.getElementById("email");
+                var pss = document.getElementById("password");
+                ase.classList.add('hidden');
+                emi.classList.add('border-gray-300');
+                emi.classList.remove('border-petnetpink');
+                pss.classList.add('border-gray-300');
+                pss.classList.remove('border-petnetpink');
+                if (params.has("msgType")) {
+                    params.delete("msgType");
+                }
+            }
+        let passEyeChange = document.getElementById('passEyeChange')
+        let eyeShow = document.getElementById('eyeShow')
+        let eyeClose = document.getElementById('eyeClose')
+        passEyeChange.addEventListener('click', ()=>{
+            eyeShow.classList.toggle('hidden')
+            eyeClose.classList.toggle('hidden')
+        })
+
+      </script>
+</body>
+
+</html>

@@ -1,0 +1,51 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../../base
+
+namespace: petnet-production
+
+patchesStrategicMerge:
+- config.yaml
+
+patchesJson6902:
+- path: ingress.yaml
+  target:
+    group: extensions
+    kind: Ingress
+    name: rbac-auth
+    version: v1beta1
+
+# generatorOptions:
+#   disableNameSuffixHash: true
+# secretGenerator:
+# - behavior: create
+#   name: idp
+#   type: Opaque
+#   literals:
+#     # DO NOT SET AND COMMIT.  NO SECRETS IN GIT!
+#     - CSRF_AUTH_KEY=
+#     - GOOGLE_OAUTH2_CLIENT_ID
+#     - GOOGLE_OAUTH2_CLIENT_SECRET
+# - behavior: create
+#   name: sso-postgresql
+#   type: Opaque
+#   literals:
+#     # DO NOT SET AND COMMIT.  NO SECRETS IN GIT!
+#     - DATABASE_HOST=
+#     - DATABASE_PORT=
+#     - DATABASE_USER=
+#     - DATABASE_PASSWORD=
+#     - DATABASE_NAME=
+# - behavior: create
+#   name: sso-postgresql
+#   type: Opaque
+#   literals:
+#     # DO NOT SET AND COMMIT.  NO SECRETS IN GIT!
+#     - DSN=
+#     - SECRETS_SYSTEM=
+#     - POSTGRES_HOST=
+#     - POSTGRES_PORT=
+#     - CREATE_USER=
+#     - CREATE_DB=
+#     - CREATE_PASS=

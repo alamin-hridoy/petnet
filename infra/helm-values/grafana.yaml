@@ -1,0 +1,40 @@
+deploymentStrategy:
+  type: Recreate
+
+persistence:
+  type: pvc
+  enabled: true
+  accessModes:
+    - ReadWriteOnce
+  size: 10Gi
+  finalizers:
+    - kubernetes.io/pvc-protection
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-real
+  path: /
+  hosts:
+    - grafana.petnet.dev
+  tls:
+  - secretName: cert-grafana
+    hosts:
+    - grafana.petnet.dev
+
+grafana.ini:
+  server:
+    domain: grafana.petnet.dev
+    root_url: https://grafana.petnet.dev/
+
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        url: http://prometheus-server.prometheus.svc.cluster.local
+        access: proxy
+        isDefault: true

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PERA HUB - Register Account Information</title>
+  <meta name="keywords" content="Perahub" />
+  <meta name="description" content="Perahub" />
+  <link rel="stylesheet" href="/assets/css/app.min.css" />
+</head>
+<script>
+  // Toggle show password
+  //
+  document.addEventListener("DOMContentLoaded", function () {
+    var togglePasswordBtn = document.getElementsByClassName("toggle-password");
+    var passwordInput = document.getElementsByClassName('password');
+
+    for (let i = 0; i < togglePasswordBtn.length; i++) {
+      let togglePassword = togglePasswordBtn[i]
+      let password = passwordInput[i]
+      togglePassword.addEventListener("click", function () {
+        password.type = (password.type === "password") ? "text" : "password";
+      });
+    }
+  });
+</script>
+
+<body>
+  <main>
+    <div class="bg-blue-dark-15 relative z-0">
+      <div class="container m-auto flex flex-wrap">
+        <div class="w-full md:w-2/6 lg:pl-4 min-h-800 relative flex flex-wrap register-left-panel">
+          <div class="self-stretch">
+            <div class="pl-8 pt-10 pr-4">
+              <a href="/login" class="mb-8 self-start flex items-center">
+                <!-- <img src="/assets/images/logo.png" class="mr-5" width="55" alt="Perahub" /> -->
+                <!-- <img src="/assets/images/proxtera-white.png" width="120" alt="Perahub" /> -->
+              </a>
+              <h1 class="mb-6 text-4xl leading-10 text-white font-light">
+                Get Started with Perahub
+              </h1>
+            </div>
+            <div class="pl-8 py-5 pr-4 text-white text-sm bg-purple bg-opacity-25">
+              <span class="inline-block w-6 h-6 mr-3 rounded-full border-2 border-white text-center">
+                1
+              </span>
+              <span class="uppercase">Personal Information</span>
+            </div>
+            <div class="pl-8 py-5 pr-4 text-white text-sm">
+              <span class="inline-block w-6 h-6 mr-3 rounded-full border-2 border-white text-center">
+                2
+              </span>
+              <span class="uppercase">Organization Information</span>
+            </div>
+            <div class="pl-8 py-5 pr-4 text-white text-sm">
+              <span class="inline-block w-6 h-6 mr-3 rounded-full border-2 border-white text-center">
+                3
+              </span>
+              <span class="uppercase">Organization Contact</span>
+            </div>
+          </div>
+          <p class="self-end pl-8 mb-12 text-sm text-grey">
+            © 2020 Perahub. All rights reserved.<br />
+            <a href="" class="hover:underline">
+              Terms & Conditions
+            </a>
+            &amp;
+            <a href="" class="hover:underline">
+              Privacy Policy
+            </a>
+          </p>
+        </div>
+
+        <div class="w-full md:w-4/6 min-h-screen pl-8 lg:pl-40 pr-8 lg:pr-10 pt-16">
+          <h1 class="text-3xl text-green-dark-5 text-white font-medium">
+            Personal Information
+          </h1>
+          <p class="mb-10 text-grey-dark-10">
+            Details about you and your work
+          </p>
+          <form class="pb-16 w-full flex flex-wrap" method="POST" action="/register/personal-information">
+            {{ .CSRFField }}
+            <input name="InvitationCode" value="{{ .InvitationCode }}" type="hidden" />
+            <div class="md:pr-2 w-full md:w-1/2 mb-4">
+              <input type="text" name="FirstName" placeholder="First Name" onkeydown="clearErrorMessages(['first-name-err'])"
+                class="px-8 h-14 w-full border rounded border-grey-dark-10 focus:border-blue-light-5 bg-blue-dark-15 focus:bg-blue-dark-20 text-white {{if .FormErrors.FirstName}}border-red{{end}}"
+                value="{{ .FirstName }}" />
+              {{with .FormErrors.FirstName}}
+              <p id="first-name-err" class="text-red text-sm">{{.}}</p>
+              {{end}}
+            </div>
+            <div class="md:pl-2 w-full md:w-1/2 mb-4">
+              <input type="text" name="LastName" value="{{ .LastName }}" placeholder="Last Name" onkeydown="clearErrorMessages(['last-name-err'])"
+                class="px-8 h-14 w-full border rounded border-grey-dark-10 focus:border-blue-light-5 bg-blue-dark-15 focus:bg-blue-dark-20 text-white {{if .FormErrors.LastName}}border-red{{end}}"
+              />
+              {{with .FormErrors.LastName}}
+              <p id="last-name-err" class="text-red text-sm">{{.}}</p>
+              {{end}}
+            </div>
+            <div class="w-full mb-4">
+              <input type="text" name="Email" value="{{ .Email }}" readonly class="px-8 h-14 w-full border rounded border-grey-dark-10 focus:border-blue-light-5 bg-blue-dark-15 focus:bg-blue-dark-20 text-white
+                      {{if .FormErrors.Email}}border-red{{end}}
+                      {{if .FormErrors.EmailExists}}border-red{{end}}" onkeydown="clearErrorMessages(['email-err', 'exist-err'])"/>
+              {{with .FormErrors.Email}}
+              <p id="email-err" class="text-red text-sm">{{.}}</p>
+              {{end}}
+              {{if .FormErrors.EmailExists}}
+              <p id="exist-err" class="text-red text-sm">
+                Your email already exists.Please
+                <a href="{{ .HackathonURL }}/login?loginRedirect=hackathon_pre_register&emailPrefill={{.Email}}"
+                  class="hover:underline text-white font-medium">
+                  log in
+                </a>.
+              </p>
+              {{end}}
+            </div>
+            <div class="w-full mb-4">
+              <div class="relative">
+                <input type="password" name="Password" minlength="8" maxlength="256" placeholder="Password" class="password px-8 h-14 w-full border rounded border-grey-dark-10 focus:border-blue-light-5 bg-blue-dark-15 focus:bg-blue-dark-20 text-white
+                          {{if .FormErrors.Password}}border-red{{end}}" onkeydown="clearErrorMessages(['password-err', 'character-err'])"/>
+                <span class="toggle-password cursor-pointer absolute top-0 right-0 mt-5 mr-3">
+                  <img class="pw-show hidden" src="/assets/images/icons/show-password.svg" width="20">
+                  <img class="pw-hide hidden" src="/assets/images/icons/hide-password.svg" width="20">
+                </span>
+              </div>
+              <span id="character-err" class="text-xs text-grey-dark-10">
+                Must be 8 characters and contains at least 1 number
+              </span>
+              {{with .FormErrors.Password}}
+              <p id="password-err" class="text-red text-sm">{{.}}</p>
+              {{end}}
+            </div>
+            <div class="w-full mb-4">
+              <div class="relative">
+                <input type="password" name="Password2" placeholder="Confirm Password" class="password px-8 h-14 w-full border rounded border-grey-dark-10 focus:border-blue-light-5 bg-blue-dark-15 focus:bg-blue-dark-20 text-white
+                        {{if .FormErrors.Password2}}border-red{{end}}" onkeydown="clearErrorMessages(['password2-err'])"/>
+                <span class="toggle-password cursor-pointer absolute top-0 right-0 mt-5 mr-3">
+                  <img class="pw-show hidden" src="/assets/images/icons/show-password.svg" width="20">
+                  <img class="pw-hide hidden" src="/assets/images/icons/hide-password.svg" width="20">
+                </span>
+              </div>
+              {{with .FormErrors.Password2}}
+              <p id="password2-err" class="text-red text-sm">{{.}}</p>
+              {{end}}
+            </div>
+            <div class="w-full mb-4">
+              <div class="flex">
+                <input type="text" value="{{ .PhoneCountryCode }}" name="PhoneCountryCode" placeholder="+63" class="w-24 px-8 h-14 mr-2 border rounded border-grey-dark-10 focus:border-blue-light-5 bg-blue-dark-15 focus:bg-blue-dark-20 text-white
+                          {{if .FormErrors.PhoneCountryCode}}border-red{{end}}" onkeydown="clearErrorMessages(['phone-code-err'])"/>
+                <input type="text" value="{{ .MobilePhoneNumber }}" name="MobilePhoneNumber" placeholder="Mobile Phone Number" class="flex-grow w-3/5 px-8 h-14 border rounded border-grey-dark-10 focus:border-blue-light-5 bg-blue-dark-15 focus:bg-blue-dark-20 text-white
+                          {{if .FormErrors.Phone}}border-red{{end}}" onkeydown="clearErrorMessages(['phone-err'])"/>
+              </div>
+              {{with .FormErrors.Phone}}
+              <p id="phone-err" class="text-red text-sm">{{.}}</p>
+              {{end}}
+              {{with .FormErrors.PhoneCountryCode}}
+              <p id="phone-code-err" class="text-red text-sm">{{.}}</p>
+              {{end}}
+            </div>
+            <div class="w-full mb-4">
+              <input type="text" name="Designation" placeholder="Designation (optional)" class="w-full px-8 h-14 border rounded border-grey-dark-10 focus:border-blue-light-5 bg-blue-dark-15 focus:bg-blue-dark-20 text-white
+                        {{if .FormErrors.Designation}}border-red{{end}}" value="{{ .Designation }}" onkeydown="clearErrorMessages(['destination-err'])"/>
+              {{with .FormErrors.Designation}}
+              <p id="destination-err" class="text-red text-sm">{{.}}</p>
+              {{end}}
+            </div>
+            <div class="w-full mb-6">
+              <input type="text" name="Department" placeholder="Department (optional)" class="w-full px-8 h-14 border rounded border-grey-dark-10 focus:border-blue-light-5 bg-blue-dark-15 focus:bg-blue-dark-20 text-white
+                        {{if .FormErrors.Department}}border-red{{end}}" value="{{ .Department }}" onkeydown="clearErrorMessages(['department-err'])"/>
+              {{with .FormErrors.Department}}
+              <p id="department-err" class="text-red text-sm">{{.}}</p>
+              {{end}}
+            </div>
+            <div class="w-full">
+              <button class="w-full h-14 rounded bg-blue hover:bg-blue-dark-5 text-white font-medium">
+                Continue
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+<script src="/assets/js/app.js"></script>
+</html>

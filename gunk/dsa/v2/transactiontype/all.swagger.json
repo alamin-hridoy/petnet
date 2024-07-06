@@ -1,0 +1,335 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/dsa/v2/transactiontype/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "TransactionTypeService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v2/api-transaction-type-list": {
+      "get": {
+        "summary": "List User API Key Transaction Type.",
+        "description": "List all User API Key Transaction Type.",
+        "operationId": "TransactionTypeService_ListUserAPIKeyTransactionType",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/transactionListUserAPIKeyTransactionTypeResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Transaction Type"
+        ]
+      }
+    },
+    "/v2/get-transaction-type/{client_id}": {
+      "get": {
+        "summary": "Get Transaction Type.",
+        "description": "Get Transaction Type.",
+        "operationId": "TransactionTypeService_GetTransactionTypeByClientId",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/transactionGetTransactionTypeByClientIdResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "client_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Transaction Type"
+        ]
+      }
+    },
+    "/v2/transaction-type": {
+      "get": {
+        "summary": "Get api transaction type.",
+        "description": "Get api transaction type.",
+        "operationId": "TransactionTypeService_GetAPITransactionType",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/transactionGetAPITransactionTypeResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "org_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "environment",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "transaction_type",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EMPTYTRANSACTIONTYPE",
+              "DIGITAL",
+              "OTC"
+            ],
+            "default": "EMPTYTRANSACTIONTYPE"
+          }
+        ],
+        "tags": [
+          "Transaction Type"
+        ]
+      },
+      "post": {
+        "summary": "Create Transaction Type.",
+        "description": "Create Transaction Type.",
+        "operationId": "TransactionTypeService_CreateApiKeyTransactionType",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/transactionCreateApiKeyTransactionTypeResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/transactiontypeCreateApiKeyTransactionTypeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TransactionType"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "transactiontypeApiKeyTransactionType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "client_id": {
+          "type": "string"
+        },
+        "environment": {
+          "type": "string"
+        },
+        "transaction_type": {
+          "$ref": "#/definitions/transactiontypeTransactionType"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "transactiontypeCreateApiKeyTransactionTypeRequest": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "client_id": {
+          "type": "string"
+        },
+        "environment": {
+          "type": "string"
+        },
+        "transaction_type": {
+          "$ref": "#/definitions/transactiontypeTransactionType"
+        }
+      },
+      "required": [
+        "user_id",
+        "org_id",
+        "client_id",
+        "environment",
+        "transaction_type"
+      ]
+    },
+    "transactiontypeCreateApiKeyTransactionTypeResponse": {
+      "type": "object",
+      "properties": {
+        "transaction_types": {
+          "$ref": "#/definitions/transactiontypeApiKeyTransactionType"
+        }
+      }
+    },
+    "transactiontypeGetTransactionTypeByClientIdResponse": {
+      "type": "object",
+      "properties": {
+        "transaction_type": {
+          "type": "string"
+        },
+        "environment": {
+          "type": "string"
+        }
+      }
+    },
+    "transactiontypeListUserAPIKeyTransactionTypeResponse": {
+      "type": "object",
+      "properties": {
+        "transaction_types": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/transactiontypeApiKeyTransactionType"
+          }
+        }
+      }
+    },
+    "transactiontypeTransactionType": {
+      "type": "string",
+      "enum": [
+        "EMPTYTRANSACTIONTYPE",
+        "DIGITAL",
+        "OTC"
+      ],
+      "default": "EMPTYTRANSACTIONTYPE"
+    }
+  }
+}

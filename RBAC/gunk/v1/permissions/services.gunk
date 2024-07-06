@@ -1,0 +1,108 @@
+package permissions
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+)
+
+type GrantServiceRequest struct {
+	ServiceID   string `pb:"1" json:"service_id"`
+	OrgID       string `pb:"2" json:"org_id"`
+	Environment string `pb:"3" json:"environment"`
+}
+
+type GrantServiceResponse struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type ListServiceAssignmentsRequest struct {
+	// OrgID will show the given org if allowed.
+	OrgID string `pb:"1" json:"org_id"`
+	// ID will filter to show those services.
+	ServiceID []string `pb:"2" json:"service_id"`
+}
+
+type ServiceAssignment struct {
+	Grant       string    `pb:"1" json:"grant"`
+	OrgID       string    `pb:"2" json:"org_id"`
+	ServiceID   string    `pb:"3" json:"service_id"`
+	ServiceName string    `pb:"4" json:"service_name"`
+	Environment string    `pb:"5" json:"environment"`
+	GrantedBy   string    `pb:"6" json:"granted_by"`
+	Granted     time.Time `pb:"7" json:"granted"`
+	RevokedBy   string    `pb:"8" json:"revoked_by"`
+	Revoked     time.Time `pb:"9" json:"revoked"`
+}
+
+type ListServiceAssignmentsResponse struct {
+	ServiceAssignments []ServiceAssignment `pb:"1" json:"service_assignments"`
+}
+
+type RevokeServiceRequest struct {
+	ServiceID   string `pb:"1" json:"service_id"`
+	OrgID       string `pb:"2" json:"org_id"`
+	Environment string `pb:"3" json:"environment"`
+}
+
+type RevokeServiceResponse struct {
+	Revoked time.Time `pb:"1" json:"revoked"`
+}
+
+type PublicServiceRequest struct {
+	ServiceID   string `pb:"1" json:"service_id"`
+	Environment string `pb:"2" json:"environment"`
+	Enabled     bool   `pb:"3" json:"enabled"`
+}
+
+type PublicServiceResponse struct {
+	Processed time.Time `pb:"1" json:"processed"`
+}
+
+type ListServicesRequest struct{}
+
+type ListServicesResponse struct {
+	Services []Service `pb:"1" json:"services"`
+	Public   []Service `pb:"2" json:"public"`
+}
+
+type Service struct {
+	ServiceID   string `pb:"1" json:"service_id"`
+	ServiceName string `pb:"2" json:"service_name"`
+	Description string `pb:"3" json:"description"`
+	Environment string `pb:"4" json:"environment"`
+}
+
+type ProductService interface {
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/service",
+	//         Body:   "*",
+	// }
+	GrantService(GrantServiceRequest) GrantServiceResponse
+
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/service/grant",
+	// }
+	ListServiceAssignments(ListServiceAssignmentsRequest) ListServiceAssignmentsResponse
+
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v1/service/{ServiceID}/org/{OrgID}",
+	// }
+	RevokeService(RevokeServiceRequest) RevokeServiceResponse
+
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v1/service/{ServiceID}",
+	//         Body:   "*",
+	// }
+	PublicService(PublicServiceRequest) PublicServiceResponse
+
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/service",
+	// }
+	ListServices(ListServicesRequest) ListServicesResponse
+}

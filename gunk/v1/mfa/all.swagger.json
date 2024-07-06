@@ -1,0 +1,146 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/v1/mfa/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "MFAService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/mfa/{user_id}": {
+      "post": {
+        "summary": "Enable MFA Source.",
+        "description": "Enable source as an MFA associated with the user ID.",
+        "operationId": "MFAService_EnableMFA",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/mfaEnableMFAResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/mfaEnableMFARequest"
+            }
+          }
+        ],
+        "tags": [
+          "MFA"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "mfaEnableMFARequest": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/mfaMFA"
+        },
+        "source": {
+          "type": "string"
+        }
+      }
+    },
+    "mfaEnableMFAResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "initialize_code": {
+          "type": "string"
+        },
+        "event_id": {
+          "type": "string"
+        },
+        "codes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "mfaMFA": {
+      "type": "string",
+      "enum": [
+        "PASS",
+        "TOTP",
+        "CODE",
+        "SMS",
+        "RECOVERY",
+        "EMAIL"
+      ],
+      "default": "PASS"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

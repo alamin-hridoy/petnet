@@ -1,0 +1,100 @@
+package temp // proto "petnet.v2.temp"
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+type ActionType int
+
+const (
+	UnknownActionType ActionType = iota
+	Create
+	Read
+	Update
+	Delete
+)
+
+type CreateEventDataRequest struct {
+	EventData EventData `pb:"1" json:"event_data"`
+}
+
+type CreateEventDataResponse struct{}
+
+type GetEventDataRequest struct {
+	EventID string `pb:"1" json:"event_id"`
+}
+
+type GetEventDataResponse struct {
+	EventData EventData `pb:"1" json:"event_data"`
+}
+
+type EventData struct {
+	EventID  string     `pb:"1" json:"event_id"`
+	Resource string     `pb:"2" json:"resource"`
+	Action   ActionType `pb:"3" json:"action"`
+	Data     string     `pb:"4" json:"data"`
+}
+
+type EventService interface {
+	// Create event data.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/eventdata/{EventData.EventID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"EventData"},
+	//         Description: "Save data related to an event so it can be used once an event has been confirmed to proceed with an action on a resource.",
+	//         Summary:     "Create event data.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/eventDataCreateEventDataResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	CreateEventData(CreateEventDataRequest) CreateEventDataResponse
+
+	// Get event data by event ID.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v2/eventdata/{EventID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"EventData"},
+	//         Description: "Get event data by event ID which is then used to proceed once the resource and action has been confirmed.",
+	//         Summary:     "Get event.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/eventDataGetEventDataResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	GetEventData(GetEventDataRequest) GetEventDataResponse
+}

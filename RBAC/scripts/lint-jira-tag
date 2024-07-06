@@ -1,0 +1,20 @@
+#!/bin/sh
+
+TICKET_COUNT=$(git log --max-count=1 --no-merges | tail -n +5 | grep -Pce "[\[]?[A-Z0-9]{2,6}-[0-9]{1,5}[\]]?")
+
+case ${TICKET_COUNT} in
+1)
+	echo "Commit for ticket $(git log --max-count=1 --no-merges | tail -n +5 | grep -Poe '[\[]?[A-Z0-9]{2,6}-[0-9]{1,5}[\]]?')"
+	exit 0
+	;;
+0)
+	echo "No commits without JIRA tickets, please."
+	exit 1
+	;;
+*)
+	echo "Commit for multiple tickets:"
+	git log --max-count=1 --no-merges | tail -n +5 | grep -Poe "[\[]?[A-Z0-9]{2,6}-[0-9]{1,5}[\]]?"
+	echo "One ticket per commit, please."
+	exit 1
+	;;
+esac

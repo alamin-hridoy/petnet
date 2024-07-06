@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../../base
+# Set secrets locally, not in CI
+# - secret.yaml
+
+namespace: petnet-dev
+
+images:
+- name: cms
+  newName: asia.gcr.io/petnet-brankas-prod-1/perahub/cms
+  newTag: latest
+
+patchesStrategicMerge:
+- config.yaml
+
+patchesJson6902:
+- path: ingress.yaml
+  target:
+    group: extensions
+    kind: Ingress
+    name: cms
+    version: v1beta1

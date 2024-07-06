@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: usermgm-config
+data:
+  RUNTIME_ENVIRONMENT: 'staging'
+  HYDRA_AUDIENCE: staging.petnet.dev
+  HYDRA_ADMINURL: 'http://hydra-admin'
+  CORS_ORIGINS: 'https://staging.petnet.dev,https://*.staging.petnet.dev'
+  BASE_URL: 'https://staging.petnet.dev'
+  API_HOST: 'https://api.staging.petnet.dev'
+  API_AUTHHOST: 'https://auth.staging.petnet.dev/oauth2/token'
+  DATABASE_HOST: 172.30.225.19
+  DATABASE_DBNAME: identitydb_dev
+  BOOTSTRAP_NAME: admin
+  BOOTSTRAP_EMAIL: admin@example.com
+  KETO_HOST: keto-api
+  INFLUXDB_BUCKET: conexdev
+  INFLUXDB_ORGANIZATION: petnetdev
+  BOOTSTRAP_ENVLIST: "sandbox live"
+  IDP_URL: https://auth.staging.petnet.dev
+  MAILER_EMAILCONFIRMURL: https://staging.petnet.dev/registration/preliminary-screen
+  MAILER_SIGNUPURL: https://staging.petnet.dev/registration/account-details
+  USER_EXISTERROR: "true"
+  TRACE_COLLECTORHOST: my-opentelemetry-collector.tracing.svc.cluster.local:4317

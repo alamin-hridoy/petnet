@@ -1,0 +1,270 @@
+@font-face {
+  font-family: "basisgrotesquepro";
+  src: url("../fonts/basis-grotesque-pro/BasisGrotesquePro-Regular.ttf") format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "basisgrotesquepro";
+  src: url("../fonts/basis-grotesque-pro/BasisGrotesquePro-Light.ttf") format('truetype');
+  font-weight: 200;
+  font-style: normal;
+}
+@font-face {
+  font-family: "basisgrotesquepro";
+  src: url("../fonts/basis-grotesque-pro/BasisGrotesquePro-Bold.ttf") format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+@font-face {
+  font-family: "avenirLT";
+  src: url("../fonts/avenir/AvenirLTStd-Heavy.otf") format('opentype');
+  font-weight: 800;
+  font-style: normal;
+}
+@font-face {
+  font-family: "avenirLT";
+  src: url("../fonts/avenir/AvenirLTStd-Black.otf") format('opentype');
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: "avenirLT";
+  src: url("../fonts/avenir/AvenirLTStd-Medium.otf") format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "avenirLT";
+  src: url("../fonts/avenir/AvenirLTStd-Light.otf") format('opentype');
+  font-weight: 100;
+  font-style: normal;
+}
+@font-face {
+  font-family: "avenirLT";
+  src: url("../fonts/avenir/AvenirLTStd-Roman.otf") format('opentype');
+  font-weight: 200;
+  font-style: normal;
+}
+body {
+  font-family: "basisgrotesquepro",Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+h1,h2,h3,h4,h5,p {
+  font-family: "basisgrotesquepro",Arial, Helvetica, sans-serif;
+}
+a {
+  transition: all .3s ease-in-out;
+}
+
+.off-canvas {
+  background: #333491;
+}
+.fluid-container {
+  padding-right: .9375rem;
+  padding-left: .9375rem;
+}
+.header-bar {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: .5rem;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap
+}
+.header-bar-left {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  margin-right: auto;
+}
+.header-bar-right {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+  margin-left: auto;
+}
+.header-menu {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+.top-header .logo {
+  max-height: 40px;
+  min-height: 40px;
+  max-width: 180px;
+}
+.header-menu a {
+  padding: 15px 16px;
+  line-height: 20px;
+  position: relative;
+  display: block;
+  font-size: 14px;
+  text-decoration: none;
+  color: #fff;
+}
+.header-menu a:hover {
+  color: #a6a6c7;
+}
+.header-menu a:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  height: 2px;
+  width: 100%;
+  background-color: rgba(216, 216, 216, 0);
+  transition: all .3s ease-in-out;
+}
+.header-menu a:hover:before {
+  bottom: 0px;
+  background-color: #4dc7e0;
+}
+.header-menu .is-active:before {
+  bottom: 0;
+  background-color: #4dc7e0;
+}
+.top-header {
+  background-color: #333491;
+}
+.top-header .header-menu .translate {
+  border-left: 1px solid rgba(216, 216, 216, 0.15);
+  border-right: 1px solid rgba(216, 216, 216, 0.15);
+}
+.top-header .header-menu .translate a:after {
+  border-color: #fff transparent transparent !important;
+}
+.sc-hXRMBi {
+  display: none;
+}
+
+.menu-content ul[role="navigation"] label .operation-type {
+  width: 32px;
+  display: inline-block;
+  height: 16px;
+  line-height: 16px;
+  background-color: #333;
+  border-radius: 25px;
+  background-repeat: no-repeat;
+  background-position: 6px 4px;
+  font-size: 7px;
+  font-family: Verdana;
+  color: white;
+  text-transform: uppercase;
+  text-align: center;
+  font-weight: bold;
+  vertical-align: middle;
+  margin-right: 6px;
+  margin-top: 4px;
+  position: relative;
+}
+.menu-content ul[role="navigation"] label .operation-type:after {
+  content: "";
+  height: 60px;
+  width: 1px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -56px;
+  margin: auto;
+  background-color: rgba(54,73,92,.1);
+  z-index: -1;
+}
+.menu-content ul[role="navigation"] label .operation-type:before {
+  content: "";
+  height: 60px;
+  width: 1px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -56px;
+  margin: auto;
+  background-color: rgba(54,73,92,.1);
+  z-index: -1;
+}
+.menu-content ul[role="navigation"] ul li:first-of-type .operation-type:before {
+  content: none;
+}
+.menu-content ul[role="navigation"] ul li:last-of-type .operation-type:after {
+  content: none;
+}
+.menu-content ul[role="navigation"] label .get {
+  background-color: #62ADD4;
+}
+
+.menu-content ul[role="navigation"] label .post {
+  background-color: #2EC76E;
+}
+
+.menu-content ul[role="navigation"] label .put {
+  background-color: #5256DE;
+}
+
+.menu-content ul[role="navigation"] label .options {
+  background-color: #d3ca12;
+}
+
+.menu-content ul[role="navigation"] label .patch {
+  background-color: #e09d43;
+}
+
+.menu-content ul[role="navigation"] label .delete {
+  background-color: #e27a7a;
+}
+
+@media screen and (max-width:767px) {
+  .header-bar {
+    padding: 0;
+  }
+  .header-menu {
+    justify-content: center;
+  }
+  .header-bar-left,
+  .header-bar-right {
+    padding-bottom: 15px;
+    width: 100%;
+    text-align: center;
+  }
+  .header-bar-left {
+    padding-top: 15px;
+  }
+  .header-bar-left img {
+    min-width: 150px;
+  }
+  .header-menu a {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+@media screen and (max-width:474px) {
+  .header-bar-right {
+    font-size: 12px;
+  }
+}

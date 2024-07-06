@@ -1,0 +1,26 @@
+package cicopartnerlist
+
+import (
+	"context"
+
+	spb "brank.as/petnet/gunk/dsa/v2/cicopartnerlist"
+	"brank.as/petnet/profile/storage"
+	"brank.as/petnet/serviceutil/logging"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+)
+
+func (s *Svc) DisableCICOPartnerList(ctx context.Context, req *spb.DisableCICOPartnerListRequest) (*spb.DisableCICOPartnerListResponse, error) {
+	log := logging.FromContext(ctx)
+	Stype, err := s.st.DisableCICOPartnerList(ctx, req.Stype)
+	if err != nil {
+		logging.WithError(err, log).WithField("Stype", req.Stype).Error("Disable CICO Partner List")
+		if err == storage.NotFound {
+			return nil, status.Error(codes.NotFound, "CICO partner List not found")
+		}
+		return nil, err
+	}
+	return &spb.DisableCICOPartnerListResponse{
+		Stype: Stype,
+	}, nil
+}

@@ -1,0 +1,122 @@
+package consent // proto "rbac.brankas.consent"
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+type ServeGrantRequest struct {
+	// User unique identifier.
+	UserID string `pb:"1" json:"user_id"`
+	// Authentication client identifier.
+	ClientID string `pb:"2" json:"client_id"`
+	// Authentication client owner identifier.
+	OwnerID string `pb:"3" json:"owner_id"`
+	// New scope grants requested by client.
+	Requested []string `pb:"4" json:"requested"`
+	// Scopes previously granted to client by user.
+	Granted []string `pb:"5" json:"granted"`
+}
+
+type ServeGrantResponse struct {
+	// Scope requests not previously granted.
+	NewScopes map[string]ScopeDetail `pb:"1" json:"scopes"`
+	// Previously granted scopes.
+	GrantedScopes map[string]ScopeDetail `pb:"2" json:"granted_scopes"`
+	// Grouping details for all of the requested scopes.
+	Groups map[string]GroupDetail `pb:"3" json:"groups"`
+	// Skip explicit consent grant.  Used to mark first-party logins.
+	Skip bool `pb:"4" json:"skip"`
+	// OrgID requesting the consent.
+	OrgID string `pb:"5" json:"org_id"`
+	// Organization name requesting consent.
+	OrgName string `pb:"6" json:"org_name"`
+}
+
+type GrantRequest struct {
+	// User unique identifier.
+	UserID string `pb:"1" json:"user_id"`
+	// Authentication client identifier.
+	ClientID string `pb:"2" json:"client_id"`
+	// Authentication client owner identifier.
+	OwnerID string `pb:"3" json:"owner_id"`
+	// User-granted scopes requested by client.
+	Scopes []string `pb:"4" json:"scopes"`
+	// Recorded timestamp of user consent grant.
+	Timestamp time.Time `pb:"5" json:"timestamp"`
+}
+
+type GrantResponse struct {
+	// Unique consent grant identifier.
+	GrantID string `pb:"1" json:"grant_id"`
+	// Single grants are not remembered for future consent requests by the same client.
+	SingleGrant bool `pb:"2" json:"remember"`
+	// User consent grants recorded.
+	Grants []string `pb:"3" json:"grants"`
+}
+
+type ConsentError struct {
+	Message      string            `pb:"1" json:"message"`
+	ErrorDetails map[string]string `pb:"4" json:"error_details"`
+}
+
+type GrantService interface {
+	// Serve grant request for user consent grant.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/consent",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:    []string{"Consent Grant"},
+	//         Summary: "Get consent request details.",
+	//         Description: `Prepare a consent request for user grant.
+	// 	   	Used by consent provider for displaying to a user.`,
+	//         Produces: []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/consentServeGrantResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/rpcStatus",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	ServeGrant(ServeGrantRequest) ServeGrantResponse
+
+	// Get existing user session details.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/consent",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Consent Grant"},
+	//         Summary:     "User Consent Grant.",
+	//         Description: `Record user consent grant.`,
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/consentGrantResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/rpcStatus",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	Grant(GrantRequest) GrantResponse
+}

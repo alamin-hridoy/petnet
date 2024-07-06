@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../../base
+
+namespace: proxtera-uat
+
+patchesStrategicMerge:
+- config_patch.yaml
+
+patchesJson6902:
+- path: auth_ingress_patch.yaml
+  target:
+    group: extensions
+    kind: Ingress
+    name: sso-auth
+    version: v1beta1
+
+images:
+- name: proxtera-production/idp
+  newName: 461111061869.dkr.ecr.ap-southeast-1.amazonaws.com/proxtera-production/idp
+  newTag: v1.2.25.1-7269

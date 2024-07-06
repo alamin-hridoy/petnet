@@ -1,0 +1,318 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>Financial Information</title>
+</head>
+
+<body class="font-proxima-nova-reg">
+    <div>
+        <div class="flex min-h-screen items-center justify-center bg-petnetblue">
+            <div  class="w-full md:w-10/12 lg:w-7/12">
+                <!-- perahub logo -->
+                <div class="my-2 hidden sm:flex justify-center">
+					<img src="{{ assetHash "/images/DRP-white-horizontal.svg" }}" alt="" srcset="">
+				</div>
+				<div class="my-2 mx-6 flex justify-center sm:hidden">
+					<img src="{{ assetHash "/images/DRP-white-horizontal.svg" }}" alt="" srcset="">
+				</div>
+                <!-- content area -->
+                <div class="bg-white rounded mx-6">
+                    <div class="bg-petnetheader bg-opacity-60 rounded-t sm:hidden justify-around px-4 py-4 flex">
+						<div class="border-2 rounded-full border-petnetpink h-10 w-10 bg-petnetpink text-white font-bold text-xl flex items-center justify-center">
+							1
+						</div>
+						<div class="border-2 rounded-full border-petnetorange h-10 w-10 text-white bg-petnetorange font-bold text-xl flex items-center justify-center">
+							2
+						</div>
+						<div class="border-2 rounded-full border-petnetblue h-10 w-10 text-petnetblue font-bold text-xl flex items-center justify-center">
+							3
+						</div>
+						<div class="border-2 rounded-full border-petnetblue h-10 w-10 text-petnetblue font-bold text-xl flex items-center justify-center">
+							4
+						</div>
+					</div>
+                    <!-- step area -->
+                    <div class="sm:flex bg-petnetheader bg-opacity-60 rounded-t hidden">
+                        <div class="w-1/4">
+                        <div class="flex bg-petnetpink p-4 items-center rounded-tl">
+                            <span
+                                class=" text-white text-2xl rounded-full border-white border h-8 w-8 inline-flex justify-center items-center mr-2">1</span>
+                            <p class="text-white text-xl ">Business Information</p>
+                        </div>
+                    </div>
+                    <div class="w-1/4">
+                        <div class="flex p-4 items-center bg-petnetorange">
+                            <span
+                                class=" text-white text-2xl rounded-full border-white border h-8 w-8 inline-flex justify-center items-center mr-2">2</span>
+                            <p class="text-white text-xl ">Financial Information</p>
+                        </div>
+                    </div>
+                    <div class="w-1/4">
+                        <div class="flex p-4 items-center text-petnetblue">
+                            <span
+                                class=" text-petnetblue text-2xl rounded-full border-petnetblue border h-8 w-8 inline-flex justify-center items-center mr-2">3</span>
+                            <p class="text-petnetblue text-xl ">Account Onboarding</p>
+                        </div>
+                    </div>
+                    <div class="w-1/4">
+                        <div class="flex p-4 items-center text-petnetblue">
+                            <span
+                                class=" text-petnetblue text-2xl rounded-full border-petnetblue border h-8 w-8 inline-flex justify-center items-center mr-2">4</span>
+                            <p class="text-petnetblue text-xl ">DRP Onboarding</p>
+                        </div>
+                    </div>
+                    </div>
+                    <form method="POST" action="/register/financialinfo" name="financial" enctype="multipart/form-data" id="businessinfofrm">
+                        {{ .CSRFField }}
+                    <!-- form area -->
+                    <div class="flex flex-wrap justify-center">
+                        <!-- header text -->
+                        <div>
+                            <p class="text-center text-gray-400 pt-4 pb-3">STEP 2</p>
+                            <p class="text-center pb-4 text-2xl font-bold">Financial Information</p>
+                            <p class="text-center">Please upload the necessary financial documents</p>
+                        </div>
+                    </div>
+                    <div class="sm:px-48 px-6">
+                        <h1 class="text-petnetblue py-4">UPLOAD DOCUMENTS</h1>
+                        <div>
+                            <h1 class="pt-4">Financial Statement<span class="text-petnetpink">*</span></h1>
+                            <!-- upload form -->
+                            <div id="file-upload-FinancialStatements" class="w-full bg-petnetgray {{with .Errors.FinancialStatements}} border border-red-500{{end}}"></div>
+                            <p class="text-red-700 mt-2 all-errs-FinancialStatements" id="err-FinancialStatements"></p>
+                            {{with .Errors.FinancialStatements}}
+                                <p class="text-red-700 mt-2">{{.}}</p>
+                            {{end}}
+                            
+                            <div class="pb-16">
+                                <h1 class="pt-4">Bank Statement<span class="text-petnetpink">*</span></h1>
+                                <p class="italic text-gray-400 font-normal">Must be at least one year</p>
+                                <div id="file-upload-BankStatements" class="w-full bg-petnetgray {{with .Errors.BankStatements}} border border-red-500{{end}}"></div>
+                                <p class="text-red-700 mt-2 all-errs-BankStatements" id="err-BankStatements"></p>
+                                {{with .Errors.BankStatements}}
+                                    <p class="text-red-700 mt-2">{{.}}</p>
+                                {{end}}
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                      <div class="sm:flex mt-5 justify-between mb-16 hidden mx-6">
+                        <div>
+                            <a href="/register/businessinfo" class=" inline-block rounded-md font-bold text-white border border-white px-8 py-3">
+                                Go back
+                            </a>
+                        </div>
+                        <div class="lg:w-auto w-full lg:ml-auto text-center mr-1.5">
+                            <button id="SaveDraft" name="SaveDraft" value="SaveDraft" type="submit" class="bg-petnetlightblue border border-petnetlightblue text-sm text-white px-6 py-3 rounded-md font-bold">
+                            Save as Draft 
+                            </button>
+                        </div>
+                        <div>
+                            <button type="submit" class="bg-petnetyellow text-petnetblue px-8 py-3 rounded-md font-bold">
+                            Save & Continue
+                            </button>
+                        </div>
+                    </div>
+                    <div class="sm:hidden mt-5 mx-6 mb-16">
+                        <div>
+                            <button id="SaveDraft" name="SaveDraft" value="SaveDraft" type="submit" class="bg-petnetlightblue border border-petnetlightblue text-sm text-white  px-8 py-3 rounded-md font-normal my-3 text-center w-full mb-4">
+                            Save as Draft 
+                            </button>
+                        </div>
+                        <div>
+                            <button type="submit" class="bg-petnetyellow text-petnetblue px-8 py-3 rounded-md font-bold w-full mb-4">
+                                Save & Continue
+                            </button>
+                        </div>
+                        <div>
+                            <a href="/register/businessinfo" class="rounded-md font-bold text-white border border-white px-8 py-3 w-full inline-block text-center">
+                                Go back
+                            </a>
+                        </div>
+                        
+                    </div>
+            </form>
+            </div>
+        </div>
+    </div>
+<script>
+    var bankStateMentURL = "{{.BankStatementURLs}}"
+    var FinancialStatementURLs = "{{.FinancialStatementURLs}}"
+    var FinancialStatementID = "{{.FinancialStatementID}}"
+    var BankStatementID = "{{.BankStatementID}}"
+    var CSRFFieldValue = "{{.CSRFFieldValue}}"
+</script>
+<script src="{{ assetHash "/js/fileupload.js" }}"></script>
+    <script>
+        function addDocErrorMessage(field, msg) {
+            if (field == "") {
+                return;
+            }
+
+            let fieldContainer = document.getElementById("file-upload-" + field);
+            if (!fieldContainer) {
+                return;
+            }
+
+            // remove errors if no error msg
+            if (msg == "") {
+                fieldContainer.classList.remove("border-red-500", "border");
+                let allDocErrs = document.querySelector(".all-errs-" + field);
+                if (allDocErrs) {
+                    allDocErrs.innerHTML = "";
+                }
+
+                return;
+            }
+
+            // for error
+            fieldContainer.classList.add("border-red-500", "border");
+            document.getElementById("err-" + field).innerHTML = msg
+		}
+
+        function isFileSelected(el) {
+            if (!el) {
+                console.log("file input not present");
+                return false;
+            }
+
+            // If files are uploaded previously, then that file is not requireds
+            if (document.getElementsByName("uploaded-" + el.name).length > 0) {
+                return true
+            }
+
+            // if not multiple
+            if (el.files && el.files.length > 0) {
+                return true;
+            }
+
+            // if multiple
+            for (let i = 0; i < el.length; i++) {
+                if (el[i].files.length > 0) {
+                    return true;
+                }
+            }
+
+            return false
+		}
+
+        var fs = [];
+        var bankStateMents = bankStateMentURL.split(",");
+        var FinancialStatements = FinancialStatementURLs.split(",");
+        if(FinancialStatements.length > 0){
+            FinancialStatements.forEach(function(item){
+                if(item != ""){
+                    fs.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':FinancialStatementID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        var bs = [];
+        if(bankStateMents.length > 0){
+            bankStateMents.forEach(function(item){
+                if(item != "" ){
+                    bs.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':BankStatementID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("FinancialStatements", 3, ["png", "jpg", "jpeg", "pdf", "docx"],
+            "", "Choose file/s to upload", fs, '', {
+                'previewImages': true,
+                'multiple': true,
+                'uploadCallback': function () {
+					return addDocErrorMessage("FinancialStatements", "")
+				}
+            });
+        new FileUpload("BankStatements", 3, ["png", "jpg", "jpeg", "pdf", "docx"],
+            "", "Choose file/s to upload", bs, '', {
+                'previewImages': true,
+                'multiple': true,
+                'uploadCallback': function () {
+					return addDocErrorMessage("BankStatements", "")
+				}
+            });
+        function loadAjax(url, method, nameV) {
+			var xhttp = new XMLHttpRequest();
+			var data = new FormData();
+			data.append("name", nameV);
+			data.append("gorilla.csrf.Token", CSRFFieldValue);
+			xhttp.open(method, url, true);
+			xhttp.send(data);
+		}
+		function removedUploadedFile(){
+			const removefile = document.getElementsByClassName("remove_file");
+			for (var i = 0; i < removefile.length; i++) {
+				removefile[i].addEventListener("click", function(e){
+					let file = this.getAttribute("data-file")
+					let fileid = this.getAttribute("data-fileid")
+					if (typeof file !== 'undefined') {
+						if (file != null) {
+							loadAjax("/u/files/"+fileid, "DELETE", file)
+						}
+					}
+					this.closest(".remove_file_wrap").remove();
+				});
+			}
+		}
+		document.getElementById("businessinfofrm").addEventListener('submit', function(event) {
+            event.preventDefault();
+            const errmsg = "Please select file(s) to upload";
+            let fs = document.getElementsByName("FinancialStatements");
+            let fse = false;
+            for(let i=0; i<fs.length; i++){
+                if(fs[i].files.length > 0){
+                    fse = true;
+                }
+            }
+            let bs = document.getElementsByName("BankStatements");
+            let bse = false;
+            for(let i=0; i<bs.length; i++){
+                if(bs[i].files.length > 0){
+                    bse = true;
+                }
+            }
+            let fsDoc = document.financial.FinancialStatements;
+            if (!isFileSelected(fsDoc)) {
+                addDocErrorMessage("FinancialStatements", errmsg);
+                fsDoc.focus();
+            }
+            let bseDoc = document.financial.BankStatements;
+            if (!isFileSelected(bseDoc)) {
+                addDocErrorMessage("BankStatements", errmsg);
+                bseDoc.focus();
+            }
+            let fsf = document.getElementById("filelist-uploaded-FinancialStatements").innerHTML;
+            let ff = document.getElementById("filelist-FinancialStatements").innerHTML;
+            let bsf = document.getElementById("filelist-uploaded-BankStatements").innerHTML;
+            let fb = document.getElementById("filelist-BankStatements").innerHTML;
+            
+            fsf = fsf.trim();
+            bsf = bsf.trim();
+            if((bse && fse) || ((fsf || ff != "") && (bsf || fb != ""))){
+                event.target.submit();
+            }
+        });
+		document.addEventListener('DOMContentLoaded', function(event) {
+			removedUploadedFile()
+		});
+		document.body.addEventListener('DOMSubtreeModified', function(event) {
+			removedUploadedFile()
+		});
+    </script>
+</body>
+</html>

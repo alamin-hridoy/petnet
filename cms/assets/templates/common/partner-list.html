@@ -1,0 +1,241 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>Partner List</title>
+</head>
+<body class="font-sans">
+    <div>
+        <div class="flex">
+            <!-- sidebar-left-start -->
+            <div class="bg-petnetblue w-32 min-h-screen">
+                <div class="min-h-screen">
+                    <img src="{{ assetHash "/images/DRP-Vertical.svg" }}" class="mx-auto my-5">
+                    <!-- Sidebar menu start -->
+                    {{ template "admin-sidenav-menu.html" dict "Type" "partner-list" "Data" .}}
+                    <!-- Sidebar menu end -->
+                </div>
+            </div>
+            <!-- sidebarleft-end -->
+            <!-- top-header-start -->
+            <div class="min-h-screen w-full flex bg-petnetgray ">
+                <div class="w-full">
+                    <div class="px-6 lg:px-8 pt-10 pb-8 mb-4 bg-white border-b relative z-10 shadow-sm">
+                        {{ template "top-header.html" .}}
+                        <div class="mb-4">
+                            <h2 class="text-4xl text-petnetblue">Partner List</h2>
+                        </div>
+                        <div class="flex flex-wrap items-center justify-between">
+                            <div class="border w-1/3 flex rounded-l">
+                                <input type="text" value="{{.SearchTerm}}" id="search" placeholder="Search for Partner"
+                                    class="w-full h-12 p-4 bg-petnetgray focus:outline-none">
+                                <button id="searchbtn" class="bg-petnetblue text-white rounded-r p-3 searchbtn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- top-header-end -->
+                    <!-- table-start -->
+                    {{if .PartnerListApplicants}}
+                    <div class="text-3xl text-white bg-petnetblue mx-20 text-center py-3 rounded-md shadow-md mb-8">Enabled</div>
+                    <div class="flex-wrap flex justify-center ml-8">
+                        {{range .PartnerListApplicants}}
+                            <div data-status="{{.Status}}" data-stype="{{.Stype}}" data-name="{{.Name}}" onclick="editPartners(this)" class="mb-8 mr-8 px-8 pt-8 relative z-10 bg-white w-72 h-44 shadow-md rounded-sm flex flex-col items-center">
+                                <img class="rounded-md h-24" src="{{.ImageLink}}" alt="{{.Name}}">
+                                <p class="text-2xl font-semibold text-petnetblue absolute bottom-3">{{.Name}}</p>
+                            </div>
+                        {{end}}
+                    </div>
+                    {{end}}
+                    {{if .DisabledPartnerListApplicants}}
+                    <div class="text-3xl text-petnetblue bg-white mx-20 text-center py-3 rounded-md shadow-md mb-8 focus:outline-none border border-petnetblue">Disabled</div>
+                    <div class="flex-wrap flex justify-center ml-8">
+                        {{range .DisabledPartnerListApplicants}}
+                            <div data-status="{{.Status}}" data-stype="{{.Stype}}" data-name="{{.Name}}" onclick="editPartners(this)" class="mb-8 mr-8 px-8 pt-8 relative z-10 bg-white w-72 h-44 shadow-md rounded-sm flex flex-col items-center">
+                                <img class="rounded-md h-24" src="{{.ImageLink}}" alt="{{.Name}}">
+                                <p class="text-2xl font-semibold text-petnetblue absolute bottom-3">{{.Name}}</p>
+                            </div>
+                        {{end}}
+                    </div>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+        <div id="addBranchPopUp" class="hidden">
+            <div
+                class="fixed top-0 left-0 z-50 w-screen min-h-screen bg-black bg-opacity-50 py-6 flex flex-col justify-center sm:py-12">
+                <div class="py-3 sm:max-w-full sm:mx-auto">
+                    <div class="w-full modal-container">
+                        <div class="bg-white flex flex-col shadow-lg w-full z-50 rounded-lg overflow-hidden">
+                            <div class="flex flex-col items-center">
+                                <form id="servicesForm" action="/dashboard/partner-list-create" method="POST"
+                                    class="w-full flex flex-col px-16 mx-16">
+                                    {{ .CSRFField }}
+                                    <div class="w-full">
+                                        <div class="mt-16">
+                                            <h1 class="mt-8 text-3xl font-bold" id="modaltitle">Add Partner</h1>
+                                        </div>
+                                        <div class="w-full my-3">
+                                            <select name="Stype" id="Stype" onchange="Changef(this)"
+                                                class="w-full py-3 pl-4 font-bold bg-petnetgray rounded-md">
+                                                <option value="" selected>Select a Partner</option>
+                                                <option value="WU">Western Union</option>
+                                                <option value="IR">IRemit</option>
+                                                <option value="TF">Transfast</option>
+                                                <option value="RIA">Ria</option>
+                                                <option value="MB">MetroBank</option>
+                                                <option value="RM">Remitly</option>
+                                                <option value="BPI">BPI</option>
+                                                <option value="USSC">USSC</option>
+                                                <option value="JPR">JapanRemit</option>
+                                                <option value="IC">InstantCash</option>
+                                                <option value="UNT">Uniteller</option>
+                                                <option value="WISE">Transfer Wise</option>
+                                                <option value="CEBI">Cebuana Intl</option>
+                                                <option value="AYA">Ayannah</option>
+                                                <option value="CEB">Cebuana</option>
+                                                <option value="IE">IntelExpress</option>
+                                            </select>
+                                        </div>
+                                        <div class="w-full mb-2 pt-2">
+                                            <div class="w-full">
+                                                <label for="PartnerName" class="block font-medium "> Partner Name
+                                                </label>
+                                                <input id="PartnerName" name="Name" type="text"
+                                                    class="py-2 w-full rounded-md bg-petnetgray focus:outline-none focus:ring-1 focus:ring-blue-400 px-3 border border-gray-300 mt-1 text-gray-700">
+                                            </div>
+                                        </div>
+                                        <div class="w-full mb-2 pt-2">
+                                            <select name="Status" id="Status"
+                                                class="w-full py-3 pl-4 font-bold bg-petnetgray rounded-md">
+                                                <option value="ENABLED">Enabled</option>
+                                                <option value="DISABLED">Disabled</option>
+                                            </select>
+                                        </div>
+                                        <div id="addextrafield"></div>
+                                    </div>
+                            </div>
+                            <div class="flex justify-between pb-12 px-16">
+                                <a href="/dashboard/partner-list"
+                                    class=" py-3 px-4 mr-2 w-1/2 text-lg text-center font-bold inline-block rounded-md text-petnetblue focus:outline-none border border-petnetblue">Cancel</a>
+                                <button type="submit" id="submitbtn"
+                                    class=" py-3 px-4 ml-4 w-1/2 text-lg font-bold rounded-md text-petnetblue bg-petnetyellow focus:outline-none">Add</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script>
+        const params = new URLSearchParams(window.location.search)
+        function search() {
+            let searchTerm = document.getElementById("search").value;
+            if (params.has("search-term")) {
+                params.delete("search-term");
+            }
+            params.append("search-term", searchTerm);
+            if (params.has("page")) {
+                params.delete("page");
+            }
+            window.location.search = params.toString();
+        }
+        function dropdownToggle(event) {
+            let targetItem = event.target;
+            while (!targetItem.classList.contains('dropdown-toggle')) {
+                targetItem = targetItem.parentElement;
+            }
+            targetItem = targetItem.nextElementSibling;
+            if (targetItem.classList.contains('hidden')) {
+                targetItem.classList.remove("hidden");
+            } else {
+                targetItem.classList.add("hidden");
+            }
+            let x = document.getElementsByClassName("dropdown-item");
+            for (let i = 0; i < x.length; i++) {
+                if (x[i] != targetItem) {
+                    x[i].classList.add("hidden")
+                }
+            }
+        }
+        function toggleTopButton(id) {
+            let getDropdownItem = document.getElementById(id)
+            let isHiddenClass = getDropdownItem.classList.contains('hidden');
+            if (!isHiddenClass) {
+                getDropdownItem.classList.add("hidden");
+            } else {
+                getDropdownItem.classList.remove("hidden");
+            }
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            let searchbtn = document.querySelectorAll(".searchbtn");
+            for (let i = 0; i < searchbtn.length; i++) {
+                searchbtn[i].addEventListener("click", function (e) {
+                    e.preventDefault();
+                    searchbtn[i].disabled = true;
+                    search();
+                });
+            }
+        });
+        function modalShow() {
+            var getPopUp = document.getElementById("addBranchPopUp")
+            var getPopUpClass = getPopUp.className
+            getPopUp.classList.remove("hidden");
+        }
+        function modalCancel() {
+            var getPopUp = document.getElementById("addBranchPopUp")
+            var getPopUpClass = getPopUp.className
+            getPopUp.classList.add("hidden");
+        }
+        function addPartners() {
+            document.getElementById("modaltitle").innerText = "Add Partner";
+            document.getElementById("Stype").removeAttribute("disabled");
+            document.getElementById("PartnerName").removeAttribute("disabled");
+            document.getElementById("addextrafield").innerHTML = "";
+            document.getElementById("submitbtn").text = "Add";
+            modalShow();
+        }
+        function Changef(sel) {
+            document.getElementById("PartnerName").value = "ddsdsds";
+            var selectedVal = sel.options[sel.selectedIndex].text;
+            console.log("selectedVal", selectedVal)
+            document.getElementById("PartnerName").value = selectedVal;
+        }
+        function addFieldValue(item) {
+            let name = item.getAttribute("data-name");
+            let stype = item.getAttribute("data-stype");
+            let Status = item.getAttribute("data-status");
+            document.getElementById("Stype").value = stype;
+            document.getElementById("PartnerName").value = name;
+            document.getElementById("Status").value = Status;
+            document.getElementById("Stype").setAttribute("disabled", "disabled");
+            document.getElementById("PartnerName").setAttribute("disabled", "disabled");
+            var htm = '<input type="hidden" name="Stype" value="'+stype+'"><input type="hidden" value="'+name+'" name="Name">';
+            document.getElementById("addextrafield").innerHTML = htm;
+            document.getElementById("submitbtn").text = "Update";
+        }
+        function editPartners(item) {
+            let name = item.getAttribute("data-name");
+            document.getElementById("modaltitle").innerText = "Update "+name;
+            addFieldValue(item);
+            modalShow();
+        }
+        var input = document.getElementById("search");
+        input.addEventListener("keyup", function(event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            document.getElementById("searchbtn").click();
+            }
+        });
+    </script>
+</body>
+</html>

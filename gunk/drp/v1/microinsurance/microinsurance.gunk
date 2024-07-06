@@ -1,0 +1,741 @@
+package microinsurance
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+// TransactRequest ...
+//
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "coy",
+//                 "location_id",
+//                 "user_code",
+//                 "trx_date",
+//                 "amount",
+//                 "coverage_count",
+//                 "product_code",
+//                 "product_code",
+//                 "processing_branch",
+//                 "processed_by",
+//                 "user_email",
+//                 "last_name",
+//                 "first_name",
+//                 "gender",
+//                 "birthdate",
+//                 "mobile_number",
+//                 "province_code",
+//                 "city_code",
+//                 "address",
+//                 "marital_status",
+//                 "occupation",
+//                 "number_units",
+//                 "beneficiaries",
+//                 "dependents",
+//         },
+// }}
+type TransactRequest struct {
+	Coy              string   `pb:"1" json:"coy"`
+	LocationID       string   `pb:"2" json:"location_id"`
+	UserCode         string   `pb:"3" json:"user_code"`
+	TrxDate          string   `pb:"4" json:"trx_date"`
+	PromoAmount      float64  `pb:"5" json:"promo_amount"`
+	PromoCode        string   `pb:"6" json:"promo_code"`
+	Amount           string   `pb:"7" json:"amount"`
+	CoverageCount    string   `pb:"8" json:"coverage_count"`
+	ProductCode      string   `pb:"9" json:"product_code"`
+	ProcessingBranch string   `pb:"10" json:"processing_branch"`
+	ProcessedBy      string   `pb:"11" json:"processed_by"`
+	UserEmail        string   `pb:"12" json:"user_email"`
+	LastName         string   `pb:"13" json:"last_name"`
+	FirstName        string   `pb:"14" json:"first_name"`
+	MiddleName       string   `pb:"15" json:"middle_name"`
+	Gender           string   `pb:"16" json:"gender"`
+	Birthdate        string   `pb:"17" json:"birthdate"`
+	MobileNumber     string   `pb:"18" json:"mobile_number"`
+	ProvinceCode     string   `pb:"19" json:"province_code"`
+	CityCode         string   `pb:"20" json:"city_code"`
+	Address          string   `pb:"21" json:"address"`
+	MaritalStatus    string   `pb:"23" json:"marital_status"`
+	Occupation       string   `pb:"24" json:"occupation"`
+	CardNumber       string   `pb:"25" json:"card_number"`
+	NumberUnits      string   `pb:"26" json:"number_units"`
+	Beneficiaries    []Person `pb:"27" json:"beneficiaries"`
+	Dependents       []Person `pb:"28" json:"dependents"`
+}
+
+// GetReprintRequest ...
+//
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "traceNo",
+//         },
+// }}
+type GetReprintRequest struct {
+	TraceNumber string `pb:"1" json:"trace_number"`
+}
+
+// RetryTransactionRequest ...
+//
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "id",
+//         },
+// }}
+type RetryTransactionRequest struct {
+	ID string `pb:"1" json:"id"`
+}
+
+// Person ...
+//
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "last_name",
+//                 "first_name",
+//                 "contact_number",
+//                 "birth_date",
+//                 "relationship",
+//         },
+// }}
+type Person struct {
+	LastName      string `pb:"1" json:"last_name"`
+	FirstName     string `pb:"2" json:"first_name"`
+	MiddleName    string `pb:"3" json:"middle_name"`
+	NoMiddleName  bool   `pb:"4" json:"no_middle_name"`
+	ContactNumber string `pb:"5" json:"contact_number"`
+	BirthDate     string `pb:"6" json:"birth_date"`
+	Relationship  string `pb:"7" json:"relationship"`
+}
+
+// Insurance ...
+type Insurance struct {
+	SessionID         string    `pb:"1" json:"sessionID"`
+	StatusCode        string    `pb:"2" json:"statusCode"`
+	StatusDesc        string    `pb:"3" json:"statusDesc"`
+	InsProductID      string    `pb:"4" json:"insProductID"`
+	InsProductDesc    string    `pb:"5" json:"insProductDesc"`
+	TrnDate           string    `pb:"6" json:"trnDate"`
+	TrnAmount         float64   `pb:"7" json:"trnAmount"`
+	TraceNumber       string    `pb:"8" json:"traceNo"`
+	ClientNo          string    `pb:"9" json:"clientNo"`
+	NumUnits          int       `pb:"10" json:"numUnits"`
+	BegPolicyNo       string    `pb:"11" json:"begPolicyNo"`
+	EndPolicyNo       string    `pb:"12" json:"endPolicyNo"`
+	EffectiveDate     string    `pb:"13" json:"effectiveDate"`
+	ExpiryDate        string    `pb:"14" json:"expiryDate"`
+	PocPDFLink        string    `pb:"15" json:"pocPDFLink"`
+	CocPDFLink        string    `pb:"16" json:"cocPDFLink"`
+	PartnerCommission float64   `pb:"17" json:"partnerCommission"`
+	TellerCommission  float64   `pb:"18" json:"tellerCommission"`
+	Timestamp         time.Time `pb:"19" json:"timestamp"`
+}
+
+type SortOrder int
+
+const (
+	DESC SortOrder = iota
+	ASC
+)
+
+type SortByColumn int
+
+const (
+	OmitSortByColumn SortByColumn = iota
+	TraceNumber
+	TrnStatus
+	Fee
+	Commission
+	TotalAmount
+	TransactionCompletedTime
+)
+
+// GetTransactionListRequest ...
+//
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "date_from",
+//                 "date_to",
+//                 "org_id",
+//         },
+// }}
+type GetTransactionListRequest struct {
+	DateFrom     string       `pb:"1" json:"date_from"`
+	DateTo       string       `pb:"2" json:"date_to"`
+	Limit        int32        `pb:"3" json:"limit"`
+	Offset       int32        `pb:"4" json:"offset"`
+	SortOrder    SortOrder    `pb:"5" json:"sort_order"`
+	SortByColumn SortByColumn `pb:"6" json:"sort_by_column"`
+	OrgID        string       `pb:"7" json:"org_id"`
+}
+
+type Amount struct {
+	// Monetary amount in the smallest currency denomination.  Example: USD $10.25 => "1025".
+	Amount string `pb:"1" json:"amount"`
+	// Currency code using ISO-4217 3-letter codes.
+	Currency string `pb:"2" json:"currency"`
+}
+
+// InsuranceTransaction ...
+type InsuranceTransaction struct {
+	TrnDate        time.Time `pb:"1" json:"trnDate"`
+	TraceNumber    string    `pb:"2" json:"traceNo"`
+	ClientNo       string    `pb:"3" json:"clientNo"`
+	LastName       string    `pb:"4" json:"lastName"`
+	FirstName      string    `pb:"5" json:"firstName"`
+	MiddleName     string    `pb:"6" json:"middleName"`
+	Gender         string    `pb:"7" json:"gender"`
+	BirthDate      string    `pb:"8" json:"birthDate"`
+	MobileNumber   string    `pb:"9" json:"mobileNo"`
+	MaritalStatus  string    `pb:"10" json:"maritalStatus"`
+	Occupation     string    `pb:"11" json:"occupation"`
+	InsGroupID     string    `pb:"12" json:"insGroupID"`
+	InsProductID   string    `pb:"13" json:"insProductID"`
+	InsProductDesc string    `pb:"14" json:"insProductDesc"`
+	InsurerCode    string    `pb:"15" json:"insurerCode"`
+	InsuranceType  string    `pb:"16" json:"insuranceType"`
+	BegPolicyNo    string    `pb:"17" json:"begPolicyNo"`
+	EndPolicyNo    string    `pb:"18" json:"endPolicyNo"`
+	CoverageInMos  int       `pb:"19" json:"coverageInMos"`
+	EffectiveDate  string    `pb:"20" json:"effectiveDate"`
+	ExpiryDate     string    `pb:"21" json:"expiryDate"`
+	InsCardNo      string    `pb:"22" json:"insCardNo"`
+	Beneficiaries  []Person  `pb:"23" json:"beneficiaries"`
+	Dependents     []Person  `pb:"24" json:"dependents"`
+	NumUnits       int       `pb:"25" json:"numUnits"`
+	TotAmt         Amount    `pb:"26" json:"totAmt"`
+	TrnStatus      string    `pb:"27" json:"trnStatus"`
+	ProvinceCode   string    `pb:"28" json:"provinceCode"`
+	CityCode       string    `pb:"29" json:"cityCode"`
+	Address        string    `pb:"30" json:"address"`
+}
+
+// TransactionListResult ...
+type TransactionListResult struct {
+	Transactions []InsuranceTransaction `pb:"4" json:"transactions"`
+	Next         int32                  `pb:"5" json:"next"`
+	Total        int32                  `pb:"6" json:"total"`
+}
+
+// InsuranceProduct ...
+type InsuranceProduct struct {
+	InsGroupID          string `pb:"1" json:"insGroupID"`
+	InsProductID        string `pb:"2" json:"insProductID"`
+	InsProductDesc      string `pb:"3" json:"insProductDesc"`
+	InsurerCode         string `pb:"4" json:"insurerCode"`
+	InsuranceType       string `pb:"5" json:"insuranceType"`
+	InsuranceCategory   string `pb:"6" json:"insuranceCategory"`
+	PolicyNo            string `pb:"7" json:"policyNo"`
+	MinAge              int    `pb:"8" json:"minAge"`
+	MaxAge              int    `pb:"9" json:"maxAge"`
+	CoverageInMos       string `pb:"10" json:"coverageInMos"`
+	ContestAbilityInMos string `pb:"11" json:"contestabilityInMos"`
+	ActivationDelay     string `pb:"12" json:"activationDelay"`
+	MaxUnits            string `pb:"13" json:"maxUnits"`
+	PerUnitFee          string `pb:"14" json:"perUnitFee"`
+	ProductName         string `pb:"15" json:"product_name"`
+}
+
+// Coverage ...
+type Coverage struct {
+	InsCoverageID     string `pb:"1" json:"insCoverageID"`
+	InsCoverageDesc   string `pb:"2" json:"insCoverageDesc"`
+	InsCoverageIconID string `pb:"3" json:"insCoverageIconID"`
+	InsCoverageType1  string `pb:"4" json:"insCoverageType1"`
+	InsCoverageAmt1   string `pb:"5" json:"insCoverageAmt1"`
+	InsCoverageType2  string `pb:"6" json:"insCoverageType2"`
+	InsCoverageAmt2   string `pb:"7" json:"insCoverageAmt2"`
+	InsCoverageType3  string `pb:"8" json:"insCoverageType3"`
+	InsCoverageAmt3   string `pb:"9" json:"insCoverageAmt3"`
+	InsCoverageType4  string `pb:"10" json:"insCoverageType4"`
+	InsCoverageAmt4   string `pb:"11" json:"insCoverageAmt4"`
+	InsCoverageType5  string `pb:"12" json:"insCoverageType5"`
+	InsCoverageAmt5   string `pb:"13" json:"insCoverageAmt5"`
+}
+
+// ProductResult ...
+type ProductResult struct {
+	SessionID  string           `pb:"1" json:"sessionID"`
+	StatusCode string           `pb:"2" json:"statusCode"`
+	StatusDesc string           `pb:"3" json:"statusDesc"`
+	Product    InsuranceProduct `pb:"4" json:"product"`
+	Coverages  []Coverage       `pb:"5" json:"coverages"`
+}
+
+// GetProductRequest ...
+//
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "product_code",
+//         },
+// }}
+type GetProductRequest struct {
+	ProductCode string `pb:"1" json:"product_code"`
+}
+
+// GetOfferProductRequest ...
+//
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "last_name",
+//                 "first_name",
+//                 "birthdate",
+//                 "gender",
+//                 "trx_type",
+//                 "amount",
+//         },
+// }}
+type GetOfferProductRequest struct {
+	LastName   string  `pb:"1" json:"last_name"`
+	FirstName  string  `pb:"2" json:"first_name"`
+	MiddleName string  `pb:"3" json:"middle_name"`
+	Birthdate  string  `pb:"4" json:"birthdate"`
+	Gender     string  `pb:"5" json:"gender"`
+	TrxType    int     `pb:"6" json:"trx_type"`
+	Amount     float64 `pb:"7" json:"amount"`
+}
+
+// OfferProduct ...
+type OfferProduct struct {
+	ProductName          string    `pb:"1" json:"product_name"`
+	ProductCode          string    `pb:"2" json:"product_code"`
+	ProductType          string    `pb:"3" json:"product_type"`
+	Dependents           int       `pb:"4" json:"dependents"`
+	Beneficiary          int       `pb:"5" json:"beneficiary"`
+	BeneficiaryPolicy    MinMax    `pb:"6" json:"beneficiary_policy"`
+	AgePolicy            AgePolicy `pb:"7" json:"age_policy"`
+	EndSpielsTitle       string    `pb:"8" json:"end_spiels_title"`
+	EndSpielsDescription string    `pb:"9" json:"end_spiels_description"`
+	SalesPitch           string    `pb:"10" json:"sales_pitch"`
+	TermsAndCondition    string    `pb:"11" json:"terms_and_condition"`
+	DataPrivacy          string    `pb:"12" json:"data_privacy"`
+}
+
+// ActiveProduct ...
+type ActiveProduct struct {
+	ProductName          string    `pb:"1" json:"product_name"`
+	ProductCode          string    `pb:"2" json:"product_code"`
+	ProductType          string    `pb:"3" json:"product_type"`
+	Dependents           int       `pb:"4" json:"dependents"`
+	Beneficiary          int       `pb:"5" json:"beneficiary"`
+	BeneficiaryPolicy    MinMax    `pb:"6" json:"beneficiary_policy"`
+	DependentsPolicy     MinMax    `pb:"7" json:"dependents_policy"`
+	AgePolicy            AgePolicy `pb:"8" json:"age_policy"`
+	EndSpielsTitle       string    `pb:"9" json:"end_spiels_title"`
+	EndSpielsDescription string    `pb:"10" json:"end_spiels_description"`
+	SalesPitch           string    `pb:"11" json:"sales_pitch"`
+	TermsAndCondition    string    `pb:"12" json:"terms_and_condition"`
+	DataPrivacy          string    `pb:"13" json:"data_privacy"`
+}
+
+// MinMax ...
+type MinMax struct {
+	Max int `pb:"1" json:"max"`
+	Min int `pb:"2" json:"min"`
+}
+
+// MinMaxAge ...
+type MinMaxAge struct {
+	MaxAge int `pb:"1" json:"max_age"`
+	MinAge int `pb:"2" json:"min_age"`
+}
+
+// AgePolicy ...
+type AgePolicy struct {
+	Insurer    MinMaxAge        `pb:"1" json:"insurer"`
+	Dependents DependentsPolicy `pb:"2" json:"dependents"`
+}
+
+// DependentsPolicy ...
+type DependentsPolicy struct {
+	Children MinMaxAge `pb:"1" json:"CHI"`
+	Parents  MinMaxAge `pb:"2" json:"PAR"`
+	Siblings MinMaxAge `pb:"3" json:"SIB"`
+	Spouse   MinMaxAge `pb:"4" json:"SPS"`
+}
+
+// CheckActiveProductRequest ...
+//
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "last_name",
+//                 "first_name",
+//                 "birthdate",
+//                 "gender",
+//                 "product_code",
+//         },
+// }}
+type CheckActiveProductRequest struct {
+	LastName    string `pb:"1" json:"last_name"`
+	FirstName   string `pb:"2" json:"first_name"`
+	MiddleName  string `pb:"3" json:"middle_name"`
+	Birthdate   string `pb:"4" json:"birthdate"`
+	Gender      string `pb:"5" json:"gender"`
+	ProductCode string `pb:"6" json:"product_code"`
+}
+
+// GetProductListResult ...
+type GetProductListResult struct {
+	Products []ActiveProduct `pb:"1" json:"products"`
+}
+
+// Relationship ...
+type Relationship struct {
+	Relationship      string `pb:"1" json:"relationship"`
+	RelationshipValue string `pb:"2" json:"relationship_value"`
+}
+
+// GetRelationshipsResult ...
+type GetRelationshipsResult struct {
+	Relationships []Relationship `pb:"1" json:"relationships"`
+}
+
+// City ...
+type City struct {
+	CityCode     string `pb:"1" json:"cityCode"`
+	CityName     string `pb:"2" json:"cityName"`
+	ProvinceCode string `pb:"3" json:"provinceCode"`
+	ProvinceName string `pb:"4" json:"provinceName"`
+}
+
+// CityListResult ...
+type CityListResult struct {
+	Cities []City `pb:"1" json:"cities"`
+}
+
+type MicroInsuranceService interface {
+	// Transact ...
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/microinsurance/transact",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"MicroInsurance"},
+	//         Description: "Transact",
+	//         Summary:     "Transact",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/microinsuranceInsurance",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when invalid request data",
+	//                 },
+	//         },
+	// }
+	Transact(TransactRequest) Insurance
+
+	// GetReprint ...
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/microinsurance/transact/{TraceNumber}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"MicroInsurance"},
+	//         Description: "Get Reprint",
+	//         Summary:     "Get Reprint",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/microinsuranceInsurance",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when invalid request data",
+	//                 },
+	//         },
+	// }
+	GetReprint(GetReprintRequest) Insurance
+
+	// RetryTransaction ...
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/microinsurance/transact/retry",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"MicroInsurance"},
+	//         Description: "Retry transaction",
+	//         Summary:     "Retry transaction",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/microinsuranceInsurance",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when invalid request data",
+	//                 },
+	//         },
+	// }
+	RetryTransaction(RetryTransactionRequest) Insurance
+
+	// GetTransactionList ...
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/microinsurance/transact/list",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"MicroInsurance"},
+	//         Description: "List transactions",
+	//         Summary:     "List transactions",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/microinsuranceTransactionListResult",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when invalid request data",
+	//                 },
+	//         },
+	// }
+	GetTransactionList(GetTransactionListRequest) TransactionListResult
+
+	// GetProduct ...
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/microinsurance/product/{ProductCode}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"MicroInsurance"},
+	//         Description: "Get Product By ID",
+	//         Summary:     "Get Product By ID",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/microinsuranceProductResult",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when record not found",
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when invalid request data",
+	//                 },
+	//         },
+	// }
+	GetProduct(request GetProductRequest) ProductResult
+
+	// GetOfferProduct ...
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/microinsurance/product/offer",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"MicroInsurance"},
+	//         Description: "Get Offer Product",
+	//         Summary:     "Get Offer Product",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/microinsuranceOfferProduct",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when record not found",
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when invalid request data",
+	//                 },
+	//         },
+	// }
+	GetOfferProduct(GetOfferProductRequest) OfferProduct
+
+	// CheckActiveProduct ...
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/microinsurance/product/check-active",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"MicroInsurance"},
+	//         Description: "Check Active Product",
+	//         Summary:     "Check Active Product",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/microinsuranceActiveProduct",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when record not found",
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when invalid request data",
+	//                 },
+	//         },
+	// }
+	CheckActiveProduct(CheckActiveProductRequest) ActiveProduct
+
+	// GetProductList ...
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/microinsurance/product",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"MicroInsurance"},
+	//         Description: "Get Product List",
+	//         Summary:     "Get Product List",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/microinsuranceActiveProduct",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when record not found",
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when invalid request data",
+	//                 },
+	//         },
+	// }
+	GetProductList() GetProductListResult
+
+	// GetRelationships ...
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/microinsurance/relationship",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"MicroInsurance"},
+	//         Description: "Get Relationship List",
+	//         Summary:     "Get Relationship List",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/microinsuranceGetRelationshipsResult",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when record not found",
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when invalid request data",
+	//                 },
+	//         },
+	// }
+	GetRelationships() GetRelationshipsResult
+
+	// GetAllCities ...
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/microinsurance/city",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"MicroInsurance"},
+	//         Description: "Get All City List",
+	//         Summary:     "Get All City List",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/microinsuranceCityListResult",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when record not found",
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when invalid request data",
+	//                 },
+	//         },
+	// }
+	GetAllCities() CityListResult
+}

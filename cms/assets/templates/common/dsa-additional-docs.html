@@ -1,0 +1,991 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>DSA Services</title>
+    <style>
+        .hasError .border.border-gray-300{
+            --tw-border-opacity: 1 !important;
+            border-color: rgba(185, 28, 28, var(--tw-border-opacity)) !important;
+        }
+    </style>
+</head>
+<body class="font-sans">
+        <div class="flex">
+            <!-- sidebar-left-start -->
+            {{ template "dsa-sidenav-menu.html" dict "Type" "dsa-select-partners" "Data" .}}
+            <!-- sidebarleft-end -->
+            
+            <!-- top-header-start -->
+            <div class="min-h-screen w-full flex bg-petnetgray ">
+                <div class="w-full">
+                  <div class="px-16 py-4 shadow-md bg-white">
+                    <ul class="flex justify-end items-center space-x-4 mb-16">
+                      <li class="mr-auto">
+                            <a href="/dsa-services" class="inline-flex text-petnetlightblue text-sm items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-4" fill="none"
+                                                                                                                 viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                                                          d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                                </svg>
+                                Back to List
+                            </a>
+                      </li>
+                      <li>
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" fill="none" viewBox="0 0 24 24"
+                              stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                          </svg>
+                      </li>
+                      <li>
+                        {{ template "top-head-profile.html" dict "UserInfo" .UserInfo "CompanyName" .CompanyName .}}
+                      </li>
+                      <li>
+                          <div class="relative" id="topDropdownBox">
+                              <a href="javascript:;" onclick="toggleTopButton('openTopDropdown')">
+                                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                      viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M19 9l-7 7-7-7" />
+                                  </svg>
+                              </a>
+                              <div class="absolute right-0 top-12 hidden" id="openTopDropdown">
+                                  <div
+                                      class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                  </div>
+                                  <div class="shadow-lg  absolute top-3 -right-5 rounded">
+                                      <div class="relative z-20 p-3 w-36 bg-white rounded space-y-2">
+                                          <a class="flex text-sm items-center" href="/profile">
+                                              <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                  <path fill-rule="evenodd" clip-rule="evenodd" d="M16 8C16 10.21 14.21 12 12 12C9.79 12 8 10.21 8 8C8 5.79 9.79 4 12 4C14.21 4 16 5.79 16 8ZM4 18C4 15.34 9.33 14 12 14C14.67 14 20 15.34 20 18V19C20 19.55 19.55 20 19 20H5C4.45 20 4 19.55 4 19V18Z" fill="#333333"/>
+                                              </svg>
+                                              Profile
+                                          </a>
+                                          <a href="/logout" class="flex text-sm pl-1">
+                                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
+                                                  viewBox="0 0 24 24" stroke="currentColor">
+                                                  <path stroke-linecap="round" stroke-linejoin="round"
+                                                      stroke-width="2"
+                                                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                              </svg>
+                                              Logout
+                                          </a>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </li>
+                  </ul>
+                <div class="mb-4">
+                    <h2 class="sm:text-5xl text-petnetblue font-semibold">Request Service</h2>
+                </div>
+                  </div>
+                    <!-- top-header-end -->
+                    <!-- main content-start -->
+                    <div class="px-24 xl:px-40 2xl:px-56 py-20 w-full">
+                      <div class="shadow overflow-hidden bg-white">
+                        <div class="rounded">
+                          <!-- step area -->
+                          <div class="flex bg-petnetheader bg-opacity-60 rounded-t">
+                              <div class="px-2 flex bg-petnetpink justify-center items-center rounded-tl {{if .HasAddi}}w-1/3{{else}}w-1/2{{end}} h-12">
+                                  <span
+                                      class="text-white text-sm rounded-full border-white border h-8 w-8 inline-flex justify-center items-center mr-2">1</span>
+                                  <p class="text-white text-sm font-normal">Choose Partners</p>
+                              </div>
+                              <div class="px-2 flex justify-center items-center bg-petnetorange {{if .HasAddi}}w-1/3{{else}}w-1/2{{end}} h-12">
+                                  <span
+                                      class="text-white text-sm rounded-full border-white border h-8 w-8 inline-flex justify-center items-center mr-2">2</span>
+                                  <p class="text-white text-sm ">Required Documents</p>
+                              </div>
+                              {{if .HasAddi}}
+                                <div class="px-2 flex justify-center items-center bg-petnetgreen rounded-tr w-1/3 h-12">
+                                    <span
+                                        class="text-white text-sm rounded-full border-white border h-8 w-8 inline-flex justify-center items-center mr-2">3</span>
+                                    <p class="text-white text-sm ">Additional Documents</p>
+                                </div>
+                              {{end}}
+                          </div>
+                          <!-- form area -->
+                          <form method="POST" action="/dsa-additional-docs" enctype="multipart/form-data" name="dsaAdsDocsForm">
+                            {{ .CSRFField }}
+                                  <!-- header text -->
+                            <p class="pt-20 pb-3 pl-20 text-2xl font-bold">Additional Documents</p>
+                            <div class="px-20">
+                                {{if .HasWu}}
+                                    <p class="py-1 text-base font-normal">Western Union KYA</p>
+                                    <p class="py-1 text-base font-normal">Company Documents:</p>
+                                    <p class="pt-4 pb-1 text-base font-normal">SEC Registration<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-WU_sr" class="w-full bg-petnetgray {{with .Errors.WU_sr}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-WU_sr" id="err-WU_sr"></p>
+                                    {{with .Errors.WU_sr}}
+                                        <p class="text-red-700 mt-2 all-errs-WU_sr">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">Latest General Information Sheet (GIS)</p>
+                                    <div id="file-upload-WU_lgis" class="w-full bg-petnetgray"></div>
+
+                                    <p class="pt-4 pb-1 text-base font-normal">DTI - Sole Proprietorship</p>
+                                    <div id="file-upload-WU_dtisspa" class="w-full bg-petnetgray"></div>
+
+                                    <p class="pt-4 pb-1 text-base font-normal">BIR Form 2303<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-WU_birf" class="w-full bg-petnetgray {{with .Errors.WU_birf}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-WU_birf" id="err-WU_birf"></p>
+                                    {{with .Errors.WU_birf}}
+                                        <p class="text-red-700 mt-2 all-errs-WU_birf">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">BSP Registration<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-WU_bspr" class="w-full bg-petnetgray {{with .Errors.WU_bspr}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-WU_bspr" id="err-WU_bspr"></p>
+                                    {{with .Errors.WU_bspr}}
+                                        <p class="text-red-700 mt-2 all-errs-WU_bspr">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">Individual Questionnaire<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-WU_iqa" class="w-full bg-petnetgray {{with .Errors.WU_iqa}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-WU_iqa" id="err-WU_iqa"></p>
+                                    {{with .Errors.WU_iqa}}
+                                        <p class="text-red-700 mt-2 all-errs-WU_iqa">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">Business Questionnaire<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-WU_bqa" class="w-full bg-petnetgray {{with .Errors.WU_bqa}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-WU_bqa" id="err-WU_bqa"></p>
+                                    {{with .Errors.WU_bqa}}
+                                        <p class="text-red-700 mt-2 all-errs-WU_bqa">{{.}}</p>
+                                    {{end}}                  
+                                {{end}}
+                                {{if .HasAya}}
+                                    <p class="py-1 text-base font-normal">Ayannah AML/KYC</p>
+                                    <p class="pt-4 pb-1 text-base font-normal">Declaration for Foreign Exchange Dealers/Money Changers and Remittance and Transfer Companies<span class="text-red-700 font-bold">*</span></p>
+                                    <p class="pt-4 pb-1 text-base font-normal">a. Copy of Certificate of Registration issued by BSP to the Company<span class="text-red-700 font-bold">*</span></p>
+                                    <p class="pt-4 pb-1 text-base font-normal">b. Copy of Certificate of Registration issued by the AMLC to the Company<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-AYA_dfedr" class="w-full bg-petnetgray {{with .Errors.AYA_dfedr}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-AYA_dfedr" id="err-AYA_dfedr"></p>
+                                    {{with .Errors.AYA_dfedr}}
+                                        <p class="text-red-700 mt-2 all-errs-AYA_dfedr">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">Completed Ayannah Enhanced Due Diligence Form<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-AYA_ddf" class="w-full bg-petnetgray {{with .Errors.AYA_ddf}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-AYA_ddf" id="err-AYA_ddf"></p>
+                                    {{with .Errors.AYA_ddf}}
+                                        <p class="text-red-700 mt-2 all-errs-AYA_ddf">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">Articles of Incorporation or Association and By-laws<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-AYA_ialaws" class="w-full bg-petnetgray {{with .Errors.AYA_ialaws}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-AYA_ialaws" id="err-AYA_ialaws"></p>
+                                    {{with .Errors.AYA_ialaws}}
+                                        <p class="text-red-700 mt-2 all-errs-AYA_ialaws">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">Certificate of filing of Articles of Incorporation or Association and By-Laws<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-AYA_aialaws" class="w-full bg-petnetgray {{with .Errors.AYA_aialaws}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-AYA_aialaws" id="err-AYA_aialaws"></p>
+                                    {{with .Errors.AYA_aialaws}}
+                                        <p class="text-red-700 mt-2 all-errs-AYA_aialaws">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">Money Transfer License<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-AYA_mtl" class="w-full bg-petnetgray {{with .Errors.AYA_mtl}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-AYA_mtl" id="err-AYA_mtl"></p>
+                                    {{with .Errors.AYA_mtl}}
+                                        <p class="text-red-700 mt-2 all-errs-AYA_mtl">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">Board Resolution duly certified by the Corporate Secretary authorizing the signatory to sign on behalf of the entity<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-AYA_brdcsa" class="w-full bg-petnetgray {{with .Errors.AYA_brdcsa}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-AYA_brdcsa" id="err-AYA_brdcsa"></p>
+                                    {{with .Errors.AYA_brdcsa}}
+                                        <p class="text-red-700 mt-2 all-errs-AYA_brdcsa">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">General Information Sheet<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-AYA_gis" class="w-full bg-petnetgray {{with .Errors.AYA_gis}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-AYA_gis" id="err-AYA_gis"></p>
+                                    {{with .Errors.AYA_gis}}
+                                        <p class="text-red-700 mt-2 all-errs-AYA_gis">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">Copy of Company Profile which includes but not limited to principal business address and contact numbers<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-AYA_ccpwi" class="w-full bg-petnetgray {{with .Errors.AYA_ccpwi}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-AYA_ccpwi" id="err-AYA_ccpwi"></p>
+                                    {{with .Errors.AYA_ccpwi}}
+                                        <p class="text-red-700 mt-2 all-errs-AYA_ccpwi">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">For the authorized signatories<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-AYA_fas" class="w-full bg-petnetgray {{with .Errors.AYA_fas}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-AYA_fas" id="err-AYA_fas"></p>
+                                    {{with .Errors.AYA_fas}}
+                                        <p class="text-red-700 mt-2 all-errs-AYA_fas">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">AML Manual<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-AYA_am" class="w-full bg-petnetgray {{with .Errors.AYA_am}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-AYA_am" id="err-AYA_am"></p>
+                                    {{with .Errors.AYA_am}}
+                                        <p class="text-red-700 mt-2 all-errs-AYA_am">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">Latest Audited FS<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-AYA_laf" class="w-full bg-petnetgray {{with .Errors.AYA_laf}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-AYA_laf" id="err-AYA_laf"></p>
+                                    {{with .Errors.AYA_laf}}
+                                        <p class="text-red-700 mt-2 all-errs-AYA_laf">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal"> BIR Registration<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-AYA_birr" class="w-full bg-petnetgray {{with .Errors.AYA_birr}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-AYA_birr" id="err-AYA_birr"></p>
+                                    {{with .Errors.AYA_birr}}
+                                        <p class="text-red-700 mt-2 all-errs-AYA_birr">{{.}}</p>
+                                    {{end}}
+                                    <p class="pt-4 pb-1 text-base font-normal">Other documents (Corporate Profile, Newspaper Clippings if any please indicate)<span class="text-red-700 font-bold">*</span></p>
+                                    <div id="file-upload-AYA_od" class="w-full bg-petnetgray {{with .Errors.AYA_od}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-AYA_od" id="err-AYA_od"></p>
+                                    {{with .Errors.AYA_od}}
+                                        <p class="text-red-700 mt-2 all-errs-AYA_od">{{.}}</p>
+                                    {{end}}
+                                {{end}}
+                                <div class="flex flex-wrap pt-6 justify-between bg-white pb-20">
+                                    <div class="lg:w-auto w-full text-center">
+                                        <a href="/dsa-req-docs" class="rounded-md font-normal text-sm text-petnetblue border border-petnetblue  py-3 my-3 text-center w-44 inline-block">
+                                        Back
+                                        </a>
+                                    </div>
+                                       <div class="lg:w-auto w-full lg:ml-auto text-center">
+                                        <button id="SaveDraft" name="SaveDraft" value="SaveDraft" type="submit" class="bg-petnetlightblue border border-petnetlightblue text-sm text-white  py-3 rounded-md font-normal my-3 text-center w-44 ml-auto">
+                                        Save as Draft 
+                                        </button>
+                                      </div>
+                                      <div class="lg:w-auto w-full text-center">
+                                        <button id="SaveContinue" name="SaveContinue" value="SaveContinue" type="submit" class="bg-petnetyellow border border-petnetyellow text-sm text-petnetblue  py-3 rounded-md font-normal my-3 text-center w-44 ml-0 lg:ml-4">                                
+                                            Submit
+                                        </button>
+                                    </div>
+                                </div>
+                              </div>
+                              </form>
+                      </div>
+                      </div>
+                    </div>
+                    <!-- main content-end -->
+                </div>
+            </div>
+        </div>
+</body>
+<script src="{{ assetHash "/js/fileupload.js" }}"></script>
+<script>
+    let tags = document.querySelectorAll(".upin");
+    tags.forEach((item) => {
+        item.addEventListener('change', ()=>{
+            let hasValue = false;
+            for (var i = 0; i < tags.length; i++) {
+                if (tags[i].value !== "") {
+                    hasValue = true;
+                    break
+                }
+            }
+            if(hasValue) {
+                console.log("field has value");
+            }
+        })
+    })
+</script>
+<script>
+    var WU_srID = "{{.WU_srID}}";
+    var WU_srForms = "{{.WU_srForms}}";
+    var WU_lgisID = "{{.WU_lgisID}}";
+    var WU_lgisForms = "{{.WU_lgisForms}}";
+    var WU_dtisspaID = "{{.WU_dtisspaID}}";
+    var WU_dtisspaForms = "{{.WU_dtisspaForms}}";
+    var WU_birfID = "{{.WU_birfID}}";
+    var WU_birfForms = "{{.WU_birfForms}}";
+    var WU_bsprID = "{{.WU_bsprID}}";
+    var WU_bsprForms = "{{.WU_bsprForms}}";
+    var WU_iqaID = "{{.WU_iqaID}}";
+    var WU_iqaForms = "{{.WU_iqaForms}}";
+    var WU_bqaID = "{{.WU_bqaID}}";
+    var WU_bqaForms = "{{.WU_bqaForms}}";
+    var AYA_dfedrID = "{{.AYA_dfedrID}}";
+    var AYA_dfedrForms = "{{.AYA_dfedrForms}}";
+    var AYA_ddfID = "{{.AYA_ddfID}}";
+    var AYA_ddfForms = "{{.AYA_ddfForms}}";
+    var AYA_ialawsID = "{{.AYA_ialawsID}}";
+    var AYA_ialawsForms = "{{.AYA_ialawsForms}}";
+    var AYA_aialawsID = "{{.AYA_aialawsID}}";
+    var AYA_aialawsForms = "{{.AYA_aialawsForms}}";
+    var AYA_mtlID = "{{.AYA_mtlID}}";
+    var AYA_mtlForms = "{{.AYA_mtlForms}}";
+    var AYA_brdcsaID = "{{.AYA_brdcsaID}}";
+    var AYA_brdcsaForms = "{{.AYA_brdcsaForms}}";
+    var AYA_gisID = "{{.AYA_gisID}}";
+    var AYA_gisForms = "{{.AYA_gisForms}}";
+    var AYA_ccpwiID = "{{.AYA_ccpwiID}}";
+    var AYA_ccpwiForms = "{{.AYA_ccpwiForms}}";
+    var AYA_fasID = "{{.AYA_fasID}}";
+    var AYA_fasForms = "{{.AYA_fasForms}}";
+    var AYA_amID = "{{.AYA_amID}}";
+    var AYA_amForms = "{{.AYA_amForms}}";
+    var AYA_lafID = "{{.AYA_lafID}}";
+    var AYA_lafForms = "{{.AYA_lafForms}}";
+    var AYA_birrID = "{{.AYA_birrID}}";
+    var AYA_birrForms = "{{.AYA_birrForms}}";
+    var AYA_odID = "{{.AYA_odID}}";
+    var AYA_odForms = "{{.AYA_odForms}}";
+    var CSRFFieldValue = "{{.CSRFFieldValue}}";
+</script>
+<script>
+        function isFileSelected(el) {
+        if (!el) {
+            console.log("file input not present");
+            return false;
+        }
+
+        // If files are uploaded previously, then that file is not requireds
+        if (document.getElementsByName("uploaded-" + el.name).length > 0) {
+            return true
+        }
+
+        // if not multiple
+        if (el.files && el.files.length > 0) {
+            return true;
+        }
+
+        // if multiple
+        for (let i = 0; i < el.length; i++) {
+            if (el[i].files.length > 0) {
+                return true;
+            }
+        }
+
+        return false
+    }
+        function addDocErrorMessage(field, msg) {
+        if (field == "") {
+            return;
+        }
+
+        let fieldContainer = document.getElementById("file-upload-" + field);
+        if (!fieldContainer) {
+            return;
+        }
+
+        // remove errors if no error msg
+        let allContainer = document.getElementById("err-" + field);
+        let blankErrMsg = allContainer.nextElementSibling.innerHTML
+        if (blankErrMsg == "" && allContainer.previousElementSibling.classList.contains("hasError")){
+            allContainer.previousElementSibling.classList.remove('hasError')
+        }
+        if (msg == "") {
+            fieldContainer.classList.remove("border-red-500", "border");
+            let allDocErrs = document.querySelector(".all-errs-" + field);
+            if (allDocErrs) {
+                allDocErrs.innerHTML = "";
+            }
+
+            return;
+        }
+
+        // for error
+        fieldContainer.classList.add("border-red-500", "border");
+        document.getElementById("err-" + field).innerHTML = msg
+    }
+        const wu_sr = [];
+        var WU_srFormsL = WU_srForms.split(",");
+        if(WU_srFormsL.length > 0){
+            WU_srFormsL.forEach(function(item){
+                if(item != ""){
+                    wu_sr.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':WU_srID,
+                        'video':false
+                        
+                    });
+                }
+            });
+        }
+        new FileUpload("WU_sr", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", wu_sr, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("WU_sr", "")
+            }
+        });
+        const wu_lgis = [];
+        var WU_lgisFormsL = WU_lgisForms.split(",");
+        if(WU_lgisFormsL.length > 0){
+            WU_lgisFormsL.forEach(function(item){
+                if(item != ""){
+                    wu_lgis.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':WU_lgisID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("WU_lgis", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", wu_lgis, '', {
+            'previewImages': true,
+            'multiple': true
+        });
+        const wu_dtisspa = [];
+        var WU_dtisspaFormsL = WU_dtisspaForms.split(",");
+        if(WU_dtisspaFormsL.length > 0){
+            WU_dtisspaFormsL.forEach(function(item){
+                if(item != ""){
+                    wu_dtisspa.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':WU_dtisspaID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("WU_dtisspa", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", wu_dtisspa, '', {
+            'previewImages': true,
+            'multiple': true
+        });
+        const wu_birf = [];
+        var WU_birfFormsL = WU_birfForms.split(",");
+        if(WU_birfFormsL.length > 0){
+            WU_birfFormsL.forEach(function(item){
+                if(item != ""){
+                    wu_birf.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':WU_birfID,
+                        'video':false,
+                        
+                    });
+                }
+            });
+        }
+        new FileUpload("WU_birf", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", wu_birf, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("WU_birf", "")
+            }
+        });
+        const wu_bspr = [];
+        var WU_bsprFormsL = WU_bsprForms.split(",");
+        if(WU_bsprFormsL.length > 0){
+            WU_bsprFormsL.forEach(function(item){
+                if(item != ""){
+                    wu_bspr.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':WU_bsprID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("WU_bspr", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", wu_bspr, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                            return addDocErrorMessage("WU_bspr", "")
+                        }
+        });
+        const wu_iqa = [];
+        var WU_iqaFormsL = WU_iqaForms.split(",");
+        if(WU_iqaFormsL.length > 0){
+            WU_iqaFormsL.forEach(function(item){
+                if(item != ""){
+                    wu_iqa.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':WU_iqaID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("WU_iqa", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", wu_iqa, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("WU_iqa", "")
+            }
+        });
+        const wu_bqa = [];
+        var WU_bqaFormsL = WU_bqaForms.split(",");
+        if(WU_bqaFormsL.length > 0){
+            WU_bqaFormsL.forEach(function(item){
+                if(item != ""){
+                    wu_bqa.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':WU_bqaID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("WU_bqa", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", wu_bqa, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("WU_bqa", "")
+            }
+        });
+        const aya_dfedr = [];
+        var AYA_dfedrFormsL = AYA_dfedrForms.split(",");
+        if(AYA_dfedrFormsL.length > 0){
+            AYA_dfedrFormsL.forEach(function(item){
+                if(item != ""){
+                    aya_dfedr.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':AYA_dfedrID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("AYA_dfedr", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", aya_dfedr, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("AYA_dfedr", "")
+            }
+        });
+        const aya_ddf = [];
+        var AYA_ddfFormsL = AYA_ddfForms.split(",");
+        if(AYA_ddfFormsL.length > 0){
+            AYA_ddfFormsL.forEach(function(item){
+                if(item != ""){
+                    aya_ddf.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':AYA_ddfID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("AYA_ddf", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", aya_ddf, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("AYA_ddf", "")
+            }
+        });
+        const aya_ialaws = [];
+        var AYA_ialawsFormsL = AYA_ialawsForms.split(",");
+        if(AYA_ialawsFormsL.length > 0){
+            AYA_ialawsFormsL.forEach(function(item){
+                if(item != ""){
+                    aya_ialaws.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':AYA_ialawsID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("AYA_ialaws", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", aya_ialaws, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("AYA_ialaws", "")
+            }
+        });
+        const aya_aialaws = [];
+        var AYA_aialawsFormsL = AYA_aialawsForms.split(",");
+        if(AYA_aialawsFormsL.length > 0){
+            AYA_aialawsFormsL.forEach(function(item){
+                if(item != ""){
+                    aya_aialaws.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':AYA_aialawsID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("AYA_aialaws", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", aya_aialaws, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("AYA_aialaws", "")
+            }
+        });
+        const aya_mtl = [];
+        var AYA_mtlFormsL = AYA_mtlForms.split(",");
+        if(AYA_mtlFormsL.length > 0){
+            AYA_mtlFormsL.forEach(function(item){
+                if(item != ""){
+                    aya_mtl.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':AYA_mtlID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("AYA_mtl", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", aya_mtl, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("AYA_mtl", "")
+            }
+        });
+        const aya_brdcsa = [];
+        var AYA_brdcsaFormsL = AYA_brdcsaForms.split(",");
+        if(AYA_brdcsaFormsL.length > 0){
+            AYA_brdcsaFormsL.forEach(function(item){
+                if(item != ""){
+                    aya_brdcsa.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':AYA_brdcsaID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("AYA_brdcsa", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", aya_brdcsa, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("AYA_brdcsa", "")
+            }
+        });
+        const aya_gis = [];
+        var AYA_gisFormsL = AYA_gisForms.split(",");
+        if(AYA_gisFormsL.length > 0){
+            AYA_gisFormsL.forEach(function(item){
+                if(item != ""){
+                    aya_gis.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':AYA_gisID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("AYA_gis", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", aya_gis, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("AYA_gis", "")
+            }
+        });
+        const aya_ccpwi = [];
+        var AYA_ccpwiFormsL = AYA_ccpwiForms.split(",");
+        if(AYA_ccpwiFormsL.length > 0){
+            AYA_ccpwiFormsL.forEach(function(item){
+                if(item != ""){
+                    aya_ccpwi.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':AYA_ccpwiID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("AYA_ccpwi", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", aya_ccpwi, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("AYA_ccpwi", "")
+            }
+        });
+        const aya_fas = [];
+        var AYA_fasFormsL = AYA_fasForms.split(",");
+        if(AYA_fasFormsL.length > 0){
+            AYA_fasFormsL.forEach(function(item){
+                if(item != ""){
+                    aya_fas.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':AYA_fasID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("AYA_fas", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", aya_fas, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("AYA_fas", "")
+            }
+        });
+        const aya_am = [];
+        var AYA_amFormsL = AYA_amForms.split(",");
+        if(AYA_amFormsL.length > 0){
+            AYA_amFormsL.forEach(function(item){
+                if(item != ""){
+                    aya_am.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':AYA_amID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("AYA_am", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", aya_am, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("AYA_am", "")
+            }
+        });
+        const aya_laf = [];
+        var AYA_lafFormsL = AYA_lafForms.split(",");
+        if(AYA_lafFormsL.length > 0){
+            AYA_lafFormsL.forEach(function(item){
+                if(item != ""){
+                    aya_laf.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':AYA_lafID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("AYA_laf", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", aya_laf, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("AYA_laf", "")
+            }
+        });
+        const aya_birr = [];
+        var AYA_birrFormsL = AYA_birrForms.split(",");
+        if(AYA_birrFormsL.length > 0){
+            AYA_birrFormsL.forEach(function(item){
+                if(item != ""){
+                    aya_birr.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':AYA_birrID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("AYA_birr", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", aya_birr, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("AYA_birr", "")
+            }
+        });
+        const aya_od = [];
+        var AYA_odFormsL = AYA_odForms.split(",");
+        if(AYA_odFormsL.length > 0){
+            AYA_odFormsL.forEach(function(item){
+                if(item != ""){
+                    aya_od.push({
+                        'name':item,
+                        'url':"/u/files/"+item,
+                        'input':AYA_odID,
+                        'video':false
+                    });
+                }
+            });
+        }
+        new FileUpload("AYA_od", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", aya_od, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("AYA_od", "")
+            }
+        });
+        function loadAjax(url, method, nameV) {
+            var xhttp = new XMLHttpRequest();
+            var data = new FormData();
+            data.append("name", nameV);
+            data.append("gorilla.csrf.Token", CSRFFieldValue);
+            xhttp.open(method, url, true);
+            xhttp.send(data);
+        }
+        function removedUploadedFile() {
+			const removefile = document.getElementsByClassName("remove_file");
+			for (var i = 0; i < removefile.length; i++) {
+				removefile[i].addEventListener("click", function (e) {
+					let file = this.getAttribute("data-file")
+					let fileid = this.getAttribute("data-fileid")
+					if (typeof file !== 'undefined') {
+						if (file != null) {
+							loadAjax("/u/files/" + fileid, "DELETE", file)
+						}
+					}
+					this.closest(".remove_file_wrap").remove();
+				});
+			}
+		}
+		document.addEventListener('DOMContentLoaded', function (event) {
+			removedUploadedFile()
+		});
+		document.body.addEventListener('DOMSubtreeModified', function (event) {
+			removedUploadedFile()
+		});
+        function validateForm() {
+        let IsValid = true;
+        const errMsg = "This is a required document, please upload a file";
+        
+        let wUsrDoc = document.dsaAdsDocsForm.WU_sr;
+        if (!isFileSelected(wUsrDoc)) {
+            IsValid = false;
+            addDocErrorMessage("WU_sr", errMsg);
+            wUsrDoc.focus();
+        }
+        let wUbirfDoc = document.dsaAdsDocsForm.WU_birf;
+        if (!isFileSelected(wUbirfDoc)) {
+            IsValid = false;
+            addDocErrorMessage("WU_birf", errMsg);
+            wUbirfDoc.focus();
+        }
+        let wUbsprDoc = document.dsaAdsDocsForm.WU_bspr;
+        if (!isFileSelected(wUbsprDoc)) {
+            IsValid = false;
+            addDocErrorMessage("WU_bspr", errMsg);
+            wUbsprDoc.focus();
+        }
+        let wUiqaDoc = document.dsaAdsDocsForm.WU_iqa;
+        if (!isFileSelected(wUiqaDoc)) {
+            IsValid = false;
+            addDocErrorMessage("WU_iqa", errMsg);
+            wUiqaDoc.focus();
+        }
+        let wUbqaDoc = document.dsaAdsDocsForm.WU_bqa;
+        if (!isFileSelected(wUbqaDoc)) {
+            IsValid = false;
+            addDocErrorMessage("WU_bqa", errMsg);
+            wUbqaDoc.focus();
+        }
+        let aYAdfedrDoc = document.dsaAdsDocsForm.AYA_dfedr;
+        if (!isFileSelected(aYAdfedrDoc)) {
+            IsValid = false;
+            addDocErrorMessage("AYA_dfedr", errMsg);
+            aYAdfedrDoc.focus();
+        }
+        let aYAddfDoc = document.dsaAdsDocsForm.AYA_ddf;
+        if (!isFileSelected(aYAddfDoc)) {
+            IsValid = false;
+            addDocErrorMessage("AYA_ddf", errMsg);
+            aYAddfDoc.focus();
+        }
+        
+        let aYAialawsDoc = document.dsaAdsDocsForm.AYA_ialaws;
+        if (!isFileSelected(aYAialawsDoc)) {
+            IsValid = false;
+            addDocErrorMessage("AYA_ialaws", errMsg);
+            aYAialawsDoc.focus();
+        }
+        let aYAaialawsDoc = document.dsaAdsDocsForm.AYA_aialaws;
+        if (!isFileSelected(aYAaialawsDoc)) {
+            IsValid = false;
+            addDocErrorMessage("AYA_aialaws", errMsg);
+            aYAaialawsDoc.focus();
+        }
+
+        let aYAmtlDoc = document.dsaAdsDocsForm.AYA_mtl;
+        if (!isFileSelected(aYAmtlDoc)) {
+            IsValid = false;
+            addDocErrorMessage("AYA_mtl", errMsg);
+            aYAmtlDoc.focus();
+        }
+
+        let aYAbrdcsaDoc = document.dsaAdsDocsForm.AYA_brdcsa;
+        if (!isFileSelected(aYAbrdcsaDoc)) {
+            IsValid = false;
+            addDocErrorMessage("AYA_brdcsa", errMsg);
+            aYAbrdcsaDoc.focus();
+        }
+
+        let aYAgisDoc = document.dsaAdsDocsForm.AYA_gis;
+        if (!isFileSelected(aYAgisDoc)) {
+            IsValid = false;
+            addDocErrorMessage("AYA_gis", errMsg);
+            aYAgisDoc.focus();
+        }
+        let aYAccpwiDoc = document.dsaAdsDocsForm.AYA_ccpwi;
+        if (!isFileSelected(aYAccpwiDoc)) {
+            IsValid = false;
+            addDocErrorMessage("AYA_ccpwi", errMsg);
+            aYAccpwiDoc.focus();
+        }
+        let aYAfasDoc = document.dsaAdsDocsForm.AYA_fas;
+        if (!isFileSelected(aYAfasDoc)) {
+            IsValid = false;
+            addDocErrorMessage("AYA_fas", errMsg);
+            aYAfasDoc.focus();
+        }
+        let aYA_amDoc = document.dsaAdsDocsForm.AYA_am;
+        if (!isFileSelected(aYA_amDoc)) {
+            IsValid = false;
+            addDocErrorMessage("AYA_am", errMsg);
+            aYA_amDoc.focus();
+        }
+        let aYAlafDoc = document.dsaAdsDocsForm.AYA_laf;
+        if (!isFileSelected(aYAlafDoc)) {
+            IsValid = false;
+            addDocErrorMessage("AYA_laf", errMsg);
+            aYAlafDoc.focus();
+        }
+        let aYAbirrDoc = document.dsaAdsDocsForm.AYA_birr;
+        if (!isFileSelected(aYAbirrDoc)) {
+            IsValid = false;
+            addDocErrorMessage("AYA_birr", errMsg);
+            aYAbirrDoc.focus();
+        }
+        let aYAodDoc = document.dsaAdsDocsForm.AYA_od;
+        if (!isFileSelected(aYAodDoc)) {
+            IsValid = false;
+            addDocErrorMessage("AYA_od", errMsg);
+            aYAodDoc.focus();
+        }
+       return IsValid;
+    }
+</script>
+<script>
+    const params = new URLSearchParams(window.location.search);
+    function toggleTopButton(id) {
+        let getDropdownItem = document.getElementById(id)
+        let isHiddenClass = getDropdownItem.classList.contains('hidden');
+        if (!isHiddenClass) {
+            getDropdownItem.classList.add("hidden");
+        } else {
+            getDropdownItem.classList.remove("hidden");
+        }
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        let menus = document.querySelectorAll("a");
+        for (let i = 0; i < menus.length; i++) {
+            menus[i].addEventListener("click", function(e){
+                e.preventDefault();
+                let lnk = menus[i].href;
+                menus[i].href = "javascript:;"
+                window.location.href = lnk;
+            });
+        }
+    });
+</script>
+</html>

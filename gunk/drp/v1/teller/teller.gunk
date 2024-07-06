@@ -1,0 +1,117 @@
+package teller
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+
+	"brank.as/petnet/gunk/drp/v1/profile"
+)
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "username",
+//                 "password",
+//                 "first_name",
+//                 "last_name",
+//                 "email",
+//                 "phone_number",
+//                 "birthdate",
+//         },
+// }}
+type RegisterTellerRequest struct {
+	Username   string              `pb:"1" json:"username"`
+	Password   string              `pb:"2" json:"password"`
+	FirstName  string              `pb:"3" json:"first_name"`
+	MiddleName string              `pb:"4" json:"middle_name"`
+	LastName   string              `pb:"5" json:"last_name"`
+	Email      string              `pb:"6" json:"email"`
+	Phone      profile.PhoneNumber `pb:"7" json:"phone"`
+	Birthdate  profile.Date        `pb:"8" json:"birthdate"`
+	OperatorID string              `pb:"9"`
+}
+
+type RegisterTellerResponse struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type Teller struct {
+	ID               string              `pb:"1" json:"id"`
+	Status           string              `pb:"2" json:"status"`
+	FirstName        string              `pb:"3" json:"first_name"`
+	LastName         string              `pb:"4" json:"last_name"`
+	Email            string              `pb:"5" json:"email"`
+	Phone            profile.PhoneNumber `pb:"6" json:"phone"`
+	Birthdate        profile.Date        `pb:"7" json:"birthdate"`
+	BirthCountry     string              `pb:"8" json:"birth_country"`
+	Gender           string              `pb:"09" json:"gender"`
+	Nationality      string              `pb:"10" json:"nationality"`
+	CurrentAddress   profile.Address     `pb:"11" json:"current_address"`
+	PermanentAddress profile.Address     `pb:"12" json:"permanent_address"`
+	Employment       string              `pb:"13" json:"employment"`
+	KYCStatus        string              `pb:"14" json:"kyc_status"`
+	EnabledPartners  map[string]string   `pb:"15" json:"enabled_partners"`
+}
+
+type UpdateTellerRequest struct {
+	ID               string                     `pb:"1" json:"id"`
+	Username         string                     `pb:"2" json:"username"`
+	Status           string                     `pb:"3" json:"status"`
+	Email            string                     `pb:"4" json:"email"`
+	Phone            profile.PhoneNumber        `pb:"5" json:"phone"`
+	Birthdate        profile.Date               `pb:"6" json:"birthdate"`
+	Nationality      string                     `pb:"7" json:"nationality"`
+	CurrentAddress   profile.Address            `pb:"8" json:"current_address"`
+	PermanentAddress profile.Address            `pb:"9" json:"permanent_address"`
+	Occupation       string                     `pb:"10" json:"occupation"`
+	EmployerName     string                     `pb:"11" json:"employer_name"`
+	TaxID            string                     `pb:"12" json:"tax_id"`
+	SocSecurity      string                     `pb:"13" json:"soc_security"`
+	ProfilePhoto     []byte                     `pb:"14" json:"profile_photo"`
+	SecurityQuestion []profile.SecurityQuestion `pb:"15" json:"security_question"`
+}
+
+type UpdateTellerResponse struct {
+	Teller Teller `pb:"1" json:"teller"`
+}
+
+type UpdateIdentificationRequest struct {
+	ValidID profile.Identification `pb:"1" json:"valid_id"`
+	IDPhoto []byte                 `pb:"2" json:"id_photo"`
+}
+
+type UpdateIdentificationResponse struct {
+	Teller Teller `pb:"1" json:"teller"`
+}
+
+type TellerService interface {
+	// Register a remittance teller to the perahub conex platform.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/teller",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Teller"},
+	//         Summary:     "Register teller.",
+	//         Description: "Register a remittance teller to use the perahub conex platform.",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/tellerRegisterTellerResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	RegisterTeller(RegisterTellerRequest) RegisterTellerResponse
+}

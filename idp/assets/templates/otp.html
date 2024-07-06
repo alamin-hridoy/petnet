@@ -1,0 +1,86 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ assetHash "/assets/css/app.min.css"}}">
+  <title>{{.ProjectName}} - OTP Verify</title>
+  <meta name="keywords" content="{{.ProjectName}}" />
+  <meta name="description" content="{{.ProjectName}}" />
+</head>
+
+<body class="bg-petnetblue">
+  <div>
+    <section class="min-h-screen">
+      <form id="otpForm" action="{{ .OTPForm.ProcessEndpoint }}" method="POST" class="form-wrapper" data-abide
+        novalidate>
+        <div class="flex min-h-screen flex-wrap items-center justify-center  ">
+          {{ .OTPForm.CSRFField }}
+          <div class="w-3/5">
+            <div class="mb-10 flex justify-center">
+              <img src="{{assetHash "/assets/images/icons/DRP-white-horizontal.svg"}}" alt="" srcset="">
+            </div>
+            <div class="flex justify-end">
+
+              {{if .OTPForm.CodeError}}
+              <div id="alert-show-error" role="alert" class="w-2/3 mx-auto">
+                <div
+                  class="p-3 bg-petnetpink w-full text-white mb-4 bg-opacity-20 rounded-lg border border-petnetpink flex items-center ">
+                  <span class="p-2 rounded-lg bg-petnetpink flex justify-center items-center mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white rounded-full" viewBox="0 0 20 20"
+                      fill="currentColor">
+                      <path fill-rule="evenodd"
+                        d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                        clip-rule="evenodd" />
+                    </svg>
+                  </span>
+                  <span>
+                    {{.OTPForm.CodeError}}
+                  </span>
+                  <a href="javascript:;" class="mr-2 text-gray-400 inline-block w-3 ml-auto" id="alert-remove-error"
+                    onclick="hidealertMessage()">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M11.25 0.757931C11.0943 0.601887 10.8829 0.514193 10.6625 0.514193C10.442 0.514193 10.2307 0.601887 10.075 0.757931L5.99998 4.8246L1.92498 0.749597C1.76928 0.593553 1.55791 0.505859 1.33748 0.505859C1.11704 0.505859 0.905668 0.593553 0.749976 0.749597C0.424976 1.0746 0.424976 1.5996 0.749976 1.9246L4.82498 5.9996L0.749976 10.0746C0.424976 10.3996 0.424976 10.9246 0.749976 11.2496C1.07498 11.5746 1.59998 11.5746 1.92498 11.2496L5.99998 7.1746L10.075 11.2496C10.4 11.5746 10.925 11.5746 11.25 11.2496C11.575 10.9246 11.575 10.3996 11.25 10.0746L7.17497 5.9996L11.25 1.9246C11.5666 1.60793 11.5666 1.0746 11.25 0.757931Z"
+                        fill="#BCC3C8" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+              {{end}}
+            </div>
+            <input class="hidden" type="text" name="OTPCode" id="otpCode">
+            <div class=" bg-white rounded-sm pl-16 pr-16">
+              <div class="text-center">
+                <h1 class="text-3xl font-bold pb-8 pt-16">Let’s verify your email.</h1>
+                <p class="mb-8">We sent an email to <span class="font-semibold">{{if
+                    .OTPForm.Email}}{{.OTPForm.Email}}{{end}}.</span>
+                  please check your inbox. <br> If you weren’t able to receive a verification email,
+                  please click the resend button.</p>
+                <div class="w-full">
+                  <input
+                    class="otpCode w-2/3 h-16 border text-center text-5xl rounded-md {{if .OTPForm.CodeError}}bg-gray-200 {{else}}bg-petnetgray{{end}} outline-none"
+                    maxlength="6" autocomplete="off" onkeyup="toUnicode(6)" type="text" id="email" name="code"
+                    pattern="^[0-9]+$" placeholder="OTP Code">
+                </div>
+                <a href="{{.LoginURL}}"
+                  class="bg-petnetyellow inline-block text-petnetblue px-20 py-3 mr-5 rounded-md font-bold mb-16 mt-8 outline-none">
+                  Back to login
+                </a>
+                <button type="submit" onsubmit="otpSubmission()"
+                  class="bg-petnetblue inline-block text-white px-20 py-3 rounded-md font-bold mb-16 mt-8 outline-none">
+                  Submit OTP
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </section>
+  </div>
+  <script src="{{ assetHash "/assets/js/app.js"}}"></script>
+
+</body>
+
+</html>

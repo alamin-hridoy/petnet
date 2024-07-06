@@ -1,0 +1,1364 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/drp/v1/microinsurance/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "MicroInsuranceService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/microinsurance/city": {
+      "get": {
+        "summary": "Get All City List",
+        "description": "Get All City List",
+        "operationId": "MicroInsuranceService_GetAllCities",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/microinsuranceCityListResult"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when record not found",
+            "schema": {}
+          },
+          "422": {
+            "description": "Returned when invalid request data",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "MicroInsurance"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/microinsurance/product": {
+      "get": {
+        "summary": "Get Product List",
+        "description": "Get Product List",
+        "operationId": "MicroInsuranceService_GetProductList",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/microinsuranceActiveProduct"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when record not found",
+            "schema": {}
+          },
+          "422": {
+            "description": "Returned when invalid request data",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "MicroInsurance"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/microinsurance/product/check-active": {
+      "post": {
+        "summary": "Check Active Product",
+        "description": "Check Active Product",
+        "operationId": "MicroInsuranceService_CheckActiveProduct",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/microinsuranceActiveProduct"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when record not found",
+            "schema": {}
+          },
+          "422": {
+            "description": "Returned when invalid request data",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/microinsuranceCheckActiveProductRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MicroInsurance"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/microinsurance/product/offer": {
+      "post": {
+        "summary": "Get Offer Product",
+        "description": "Get Offer Product",
+        "operationId": "MicroInsuranceService_GetOfferProduct",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/microinsuranceOfferProduct"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when record not found",
+            "schema": {}
+          },
+          "422": {
+            "description": "Returned when invalid request data",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/microinsuranceGetOfferProductRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MicroInsurance"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/microinsurance/product/{product_code}": {
+      "get": {
+        "summary": "Get Product By ID",
+        "description": "Get Product By ID",
+        "operationId": "MicroInsuranceService_GetProduct",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/microinsuranceProductResult"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when record not found",
+            "schema": {}
+          },
+          "422": {
+            "description": "Returned when invalid request data",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "product_code",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MicroInsurance"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/microinsurance/relationship": {
+      "get": {
+        "summary": "Get Relationship List",
+        "description": "Get Relationship List",
+        "operationId": "MicroInsuranceService_GetRelationships",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/microinsuranceGetRelationshipsResult"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when record not found",
+            "schema": {}
+          },
+          "422": {
+            "description": "Returned when invalid request data",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "MicroInsurance"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/microinsurance/transact": {
+      "post": {
+        "summary": "Transact",
+        "description": "Transact",
+        "operationId": "MicroInsuranceService_Transact",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/microinsuranceInsurance"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "422": {
+            "description": "Returned when invalid request data",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/microinsuranceTransactRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MicroInsurance"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/microinsurance/transact/list": {
+      "post": {
+        "summary": "List transactions",
+        "description": "List transactions",
+        "operationId": "MicroInsuranceService_GetTransactionList",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/microinsuranceTransactionListResult"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "422": {
+            "description": "Returned when invalid request data",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/microinsuranceGetTransactionListRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MicroInsurance"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/microinsurance/transact/retry": {
+      "post": {
+        "summary": "Retry transaction",
+        "description": "Retry transaction",
+        "operationId": "MicroInsuranceService_RetryTransaction",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/microinsuranceInsurance"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "422": {
+            "description": "Returned when invalid request data",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/microinsuranceRetryTransactionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MicroInsurance"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/microinsurance/transact/{trace_number}": {
+      "get": {
+        "summary": "Get Reprint",
+        "description": "Get Reprint",
+        "operationId": "MicroInsuranceService_GetReprint",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/microinsuranceInsurance"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "422": {
+            "description": "Returned when invalid request data",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "trace_number",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MicroInsurance"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "microinsuranceActiveProduct": {
+      "type": "object",
+      "properties": {
+        "product_name": {
+          "type": "string"
+        },
+        "product_code": {
+          "type": "string"
+        },
+        "product_type": {
+          "type": "string"
+        },
+        "dependents": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "beneficiary": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "beneficiary_policy": {
+          "$ref": "#/definitions/microinsuranceMinMax"
+        },
+        "dependents_policy": {
+          "$ref": "#/definitions/microinsuranceMinMax"
+        },
+        "age_policy": {
+          "$ref": "#/definitions/microinsuranceAgePolicy"
+        },
+        "end_spiels_title": {
+          "type": "string"
+        },
+        "end_spiels_description": {
+          "type": "string"
+        },
+        "sales_pitch": {
+          "type": "string"
+        },
+        "terms_and_condition": {
+          "type": "string"
+        },
+        "data_privacy": {
+          "type": "string"
+        }
+      },
+      "description": "ActiveProduct ..."
+    },
+    "microinsuranceAgePolicy": {
+      "type": "object",
+      "properties": {
+        "insurer": {
+          "$ref": "#/definitions/microinsuranceMinMaxAge"
+        },
+        "dependents": {
+          "$ref": "#/definitions/microinsuranceDependentsPolicy"
+        }
+      },
+      "description": "AgePolicy ..."
+    },
+    "microinsuranceAmount": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string",
+          "description": "Monetary amount in the smallest currency denomination.  Example: USD $10.25 =\u003e \"1025\"."
+        },
+        "currency": {
+          "type": "string",
+          "description": "Currency code using ISO-4217 3-letter codes."
+        }
+      }
+    },
+    "microinsuranceCheckActiveProductRequest": {
+      "type": "object",
+      "properties": {
+        "last_name": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "middle_name": {
+          "type": "string"
+        },
+        "birthdate": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "string"
+        },
+        "product_code": {
+          "type": "string"
+        }
+      },
+      "description": "CheckActiveProductRequest ...",
+      "required": [
+        "last_name",
+        "first_name",
+        "birthdate",
+        "gender",
+        "product_code"
+      ]
+    },
+    "microinsuranceCity": {
+      "type": "object",
+      "properties": {
+        "cityCode": {
+          "type": "string"
+        },
+        "cityName": {
+          "type": "string"
+        },
+        "provinceCode": {
+          "type": "string"
+        },
+        "provinceName": {
+          "type": "string"
+        }
+      },
+      "description": "City ..."
+    },
+    "microinsuranceCityListResult": {
+      "type": "object",
+      "properties": {
+        "cities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/microinsuranceCity"
+          }
+        }
+      },
+      "description": "CityListResult ..."
+    },
+    "microinsuranceCoverage": {
+      "type": "object",
+      "properties": {
+        "insCoverageID": {
+          "type": "string"
+        },
+        "insCoverageDesc": {
+          "type": "string"
+        },
+        "insCoverageIconID": {
+          "type": "string"
+        },
+        "insCoverageType1": {
+          "type": "string"
+        },
+        "insCoverageAmt1": {
+          "type": "string"
+        },
+        "insCoverageType2": {
+          "type": "string"
+        },
+        "insCoverageAmt2": {
+          "type": "string"
+        },
+        "insCoverageType3": {
+          "type": "string"
+        },
+        "insCoverageAmt3": {
+          "type": "string"
+        },
+        "insCoverageType4": {
+          "type": "string"
+        },
+        "insCoverageAmt4": {
+          "type": "string"
+        },
+        "insCoverageType5": {
+          "type": "string"
+        },
+        "insCoverageAmt5": {
+          "type": "string"
+        }
+      },
+      "description": "Coverage ..."
+    },
+    "microinsuranceDependentsPolicy": {
+      "type": "object",
+      "properties": {
+        "CHI": {
+          "$ref": "#/definitions/microinsuranceMinMaxAge"
+        },
+        "PAR": {
+          "$ref": "#/definitions/microinsuranceMinMaxAge"
+        },
+        "SIB": {
+          "$ref": "#/definitions/microinsuranceMinMaxAge"
+        },
+        "SPS": {
+          "$ref": "#/definitions/microinsuranceMinMaxAge"
+        }
+      },
+      "description": "DependentsPolicy ..."
+    },
+    "microinsuranceGetOfferProductRequest": {
+      "type": "object",
+      "properties": {
+        "last_name": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "middle_name": {
+          "type": "string"
+        },
+        "birthdate": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "string"
+        },
+        "trx_type": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "amount": {
+          "type": "number",
+          "format": "double"
+        }
+      },
+      "description": "GetOfferProductRequest ...",
+      "required": [
+        "last_name",
+        "first_name",
+        "birthdate",
+        "gender",
+        "trx_type",
+        "amount"
+      ]
+    },
+    "microinsuranceGetProductListResult": {
+      "type": "object",
+      "properties": {
+        "products": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/microinsuranceActiveProduct"
+          }
+        }
+      },
+      "description": "GetProductListResult ..."
+    },
+    "microinsuranceGetRelationshipsResult": {
+      "type": "object",
+      "properties": {
+        "relationships": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/microinsuranceRelationship"
+          }
+        }
+      },
+      "description": "GetRelationshipsResult ..."
+    },
+    "microinsuranceGetTransactionListRequest": {
+      "type": "object",
+      "properties": {
+        "date_from": {
+          "type": "string"
+        },
+        "date_to": {
+          "type": "string"
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "offset": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "sort_order": {
+          "$ref": "#/definitions/microinsuranceSortOrder"
+        },
+        "sort_by_column": {
+          "$ref": "#/definitions/microinsuranceSortByColumn"
+        },
+        "org_id": {
+          "type": "string"
+        }
+      },
+      "description": "GetTransactionListRequest ...",
+      "required": [
+        "date_from",
+        "date_to",
+        "org_id"
+      ]
+    },
+    "microinsuranceInsurance": {
+      "type": "object",
+      "properties": {
+        "sessionID": {
+          "type": "string"
+        },
+        "statusCode": {
+          "type": "string"
+        },
+        "statusDesc": {
+          "type": "string"
+        },
+        "insProductID": {
+          "type": "string"
+        },
+        "insProductDesc": {
+          "type": "string"
+        },
+        "trnDate": {
+          "type": "string"
+        },
+        "trnAmount": {
+          "type": "number",
+          "format": "double"
+        },
+        "traceNo": {
+          "type": "string"
+        },
+        "clientNo": {
+          "type": "string"
+        },
+        "numUnits": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "begPolicyNo": {
+          "type": "string"
+        },
+        "endPolicyNo": {
+          "type": "string"
+        },
+        "effectiveDate": {
+          "type": "string"
+        },
+        "expiryDate": {
+          "type": "string"
+        },
+        "pocPDFLink": {
+          "type": "string"
+        },
+        "cocPDFLink": {
+          "type": "string"
+        },
+        "partnerCommission": {
+          "type": "number",
+          "format": "double"
+        },
+        "tellerCommission": {
+          "type": "number",
+          "format": "double"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "description": "Insurance ..."
+    },
+    "microinsuranceInsuranceProduct": {
+      "type": "object",
+      "properties": {
+        "insGroupID": {
+          "type": "string"
+        },
+        "insProductID": {
+          "type": "string"
+        },
+        "insProductDesc": {
+          "type": "string"
+        },
+        "insurerCode": {
+          "type": "string"
+        },
+        "insuranceType": {
+          "type": "string"
+        },
+        "insuranceCategory": {
+          "type": "string"
+        },
+        "policyNo": {
+          "type": "string"
+        },
+        "minAge": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "maxAge": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "coverageInMos": {
+          "type": "string"
+        },
+        "contestabilityInMos": {
+          "type": "string"
+        },
+        "activationDelay": {
+          "type": "string"
+        },
+        "maxUnits": {
+          "type": "string"
+        },
+        "perUnitFee": {
+          "type": "string"
+        },
+        "product_name": {
+          "type": "string"
+        }
+      },
+      "description": "InsuranceProduct ..."
+    },
+    "microinsuranceInsuranceTransaction": {
+      "type": "object",
+      "properties": {
+        "trnDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "traceNo": {
+          "type": "string"
+        },
+        "clientNo": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "middleName": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "string"
+        },
+        "birthDate": {
+          "type": "string"
+        },
+        "mobileNo": {
+          "type": "string"
+        },
+        "maritalStatus": {
+          "type": "string"
+        },
+        "occupation": {
+          "type": "string"
+        },
+        "insGroupID": {
+          "type": "string"
+        },
+        "insProductID": {
+          "type": "string"
+        },
+        "insProductDesc": {
+          "type": "string"
+        },
+        "insurerCode": {
+          "type": "string"
+        },
+        "insuranceType": {
+          "type": "string"
+        },
+        "begPolicyNo": {
+          "type": "string"
+        },
+        "endPolicyNo": {
+          "type": "string"
+        },
+        "coverageInMos": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "effectiveDate": {
+          "type": "string"
+        },
+        "expiryDate": {
+          "type": "string"
+        },
+        "insCardNo": {
+          "type": "string"
+        },
+        "beneficiaries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/microinsurancePerson"
+          }
+        },
+        "dependents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/microinsurancePerson"
+          }
+        },
+        "numUnits": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totAmt": {
+          "$ref": "#/definitions/microinsuranceAmount"
+        },
+        "trnStatus": {
+          "type": "string"
+        },
+        "provinceCode": {
+          "type": "string"
+        },
+        "cityCode": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        }
+      },
+      "description": "InsuranceTransaction ..."
+    },
+    "microinsuranceMinMax": {
+      "type": "object",
+      "properties": {
+        "max": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "min": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "description": "MinMax ..."
+    },
+    "microinsuranceMinMaxAge": {
+      "type": "object",
+      "properties": {
+        "max_age": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "min_age": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "description": "MinMaxAge ..."
+    },
+    "microinsuranceOfferProduct": {
+      "type": "object",
+      "properties": {
+        "product_name": {
+          "type": "string"
+        },
+        "product_code": {
+          "type": "string"
+        },
+        "product_type": {
+          "type": "string"
+        },
+        "dependents": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "beneficiary": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "beneficiary_policy": {
+          "$ref": "#/definitions/microinsuranceMinMax"
+        },
+        "age_policy": {
+          "$ref": "#/definitions/microinsuranceAgePolicy"
+        },
+        "end_spiels_title": {
+          "type": "string"
+        },
+        "end_spiels_description": {
+          "type": "string"
+        },
+        "sales_pitch": {
+          "type": "string"
+        },
+        "terms_and_condition": {
+          "type": "string"
+        },
+        "data_privacy": {
+          "type": "string"
+        }
+      },
+      "description": "OfferProduct ..."
+    },
+    "microinsurancePerson": {
+      "type": "object",
+      "properties": {
+        "last_name": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "middle_name": {
+          "type": "string"
+        },
+        "no_middle_name": {
+          "type": "boolean"
+        },
+        "contact_number": {
+          "type": "string"
+        },
+        "birth_date": {
+          "type": "string"
+        },
+        "relationship": {
+          "type": "string"
+        }
+      },
+      "description": "Person ...",
+      "required": [
+        "last_name",
+        "first_name",
+        "contact_number",
+        "birth_date",
+        "relationship"
+      ]
+    },
+    "microinsuranceProductResult": {
+      "type": "object",
+      "properties": {
+        "sessionID": {
+          "type": "string"
+        },
+        "statusCode": {
+          "type": "string"
+        },
+        "statusDesc": {
+          "type": "string"
+        },
+        "product": {
+          "$ref": "#/definitions/microinsuranceInsuranceProduct"
+        },
+        "coverages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/microinsuranceCoverage"
+          }
+        }
+      },
+      "description": "ProductResult ..."
+    },
+    "microinsuranceRelationship": {
+      "type": "object",
+      "properties": {
+        "relationship": {
+          "type": "string"
+        },
+        "relationship_value": {
+          "type": "string"
+        }
+      },
+      "description": "Relationship ..."
+    },
+    "microinsuranceRetryTransactionRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "description": "RetryTransactionRequest ...",
+      "required": [
+        "id"
+      ]
+    },
+    "microinsuranceSortByColumn": {
+      "type": "string",
+      "enum": [
+        "OmitSortByColumn",
+        "TraceNumber",
+        "TrnStatus",
+        "Fee",
+        "Commission",
+        "TotalAmount",
+        "TransactionCompletedTime"
+      ],
+      "default": "OmitSortByColumn"
+    },
+    "microinsuranceSortOrder": {
+      "type": "string",
+      "enum": [
+        "DESC",
+        "ASC"
+      ],
+      "default": "DESC"
+    },
+    "microinsuranceTransactRequest": {
+      "type": "object",
+      "properties": {
+        "coy": {
+          "type": "string"
+        },
+        "location_id": {
+          "type": "string"
+        },
+        "user_code": {
+          "type": "string"
+        },
+        "trx_date": {
+          "type": "string"
+        },
+        "promo_amount": {
+          "type": "number",
+          "format": "double"
+        },
+        "promo_code": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "coverage_count": {
+          "type": "string"
+        },
+        "product_code": {
+          "type": "string"
+        },
+        "processing_branch": {
+          "type": "string"
+        },
+        "processed_by": {
+          "type": "string"
+        },
+        "user_email": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "middle_name": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "string"
+        },
+        "birthdate": {
+          "type": "string"
+        },
+        "mobile_number": {
+          "type": "string"
+        },
+        "province_code": {
+          "type": "string"
+        },
+        "city_code": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "marital_status": {
+          "type": "string"
+        },
+        "occupation": {
+          "type": "string"
+        },
+        "card_number": {
+          "type": "string"
+        },
+        "number_units": {
+          "type": "string"
+        },
+        "beneficiaries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/microinsurancePerson"
+          }
+        },
+        "dependents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/microinsurancePerson"
+          }
+        }
+      },
+      "description": "TransactRequest ...",
+      "required": [
+        "coy",
+        "location_id",
+        "user_code",
+        "trx_date",
+        "amount",
+        "coverage_count",
+        "product_code",
+        "product_code",
+        "processing_branch",
+        "processed_by",
+        "user_email",
+        "last_name",
+        "first_name",
+        "gender",
+        "birthdate",
+        "mobile_number",
+        "province_code",
+        "city_code",
+        "address",
+        "marital_status",
+        "occupation",
+        "number_units",
+        "beneficiaries",
+        "dependents"
+      ]
+    },
+    "microinsuranceTransactionListResult": {
+      "type": "object",
+      "properties": {
+        "transactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/microinsuranceInsuranceTransaction"
+          }
+        },
+        "next": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "description": "TransactionListResult ..."
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

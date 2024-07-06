@@ -1,0 +1,57 @@
+<ul class="">
+    <li class="w-full flex items-center justify-center text-white">
+        <a href="/dashboard/dsa-applicant-list" class="menulink hover:bg-white hover:bg-opacity-30  text-center w-full dsa-nav-li px-2 py-4 {{if eq "dsa-list" .Type}}bg-white text-petnetyellow bg-opacity-30{{end}}">
+            <img src="/images/dsa-list-{{if eq "dsa-list" .Type}}yellow{{else}}white{{end}}.png" width="28" class="mx-auto mb-3">
+            <span class="leading-5 font-semibold text-sm">DSA List</span>
+        </a>
+    </li>
+    {{if .Data.PresetPermission.transaction.read}}
+    <li class="w-full flex items-center justify-center text-white">
+        <a href="/dashboard/transaction" class="menulink hover:bg-white hover:bg-opacity-30 text-center w-full dsa-nav-li px-2 py-4 {{if eq "transaction-list" .Type}}bg-white text-petnetyellow bg-opacity-30{{end}}">
+            <img src="/images/transaction-{{if eq "transaction-list" .Type}}yellow{{else}}white{{end}}.png" width="28" class="mx-auto mb-3">
+            <span class="leading-5 font-semibold text-sm">Transactions</span>
+        </a>
+    </li>
+    {{end}}
+    {{if .Data.PresetPermission.ispetnetowner.permission}}
+    <li class="w-full flex items-center justify-center text-white">
+        <a href="/dashboard/commission-mgt" class="menulink hover:bg-white hover:bg-opacity-30 text-center w-full dsa-nav-li px-2 py-4  {{if eq "partner-list" .Type}}bg-white text-petnetyellow bg-opacity-30{{end}}">
+            <img src="/images/partner{{if eq "partner-list" .Type}}-yellow.png{{else}}.png{{end}}" width="28"
+                class="mx-auto mb-3">
+            <span class="leading-5 font-semibold text-sm">Partner</span>
+        </a>
+    </li>
+    {{end}}
+    {{if .Data.PresetPermission.ispetnetowner.permission}}
+    <li class="w-full flex items-center justify-center text-white">
+        <a href="/dashboard/manage-users" class="menulink hover:bg-white hover:bg-opacity-30 text-center w-full dsa-nav-li px-2 py-4 {{if eq "manage-users" .Type}}bg-white text-petnetyellow bg-opacity-30{{end}}">
+            <img src="/images/settings{{if eq "manage-users" .Type}}-yellow.svg{{else}}.png{{end}}" width="28"
+                class="mx-auto mb-3">
+            <span class="leading-5 font-semibold text-sm">Manage Roles</span>
+        </a>
+    </li>
+    {{end}}
+    {{if .Data.ServiceRequest}}
+    <li class="w-full flex items-center justify-center text-white">
+        <a href="/dashboard/service-req" class="menulink hover:bg-white hover:bg-opacity-30 text-center w-full dsa-nav-li px-2 py-4 {{if eq "service-req" .Type}}bg-white text-petnetyellow bg-opacity-30{{end}}">
+            <img src="/images/services-{{if eq "service-req" .Type}}yellow{{else}}white{{end}}.png" width="28"
+                class="mx-auto mb-3">
+            <span class="leading-5 font-semibold text-sm">Services</span>
+        </a>
+    </li>
+    {{end}}
+</ul>
+<script type="text/javascript" src="{{ assetHash "/js/monitoractivity.js" }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let menus = document.querySelectorAll("a");
+        for (let i = 0; i < menus.length; i++) {
+            menus[i].addEventListener("click", function(e){
+                e.preventDefault();
+                let lnk = menus[i].href;
+                menus[i].href = "javascript:;"
+                window.location.href = lnk;
+            });
+        }
+    });
+</script>

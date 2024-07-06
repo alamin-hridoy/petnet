@@ -1,0 +1,62 @@
+<form method="POST" action="/create-recipient">
+    {{ .CSRFField }}
+    <input name="Types" value="{{.Types}}" type="hidden">
+    <div>
+        <button type="submit">Create Recipient</button>
+    </div>
+    <br>
+    <input name="Partner" value="{{.Partner}}" type="hidden">
+    <input name="Type" value="{{.Type}}" type="hidden">
+    <br>
+    <div>
+        <label>Email Address</label>
+    </div>
+    <div>
+        <input name="CreateRecipientReq.Email" {{if .CreateRecipientReq.Email}}value="{{.CreateRecipientReq.Email}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+    <br>
+    <div>
+        <label>Currency</label>
+    </div>
+    <div>
+        <input name="CreateRecipientReq.Currency" {{if .CreateRecipientReq.Currency}}value="{{.CreateRecipientReq.Currency}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+    <br>
+    <div>
+        <label>Type</label>
+    </div>
+    <div>
+        <input name="CreateRecipientReq.Type" {{if .CreateRecipientReq.Type}}value="{{.CreateRecipientReq.Type}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+    <br>
+    <div>
+        <label>Owned By Customer</label>
+    </div>
+    <div>
+        <select name="CreateRecipientReq.OwnedByCustomer">
+            <option value="true" {{if eq .CreateRecipientReq.Type "true"}}selected="selected"{{end}}>True</option>
+            <option value="false" {{if eq .CreateRecipientReq.Type "false"}}selected="selected"{{end}}>False</option>
+        </select>
+    </div>
+    <br>
+    <div>
+        <label>Account Holder Name</label>
+    </div>
+    <div>
+        <input name="CreateRecipientReq.AccountHolderName" {{if .CreateRecipientReq.AccountHolderName}}value="{{.CreateRecipientReq.AccountHolderName}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+    <br>
+    <div>
+        <label>Requirements Name</label>
+    </div>
+    <div>
+        <input name="RequirementsName" {{if .RequirementsName}}value="{{.RequirementsName}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+    <br>
+    <div>
+        <label>Requirements Value</label>
+    </div>
+    <div>
+        <input name="RequirementsValue" {{if .RequirementsValue}}value="{{.RequirementsValue}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+</form>

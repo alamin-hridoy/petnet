@@ -1,0 +1,348 @@
+package mfa
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+type MFA int32
+
+const (
+	PASS MFA = iota
+	TOTP
+	CODE
+	SMS
+	RECOVERY
+	EMAIL
+)
+
+type GetRegisteredMFARequest struct {
+	UserID string `pb:"1" json:"user_id"`
+}
+
+type GetRegisteredMFAResponse struct {
+	UserID string     `pb:"1" json:"user_id"`
+	MFA    []MFAEntry `pb:"2" json:"mfa"`
+}
+
+type MFAEntry struct {
+	ID       string    `pb:"1" json:"id"`
+	Type     MFA       `pb:"2" json:"type"`
+	Source   string    `pb:"3" json:"source"`
+	Enabled  time.Time `pb:"4" json:"enabled"`
+	Disabled time.Time `pb:"5" json:"disabled"`
+	Updated  time.Time `pb:"6" json:"updated"`
+}
+
+type EnableMFARequest struct {
+	UserID string `pb:"1" json:"user_id"`
+	Type   MFA    `pb:"2" json:"type"`
+	Source string `pb:"3" json:"source"`
+}
+
+type EnableMFAResponse struct {
+	ID             string   `pb:"1" json:"id"`
+	InitializeCode string   `pb:"2" json:"initialize_code"`
+	EventID        string   `pb:"3" json:"event_id"`
+	Codes          []string `pb:"4" json:"codes"`
+}
+
+type DisableMFARequest struct {
+	UserID string `pb:"1" json:"user_id"`
+	MFAID  string `pb:"2" json:"mfa_id"`
+}
+
+type DisableMFAResponse struct {
+	Disabled time.Time `pb:"1" json:"disabled"`
+}
+
+type InitiateMFARequest struct {
+	UserID      string `pb:"1" json:"user_id"`
+	Type        MFA    `pb:"2" json:"type"`
+	SourceID    string `pb:"3" json:"source_id"`
+	Description string `pb:"4" json:"description"`
+}
+
+type InitiateMFAResponse struct {
+	EventID string     `pb:"1" json:"event_id"`
+	Sources []MFAEntry `pb:"2" json:"sources"`
+	Value   string     `pb:"3" json:"value"`
+}
+
+type RetryMFARequest struct {
+	UserID  string `pb:"1" json:"user_id"`
+	EventID string `pb:"4" json:"event_id"`
+}
+
+type RetryMFAResponse struct {
+	EventID string     `pb:"1" json:"event_id"`
+	Sources []MFAEntry `pb:"2" json:"sources"`
+	Value   string     `pb:"3" json:"value"`
+	Attempt int        `pb:"4" json:"attempt"`
+}
+
+type ExternalMFARequest struct {
+	EventID  string `pb:"1" json:"event_id"`
+	Value    string `pb:"2" json:"value"`
+	SourceID string `pb:"3" json:"source_id"`
+}
+
+type ExternalMFAResponse struct {
+	EventID string    `pb:"1" json:"event_id"`
+	Updated time.Time `pb:"2" json:"updated"`
+}
+
+type ValidateMFARequest struct {
+	UserID  string `pb:"1" json:"user_id"`
+	Type    MFA    `pb:"2" json:"type"`
+	Token   string `pb:"3" json:"token"`
+	EventID string `pb:"4" json:"event_id"`
+}
+
+type ValidateMFAResponse struct {
+	EventID    string    `pb:"1" json:"event_id"`
+	Validated  time.Time `pb:"2" json:"validated"`
+	ExternalID string    `pb:"3" json:"external_id"`
+}
+
+type MFAService interface {
+	// Get MFA List by User ID.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/mfa/{UserID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"MFA"},
+	//         Summary:     "Get MFA.",
+	//         Description: "Get all multi-factor auth sources associated the user ID.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/mfaGetRegisteredMFAResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/rpcStatus",
+	//                         }},
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/rpcStatus",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	GetRegisteredMFA(GetRegisteredMFARequest) GetRegisteredMFAResponse
+
+	// Enable MFA source.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/mfa/{UserID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"MFA"},
+	//         Summary:     "Enable MFA Source.",
+	//         Description: "Enable source as an MFA associated with the user ID.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/mfaEnableMFAResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/rpcStatus",
+	//                         }},
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/rpcStatus",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	EnableMFA(EnableMFARequest) EnableMFAResponse
+
+	// Disable MFA source.
+	//
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v1/mfa/{UserID}/source/{MFAID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"MFA"},
+	//         Summary:     "Disable MFA Source.",
+	//         Description: "Disable source as an MFA associated with the user ID.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/mfaDisableMFAResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/rpcStatus",
+	//                         }},
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/rpcStatus",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	DisableMFA(DisableMFARequest) DisableMFAResponse
+}
+
+type MFAAuthService interface {
+	// Initiate MFA event.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/mfa/{UserID}/initiate",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"MFA"},
+	//         Summary:     "Initiate MFA event.",
+	//         Description: "Create an event entry for valiating user identity with MFA.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/mfaInitiateMFAResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/rpcStatus",
+	//                         }},
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/rpcStatus",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	InitiateMFA(InitiateMFARequest) InitiateMFAResponse
+
+	// Validate MFA value.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/mfa/{UserID}/validate",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"MFA"},
+	//         Summary:     "Validate MFA.",
+	//         Description: "Validate MFA code associated with the user ID.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/mfaValidateMFAResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/rpcStatus",
+	//                         }},
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/rpcStatus",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	ValidateMFA(ValidateMFARequest) ValidateMFAResponse
+
+	// Retry MFA event.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/mfa/{UserID}/retry",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"MFA"},
+	//         Summary:     "Retry MFA event.",
+	//         Description: "Reset event and retry MFA for valiating user identity with MFA.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/mfaInitiateMFAResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/rpcStatus",
+	//                         }},
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/rpcStatus",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	RetryMFA(RetryMFARequest) RetryMFAResponse
+
+	// Record external MFA code.
+	//
+	// +gunk http.Match{
+	//         Method: "PATCH",
+	//         Path:   "/v1/mfa/{EventID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"MFA"},
+	//         Summary:     "Record external MFA.",
+	//         Description: "External MFA systems (esp SMS and e-mail) that generate codes can be integrated using an update to record the new code.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/mfaExternalMFAResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/rpcStatus",
+	//                         }},
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/rpcStatus",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	ExternalMFA(ExternalMFARequest) ExternalMFAResponse
+}

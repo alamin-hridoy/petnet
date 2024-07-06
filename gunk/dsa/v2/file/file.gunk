@@ -1,0 +1,246 @@
+package file // proto "petnet.v2.file"
+
+import (
+	"time"
+
+	"brank.as/petnet/gunk/dsa/v2/profile"
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+type UploadType int
+
+const (
+	UnknownUploadType UploadType = iota
+	// business info
+	IDPhoto
+	Picture
+	NBIClearance
+	CourtClearance
+	IncorporationPapers
+	MayorsPermit
+	NDA
+	// financial info
+	FinancialStatement
+	BankStatement
+	// western union
+	Questionnaire
+	// Request File Upload for remittance
+	Mbf
+	Sec
+	Gis
+	Afs
+	Brs
+	Bmp
+	Scbr
+	Via
+	Bspr
+	Cp
+	Aml
+	Nnda
+	Psf
+	Psp
+	Kddq
+	Sis
+	Moa
+	WU_cd
+	WU_lbp
+	WU_sr
+	WU_lgis
+	WU_dtisspa
+	WU_birf
+	WU_bspr
+	WU_iqa
+	WU_bqa
+	AYA_dfedr
+	AYA_ddf
+	AYA_ialaws
+	AYA_aialaws
+	AYA_mtl
+	AYA_cbpr
+	AYA_brdcsa
+	AYA_gis
+	AYA_ccpwi
+	AYA_fas
+	AYA_am
+	AYA_laf
+	AYA_birr
+	AYA_od
+	//cico documents
+	CICO_nda
+	CICO_sis
+	CICO_psf
+	CICO_pspp
+	CICO_sec
+	CICO_gis
+	CICO_afs
+	CICO_bir
+	CICO_bsp
+	CICO_aml
+	CICO_sccas
+	CICO_vgid
+	CICO_cp
+	CICO_moa
+	CICO_amla
+	CICO_mtpp
+	CICO_is
+	CICO_edd
+	//BillsPayment documents
+	BP_nda
+	BP_sis
+	BP_psf
+	BP_psp
+	BP_sec
+	BP_aib
+	BP_gis
+	BP_lpafs
+	BP_bir
+	BP_bp
+	BP_bsp
+	BP_aml
+	BP_sccas
+	BP_vg
+	BP_cp
+	BP_moa
+	BP_amla
+	BP_mttp
+	BP_sci
+	BP_edd
+	//MicroInsurance documents
+	MI_mbf
+	MI_nda
+	MI_sec
+	MI_gis
+	MI_afs
+	MI_bir
+	MI_scb
+	MI_via
+	MI_moa
+)
+
+type FileUpload struct {
+	ID          string            `pb:"1" json:"id"`
+	OrgID       string            `pb:"2" json:"org_id"`
+	UserID      string            `pb:"3" json:"user_id"`
+	FileNames   []string          `pb:"4" json:"file_name"`
+	BucketName  string            `pb:"5" json:"bucket_name"`
+	Type        UploadType        `pb:"6" json:"upload_type"`
+	Created     time.Time         `pb:"7" json:"created"`
+	Submitted   profile.Boolean   `pb:"8" json:"submitted"`
+	DateChecked time.Time         `pb:"9" json:"checked"`
+	FileName    map[string]string `pb:"10" json:"filename"`
+}
+
+type DeleteFileUploadRequest struct {
+	ID        string `pb:"1" json:"id"`
+	FileNames string `pb:"2" json:"file_names"`
+	OrgID     string `pb:"3" json:"org_id"`
+}
+type DeleteFileUploadResponse struct{}
+
+type UpsertFilesRequest struct {
+	FileUploads []FileUpload `pb:"1" json:"file"`
+}
+
+type UpsertFilesResponse struct {
+	FileUploads []FileUpload `pb:"1" json:"files"`
+}
+
+type ListFilesRequest struct {
+	OrgID string       `pb:"1" json:"id"`
+	Types []UploadType `pb:"2" json:"types"`
+}
+
+type ListFilesResponse struct {
+	FileUploads []FileUpload `pb:"1" json:"files"`
+}
+
+type FileService interface {
+	// Upsert files.
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v2/file/{FileUploads.OrgID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"FileUpload"},
+	//         Description: "Upsert a batch of files.",
+	//         Summary:     "Upsert files.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/fileUpsertFilesResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	UpsertFiles(UpsertFilesRequest) UpsertFilesResponse
+
+	// List files.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v2/file/{OrgID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"FileUpload"},
+	//         Description: "List created files by org and/or upload type.",
+	//         Summary:     "List files.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/fileListFilesResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	ListFiles(ListFilesRequest) ListFilesResponse
+
+	// Delete Files
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v2/filedelete/{FileNames}/{ID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"FileUpload"},
+	//         Description: "Delete File.",
+	//         Summary:     "Delete File.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/fileDeleteFileUploadResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	DeleteFileUpload(DeleteFileUploadRequest) DeleteFileUploadResponse
+}

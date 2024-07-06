@@ -1,0 +1,34 @@
+<div class="mb-8">
+    <div class="bg-white rounded">
+        <h4 class="text-xl font-bold text-petnetblue pt-7 px-6 pb-4 border-b">Summary
+        </h4>
+        <ul>
+            <li>
+                <a href="/api-guide" class="nav-anchor">
+                    <span class="mr-3 inline-block">
+                        <img src="{{ assetHash "/images/wifi-tethering.png" }}" alt="">
+                    </span>
+                    Guideline
+                </a>
+            </li>
+            <li>
+                <a href="/api-key/{{.Environment}}" class="nav-anchor">
+                    <span class="mr-3 inline-block">
+                        <img src="{{ assetHash "/images/vpn-key.png" }}" alt="">
+                    </span>
+                    API Keys
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    let navAnchors = document.getElementsByClassName("nav-anchor");
+    let currentPath = window.location.href.split('?')[0];
+    for(let i=0; i<navAnchors.length; i++){
+        if(navAnchors[i].href==currentPath){
+            navAnchors[i].classList.add("active-nav-anchor")
+        }
+    }
+</script>

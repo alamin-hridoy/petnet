@@ -1,0 +1,8 @@
+- op: replace
+  path: /spec/tls/0/hosts
+  value:
+    - idnty.uat.petnet.dev
+
+- op: replace
+  path: /spec/rules/0/host
+  value: idnty.uat.petnet.dev

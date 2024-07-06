@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>List Remit</title>
+	</head>
+	<style>
+table {
+	font-family: arial, sans-serif;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+td, th {
+	border: 1px solid #dddddd;
+	text-align: left;
+	padding: 8px;
+}
+
+tr:nth-child(even) {
+	background-color: #dddddd;
+}
+	</style>
+     {{ template "navbar.html" }}
+	<body>
+		<table>
+			<tr>
+				<th>ControlNo</th>
+				<th>Partner</th>
+				<th>Type</th>
+				<th>Amount</th>
+				<th>Currency</th>
+				<th>Date</th>
+			</tr>
+			{{range .Remittances}}
+			<tr>
+				<td>{{.ControlNumber}}</td>
+				<td>{{.RemitPartner}}</td>
+				<td>{{.RemitType}}</td>
+				<td>{{.RemitAmount.Amount}}</td>
+				<td>{{.RemitAmount.Currency}}</td>
+				<td>{{.TransactionCompletedTime.AsTime.Local.Format "2006-01-02" }}</td>
+			</tr>
+			{{end}}
+		</table>
+	</body>
+</html>

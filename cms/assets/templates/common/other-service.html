@@ -1,0 +1,57 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/app.min.css" />
+    <title>Home Screen</title>
+</head>
+
+<body>
+
+    <body class="font-body">
+        <div class="flex">
+            <!-- left-section -->
+            <div class="bg-petnetblue w-32 min-h-screen">
+                <div class="min-h-screen">
+                    <img src="{{ assetHash "/images/DRP-Vertical.svg" }}" class="mx-auto my-5">
+                    <!-- Sidebar menu start -->
+                    {{ template "admin-sidenav-menu.html" dict "Type" "dsa-list" "Data" .}}
+                    <!-- Sidebar menu end -->
+                </div>
+            </div>
+            
+            <!-- right-section -->
+            <div class="bg-gray-300 w-full">
+                <div class="flex items-center  min-h-screen">
+                    <div class="mx-auto">
+                        <div class="flex px-4 lg:px-28 w-full items-stretch">
+                            <div class="w-1/2 relative">
+                                <img src="/images/mEZ3PoFGs_k.png" class="w-full">
+                                <div class="absolute w-full h-full bg-petnetblue opacity-60 top-0 left-0"></div>
+                            </div>
+                            <div class="w-1/2 bg-petnetyellow">
+                                <div class="flex items-center h-full">
+                                    <div class="mx-auto">
+                                        <div class="p-6">
+                                            <h1 class="xl:text-5xl text-2xl text-center text-petnetblue">
+                                                Check out our many services.
+                                            </h1>
+                                            <div class="flex flex-wrap justify-center mt-3">
+                                                <button class="xl:w-60 w-full py-3 bg-petnetblue text-center rounded text-white mx-3 my-1">View Services</button>
+                                                <button class="xl:w-36 w-full py-3 border border-gray-500 text-center rounded mx-3 my-1">Maybe later</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</body>
+
+</html>

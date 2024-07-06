@@ -1,0 +1,26 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: ingress
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: prometheus
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: grafana
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: influxdb
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: cert-manager
+  labels:
+    certmanager.k8s.io/disable-validation: "true"

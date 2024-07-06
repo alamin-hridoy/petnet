@@ -1,0 +1,2188 @@
+kind: pipeline
+name: default
+
+trigger:
+  target:
+    exclude: [uat,production]
+  branch:
+    exclude: [production]
+
+workspace:
+  base: /root
+  path: ${DRONE_REPO_NAME}
+
+volumes:
+  - name: go-cache
+    host:
+      path: /var/lib/drone-cache/go
+  - name: pnpm-cache
+    host:
+      path: /var/lib/drone-cache/${DRONE_REPO_NAME}/pnpm/node14
+  - name: dockersock
+    temp: {}
+
+image_pull_secrets:
+  - dockerconfigjson
+
+services:
+  - name: postgres
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_PASSWORD: password
+  - name: docker
+    image: docker:dind
+    privileged: true
+    volumes:
+      - name: dockersock
+        path: /var/run
+
+steps:
+  - name: env-setup
+    image: golang:1.17
+    pull: if-not-exists
+    environment:
+      DOCKER_CONFIG_JSON:
+        from_secret: dockerconfigjson
+    commands:
+      # Use https cloning. SSH keys are not set up on drone
+      - git config --global url.https://gitea.brankas.dev:.insteadOf ssh://git@git.brankas.dev
+      - go env -w CGO_ENABLED=0 GOCACHE=/go-cache/buildcache GOBIN=/root/bin GOFLAGS=-mod=readonly
+      - ./scripts/lint-jira-tag
+      # Setup the docker config that all drone docker plugins will use. (includes dockerhub pro account credentials)
+      - mkdir -p /root/.docker
+      - printf "%s" "$DOCKER_CONFIG_JSON" > /root/.docker/config.json
+
+  - name: test-raciness
+    depends_on: [env-setup]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+      DATABASE_CONNECTION: "user=postgres password=password host=postgres port=5432 dbname=postgres sslmode=disable"
+      CGO_ENABLED: 1
+    commands:
+      - export
+      - go test -v -count=1 -race ./...
+
+  - name: go-mod-tidy
+    depends_on: [env-setup]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+      - go mod tidy
+      - go mod verify
+      - test -z "$(git status --porcelain '*.mod' '*.sum')" || (git diff '*.mod' '*.sum'; false)
+
+  - name: install-tools
+    depends_on: [env-setup]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+      - cd tools/ && go install $(go list -tags tools -f '{{range $_, $p := .Imports}}{{$p}} {{end}}')
+
+  - name: gofumpt-check
+    depends_on: [install-tools]
+    image: golang:1.17
+    pull: if-not-exists
+    commands:
+      # don't simply run gofumpt on ".", since that may include the cache.
+      - ~/bin/gofumpt -version
+      # exclude RBAC folder files
+      - OUT=$(git ls-files '*.go' ':!:RBAC/*' | xargs ~/bin/gofumpt -d -s)
+      - test -z "$OUT" || (echo "$OUT"; exit 1)
+
+  - name: set-version
+    depends_on: [install-tools]
+    image: golang:1.17
+    pull: if-not-exists
+    commands:
+      - ~/bin/git-buildnumber -year 2019 >.version
+
+  - name: gunk-format
+    depends_on: [install-tools]
+    image: asia.gcr.io/b-api-production/node-deps-proto:14.8.0-3.12.4-1.16.2
+    pull: if-not-exists
+    volumes:
+      - name: pnpm-cache
+        path: /pnpm-cache
+      - name: go-cache
+        path: /go-cache
+    environment:
+      PNPM_CACHE_FOLDER: /pnpm-cache
+      GOPATH: /go-cache/gopath
+    commands:
+      - cd gunk
+      - ~/bin/gunk format ./...
+      - test -z "$(git status --porcelain .)" || (git status --porcelain .;git diff .; false)
+
+  - name: gunk-generate
+    depends_on: [gunk-format]
+    image: asia.gcr.io/b-api-production/node-deps-proto:14.8.0-3.12.4-1.16.2
+    pull: if-not-exists
+    volumes:
+      - name: pnpm-cache
+        path: /pnpm-cache
+      - name: go-cache
+        path: /go-cache
+    environment:
+      PNPM_CACHE_FOLDER: /pnpm-cache
+      GOPATH: /go-cache/gopath
+    commands:
+      - npm config set store-dir $PNPM_CACHE_FOLDER
+      - cd gunk
+      - ./generate.sh
+      - touch ./node_modules/go.mod
+      - git ls-files '*.go' | xargs ~/bin/gofumpt -w
+      - test -z "$(git status --porcelain .)" || (git diff .; false)
+
+  - name: go-build-docs
+    depends_on: [set-version]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+    - name: go-cache
+      path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+    - ./gunk/build_prep.sh
+    - VERSION="$(cat .version)"
+    - cd ./docs
+    - go build -o doc-portal
+
+  - name: docker-build-docs
+    depends_on: [go-build-docs]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - IMAGE_DIR=docs
+      - ./scripts/docker-build $IMAGE_DIR
+      - ./scripts/docker-push $IMAGE_DIR
+    when:
+      event: push
+      branch: [master, staging-test, production, uat]
+
+  - name: go-build-api
+    depends_on: [set-version]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+      - VERSION="$(cat .version)"
+      - cd api
+      - go build -ldflags="-w -s -X main.version=$VERSION" -o api
+
+  - name: docker-build-api
+    depends_on: [go-build-api]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - IMAGE_DIR=api
+      - ./scripts/docker-build $IMAGE_DIR
+      - ./scripts/docker-push $IMAGE_DIR
+    when:
+      event: push
+      branch: [master, staging-test, production, uat]
+
+  - name: go-build-profile
+    depends_on: [set-version]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+      - VERSION="$(cat .version)"
+      - cd profile
+      - go build -ldflags="-w -s -X main.version=$VERSION" -o migrate migrations/migrate.go
+      - go build -ldflags="-w -s -X main.version=$VERSION" -o profile
+
+  - name: docker-build-profile
+    depends_on: [go-build-profile]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - IMAGE_DIR=profile
+      - ./scripts/docker-build $IMAGE_DIR
+      - ./scripts/docker-push $IMAGE_DIR
+    when:
+      event: push
+      branch: [master, staging-test, production, uat]
+
+  - name: go-build-cms
+    depends_on: [set-version]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+      GOCACHE: /go-cache/buildcache
+      CGO_ENABLED: 0
+    commands:
+      - VERSION="$(cat .version)"
+      - cd cms
+      - go build -ldflags="-w -s -X main.version=$VERSION" -o cms
+
+  - name: docker-build-cms
+    depends_on: [go-build-cms]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - IMAGE_DIR=cms
+      - ./scripts/docker-build $IMAGE_DIR
+      - ./scripts/docker-push $IMAGE_DIR
+    when:
+      event: push
+      branch: [master, staging-test, production, uat]
+
+  - name: docker-build-idp
+    depends_on: [set-version]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      PETNET_CREDENTIALS:
+        from_secret: google_credentials
+      BRANKAS_CREDENTIALS:
+        from_secret: google_credentials_ob_repo
+    commands:
+      - IMAGE_DIR=idp
+      - printf "%s" "$BRANKAS_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - ./scripts/docker-build $IMAGE_DIR
+      - printf "%s" "$PETNET_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - ./scripts/docker-push $IMAGE_DIR
+    when:
+      event: push
+      branch: [master, staging-test, production, uat]
+
+  - name: go-build-dsa-sim
+    depends_on: [set-version]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+      - VERSION="$(cat .version)"
+      - cd dsa-sim
+      - go build -ldflags="-w -s -X main.version=$VERSION" -o dsa-sim
+    when:
+      event: push
+      branch: [master, staging-test, uat]
+
+  - name: docker-build-dsa-sim
+    depends_on: [go-build-dsa-sim]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - IMAGE_DIR=dsa-sim
+      - ./scripts/docker-build $IMAGE_DIR
+      - ./scripts/docker-push $IMAGE_DIR
+    when:
+      event: push
+      branch: [master, staging-test, uat]
+
+  - name: docker-tag-usermgm
+    depends_on: [set-version]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      PETNET_CREDENTIALS:
+        from_secret: google_credentials
+      BRANKAS_CREDENTIALS:
+        from_secret: google_credentials_ob_repo
+    commands:
+      - IMAGE_DIR=deploy/rbac/usermgm
+      - printf "%s" "$BRANKAS_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - ./scripts/docker-build $IMAGE_DIR
+      - printf "%s" "$PETNET_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - ./scripts/docker-push $IMAGE_DIR
+    when:
+      event: push
+      branch: [master, staging-test, production, uat]
+
+  - name: deploy-services-staging
+    depends_on:
+      - docker-tag-usermgm
+      - docker-build-idp
+      - docker-build-api
+      - docker-build-cms
+      - docker-build-docs
+      - docker-build-profile
+      - docker-build-dsa-sim
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - export PATH=~/bin:$PATH # ci-deploy expects to find kustomize
+      - ./scripts/ci-deploy staging
+    when:
+      event: push
+      branch: [master, staging-test]
+
+  - name: deploy-notify-staging
+    image: kenshaw/drone-mattermost:latest
+    settings:
+      url: https://mattermost.brankas.dev
+      token:
+        from_secret: mattermost-token
+      team: petnet
+      channel: notifications
+      replace: |-
+        [{
+          "regexp": "\\\\[?(DRP-[0-9]+)\\\\]?",
+          "replace": "[$1](https://perahub-drp.atlassian.net/browse/$1)"
+        }]
+      template: |-
+        # New Commit Merged
+        **{{#success build.status}}Successfully merged{{else}}FAILED{{/success}}** {{repo.owner}}/{{repo.name}} [`{{build.branch}}@{{truncate commit 7}}`]({{build.link}}) [[diff]({{commit.link}})]
+        Author: `{{commit.author.username}}`
+        > {{commit.message.title}}{{#if commit.message.body}}
+        >
+        {{{regexReplace "(?m)^" commit.message.body "> "}}}{{/if}}
+    when:
+      event: push
+      status: [success, failure]
+      branch: [master]
+
+  #- name: jira-staging-in-progress
+    #pull: if-not-exists
+    #image: plugins/jira
+    #settings:
+      #client_id:
+        #from_secret: jira_client_id
+      #client_secret:
+        #from_secret: jira_client_secret
+      #PROJECT: DRP
+      #INSTANCE: perahub-drp
+      #ENVIRONMENT_NAME: staging
+      #LOG_LEVEL: debug
+      #PIPELINE: drone
+      #STATE: in_progress
+      #LINK: ${DRONE_BUILD_LINK}
+    #when:
+      #event: push
+      #branch: [master]
+
+  - name: jira-staging-success
+    depends_on: [deploy-services-staging]
+    pull: if-not-exists
+    image: plugins/jira
+    settings:
+      client_id:
+        from_secret: jira_client_id
+      client_secret:
+        from_secret: jira_client_secret
+      PROJECT: DRP
+      INSTANCE: perahub-drp
+      ENVIRONMENT_NAME: staging
+      LOG_LEVEL: debug
+      PIPELINE: drone
+      STATE: successful
+      LINK: ${DRONE_BUILD_LINK}
+    when:
+      event: push
+      status: [success]
+      branch: [master]
+
+  - name: jira-staging-failed
+    depends_on: [deploy-services-staging]
+    pull: if-not-exists
+    image: plugins/jira
+    settings:
+      client_id:
+        from_secret: jira_client_id
+      client_secret:
+        from_secret: jira_client_secret
+      PROJECT: DRP
+      INSTANCE: perahub-drp
+      ENVIRONMENT_NAME: staging
+      LOG_LEVEL: debug
+      PIPELINE: drone
+      STATE: failed
+      LINK: ${DRONE_BUILD_LINK}
+    when:
+      event: push
+      status: [failure]
+      branch: [master]
+
+  - name: deploy-services-uat
+    depends_on:
+      - docker-build-api
+      - docker-build-cms
+      - docker-build-docs
+      - docker-build-profile
+      - docker-build-dsa-sim
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - export PATH=~/bin:$PATH # ci-deploy expects to find kustomize
+      - ./scripts/ci-deploy uat
+    when:
+      event: push
+      branch: [uat]
+
+  - name: deploy-notify-uat
+    depends_on: [deploy-services-uat]
+    image: kenshaw/drone-mattermost:latest
+    settings:
+      url: https://mattermost.brankas.dev
+      token:
+        from_secret: mattermost-token
+      team: petnet
+      channel: notifications
+      replace: |-
+        [{
+          "regexp": "\\\\[?(DRP-[0-9]+)\\\\]?",
+          "replace": "[$1](https://perahub-drp.atlassian.net/browse/$1)"
+        }]
+      template: |-
+        # UAT deployed
+        **{{#success build.status}}Successfully deployed{{else}}FAILED{{/success}}** {{repo.owner}}/{{repo.name}} [`{{build.branch}}@{{truncate commit 7}}`]({{build.link}}) [[diff]({{commit.link}})]
+        Author: `{{commit.author.username}}`
+        > {{commit.message.title}}{{#if commit.message.body}}
+        >
+        {{{regexReplace "(?m)^" commit.message.body "> "}}}{{/if}}
+    when:
+      event: push
+      status: [success, failure]
+      branch: [uat]
+
+  #- name: jira-uat-in-progress
+    #pull: if-not-exists
+    #image: plugins/jira
+    #settings:
+      #client_id:
+        #from_secret: jira_client_id
+      #client_secret:
+        #from_secret: jira_client_secret
+      #PROJECT: DRP
+      #INSTANCE: perahub-drp
+      #ENVIRONMENT_NAME: testing
+      #LOG_LEVEL: debug
+      #PIPELINE: drone
+      #STATE: in_progress
+    #when:
+      #event: push
+      #branch: [uat]
+
+  - name: jira-uat-success
+    depends_on: [deploy-services-uat]
+    pull: if-not-exists
+    image: plugins/jira
+    settings:
+      client_id:
+        from_secret: jira_client_id
+      client_secret:
+        from_secret: jira_client_secret
+      PROJECT: DRP
+      INSTANCE: perahub-drp
+      ENVIRONMENT_NAME: testing
+      LOG_LEVEL: debug
+      PIPELINE: drone
+      STATE: successful
+      LINK: ${DRONE_BUILD_LINK}
+    when:
+      event: push
+      status: [success]
+      branch: [uat]
+
+  - name: jira-uat-failed
+    depends_on: [deploy-services-uat]
+    pull: if-not-exists
+    image: plugins/jira
+    settings:
+      client_id:
+        from_secret: jira_client_id
+      client_secret:
+        from_secret: jira_client_secret
+      PROJECT: DRP
+      INSTANCE: perahub-drp
+      ENVIRONMENT_NAME: testing
+      LOG_LEVEL: debug
+      PIPELINE: drone
+      STATE: failed
+      LINK: ${DRONE_BUILD_LINK}
+    when:
+      event: push
+      status: [failure]
+      branch: [uat]
+
+---
+kind: pipeline
+name: deploy-production
+
+trigger:
+  event:
+  - promote
+  target:
+  - production
+
+workspace:
+  base: /root
+  path: ${DRONE_REPO_NAME}
+
+volumes:
+  - name: go-cache
+    host:
+      path: /var/lib/drone-cache/go
+  - name: pnpm-cache
+    host:
+      path: /var/lib/drone-cache/${DRONE_REPO_NAME}/pnpm/node14
+  - name: dockersock
+    temp: {}
+
+image_pull_secrets:
+  - dockerconfigjson
+
+services:
+  - name: postgres
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_PASSWORD: password
+  - name: docker
+    image: docker:dind
+    privileged: true
+    volumes:
+      - name: dockersock
+        path: /var/run
+
+steps:
+  - name: env-setup
+    image: golang:1.17
+    pull: if-not-exists
+    commands:
+      - go env -w CGO_ENABLED=0 GOCACHE=/go-cache/buildcache GOBIN=/root/bin GOFLAGS=-mod=readonly
+      - ./scripts/lint-jira-tag
+
+  - name: test-raciness
+    depends_on: [env-setup]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+      DATABASE_CONNECTION: "user=postgres password=password host=postgres port=5432 dbname=postgres sslmode=disable"
+      CGO_ENABLED: 1
+    commands:
+
+  - name: go-mod-tidy
+    depends_on: [env-setup]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+      - go mod tidy
+      - go mod verify
+      - test -z "$(git status --porcelain '*.mod' '*.sum')" || (git diff '*.mod' '*.sum'; false)
+
+  - name: install-tools
+    depends_on: [env-setup]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+      - cd tools/ && go install $(go list -tags tools -f '{{range $_, $p := .Imports}}{{$p}} {{end}}')
+
+  - name: gofumpt-check
+    depends_on: [install-tools]
+    image: golang:1.17
+    pull: if-not-exists
+    commands:
+      # don't simply run gofumpt on ".", since that may include the cache.
+      - OUT=$(git ls-files '*.go' | xargs ~/bin/gofumpt -d -s)
+      - test -z "$OUT" || (echo "$OUT"; exit 1)
+
+  - name: set-version
+    depends_on: [install-tools]
+    image: golang:1.17
+    pull: if-not-exists
+    commands:
+      - ~/bin/git-buildnumber -year 2019 >.version
+
+  - name: gunk-generate
+    depends_on: [env-setup]
+    image: asia.gcr.io/b-api-production/node-deps-proto:14.8.0-3.12.4-1.16.2
+    pull: if-not-exists
+    volumes:
+      - name: pnpm-cache
+        path: /pnpm-cache
+      - name: go-cache
+        path: /go-cache
+    environment:
+      PNPM_CACHE_FOLDER: /pnpm-cache
+      GOPATH: /go-cache/gopath
+    commands:
+      - npm config set store-dir $PNPM_CACHE_FOLDER
+      - cd gunk
+      - ./generate.sh
+      - touch ./node_modules/go.mod
+      - git ls-files '*.go' | xargs ~/bin/gofumpt -w
+      - test -z "$(git status --porcelain .)" || (git diff .; false)
+
+  - name: go-build-docs
+    depends_on: [set-version]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+    - name: go-cache
+      path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+    - ./gunk/build_prep.sh
+    - VERSION="$(cat .version)"
+    - cd ./docs
+    - go build -o doc-portal
+
+  - name: docker-build-docs
+    depends_on: [go-build-docs]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      IMAGE_REGISTRY: asia.gcr.io/petnet-brankas-prod-2/perahub
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      PETNET_CREDENTIALS:
+        from_secret: google_credentials_prod
+      BRANKAS_CREDENTIALS:
+        from_secret: google_credentials_ob_repo
+    commands:
+      - IMAGE_DIR=docs
+      - printf "%s" "$BRANKAS_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - ./scripts/docker-build $IMAGE_DIR
+      - printf "%s" "$PETNET_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - ./scripts/docker-push $IMAGE_DIR
+
+  - name: go-build-api
+    depends_on: [set-version]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+      - VERSION="$(cat .version)"
+      - cd api
+      - go build -ldflags="-w -s -X main.version=$VERSION" -o api
+
+  - name: docker-build-api
+    depends_on: [go-build-api]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      IMAGE_REGISTRY: asia.gcr.io/petnet-brankas-prod-2/perahub
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials_prod
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - IMAGE_DIR=api
+      - ./scripts/docker-build $IMAGE_DIR
+      - ./scripts/docker-push $IMAGE_DIR
+
+  - name: go-build-profile
+    depends_on: [set-version]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+      - VERSION="$(cat .version)"
+      - cd profile
+      - go build -ldflags="-w -s -X main.version=$VERSION" -o migrate migrations/migrate.go
+      - go build -ldflags="-w -s -X main.version=$VERSION" -o profile
+
+  - name: docker-build-profile
+    depends_on: [go-build-profile]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      IMAGE_REGISTRY: asia.gcr.io/petnet-brankas-prod-2/perahub
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials_prod
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - IMAGE_DIR=profile
+      - ./scripts/docker-build $IMAGE_DIR
+      - ./scripts/docker-push $IMAGE_DIR
+
+  - name: go-build-cms
+    depends_on: [set-version]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+      GOCACHE: /go-cache/buildcache
+      CGO_ENABLED: 0
+    commands:
+      - VERSION="$(cat .version)"
+      - cd cms
+      - go build -ldflags="-w -s -X main.version=$VERSION" -o cms
+
+  - name: docker-build-cms
+    depends_on: [go-build-cms]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      IMAGE_REGISTRY: asia.gcr.io/petnet-brankas-prod-2/perahub
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials_prod
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - IMAGE_DIR=cms
+      - ./scripts/docker-build $IMAGE_DIR
+      - ./scripts/docker-push $IMAGE_DIR
+
+  - name: docker-build-idp
+    depends_on: [set-version]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      IMAGE_REGISTRY: asia.gcr.io/petnet-brankas-prod-2/perahub
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      PETNET_CREDENTIALS:
+        from_secret: google_credentials_prod
+      BRANKAS_CREDENTIALS:
+        from_secret: google_credentials_ob_repo
+    commands:
+      - IMAGE_DIR=idp
+      - printf "%s" "$BRANKAS_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - ./scripts/docker-build $IMAGE_DIR
+      - printf "%s" "$PETNET_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - ./scripts/docker-push $IMAGE_DIR
+
+  - name: docker-tag-usermgm
+    depends_on: [set-version]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      IMAGE_REGISTRY: asia.gcr.io/petnet-brankas-prod-2/perahub
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      PETNET_CREDENTIALS:
+        from_secret: google_credentials_prod
+      BRANKAS_CREDENTIALS:
+        from_secret: google_credentials_ob_repo
+    commands:
+      - IMAGE_DIR=deploy/rbac/usermgm
+      - printf "%s" "$BRANKAS_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - ./scripts/docker-build $IMAGE_DIR
+      - printf "%s" "$PETNET_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - ./scripts/docker-push $IMAGE_DIR
+
+  - name: deploy-services-production
+    depends_on:
+      - docker-build-api
+      - docker-build-cms
+      - docker-build-docs
+      - docker-build-profile
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      IMAGE_REGISTRY: asia.gcr.io/petnet-brankas-prod-2/perahub
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials_prod
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - export PATH=~/bin:$PATH # ci-deploy expects to find kustomize
+      - ./scripts/ci-deploy production
+
+  - name: deploy-notify-production
+    depends_on: [deploy-services-production]
+    image: kenshaw/drone-mattermost:latest
+    settings:
+      url: https://mattermost.brankas.dev
+      token:
+        from_secret: mattermost-token
+      team: petnet
+      channel: notifications
+      replace: |-
+        [{
+          "regexp": "\\\\[?(DRP-[0-9]+)\\\\]?",
+          "replace": "[$1](https://perahub-drp.atlassian.net/browse/$1)"
+        }]
+      template: |-
+        # Production deployed
+        **{{#success build.status}}Successfully deployed{{else}}FAILED{{/success}}** {{repo.owner}}/{{repo.name}} [`{{build.branch}}@{{truncate commit 7}}`]({{build.link}}) [[diff]({{commit.link}})]
+        Author: `{{commit.author.username}}`
+        > {{commit.message.title}}{{#if commit.message.body}}
+        >
+        {{{regexReplace "(?m)^" commit.message.body "> "}}}{{/if}}
+    when:
+      event: push
+      status: [success, failure]
+
+  #- name: jira-prod-in-progress
+    #pull: if-not-exists
+    #image: plugins/jira
+    #settings:
+      #client_id:
+        #from_secret: jira_client_id
+      #client_secret:
+        #from_secret: jira_client_secret
+      #PROJECT: DRP
+      #INSTANCE: perahub-drp
+      #ENVIRONMENT_NAME: production
+      #LOG_LEVEL: debug
+      #PIPELINE: drone
+      #STATE: in_progress
+    #when:
+      #event: push
+
+  - name: jira-prod-success
+    depends_on: [deploy-services-production]
+    pull: if-not-exists
+    image: plugins/jira
+    settings:
+      client_id:
+        from_secret: jira_client_id
+      client_secret:
+        from_secret: jira_client_secret
+      PROJECT: DRP
+      INSTANCE: perahub-drp
+      ENVIRONMENT_NAME: production
+      LOG_LEVEL: debug
+      PIPELINE: drone
+      STATE: successful
+      LINK: ${DRONE_BUILD_LINK}
+    when:
+      status: [success]
+
+  - name: jira-prod-failed
+    depends_on: [deploy-services-production]
+    pull: if-not-exists
+    image: plugins/jira
+    settings:
+      client_id:
+        from_secret: jira_client_id
+      client_secret:
+        from_secret: jira_client_secret
+      PROJECT: DRP
+      INSTANCE: perahub-drp
+      ENVIRONMENT_NAME: production
+      LOG_LEVEL: debug
+      PIPELINE: drone
+      STATE: failed
+      LINK: ${DRONE_BUILD_LINK}
+    when:
+      status: [failure]
+
+---
+kind: pipeline
+name: production-rollback
+
+trigger:
+  event:
+  - rollback
+  target:
+  - production
+
+workspace:
+  base: /root
+  path: ${DRONE_REPO_NAME}
+
+volumes:
+  - name: go-cache
+    host:
+      path: /var/lib/drone-cache/go
+  - name: pnpm-cache
+    host:
+      path: /var/lib/drone-cache/${DRONE_REPO_NAME}/pnpm/node14
+  - name: dockersock
+    temp: {}
+
+image_pull_secrets:
+  - dockerconfigjson
+
+services:
+  - name: postgres
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_PASSWORD: password
+  - name: docker
+    image: docker:dind
+    privileged: true
+    volumes:
+      - name: dockersock
+        path: /var/run
+
+steps:
+  - name: env-setup
+    image: golang:1.17
+    pull: if-not-exists
+    commands:
+      - go env -w CGO_ENABLED=0 GOCACHE=/go-cache/buildcache GOBIN=/root/bin GOFLAGS=-mod=readonly
+      - ./scripts/lint-jira-tag
+
+  - name: test-raciness
+    depends_on: [env-setup]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+      DATABASE_CONNECTION: "user=postgres password=password host=postgres port=5432 dbname=postgres sslmode=disable"
+      CGO_ENABLED: 1
+    commands:
+      - export
+      - go test -v -count=1 -race ./...
+
+  - name: go-mod-tidy
+    depends_on: [env-setup]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+      - go mod tidy
+      - go mod verify
+      - test -z "$(git status --porcelain '*.mod' '*.sum')" || (git diff '*.mod' '*.sum'; false)
+
+  - name: install-tools
+    depends_on: [env-setup]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+      - cd tools/ && go install $(go list -tags tools -f '{{range $_, $p := .Imports}}{{$p}} {{end}}')
+
+  - name: gofumpt-check
+    depends_on: [install-tools]
+    image: golang:1.17
+    pull: if-not-exists
+    commands:
+      # don't simply run gofumpt on ".", since that may include the cache.
+      - OUT=$(git ls-files '*.go' | xargs ~/bin/gofumpt -d -s)
+      - test -z "$OUT" || (echo "$OUT"; exit 1)
+
+  - name: set-version
+    depends_on: [install-tools]
+    image: golang:1.17
+    pull: if-not-exists
+    commands:
+      - ~/bin/git-buildnumber -year 2019 >.version
+
+  - name: gunk-generate
+    depends_on: [env-setup]
+    image: asia.gcr.io/b-api-production/node-deps-proto:14.8.0-3.12.4-1.16.2
+    pull: if-not-exists
+    volumes:
+      - name: pnpm-cache
+        path: /pnpm-cache
+      - name: go-cache
+        path: /go-cache
+    environment:
+      PNPM_CACHE_FOLDER: /pnpm-cache
+      GOPATH: /go-cache/gopath
+    commands:
+      - npm config set store-dir $PNPM_CACHE_FOLDER
+      - cd gunk
+      - ./generate.sh
+      - touch ./node_modules/go.mod
+      - git ls-files '*.go' | xargs ~/bin/gofumpt -w
+      - test -z "$(git status --porcelain .)" || (git diff .; false)
+
+  - name: go-build-docs
+    depends_on: [set-version]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+    - name: go-cache
+      path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+    - ./gunk/build_prep.sh
+    - VERSION="$(cat .version)"
+    - cd ./docs
+    - go build -o doc-portal
+
+  - name: docker-build-docs
+    depends_on: [go-build-docs]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      IMAGE_REGISTRY: asia.gcr.io/petnet-brankas-prod-2/perahub
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      PETNET_CREDENTIALS:
+        from_secret: google_credentials_prod
+      BRANKAS_CREDENTIALS:
+        from_secret: google_credentials_ob_repo
+    commands:
+      - IMAGE_DIR=docs
+      - printf "%s" "$BRANKAS_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - ./scripts/docker-build $IMAGE_DIR
+      - printf "%s" "$PETNET_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - ./scripts/docker-push $IMAGE_DIR
+
+  - name: go-build-api
+    depends_on: [set-version]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+      - VERSION="$(cat .version)"
+      - cd api
+      - go build -ldflags="-w -s -X main.version=$VERSION" -o api
+
+  - name: docker-build-api
+    depends_on: [go-build-api]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      IMAGE_REGISTRY: asia.gcr.io/petnet-brankas-prod-2/perahub
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials_prod
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - IMAGE_DIR=api
+      - ./scripts/docker-build $IMAGE_DIR
+      - ./scripts/docker-push $IMAGE_DIR
+
+  - name: go-build-profile
+    depends_on: [set-version]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+      - VERSION="$(cat .version)"
+      - cd profile
+      - go build -ldflags="-w -s -X main.version=$VERSION" -o migrate migrations/migrate.go
+      - go build -ldflags="-w -s -X main.version=$VERSION" -o profile
+
+  - name: docker-build-profile
+    depends_on: [go-build-profile]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      IMAGE_REGISTRY: asia.gcr.io/petnet-brankas-prod-2/perahub
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials_prod
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - IMAGE_DIR=profile
+      - ./scripts/docker-build $IMAGE_DIR
+      - ./scripts/docker-push $IMAGE_DIR
+
+  - name: go-build-cms
+    depends_on: [set-version]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+      GOCACHE: /go-cache/buildcache
+      CGO_ENABLED: 0
+    commands:
+      - VERSION="$(cat .version)"
+      - cd cms
+      - go build -ldflags="-w -s -X main.version=$VERSION" -o cms
+
+  - name: docker-build-cms
+    depends_on: [go-build-cms]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      IMAGE_REGISTRY: asia.gcr.io/petnet-brankas-prod-2/perahub
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials_prod
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - IMAGE_DIR=cms
+      - ./scripts/docker-build $IMAGE_DIR
+      - ./scripts/docker-push $IMAGE_DIR
+
+  - name: docker-build-idp
+    depends_on: [set-version]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      IMAGE_REGISTRY: asia.gcr.io/petnet-brankas-prod-2/perahub
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      PETNET_CREDENTIALS:
+        from_secret: google_credentials_prod
+      BRANKAS_CREDENTIALS:
+        from_secret: google_credentials_ob_repo
+    commands:
+      - IMAGE_DIR=idp
+      - printf "%s" "$BRANKAS_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - ./scripts/docker-build $IMAGE_DIR
+      - printf "%s" "$PETNET_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - ./scripts/docker-push $IMAGE_DIR
+
+  - name: docker-tag-usermgm
+    depends_on: [set-version]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      IMAGE_REGISTRY: asia.gcr.io/petnet-brankas-prod-2/perahub
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      PETNET_CREDENTIALS:
+        from_secret: google_credentials_prod
+      BRANKAS_CREDENTIALS:
+        from_secret: google_credentials_ob_repo
+    commands:
+      - IMAGE_DIR=deploy/rbac/usermgm
+      - printf "%s" "$BRANKAS_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - ./scripts/docker-build $IMAGE_DIR
+      - printf "%s" "$PETNET_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - ./scripts/docker-push $IMAGE_DIR
+
+  - name: deploy-services-production
+    depends_on:
+      - docker-build-api
+      - docker-build-cms
+      - docker-build-docs
+      - docker-build-profile
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      IMAGE_REGISTRY: asia.gcr.io/petnet-brankas-prod-2/perahub
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials_prod
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - export PATH=~/bin:$PATH # ci-deploy expects to find kustomize
+      - ./scripts/ci-deploy production
+
+  - name: deploy-notify-production
+    depends_on: [deploy-services-production]
+    image: kenshaw/drone-mattermost:latest
+    settings:
+      url: https://mattermost.brankas.dev
+      token:
+        from_secret: mattermost-token
+      team: petnet
+      channel: notifications
+      replace: |-
+        [{
+          "regexp": "\\\\[?(DRP-[0-9]+)\\\\]?",
+          "replace": "[$1](https://perahub-drp.atlassian.net/browse/$1)"
+        }]
+      template: |-
+        # Production Rolled Back
+        **{{#success build.status}}Successfully deployed{{else}}FAILED{{/success}}** {{repo.owner}}/{{repo.name}} [`{{build.branch}}@{{truncate commit 7}}`]({{build.link}}) [[diff]({{commit.link}})]
+        Author: `{{commit.author.username}}`
+        > {{commit.message.title}}{{#if commit.message.body}}
+        >
+        {{{regexReplace "(?m)^" commit.message.body "> "}}}{{/if}}
+    when:
+      event: push
+      status: [success, failure]
+
+---
+kind: pipeline
+name: deploy-uat
+
+trigger:
+  event:
+  - promote
+  target:
+  - uat
+  branch:
+  - master
+
+workspace:
+  base: /root
+  path: ${DRONE_REPO_NAME}
+
+volumes:
+  - name: go-cache
+    host:
+      path: /var/lib/drone-cache/go
+  - name: pnpm-cache
+    host:
+      path: /var/lib/drone-cache/${DRONE_REPO_NAME}/pnpm/node14
+  - name: dockersock
+    temp: {}
+
+image_pull_secrets:
+  - dockerconfigjson
+
+services:
+  - name: postgres
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_PASSWORD: password
+  - name: docker
+    image: docker:dind
+    privileged: true
+    volumes:
+      - name: dockersock
+        path: /var/run
+
+steps:
+  - name: env-setup
+    image: golang:1.17
+    pull: if-not-exists
+    environment:
+      DOCKER_CONFIG_JSON:
+        from_secret: dockerconfigjson
+    commands:
+      # Use https cloning. SSH keys are not set up on drone
+      - git config --global url.https://gitea.brankas.dev:.insteadOf ssh://git@git.brankas.dev
+      - go env -w CGO_ENABLED=0 GOCACHE=/go-cache/buildcache GOBIN=/root/bin GOFLAGS=-mod=readonly
+      - ./scripts/lint-jira-tag
+      # Setup the docker config that all drone docker plugins will use. (includes dockerhub pro account credentials)
+      - mkdir -p /root/.docker
+      - printf "%s" "$DOCKER_CONFIG_JSON" > /root/.docker/config.json
+
+  - name: test-raciness
+    depends_on: [env-setup]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+      DATABASE_CONNECTION: "user=postgres password=password host=postgres port=5432 dbname=postgres sslmode=disable"
+      CGO_ENABLED: 1
+    commands:
+      - export
+      - go test -v -count=1 -race ./...
+
+  - name: go-mod-tidy
+    depends_on: [env-setup]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+      - go mod tidy
+      - go mod verify
+      - test -z "$(git status --porcelain '*.mod' '*.sum')" || (git diff '*.mod' '*.sum'; false)
+
+  - name: install-tools
+    depends_on: [env-setup]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+      - cd tools/ && go install $(go list -tags tools -f '{{range $_, $p := .Imports}}{{$p}} {{end}}')
+
+  - name: gofumpt-check
+    depends_on: [install-tools]
+    image: golang:1.17
+    pull: if-not-exists
+    commands:
+      # don't simply run gofumpt on ".", since that may include the cache.
+      - OUT=$(git ls-files '*.go' | xargs ~/bin/gofumpt -d -s)
+      - test -z "$OUT" || (echo "$OUT"; exit 1)
+
+  - name: set-version
+    depends_on: [install-tools]
+    image: golang:1.17
+    pull: if-not-exists
+    commands:
+      - ~/bin/git-buildnumber -year 2019 >.version
+
+  - name: gunk-format
+    depends_on: [install-tools]
+    image: asia.gcr.io/b-api-production/node-deps-proto:14.8.0-3.12.4-1.16.2
+    pull: if-not-exists
+    volumes:
+      - name: pnpm-cache
+        path: /pnpm-cache
+      - name: go-cache
+        path: /go-cache
+    environment:
+      PNPM_CACHE_FOLDER: /pnpm-cache
+      GOPATH: /go-cache/gopath
+    commands:
+      - cd gunk
+      - ~/bin/gunk format ./...
+      - test -z "$(git status --porcelain .)" || (git status --porcelain .;git diff .; false)
+
+  - name: gunk-generate
+    depends_on: [gunk-format]
+    image: asia.gcr.io/b-api-production/node-deps-proto:14.8.0-3.12.4-1.16.2
+    pull: if-not-exists
+    volumes:
+      - name: pnpm-cache
+        path: /pnpm-cache
+      - name: go-cache
+        path: /go-cache
+    environment:
+      PNPM_CACHE_FOLDER: /pnpm-cache
+      GOPATH: /go-cache/gopath
+    commands:
+      - npm config set store-dir $PNPM_CACHE_FOLDER
+      - cd gunk
+      - ./generate.sh
+      - touch ./node_modules/go.mod
+      - git ls-files '*.go' | xargs ~/bin/gofumpt -w
+      - test -z "$(git status --porcelain .)" || (git diff .; false)
+
+  - name: go-build-docs
+    depends_on: [set-version]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+    - name: go-cache
+      path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+    - ./gunk/build_prep.sh
+    - VERSION="$(cat .version)"
+    - cd ./docs
+    - go build -o doc-portal
+
+  - name: docker-build-docs
+    depends_on: [go-build-docs]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - IMAGE_DIR=docs
+      - ./scripts/docker-build $IMAGE_DIR
+      - ./scripts/docker-push $IMAGE_DIR
+
+  - name: go-build-api
+    depends_on: [set-version]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+      - VERSION="$(cat .version)"
+      - cd api
+      - go build -ldflags="-w -s -X main.version=$VERSION" -o api
+
+  - name: docker-build-api
+    depends_on: [go-build-api]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - IMAGE_DIR=api
+      - ./scripts/docker-build $IMAGE_DIR
+      - ./scripts/docker-push $IMAGE_DIR
+
+  - name: go-build-profile
+    depends_on: [set-version]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+      - VERSION="$(cat .version)"
+      - cd profile
+      - go build -ldflags="-w -s -X main.version=$VERSION" -o migrate migrations/migrate.go
+      - go build -ldflags="-w -s -X main.version=$VERSION" -o profile
+
+  - name: docker-build-profile
+    depends_on: [go-build-profile]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - IMAGE_DIR=profile
+      - ./scripts/docker-build $IMAGE_DIR
+      - ./scripts/docker-push $IMAGE_DIR
+
+  - name: go-build-cms
+    depends_on: [set-version]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+      GOCACHE: /go-cache/buildcache
+      CGO_ENABLED: 0
+    commands:
+      - VERSION="$(cat .version)"
+      - cd cms
+      - go build -ldflags="-w -s -X main.version=$VERSION" -o cms
+
+  - name: docker-build-cms
+    depends_on: [go-build-cms]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - IMAGE_DIR=cms
+      - ./scripts/docker-build $IMAGE_DIR
+      - ./scripts/docker-push $IMAGE_DIR
+
+  - name: docker-build-idp
+    depends_on: [set-version]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      PETNET_CREDENTIALS:
+        from_secret: google_credentials
+      BRANKAS_CREDENTIALS:
+        from_secret: google_credentials_ob_repo
+    commands:
+      - IMAGE_DIR=idp
+      - printf "%s" "$BRANKAS_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - ./scripts/docker-build $IMAGE_DIR
+      - printf "%s" "$PETNET_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - ./scripts/docker-push $IMAGE_DIR
+
+  - name: go-build-dsa-sim
+    depends_on: [set-version]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+      - VERSION="$(cat .version)"
+      - cd dsa-sim
+      - go build -ldflags="-w -s -X main.version=$VERSION" -o dsa-sim
+
+  - name: docker-build-dsa-sim
+    depends_on: [go-build-dsa-sim]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - IMAGE_DIR=dsa-sim
+      - ./scripts/docker-build $IMAGE_DIR
+      - ./scripts/docker-push $IMAGE_DIR
+
+  - name: docker-tag-usermgm
+    depends_on: [set-version]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      PETNET_CREDENTIALS:
+        from_secret: google_credentials
+      BRANKAS_CREDENTIALS:
+        from_secret: google_credentials_ob_repo
+    commands:
+      - IMAGE_DIR=deploy/rbac/usermgm
+      - printf "%s" "$BRANKAS_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - ./scripts/docker-build $IMAGE_DIR
+      - printf "%s" "$PETNET_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - ./scripts/docker-push $IMAGE_DIR
+
+  - name: deploy-services-uat
+    depends_on:
+      - docker-build-api
+      - docker-build-cms
+      - docker-build-docs
+      - docker-build-profile
+      - docker-build-dsa-sim
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - export PATH=~/bin:$PATH # ci-deploy expects to find kustomize
+      - ./scripts/ci-deploy uat
+
+  - name: deploy-notify-uat
+    depends_on: [deploy-services-uat]
+    image: kenshaw/drone-mattermost:latest
+    settings:
+      url: https://mattermost.brankas.dev
+      token:
+        from_secret: mattermost-token
+      team: petnet
+      channel: notifications
+      replace: |-
+        [{
+          "regexp": "\\\\[?(DRP-[0-9]+)\\\\]?",
+          "replace": "[$1](https://perahub-drp.atlassian.net/browse/$1)"
+        }]
+      template: |-
+        # UAT deployed
+        **{{#success build.status}}Successfully deployed{{else}}FAILED{{/success}}** {{repo.owner}}/{{repo.name}} [`{{build.branch}}@{{truncate commit 7}}`]({{build.link}}) [[diff]({{commit.link}})]
+        Author: `{{commit.author.username}}`
+        > {{commit.message.title}}{{#if commit.message.body}}
+        >
+        {{{regexReplace "(?m)^" commit.message.body "> "}}}{{/if}}
+    when:
+      event: promote
+      status: [success, failure]
+
+  #- name: jira-uat-in-progress
+    #pull: if-not-exists
+    #image: plugins/jira
+    #settings:
+      #client_id:
+        #from_secret: jira_client_id
+      #client_secret:
+        #from_secret: jira_client_secret
+      #PROJECT: DRP
+      #INSTANCE: perahub-drp
+      #ENVIRONMENT_NAME: testing
+      #LOG_LEVEL: debug
+      #PIPELINE: drone
+      #STATE: in_progress
+    #when:
+      #event: promote
+
+  - name: jira-uat-success
+    depends_on: [deploy-services-uat]
+    pull: if-not-exists
+    image: plugins/jira
+    settings:
+      client_id:
+        from_secret: jira_client_id
+      client_secret:
+        from_secret: jira_client_secret
+      PROJECT: DRP
+      INSTANCE: perahub-drp
+      ENVIRONMENT_NAME: testing
+      LOG_LEVEL: debug
+      PIPELINE: drone
+      STATE: successful
+      LINK: ${DRONE_BUILD_LINK}
+    when:
+      status: [success]
+
+  - name: jira-uat-failed
+    depends_on: [deploy-services-uat]
+    pull: if-not-exists
+    image: plugins/jira
+    settings:
+      client_id:
+        from_secret: jira_client_id
+      client_secret:
+        from_secret: jira_client_secret
+      PROJECT: DRP
+      INSTANCE: perahub-drp
+      ENVIRONMENT_NAME: testing
+      LOG_LEVEL: debug
+      PIPELINE: drone
+      STATE: failed
+      LINK: ${DRONE_BUILD_LINK}
+    when:
+      status: [failure]
+
+---
+kind: pipeline
+name: rollback-uat
+
+trigger:
+  event:
+  - rollback
+  target:
+  - uat
+  branch:
+  - master
+
+workspace:
+  base: /root
+  path: ${DRONE_REPO_NAME}
+
+volumes:
+  - name: go-cache
+    host:
+      path: /var/lib/drone-cache/go
+  - name: pnpm-cache
+    host:
+      path: /var/lib/drone-cache/${DRONE_REPO_NAME}/pnpm/node14
+  - name: dockersock
+    temp: {}
+
+image_pull_secrets:
+  - dockerconfigjson
+
+services:
+  - name: postgres
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_PASSWORD: password
+  - name: docker
+    image: docker:dind
+    privileged: true
+    volumes:
+      - name: dockersock
+        path: /var/run
+
+steps:
+  - name: env-setup
+    image: golang:1.17
+    pull: if-not-exists
+    environment:
+      DOCKER_CONFIG_JSON:
+        from_secret: dockerconfigjson
+    commands:
+      # Use https cloning. SSH keys are not set up on drone
+      - git config --global url.https://gitea.brankas.dev:.insteadOf ssh://git@git.brankas.dev
+      - go env -w CGO_ENABLED=0 GOCACHE=/go-cache/buildcache GOBIN=/root/bin GOFLAGS=-mod=readonly
+      - ./scripts/lint-jira-tag
+      # Setup the docker config that all drone docker plugins will use. (includes dockerhub pro account credentials)
+      - mkdir -p /root/.docker
+      - printf "%s" "$DOCKER_CONFIG_JSON" > /root/.docker/config.json
+
+  - name: test-raciness
+    depends_on: [env-setup]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+      DATABASE_CONNECTION: "user=postgres password=password host=postgres port=5432 dbname=postgres sslmode=disable"
+      CGO_ENABLED: 1
+    commands:
+      - export
+      - go test -v -count=1 -race ./...
+
+  - name: go-mod-tidy
+    depends_on: [env-setup]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+      - go mod tidy
+      - go mod verify
+      - test -z "$(git status --porcelain '*.mod' '*.sum')" || (git diff '*.mod' '*.sum'; false)
+
+  - name: install-tools
+    depends_on: [env-setup]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+      - cd tools/ && go install $(go list -tags tools -f '{{range $_, $p := .Imports}}{{$p}} {{end}}')
+
+  - name: gofumpt-check
+    depends_on: [install-tools]
+    image: golang:1.17
+    pull: if-not-exists
+    commands:
+      # don't simply run gofumpt on ".", since that may include the cache.
+      - OUT=$(git ls-files '*.go' | xargs ~/bin/gofumpt -d -s)
+      - test -z "$OUT" || (echo "$OUT"; exit 1)
+
+  - name: set-version
+    depends_on: [install-tools]
+    image: golang:1.17
+    pull: if-not-exists
+    commands:
+      - ~/bin/git-buildnumber -year 2019 >.version
+
+  - name: gunk-format
+    depends_on: [install-tools]
+    image: asia.gcr.io/b-api-production/node-deps-proto:14.8.0-3.12.4-1.16.2
+    pull: if-not-exists
+    volumes:
+      - name: pnpm-cache
+        path: /pnpm-cache
+      - name: go-cache
+        path: /go-cache
+    environment:
+      PNPM_CACHE_FOLDER: /pnpm-cache
+      GOPATH: /go-cache/gopath
+    commands:
+      - cd gunk
+      - ~/bin/gunk format ./...
+      - test -z "$(git status --porcelain .)" || (git status --porcelain .;git diff .; false)
+
+  - name: gunk-generate
+    depends_on: [gunk-format]
+    image: asia.gcr.io/b-api-production/node-deps-proto:14.8.0-3.12.4-1.16.2
+    pull: if-not-exists
+    volumes:
+      - name: pnpm-cache
+        path: /pnpm-cache
+      - name: go-cache
+        path: /go-cache
+    environment:
+      PNPM_CACHE_FOLDER: /pnpm-cache
+      GOPATH: /go-cache/gopath
+    commands:
+      - npm config set store-dir $PNPM_CACHE_FOLDER
+      - cd gunk
+      - ./generate.sh
+      - touch ./node_modules/go.mod
+      - git ls-files '*.go' | xargs ~/bin/gofumpt -w
+      - test -z "$(git status --porcelain .)" || (git diff .; false)
+
+  - name: go-build-docs
+    depends_on: [set-version]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+    - name: go-cache
+      path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+    - ./gunk/build_prep.sh
+    - VERSION="$(cat .version)"
+    - cd ./docs
+    - go build -o doc-portal
+
+  - name: docker-build-docs
+    depends_on: [go-build-docs]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - IMAGE_DIR=docs
+      - ./scripts/docker-build $IMAGE_DIR
+      - ./scripts/docker-push $IMAGE_DIR
+
+  - name: go-build-api
+    depends_on: [set-version]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+      - VERSION="$(cat .version)"
+      - cd api
+      - go build -ldflags="-w -s -X main.version=$VERSION" -o api
+
+  - name: docker-build-api
+    depends_on: [go-build-api]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - IMAGE_DIR=api
+      - ./scripts/docker-build $IMAGE_DIR
+      - ./scripts/docker-push $IMAGE_DIR
+
+  - name: go-build-profile
+    depends_on: [set-version]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+      - VERSION="$(cat .version)"
+      - cd profile
+      - go build -ldflags="-w -s -X main.version=$VERSION" -o migrate migrations/migrate.go
+      - go build -ldflags="-w -s -X main.version=$VERSION" -o profile
+
+  - name: docker-build-profile
+    depends_on: [go-build-profile]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - IMAGE_DIR=profile
+      - ./scripts/docker-build $IMAGE_DIR
+      - ./scripts/docker-push $IMAGE_DIR
+
+  - name: go-build-cms
+    depends_on: [set-version]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+      GOCACHE: /go-cache/buildcache
+      CGO_ENABLED: 0
+    commands:
+      - VERSION="$(cat .version)"
+      - cd cms
+      - go build -ldflags="-w -s -X main.version=$VERSION" -o cms
+
+  - name: docker-build-cms
+    depends_on: [go-build-cms]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - IMAGE_DIR=cms
+      - ./scripts/docker-build $IMAGE_DIR
+      - ./scripts/docker-push $IMAGE_DIR
+
+  - name: docker-build-idp
+    depends_on: [set-version]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      PETNET_CREDENTIALS:
+        from_secret: google_credentials
+      BRANKAS_CREDENTIALS:
+        from_secret: google_credentials_ob_repo
+    commands:
+      - IMAGE_DIR=idp
+      - printf "%s" "$BRANKAS_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - ./scripts/docker-build $IMAGE_DIR
+      - printf "%s" "$PETNET_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - ./scripts/docker-push $IMAGE_DIR
+
+  - name: go-build-dsa-sim
+    depends_on: [set-version]
+    image: golang:1.17
+    pull: if-not-exists
+    volumes:
+      - name: go-cache
+        path: /go-cache
+    environment:
+      GOPATH: /go-cache/gopath
+    commands:
+      - VERSION="$(cat .version)"
+      - cd dsa-sim
+      - go build -ldflags="-w -s -X main.version=$VERSION" -o dsa-sim
+
+  - name: docker-build-dsa-sim
+    depends_on: [go-build-dsa-sim]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - IMAGE_DIR=dsa-sim
+      - ./scripts/docker-build $IMAGE_DIR
+      - ./scripts/docker-push $IMAGE_DIR
+
+  - name: docker-tag-usermgm
+    depends_on: [set-version]
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      PETNET_CREDENTIALS:
+        from_secret: google_credentials
+      BRANKAS_CREDENTIALS:
+        from_secret: google_credentials_ob_repo
+    commands:
+      - IMAGE_DIR=deploy/rbac/usermgm
+      - printf "%s" "$BRANKAS_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - ./scripts/docker-build $IMAGE_DIR
+      - printf "%s" "$PETNET_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - ./scripts/docker-push $IMAGE_DIR
+
+  - name: deploy-services-uat
+    depends_on:
+      - docker-build-api
+      - docker-build-cms
+      - docker-build-docs
+      - docker-build-profile
+      - docker-build-dsa-sim
+    image: google/cloud-sdk:290.0.1
+    pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/google_creds_deploy.json
+      GOOGLE_CREDENTIALS:
+        from_secret: google_credentials
+    commands:
+      - printf "%s" "$GOOGLE_CREDENTIALS" >$GOOGLE_APPLICATION_CREDENTIALS
+      - export PATH=~/bin:$PATH # ci-deploy expects to find kustomize
+      - ./scripts/ci-deploy uat
+
+  - name: deploy-notify-uat
+    depends_on: [deploy-services-uat]
+    image: kenshaw/drone-mattermost:latest
+    settings:
+      url: https://mattermost.brankas.dev
+      token:
+        from_secret: mattermost-token
+      team: petnet
+      channel: notifications
+      replace: |-
+        [{
+          "regexp": "\\\\[?(DRP-[0-9]+)\\\\]?",
+          "replace": "[$1](https://perahub-drp.atlassian.net/browse/$1)"
+        }]
+      template: |-
+        # UAT Rolled Back
+        **{{#success build.status}}Successfully Rolled Back{{else}}FAILED{{/success}}** {{repo.owner}}/{{repo.name}} [`{{build.branch}}@{{truncate commit 7}}`]({{build.link}}) [[diff]({{commit.link}})]
+        Author: `{{commit.author.username}}`
+        > {{commit.message.title}}{{#if commit.message.body}}
+        >
+        {{{regexReplace "(?m)^" commit.message.body "> "}}}{{/if}}
+    when:
+      event: rollback
+      status: [success, failure]

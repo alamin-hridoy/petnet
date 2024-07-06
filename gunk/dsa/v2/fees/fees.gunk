@@ -1,0 +1,213 @@
+package fees // proto "petnet.v2.fees"
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+type FeeStatus int
+
+const (
+	UnknownFeeStatus FeeStatus = iota
+	Active
+	Disabled
+)
+
+type FeeType int
+
+const (
+	UnknownFeeType FeeType = iota
+	TypeFee
+	TypeCommission
+)
+
+type Amount struct {
+	Currency string `pb:"1"`
+	Amount   string `pb:"2"`
+}
+
+type Fee struct {
+	ID       string    `pb:"1" json:"id"`
+	OrgID    string    `pb:"2" json:"org_id"`
+	Type     FeeType   `pb:"3" json:"fee_type"`
+	Rates    []Rate    `pb:"4" json:"rate"`
+	Schedule Schedule  `pb:"5" json:"schedule"`
+	Created  time.Time `pb:"6" json:"created"`
+	Updated  time.Time `pb:"7" json:"updated"`
+	Deleted  time.Time `pb:"8" json:"deleted"`
+}
+
+type Schedule struct {
+	Status    FeeStatus `pb:"1" json:"fee_status"`
+	StartDate time.Time `pb:"2" json:"start_date"`
+	EndDate   time.Time `pb:"3" json:"end_date"`
+	Updated   time.Time `pb:"4" json:"updated"`
+}
+
+//pb:6-7-8 has been removed
+type Rate struct {
+	ID        string `pb:"1" json:"id"`
+	FeeComID  string `pb:"2" json:"fee_commission_id"`
+	MinVolume string `pb:"3" json:"min_volume"`
+	MaxVolume string `pb:"4" json:"max_volume"`
+	TxnRate   string `pb:"5" json:"txn_rate"`
+}
+
+type UpsertFeeRequest struct {
+	Fee Fee `pb:"1" json:"fee"`
+}
+
+type UpsertFeeResponse struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type UpsertRateRequest struct {
+	FeeCommissionID string `pb:"1" json:"fee_com_id"`
+	Rate            Rate   `pb:"2" json:"rate"`
+}
+
+type UpsertRateResponse struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type ListFeesRequest struct {
+	OrgID  string `pb:"1" json:"org_id"`
+	Type   string `pb:"2" json:"type"`
+	Limit  int32  `pb:"3" json:"limit"`
+	Offset int32  `pb:"4" json:"offset"`
+}
+
+type ListFeesResponse struct {
+	Fees  []Fee `pb:"1" json:"fees"`
+	Total int32 `pb:"2" json:"total"`
+}
+
+type ListRatesRequest struct {
+	FeeComID string `pb:"1" json:"fee_commission_id"`
+}
+
+type ListRatesResponse struct {
+	Rates []Rate `pb:"1" json:"rates"`
+}
+
+type OrgFeesService interface {
+	// Upsert org fee.
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v2/orgfee/{Fee.ID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Org Fee"},
+	//         Description: "Create or update an org fee.",
+	//         Summary:     "Upsert org fee.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/orgFeeUpsertFeeResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	UpsertFee(UpsertFeeRequest) UpsertFeeResponse
+
+	// List org fees.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v2/orgfee",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Org Fees"},
+	//         Description: "List all created org fees.",
+	//         Summary:     "List org fees.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/orgFeeListFeesResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	ListFees(ListFeesRequest) ListFeesResponse
+
+	// Upsert org fee.
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v2/orgfee/{Rate.FeeComID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Org Rate"},
+	//         Description: "Create or update fee commission rate.",
+	//         Summary:     "Upsert fee commission rate.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/feeUpsertRateResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	UpsertRate(UpsertRateRequest) UpsertRateResponse
+
+	// List fees rates.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v2/rate",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Org Fees Rate"},
+	//         Description: "List all created org fees and commision rate.",
+	//         Summary:     "List fees commission rate.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/orgFeesListRatesResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	ListRates(ListRatesRequest) ListRatesResponse
+}

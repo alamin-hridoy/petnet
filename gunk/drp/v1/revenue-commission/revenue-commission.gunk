@@ -1,0 +1,1161 @@
+package revenue_commission
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+/************ CommissionFee ************/
+
+// CommissionType is commission type, can be either absolute or range
+type CommissionType int
+
+const (
+	CommissionTypeAbsolute CommissionType = iota
+	CommissionTypeRange
+	CommissionTypePercent
+)
+
+// TrxType is transaction type, can be either inbound or outbound
+type TrxType int
+
+const (
+	TrxTypeInbound TrxType = iota
+	TrxTypeOutbound
+)
+
+// RemcoCommissionFee is commission fee details for remco
+type RemcoCommissionFee struct {
+	FeeID               uint32         `pb:"1" json:"id"`
+	RemcoID             uint32         `pb:"2" json:"remco_id"`
+	MinAmount           string         `pb:"3" json:"min_amount"`
+	MaxAmount           string         `pb:"4" json:"max_amount"`
+	ServiceFee          string         `pb:"5" json:"service_fee"`
+	CommissionAmount    string         `pb:"6" json:"commission_amount"`
+	CommissionAmountOTC string         `pb:"7" json:"commission_amount_otc"`
+	CommissionType      CommissionType `pb:"8" json:"commission_type"`
+	TrxType             TrxType        `pb:"9" json:"trx_type"`
+	UpdatedBy           string         `pb:"10" json:"updated_by"`
+	CreatedAt           time.Time      `pb:"11" json:"created_at"`
+	UpdatedAt           time.Time      `pb:"12" json:"updated_at"`
+}
+
+// CreateRemcoCommissionFeeRequest is request for save new remco commission fee
+//
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "remco_id",
+//                 "min_amount",
+//                 "max_amount",
+//                 "service_fee",
+//                 "commission_type",
+//                 "commission_amount",
+//                 "trx_type",
+//                 "updated_by",
+//         },
+// }}
+type CreateRemcoCommissionFeeRequest struct {
+	RemcoID             uint32         `pb:"1" json:"remco_id"`
+	MinAmount           string         `pb:"2" json:"min_amount"`
+	MaxAmount           string         `pb:"3" json:"max_amount"`
+	ServiceFee          string         `pb:"4" json:"service_fee"`
+	CommissionType      CommissionType `pb:"5" json:"commission_type"`
+	CommissionAmount    string         `pb:"6" json:"commission_amount"`
+	CommissionAmountOTC string         `pb:"7" json:"commission_amount_otc"`
+	TrxType             TrxType        `pb:"8" json:"trx_type"`
+	UpdatedBy           string         `pb:"9" json:"updated_by"`
+}
+
+// UpdateRemcoCommissionFeeRequest is request for save new remco commission fee
+//
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "id",
+//                 "remco_id",
+//                 "min_amount",
+//                 "max_amount",
+//                 "service_fee",
+//                 "commission_type",
+//                 "commission_amount",
+//                 "trx_type",
+//                 "updated_by",
+//         },
+// }}
+type UpdateRemcoCommissionFeeRequest struct {
+	FeeID               uint32         `pb:"1" json:"id"`
+	RemcoID             uint32         `pb:"2" json:"remco_id"`
+	MinAmount           string         `pb:"3" json:"min_amount"`
+	MaxAmount           string         `pb:"4" json:"max_amount"`
+	ServiceFee          string         `pb:"5" json:"service_fee"`
+	CommissionType      CommissionType `pb:"6" json:"commission_type"`
+	CommissionAmount    string         `pb:"7" json:"commission_amount"`
+	CommissionAmountOTC string         `pb:"8" json:"commission_amount_otc"`
+	TrxType             TrxType        `pb:"9" json:"trx_type"`
+	UpdatedBy           string         `pb:"10" json:"updated_by"`
+}
+
+// ListRemcoCommissionFeeResponse response for ListRemcoCommissionFee
+type ListRemcoCommissionFeeResponse struct {
+	RemcoCommissionFeeList []RemcoCommissionFee `pb:"1" json:"list"`
+}
+
+// GetRemcoCommissionFeeByIDRequest ...
+//
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "id",
+//         },
+// }}
+type GetRemcoCommissionFeeByIDRequest struct {
+	FeeID uint32 `pb:"1" json:"id"`
+}
+
+// DeleteRemcoCommissionFeeRequest ...
+//
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "id",
+//         },
+// }}
+type DeleteRemcoCommissionFeeRequest struct {
+	FeeID uint32 `pb:"1" json:"id"`
+}
+
+/************ DSA Commission Tier ************/
+
+// DSACommissionTier ...
+type DSACommissionTier struct {
+	TierID    uint32    `pb:"1" json:"id"`
+	TierNo    string    `pb:"2" json:"tier_no"`
+	Minimum   string    `pb:"3" json:"minimum"`
+	Maximum   string    `pb:"4" json:"maximum"`
+	UpdatedBy string    `pb:"5" json:"updated_by"`
+	CreatedAt time.Time `pb:"6" json:"created_at"`
+	UpdatedAt time.Time `pb:"7" json:"updated_at"`
+}
+
+// CreateDSACommissionTierRequest ...
+//
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "tier_no",
+//                 "minimum",
+//                 "maximum",
+//                 "updated_by",
+//         },
+// }}
+type CreateDSACommissionTierRequest struct {
+	TierNo    string `pb:"1" json:"tier_no"`
+	Minimum   string `pb:"2" json:"minimum"`
+	Maximum   string `pb:"3" json:"maximum"`
+	UpdatedBy string `pb:"4" json:"updated_by"`
+}
+
+// UpdateDSACommissionTierRequest ...
+//
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "id",
+//                 "tier_no",
+//                 "minimum",
+//                 "maximum",
+//                 "updated_by",
+//         },
+// }}
+type UpdateDSACommissionTierRequest struct {
+	TierID    uint32 `pb:"1" json:"id"`
+	TierNo    string `pb:"2" json:"tier_no"`
+	Minimum   string `pb:"3" json:"minimum"`
+	Maximum   string `pb:"4" json:"maximum"`
+	UpdatedBy string `pb:"5" json:"updated_by"`
+}
+
+// ListDSACommissionTierResponse response for ListDSACommissionTier
+type ListDSACommissionTierResponse struct {
+	CommissionTierList []DSACommissionTier `pb:"1" json:"list"`
+}
+
+// GetDSACommissionTierByIDRequest ...
+//
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "id",
+//         },
+// }}
+type GetDSACommissionTierByIDRequest struct {
+	TierID uint32 `pb:"1" json:"id"`
+}
+
+// DeleteDSACommissionTierRequest ...
+//
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "id",
+//         },
+// }}
+type DeleteDSACommissionTierRequest struct {
+	TierID uint32 `pb:"1" json:"id"`
+}
+
+/************ DSA Commission ************/
+
+// DSACommission ...
+type DSACommission struct {
+	CommID             uint32         `pb:"1" json:"id"`
+	DsaCode            string         `pb:"2" json:"dsa_code"`
+	CommissionType     CommissionType `pb:"3" json:"commission_type"`
+	TierID             uint32         `pb:"4" json:"tier"`
+	CommissionAmount   string         `pb:"5" json:"commissiont_amount"`
+	CommissionCurrency string         `pb:"6" json:"commission_currency"`
+	UpdatedBy          string         `pb:"7" json:"updated_by"`
+	CreatedAt          time.Time      `pb:"8" json:"created_at"`
+	UpdatedAt          time.Time      `pb:"9" json:"updated_at"`
+	EffectiveDate      time.Time      `pb:"10" json:"effective_date"`
+	TrxType            string         `pb:"11" json:"trx_type"`
+	RemitType          string         `pb:"12" json:"remit_type"`
+}
+
+// CreateDSACommissionRequest ...
+//
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "dsa_code",
+//                 "tier",
+//                 "commission_amount",
+//                 "commission_currency",
+//                 "updated_by",
+//                 "effective_date",
+//         },
+// }}
+type CreateDSACommissionRequest struct {
+	DsaCode            string         `pb:"1" json:"dsa_code"`
+	CommissionType     CommissionType `pb:"2" json:"commission_type"`
+	TierID             uint32         `pb:"3" json:"tier"`
+	CommissionAmount   string         `pb:"4" json:"commissiont_amount"`
+	CommissionCurrency string         `pb:"5" json:"commission_currency"`
+	UpdatedBy          string         `pb:"6" json:"updated_by"`
+	EffectiveDate      time.Time      `pb:"7" json:"effective_date"`
+	TrxType            string         `pb:"8" json:"trx_type"`
+	RemitType          string         `pb:"9" json:"remit_type"`
+}
+
+// UpdateDSACommissionRequest ...
+//
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "id",
+//                 "dsa_code",
+//                 "tier",
+//                 "commission_amount",
+//                 "commission_currency",
+//                 "updated_by",
+//                 "effective_date",
+//         },
+// }}
+type UpdateDSACommissionRequest struct {
+	CommID             uint32         `pb:"1" json:"id"`
+	DsaCode            string         `pb:"2" json:"dsa_code"`
+	CommissionType     CommissionType `pb:"3" json:"commission_type"`
+	TierID             uint32         `pb:"4" json:"tier"`
+	CommissionAmount   string         `pb:"5" json:"commission_amount"`
+	CommissionCurrency string         `pb:"6" json:"commission_currency"`
+	UpdatedBy          string         `pb:"7" json:"updated_by"`
+	EffectiveDate      time.Time      `pb:"8" json:"effective_date"`
+	TrxType            string         `pb:"9" json:"trx_type"`
+	RemitType          string         `pb:"10" json:"remit_type"`
+}
+
+// GetDSACommissionByIDRequest gets DSA commission by commission ID
+//
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "id",
+//         },
+// }}
+type GetDSACommissionByIDRequest struct {
+	CommID uint32 `pb:"1" json:"id"`
+}
+
+// DeleteDSACommissionRequest deletes DSA commission by commission ID
+//
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "id",
+//         },
+// }}
+type DeleteDSACommissionRequest struct {
+	CommID uint32 `pb:"1" json:"id"`
+}
+
+// ListDSACommissionResponse response for ListDSACommission
+type ListDSACommissionResponse struct {
+	CommissionList []DSACommission `pb:"1" json:"list"`
+}
+
+/************ DSA Transaction Count ************/
+
+// DSATransactionCount ...
+type DSATransactionCount struct {
+	ID                uint32         `pb:"1" json:"id"`
+	DsaCode           string         `pb:"2" json:"dsa_code"`
+	YearMonth         string         `pb:"3" json:"year_month"`
+	RemittanceCount   uint32         `pb:"4" json:"remittance_count"`
+	CiCoCount         uint32         `pb:"5" json:"cico_count"`
+	BillsPaymentCount uint32         `pb:"6" json:"bills_payment_count"`
+	InsuranceCount    uint32         `pb:"7" json:"insurance_count"`
+	UpdatedBy         string         `pb:"8" json:"updated_by"`
+	DsaCommission     string         `pb:"9" json:"dsa_commission"`
+	DsaCommissionType CommissionType `pb:"10" json:"dsa_commission_type"`
+	CreatedAt         time.Time      `pb:"11" json:"created_at"`
+	UpdatedAt         time.Time      `pb:"12" json:"updated_at"`
+}
+
+// CreateDSATransactionCountRequest ...
+//
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "dsa_code",
+//                 "year_month",
+//                 "remittance_count",
+//                 "cico_count",
+//                 "bills_payment_count",
+//                 "insurance_count",
+//                 "updated_by",
+//                 "dsa_commission",
+//                 "dsa_commission_type",
+//         },
+// }}
+type CreateDSATransactionCountRequest struct {
+	DsaCode           string         `pb:"1" json:"dsa_code"`
+	YearMonth         string         `pb:"2" json:"year_month"`
+	RemittanceCount   uint32         `pb:"3" json:"remittance_count"`
+	CiCoCount         uint32         `pb:"4" json:"cico_count"`
+	BillsPaymentCount uint32         `pb:"5" json:"bills_payment_count"`
+	InsuranceCount    uint32         `pb:"6" json:"insurance_count"`
+	UpdatedBy         string         `pb:"7" json:"updated_by"`
+	DsaCommission     string         `pb:"8" json:"dsa_commission"`
+	DsaCommissionType CommissionType `pb:"9" json:"dsa_commission_type"`
+}
+
+// UpdateDSATransactionCountRequest updates transaction count record by transaction count ID
+//
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "id",
+//                 "dsa_code",
+//                 "year_month",
+//                 "remittance_count",
+//                 "cico_count",
+//                 "bills_payment_count",
+//                 "insurance_count",
+//                 "updated_by",
+//                 "dsa_commission",
+//                 "dsa_commission_type",
+//         },
+// }}
+type UpdateDSATransactionCountRequest struct {
+	ID                uint32         `pb:"1" json:"id"`
+	DsaCode           string         `pb:"2" json:"dsa_code"`
+	YearMonth         string         `pb:"3" json:"year_month"`
+	RemittanceCount   uint32         `pb:"4" json:"remittance_count"`
+	CiCoCount         uint32         `pb:"5" json:"cico_count"`
+	BillsPaymentCount uint32         `pb:"6" json:"bills_payment_count"`
+	InsuranceCount    uint32         `pb:"7" json:"insurance_count"`
+	UpdatedBy         string         `pb:"8" json:"updated_by"`
+	DsaCommission     string         `pb:"9" json:"dsa_commission"`
+	DsaCommissionType CommissionType `pb:"10" json:"dsa_commission_type"`
+}
+
+// GetDSATransactionCountByIDRequest gets transaction count by transaction count ID
+//
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "id",
+//         },
+// }}
+type GetDSATransactionCountByIDRequest struct {
+	ID uint32 `pb:"1" json:"id"`
+}
+
+// DeleteDSATransactionCountRequest deletes transaction count record by ID
+//
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "id",
+//         },
+// }}
+type DeleteDSATransactionCountRequest struct {
+	ID uint32 `pb:"1" json:"id"`
+}
+
+// ListDSATransactionCountByYearMonthRequest gets transaction count by year and month.
+//
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "year_month",
+//         },
+// }}
+type ListDSATransactionCountByYearMonthRequest struct {
+	// YearMonth is year and month string in format YYYYMM. Ex 202207
+	YearMonth string `pb:"1" json:"year_month"`
+}
+
+// ListDSATransactionCountResponse response for list of transaction counts
+type ListDSATransactionCountResponse struct {
+	TrxCountList []DSATransactionCount `pb:"1" json:"list"`
+}
+
+type SendTransactionReportRequest struct {
+	YearMonth string `pb:"1" json:"year_month"`
+}
+
+// RevenueCommissionService ...
+type RevenueCommissionService interface {
+	/************ CommissionFee ************/
+
+	// CreateRemcoCommissionFee Creates Remco Commission Fee record.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/revenue-commission/commission-fee",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Revenue Commission"},
+	//         Description: "Creates new Remco Commission Fee record.",
+	//         Summary:     "Creates Remco Commission Fee record",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/revenueCommissionRemcoCommissionFee",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"internal error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	CreateRemcoCommissionFee(CreateRemcoCommissionFeeRequest) RemcoCommissionFee
+
+	// UpdateRemcoCommissionFee Updates Remco Commission Fee record.
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v1/revenue-commission/commission-fee/{FeeID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Revenue Commission"},
+	//         Description: "Updates new Remco Commission Fee record.",
+	//         Summary:     "Updates Remco Commission Fee record",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/revenueCommissionRemcoCommissionFee",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"internal error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	UpdateRemcoCommissionFee(UpdateRemcoCommissionFeeRequest) RemcoCommissionFee
+
+	// GetRemcoCommissionFeeByID Gets Remco Commission Fee record by ID.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/revenue-commission/commission-fee/{FeeID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Revenue Commission"},
+	//         Description: "Gets Remco Commission Fee record by ID.",
+	//         Summary:     "Gets Remco Commission Fee record",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/revenueCommissionRemcoCommissionFee",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"internal error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	GetRemcoCommissionFeeByID(GetRemcoCommissionFeeByIDRequest) RemcoCommissionFee
+
+	// ListRemcoCommissionFee Gets List Of All Remco Commission Fee records.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/revenue-commission/commission-fee",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Revenue Commission"},
+	//         Description: "List all Remco Commission Fee records.",
+	//         Summary:     "List Remco Commission Fee records",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/revenueCommissionListRemcoCommissionFeeResponse",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"internal error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	ListRemcoCommissionFee() ListRemcoCommissionFeeResponse
+
+	// DeleteRemcoCommissionFee Deletes Remco Commission Fee record by ID.
+	//
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v1/revenue-commission/commission-fee/{FeeID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Revenue Commission"},
+	//         Description: "Deletes Remco Commission Fee record by ID.",
+	//         Summary:     "Deletes Remco Commission Fee record",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/revenueCommissionRemcoCommissionFee",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"internal error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	DeleteRemcoCommissionFee(DeleteRemcoCommissionFeeRequest) RemcoCommissionFee
+
+	/************ DSA Commission Tier ************/
+
+	// CreateDSACommissionTier Creates DSA Commission Tier record.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/revenue-commission/dsa-comm-tier",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"DSA Commission Tier"},
+	//         Description: "Creates new DSA Commission Tier record.",
+	//         Summary:     "Creates DSA Commission Tier record",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/revenueCommissionDSACommissionTier",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"internal error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	CreateDSACommissionTier(CreateDSACommissionTierRequest) DSACommissionTier
+
+	// UpdateDSACommissionTier Update DSA Commission Tier record by ID.
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v1/revenue-commission/dsa-comm-tier/{TierID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"DSA Commission Tier"},
+	//         Description: "Updates DSA Commission Tier record by ID.",
+	//         Summary:     "Updates DSA Commission Tier record",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/revenueCommissionDSACommissionTier",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"internal error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	UpdateDSACommissionTier(UpdateDSACommissionTierRequest) DSACommissionTier
+
+	// GetDSACommissionTierByID Gets DSA Commission Tier record by ID.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/revenue-commission/dsa-comm-tier/{TierID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"DSA Commission Tier"},
+	//         Description: "Gets DSA Commission Tier record by ID.",
+	//         Summary:     "Gets DSA Commission Tier record",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/revenueCommissionDSACommissionTier",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"internal error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	GetDSACommissionTierByID(GetDSACommissionTierByIDRequest) DSACommissionTier
+
+	// ListDSACommissionTier List all DSA Commission Tier records.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/revenue-commission/dsa-comm-tier",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"DSA Commission Tier"},
+	//         Description: "List all DSA Commission Tier records",
+	//         Summary:     "List DSA Commission Tier records",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/revenueCommissionListDSACommissionTierResponse",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"internal error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	ListDSACommissionTier() ListDSACommissionTierResponse
+
+	// DeleteDSACommissionTier Deletes DSA Commission Tier record by ID.
+	//
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v1/revenue-commission/dsa-comm-tier/{TierID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"DSA Commission Tier"},
+	//         Description: "Deletes DSA Commission Tier record by ID.",
+	//         Summary:     "Deletes DSA Commission Tier record",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/revenueCommissionDSACommissionTier",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"internal error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	DeleteDSACommissionTier(DeleteDSACommissionTierRequest) DSACommissionTier
+
+	/************ DSA Commission ************/
+
+	// CreateDSACommission Creates DSA Commission record.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/revenue-commission/dsa-commission",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"DSA Commission"},
+	//         Description: "Creates new DSA Commission record.",
+	//         Summary:     "Creates DSA Commission record",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/revenueCommissionDSACommission",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"internal error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	CreateDSACommission(CreateDSACommissionRequest) DSACommission
+
+	// UpdateDSACommission Update DSA Commission record by ID.
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v1/revenue-commission/dsa-commission/{CommID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"DSA Commission"},
+	//         Description: "Updates DSA Commission record by ID.",
+	//         Summary:     "Updates DSA Commission record",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/revenueCommissionDSACommission",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"internal error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	UpdateDSACommission(UpdateDSACommissionRequest) DSACommission
+
+	// GetDSACommissionByID Gets DSA Commission record by ID.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/revenue-commission/dsa-commission/{CommID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"DSA Commission"},
+	//         Description: "Gets DSA Commission record by ID.",
+	//         Summary:     "Gets DSA Commission record",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/revenueCommissionDSACommission",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"internal error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	GetDSACommissionByID(GetDSACommissionByIDRequest) DSACommission
+
+	// ListDSACommission List DSA Commission records.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/revenue-commission/dsa-commission",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"DSA Commission"},
+	//         Description: "List DSA Commission records.",
+	//         Summary:     "List DSA Commission records",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/revenueCommissionListDSACommissionResponse",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"internal error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	ListDSACommission() ListDSACommissionResponse
+
+	// DeleteDSACommission Deletes DSA Commission record by ID.
+	//
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v1/revenue-commission/dsa-commission/{CommID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"DSA Commission"},
+	//         Description: "Deletes DSA Commission record by ID.",
+	//         Summary:     "Deletes DSA Commission record",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/revenueCommissionDSACommission",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"internal error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	DeleteDSACommission(DeleteDSACommissionRequest) DSACommission
+
+	/************ DSA Transaction Count ************/
+
+	// CreateDSATransactionCount Creates DSA Transaction Count record.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/revenue-commission/dsa-trx-count",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"DSA Transaction Count"},
+	//         Description: "Creates new DSA Transaction Count record.",
+	//         Summary:     "Creates DSA Transaction Count record",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/revenueCommissionDSATransactionCount",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"internal error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	CreateDSATransactionCount(CreateDSATransactionCountRequest) DSATransactionCount
+
+	// UpdateDSATransactionCount Updates DSA Transaction Count record.
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v1/revenue-commission/dsa-trx-count/{ID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"DSA Transaction Count"},
+	//         Description: "Updates DSA Transaction Count record.",
+	//         Summary:     "Updates DSA Transaction Count record",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/revenueCommissionDSATransactionCount",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"internal error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	UpdateDSATransactionCount(UpdateDSATransactionCountRequest) DSATransactionCount
+
+	// GetDSATransactionCountByID Gets DSA Transaction Count record by transaction count ID.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/revenue-commission/dsa-trx-count/{ID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"DSA Transaction Count"},
+	//         Description: "Gets DSA Transaction Count record by transaction count ID.",
+	//         Summary:     "Gets DSA Transaction Count record",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/revenueCommissionDSATransactionCount",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"internal error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	GetDSATransactionCountByID(GetDSATransactionCountByIDRequest) DSATransactionCount
+
+	// DeleteDSATransactionCount Deletes DSA Transaction Count record by transaction count ID.
+	//
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v1/revenue-commission/dsa-trx-count/{ID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"DSA Transaction Count"},
+	//         Description: "Deletes DSA Transaction Count record by transaction count ID.",
+	//         Summary:     "Deletes DSA Transaction Count record",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/revenueCommissionDSATransactionCount",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"internal error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	DeleteDSATransactionCount(DeleteDSATransactionCountRequest) DSATransactionCount
+
+	// ListDSATransactionCountAll List all DSA Transaction Count records.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/revenue-commission/dsa-trx-count",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"DSA Transaction Count"},
+	//         Description: "List all DSA Transaction Count records.",
+	//         Summary:     "List all DSA Transaction Count record",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/revenueCommissionListDSATransactionCountResponse",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"internal error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	ListDSATransactionCountAll() ListDSATransactionCountResponse
+
+	// ListDSATransactionCountByYearMonth List DSA Transaction Count records by year and month.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/revenue-commission/dsa-trx-count/year-month/{YearMonth}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"DSA Transaction Count"},
+	//         Description: "List DSA Transaction Count records by year and month.",
+	//         Summary:     "List all DSA Transaction Count record by year and month",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/revenueCommissionListDSATransactionCountResponse",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"internal error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	ListDSATransactionCountByYearMonth(ListDSATransactionCountByYearMonthRequest) ListDSATransactionCountResponse
+
+	// Send Transaction Report
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/send-transaction-report",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"DSA Transaction Count"},
+	//         Description: `Send Transaction Report`,
+	//         Summary:     "Send Transaction Report",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/sendtransactionreport",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	SendTransactionReport(SendTransactionReportRequest)
+}

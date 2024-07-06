@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ .ProjectName }} - Consent</title>
+    <meta name="keywords" content="{{ .ProjectName }}" />
+    <meta name="description" content="{{ .ProjectName }}" />
+    <link rel="stylesheet" href="/assets/css/app.min.css" />
+  </head>
+  <body>
+    <main>
+      <h1 class="mb-6 text-3xl text-white text-center font-medium">
+        Grant to {{ .ProjectName }}
+      </h1>
+      <form
+        action="/consent"
+        method="POST"
+        data-abide
+        novalidate
+        class="form-wrapper"
+      >
+        <div class="">
+          {{ .CSRFField }}
+          <div>Payload {{.}}</div>
+          <input type="hidden" name="challenge" value="{{ .Challenge }}" />
+          <div>
+            <div class="relative">
+              <img
+                src="/assets/images/icons/email.svg"
+                width="16"
+                class="absolute top-0 left-0 mt-5 ml-5"
+              />
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Email"
+                pattern="^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$"
+                class="
+                  mb-3
+                  pl-12
+                  pr-4
+                  h-14
+                  w-full
+                  border
+                  rounded
+                  border-grey-dark-10
+                  focus:border-blue-light-5
+                  bg-blue-dark-15
+                  focus:bg-blue-dark-20
+                  text-white
+                "
+                required
+              />
+            </div>
+          </div>
+          <div class="flex items-center justify-between mb-4 text-sm">
+            <label
+              class="
+                checkbox
+                inline-block
+                relative
+                leading-6
+                pl-8
+                cursor-pointer
+                select-none
+                text-white
+              "
+            >
+              Remember me
+              <input
+                type="checkbox"
+                id="remember"
+                name="remember"
+                tag="testing"
+                value="1"
+                class="w-0 h-0 absolute opacity-0 cursor-pointer"
+              />
+              <span
+                class="
+                  checkmark
+                  w-5
+                  h-5
+                  absolute
+                  top-0
+                  left-0
+                  border-2 border-grey-dark-10
+                "
+              ></span>
+            </label>
+          </div>
+        </div>
+        <button
+          type="submit"
+          class="
+            login-button
+            mb-4
+            w-full
+            h-14
+            rounded
+            bg-blue
+            hover:bg-blue-dark-5
+            text-white
+            font-medium
+          "
+        >
+          Agree
+        </button>
+        <button
+          type="submit"
+	  name="cancel"
+	  value="cancel"
+          class="
+            login-button
+            mb-4
+            w-full
+            h-14
+            rounded
+            bg-blue
+            hover:bg-blue-dark-5
+            text-white
+            font-medium
+          "
+        >
+          Disagree
+        </button>
+      </form>
+    </main>
+  </body>
+</html>

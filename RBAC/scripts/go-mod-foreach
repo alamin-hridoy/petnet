@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Simple script to run a command for each of our modules.
+# If no command is given, it simply prints each directory.
+# We keep a static list of modules, to be sure to not pick up anything else.
+
+modules=(
+  .
+)
+
+if [[ $# == 0 ]]; then
+  set -- pwd
+fi
+
+for dir in ${modules[@]}; do
+  cd $dir
+  if ! "$@"; then
+    echo "Commad failed in module \"$dir\" : $@"
+    exit 1
+  fi
+  cd - > /dev/null
+done

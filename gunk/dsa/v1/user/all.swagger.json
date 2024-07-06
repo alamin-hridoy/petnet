@@ -1,0 +1,657 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/dsa/v1/user/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "UserProfileService"
+    },
+    {
+      "name": "SignupService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/deleteuser/{user_id}": {
+      "get": {
+        "operationId": "UserProfileService_DeleteUserProfile",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/userDeleteUserProfileResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "UserProfileService"
+        ]
+      }
+    },
+    "/v1/enableuser/{user_id}": {
+      "get": {
+        "summary": "Enable user profile.",
+        "operationId": "UserProfileService_EnableUserProfile",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/userEnableUserProfileResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "UserProfileService"
+        ]
+      }
+    },
+    "/v1/invite/{code}": {
+      "get": {
+        "summary": "RetrieveInvite details from platform application.",
+        "operationId": "SignupService_RetrieveInvite",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/userRetrieveInviteResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "SignupService"
+        ]
+      }
+    },
+    "/v1/signup": {
+      "post": {
+        "summary": "Signup signs up a user using the passed in details",
+        "operationId": "SignupService_Signup",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/userSignupResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/userSignupRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SignupService"
+        ]
+      }
+    },
+    "/v1/userprofile": {
+      "get": {
+        "summary": "List profiles.",
+        "description": "List all created user profiles.",
+        "operationId": "UserProfileService_ListUserProfiles",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/profileGetProfileResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Profile"
+        ]
+      }
+    },
+    "/v1/userprofile/{email}": {
+      "get": {
+        "summary": "Get profile.",
+        "description": "Get created user profile from user email.",
+        "operationId": "UserProfileService_GetUserProfileByEmail",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/profileGetUserProfileByEmailResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Profile"
+        ]
+      }
+    },
+    "/v1/userprofile/{oldOrgID}": {
+      "put": {
+        "summary": "Update profile.",
+        "description": "Update a user profile.",
+        "operationId": "UserProfileService_UpdateUserProfileByOrgID",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/profileUpdateProfileByOrgIDResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "oldOrgID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/userUpdateUserProfileByOrgIDRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Profile"
+        ]
+      }
+    },
+    "/v1/userprofile/{profile.user_id}": {
+      "post": {
+        "summary": "Create profile.",
+        "description": "Create a user profile.",
+        "operationId": "UserProfileService_CreateUserProfile",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/profileUpdateProfileResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "profile.user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/userCreateUserProfileRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Profile"
+        ]
+      },
+      "put": {
+        "summary": "Update profile.",
+        "description": "Update a user profile.",
+        "operationId": "UserProfileService_UpdateUserProfile",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/profileUpdateProfileResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "profile.user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/userUpdateUserProfileRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Profile"
+        ]
+      }
+    },
+    "/v1/userprofile/{user_id}": {
+      "get": {
+        "summary": "Get profile.",
+        "description": "Get created user profile from user ID.",
+        "operationId": "UserProfileService_GetUserProfile",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/profileGetProfileResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Profile"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "userCreateUserProfileRequest": {
+      "type": "object",
+      "properties": {
+        "profile": {
+          "$ref": "#/definitions/userProfile"
+        }
+      }
+    },
+    "userCreateUserProfileResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "userDeleteUserProfileResponse": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "userEnableUserProfileResponse": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "userGetUserProfileByEmailResponse": {
+      "type": "object",
+      "properties": {
+        "profile": {
+          "$ref": "#/definitions/userProfile"
+        }
+      }
+    },
+    "userGetUserProfileResponse": {
+      "type": "object",
+      "properties": {
+        "profile": {
+          "$ref": "#/definitions/userProfile"
+        }
+      }
+    },
+    "userListUserProfilesResponse": {
+      "type": "object",
+      "properties": {
+        "profiles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/userProfile"
+          }
+        }
+      }
+    },
+    "userProfile": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "profile_picture": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deleted": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "userRetrieveInviteResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "country_code": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "company_name": {
+          "type": "string"
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "invitation_email": {
+          "type": "string"
+        },
+        "invite_status": {
+          "type": "string"
+        },
+        "invited": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        }
+      }
+    },
+    "userSignupRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string",
+          "title": "Username to be registered"
+        },
+        "first_name": {
+          "type": "string",
+          "title": "First Name of the user"
+        },
+        "last_name": {
+          "type": "string",
+          "title": "Last Name of the user"
+        },
+        "email": {
+          "type": "string",
+          "title": "Email is the email that will be used for subsequent logins\nand will also be used to contact the user in future"
+        },
+        "password": {
+          "type": "string",
+          "title": "Password will be used as the account password"
+        },
+        "invite_code": {
+          "type": "string",
+          "description": "Invite Code is the invite if the user was invited by an org."
+        },
+        "org_id": {
+          "type": "string",
+          "title": "OrgID is the organization identifier for use in org-specific signups"
+        }
+      }
+    },
+    "userSignupResponse": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        }
+      }
+    },
+    "userUpdateUserProfileByOrgIDRequest": {
+      "type": "object",
+      "properties": {
+        "oldOrgID": {
+          "type": "string"
+        },
+        "newOrgID": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "userUpdateUserProfileByOrgIDResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "userUpdateUserProfileRequest": {
+      "type": "object",
+      "properties": {
+        "profile": {
+          "$ref": "#/definitions/userProfile"
+        }
+      }
+    },
+    "userUpdateUserProfileResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

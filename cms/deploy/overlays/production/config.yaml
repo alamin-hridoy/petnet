@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cms-config
+data:
+  RUNTIME_ENVIRONMENT: production
+  SERVER_HOST: ""
+  CORS_ORIGINS: "https://drp.perahub.com.ph,*.drp.perahub.com.ph"
+  HYDRA_ADMINURL: http://hydra-admin
+  AUTH_URL: "https://auth.drp.perahub.com.ph"
+  AUTH_OAUTHURL: https://drp.perahub.com.ph/oauth2
+  AUTH_ISSUER: https://auth.drp.perahub.com.ph/
+  AUTH_TOKEN: https://auth.drp.perahub.com.ph/
+  AUTH_COOKIEMAXAGE: "0"
+  TEMPLATES_LOGINURL: https://auth.drp.perahub.com.ph
+  PROFILE_INTERNAL: "profile-admin:80"
+  GCS_BUCKETNAME: dsa-onboarding-prod-2
+  DRP_SANDBOXINTERNAL: drp-api-internal-sandbox:80
+  DRP_LIVEINTERNAL: drp-api-internal:80
+  SERVER_BASEURL: "https://drp.perahub.com.ph"
+  INFLUXDB_BUCKET: conexprod
+  INFLUXDB_ORGANIZATION: conex
+  FEATURE_SERVICEREQUEST: "true"

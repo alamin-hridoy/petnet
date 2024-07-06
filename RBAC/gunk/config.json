@@ -1,0 +1,36 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "RBAC API",
+    "version": "0.0.1"
+  },
+  "apis": [
+    {
+      "url": "./v1/authenticate/all.swagger.json"
+    },
+    {
+      "url": "./v1/invite/all.swagger.json"
+    },
+    {
+      "url": "./v1/mfa/all.swagger.json"
+    },
+    {
+      "url": "./v1/oauth2/all.swagger.json"
+    },
+    {
+      "url": "./v1/consent/all.swagger.json"
+    },
+    {
+      "url": "./v1/permissions/all.swagger.json"
+    },
+    {
+      "url": "./v1/serviceaccount/all.swagger.json"
+    },
+    {
+      "url": "./v1/user/all.swagger.json"
+    },
+    {
+      "url": "./v1/organization/all.swagger.json"
+    }
+  ]
+}

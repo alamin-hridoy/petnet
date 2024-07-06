@@ -1,0 +1,8 @@
+- op: replace
+  path: /spec/tls/0/hosts
+  value:
+    - idnty.cebcorp.staging.bnk.to
+
+- op: replace
+  path: /spec/rules/0/host
+  value: idnty.cebcorp.staging.bnk.to

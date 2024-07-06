@@ -1,0 +1,17 @@
+<form method="POST" action="/register-user">
+    {{ .CSRFField }}
+    <input name="Types" value="{{.Types}}" type="hidden">
+    <div>
+        <button type="submit">Register User</button>
+    </div>
+    <br>
+    <input name="Partner" value="{{.Partner}}" type="hidden">
+    <input name="Type" value="{{.Type}}" type="hidden">
+    <br>
+    <div>
+        <label>Email Address</label>
+    </div>
+    <div>
+        <input name="RegisterUserReq.Email" {{if .RegisterUserReq.Email}}value="{{.RegisterUserReq.Email}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+</form>

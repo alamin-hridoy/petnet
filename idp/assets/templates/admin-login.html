@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hackolosseum Login</title>
+    <meta name="keywords" content="APIX">
+    <meta name="description" content="APIX">
+    <link rel="stylesheet" href="/assets/css/app.min.css" />
+  </head>
+
+  <script>
+
+    const tabid = Math.random().toString(36);
+
+    localStorage.setItem('tabid', tabid)
+    window.addEventListener('storage', messageReceive);
+    let hidden = false;
+    function messageReceive(ev) {
+      if (ev.key === 'tabid') {
+        if (localStorage.getItem('tabid') !== tabid) {
+          if (!hidden) {
+            hidden = true;
+            document.getElementById("main-login").classList.add("hidden");
+            document.getElementById("multi-tab-error").classList.remove("hidden");
+          }
+        }
+      }
+    }
+
+    function hideSignupNotify() {
+      document.getElementById("signup-notify").classList.add("hidden");
+    }
+
+    window.addEventListener("load", (event) => {
+      const emailInput = document.querySelector("#email");
+      const passwordInput = document.querySelector("#password");
+      const closeButton = document.querySelector("#close-button");
+      const invalidEmailError = document.querySelector("#invalidEmailError");
+      const emptyEmailError = document.querySelector("#emptyEmailError");
+      const emptyPasswordError = document.querySelector("#emptyPasswordError");
+
+      emailInput.addEventListener("input", (event) => {
+        const isValid = event.target.checkValidity();
+        if (emptyEmailError) {
+          emptyEmailError.classList.add("hidden");
+        }
+        if (!isValid) {
+          invalidEmailError.classList.remove("hidden");
+          emailInput.classList.add("error-message-border");
+        } else {
+          invalidEmailError.classList.add("hidden");
+          emailInput.classList.remove("error-message-border");
+        }
+      });
+
+      passwordInput.addEventListener("input", (event) => {
+        if (emptyPasswordError) {
+          emptyPasswordError.classList.add("hidden");
+          passwordInput.classList.remove("error-message-border");
+        }
+      });
+
+      if (closeButton) {
+        closeButton.addEventListener(
+          "click",
+          (event) => {
+            event.preventDefault();
+            closeButton.parentElement.classList.add("hidden");
+          },
+          false
+        );
+      }
+    });
+    // Toggle show password
+    //
+    function showPassword() {
+      var password = document.querySelector("input.password");
+      password.type = password.type === "password" ? "text" : "password";
+    }
+  </script>
+
+  <body>
+    <main class="pt-20">
+      <div class="container max-w-xs mx-auto text-center mt-12 pb-40 relative">
+        <!-- <img src="/assets/images/logo.png" alt="Perahub Logo" class="m-auto mb-16"/> -->
+        <div
+          class="container max-w-xs mx-auto text-center pt-20 xs:pt-8 pb-56 relative hidden"
+          id="multi-tab-error"
+        >
+          <p>
+            <!-- this is just when user opens two tabs, the background tab needs to be disabled
+                 and link displayed back to the ORIGINAL login (not this page) -->
+            Please try to log in again.
+            <br><br>
+            <a
+              href="{{ .HackathonURL }}/admin/login"
+              class="h-10 leading-10 xl:w-40 w-20 rounded inline-block bg-blue-light-15 hover:bg-blue-dark-30 text-center text-white hover:text-white font-semibold"
+            >
+              Log in
+            </a>
+          </p>
+        </div>
+        <div id="main-login">
+
+          <h1 class="mb-6 text-2xl text-blue-dark-5 font-bold">Log in to your account</h1>
+          <div id="login-error" class="mb-2 py-2 px-2 hidden text-red text-sm border rounded border-red">
+            <strong class="font-bold">Login error</strong>
+            <p class="" id="error-msg"></p>
+          </div>
+
+          <div
+            id="signup-notify"
+            class="mb-2 py-2 px-2 hidden text-red text-sm border rounded text-blue border-blue-light-5 {{ if not .AfterSignup }}hidden{{ end }}"
+          >
+            <div>
+              <strong class="font-bold">Registration completed successfully!</strong>
+            </div>
+            <div class="leading-10" onclick="hideSignupNotify()">
+              <img
+                class="close-button inline-block"
+                alt="close"
+                width="14px"
+                src="/assets/images/icons/close-black.svg"
+              />
+            </div>
+          </div>
+
+          <!--
+          these don't work as we don't have forgot password here
+
+          div class="hidden mb-2 py-2 px-2 flex flex-wrap justify-between items-center text-blue text-left border rounded border-blue">
+              <span>
+                Email sent! Please check your inbox.
+              </span>
+            <span class="cursor-pointer mr-2">
+                <img src="/images/icons/close-blue.png" width="9" class=""/>
+              </span>
+          </div>
+          <div class="hidden mb-2 py-2 px-2 flex flex-wrap justify-between items-center text-blue text-left border rounded border-blue">
+              <span>
+                Log in with your updated password!
+              </span>
+            <span class="cursor-pointer mr-2">
+                <img src="/images/icons/close-blue.png" width="9" class=""/>
+              </span>
+          </div-->
+          <form
+            action="/login"
+            method="POST"
+            data-abide
+            novalidate
+            class="form-wrapper"
+          >
+            {{ .CSRFField }}
+            <input type="hidden" name="admin" value="true" />
+            <input type="hidden" name="remember" value="true" />
+            <input type="hidden" name="challenge" value="{{ .Challenge }}" />
+
+            {{if .CallbackErr}}
+              <div
+                class="flex justify-between invalid-message py-2 px-2 mb-2 items-center text-red text-sm border rounded border-red"
+              >
+                <label>There was an error logging you in, please try again.</label>
+              </div>
+            {{end}}
+
+            {{if .LoginErrors.username}}
+              <div
+                class="flex justify-between invalid-message py-2 px-2 mb-2 items-center text-red text-sm border rounded border-red"
+              >
+                <label>{{.LoginErrors.username}}</label>
+                <button id="close-button" class="close-button">X</button>
+              </div>
+            {{end}}
+
+            <div>
+              <div
+                class="error-message mb-2 py-2 px-2 hidden text-red text-sm border rounded border-red"
+                id="invalidEmailError"
+              >
+                Please enter email in the format name@example.com
+              </div>
+              {{if .LoginErrors.emailError}}
+                <div
+                  class="error-message py-2 px-2 mb-2 text-red text-sm border rounded border-red"
+                  id="emptyEmailError"
+                >
+                  {{.LoginErrors.emailError}}
+                </div>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Enter Email Address"
+                  pattern="^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$"
+                  value="{{.LoginErrors.email}}"
+                  class="error-message-border mb-2 px-4 h-10 w-full border rounded border-grey-light-5 focus:border-grey focus:outline-none bg-grey-light-10 text-grey transition duration-300 ease-in-out"
+                  required
+                />
+              {{else}}
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Enter Email Address"
+                  pattern="^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$"
+                  value="{{if .LoginErrors.email}}{{.LoginErrors.email}}{{else}}{{.EmailPrefill}}{{end}}"
+                  class="mb-2 px-4 h-10 w-full border rounded border-grey-light-5 focus:border-grey focus:outline-none bg-grey-light-10 text-grey transition duration-300 ease-in-out"
+                  required
+                />
+              {{end}}
+            </div>
+
+            <div>
+              {{if .LoginErrors.passwordError}}
+              <div
+                class="absolute error-message py-1 px-5"
+                id="emptyPasswordError"
+              >
+                {{.LoginErrors.passwordError}}
+              </div>
+              <div class="input password relative">
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Password"
+                  class="error-message-border password mb-4 px-4 h-10 w-full border rounded border-grey-light-5 focus:border-grey focus:outline-none bg-grey-light-10 text-grey transition duration-300 ease-in-out"
+                  required
+                />
+                <span
+                  class="cursor-pointer absolute top-0 right-0 mt-3 mr-3"
+                  onclick="showPassword()"
+                >
+                  <img
+                    class="pw-show hidden"
+                    src="/assets/images/apix/show-password.svg"
+                    width="20"
+                  />
+                  <img
+                    class="pw-hide hidden"
+                    src="/assets/images/apix/hide-password.svg"
+                    width="20"
+                  />
+                </span>
+              </div>
+              {{else}}
+              <div class="input password relative">
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Password"
+                  class="password mb-4 px-4 h-10 w-full border rounded border-grey-light-5 focus:border-grey focus:outline-none bg-grey-light-10 text-grey transition duration-300 ease-in-out"
+                  required
+                />
+                <span
+                  class="cursor-pointer absolute top-0 right-0 mt-3 mr-3"
+                  onclick="showPassword()"
+                >
+                  <img
+                    class="pw-show hidden"
+                    src="/assets/images/apix/show-password.svg"
+                    width="20"
+                  />
+                  <img
+                    class="pw-hide hidden"
+                    src="/assets/images/apix/hide-password.svg"
+                    width="20"
+                  />
+                </span>
+              </div>
+              {{end}}
+            </div>
+
+            <button
+              type="submit"
+              class="mb-6 w-full h-10 rounded bg-orange-light-10 hover:bg-orange-dark-10 font-semibold focus:outline-none transition duration-300 ease-in-out"
+            >
+              Login
+            </button>
+            <a
+              href="{{ .GithubLoginURL }}"
+              class="block mb-5 w-full py-2 text-sm text-blue-dark-5 border rounded border-blue-dark-5 font-semibold"
+            >
+              <img
+                src="/assets/images/apix/github-btn.png"
+                width="20"
+                alt="log in"
+                class="inline-block mr-1"
+              />
+              Continue with GitHub
+            </a>
+          </form>
+          <div class="w-64 h-px mx-auto mb-8 bg-grey"></div>
+          <a href="/forgot-password" class="mb-3 inline-block text-sm text-blue hover:underline">
+            Forgot password
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+  </body>
+</html>

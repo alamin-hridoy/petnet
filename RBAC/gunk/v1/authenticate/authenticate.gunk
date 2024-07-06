@@ -1,0 +1,165 @@
+package authenticate
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+
+	"brank.as/rbac/gunk/v1/mfa"
+)
+
+type LoginRequest struct {
+	Username string `pb:"1" json:"username"`
+	Password string `pb:"2" json:"password"`
+	// Auth Client ID for identifying the organization that is requesting the session.
+	ClientID string `pb:"3" json:"client_id"`
+	// Additional or alternative form inputs for authentication.
+	Extra map[string]string `pb:"4" json:"extra"`
+	// MFA event identifier for confirming user identity.
+	MFAEventID string `pb:"5" json:"mfa_event_id"`
+	// Expected type of MFA.
+	MFAType mfa.MFA `pb:"6" json:"mfa_type"`
+	// MFA Token for authentication.
+	MFAToken string `pb:"7" json:"mfa_token"`
+	// Auth Subject ID for identifying the user that is being validated.
+	Subject string `pb:"8" json:"subject"`
+}
+
+type Session struct {
+	// User unique identifier.
+	UserID string `pb:"1" json:"user_id"`
+	// Organization unique identifier.
+	OrgID string `pb:"2" json:"org_id"`
+	// Internal session data, will be accessible in authentication middleware.
+	Session map[string]string `pb:"3" json:"session"`
+	// Public session data, will be accessible in OpenID userinfo endpoint.
+	OpenID map[string]string `pb:"4" json:"open_id"`
+	// Returned when MFA is required before the session is created.
+	MFAEventID string `pb:"5" json:"mfa_event_id"`
+	// Expected type of MFA.
+	MFAType mfa.MFA `pb:"6" json:"mfa_type"`
+	// Included when password is expiring.
+	PasswordExpiry time.Time `pb:"7" json:"password_expiry"`
+	// Password change/reset is required.  Login cannot complete until reset is complete.
+	ResetRequired bool `pb:"8" json:"reset_required"`
+	// Auth attempt count.
+	Attempt int `pb:"9" json:"attempt"`
+	// User login is required or the user's session is inconsistent.
+	// Identity to be authenticated must be set in `UserID` field.
+	ForceLogin bool `pb:"10" json:"force_login"`
+}
+
+type GetSessionRequest struct {
+	// User unique identifier.
+	UserID string `pb:"1" json:"user_id"`
+	// Auth Client ID for identifying the organization that is requesting the session.
+	ClientID string `pb:"2" json:"client_id"`
+	// Additional or alternative form inputs for authentication.
+	Extra map[string]string `pb:"3" json:"extra"`
+}
+
+type RetryMFARequest struct {
+	// Auth Subject ID for identifying the user that is being validated.
+	Subject string `pb:"1" json:"subject"`
+	// Auth Client ID for identifying the organization that is requesting the session.
+	ClientID string `pb:"2" json:"client_id"`
+	// MFA event identifier for confirming user identity.
+	MFAEventID string `pb:"3" json:"mfa_event_id"`
+	// Expected type of MFA.
+	MFAType mfa.MFA `pb:"4" json:"mfa_type"`
+}
+
+type SessionError struct {
+	Message           string            `pb:"1" json:"message"`
+	TrackingAttempts  bool              `pb:"2" json:"retry"` // TrackingAttempts is called "retry" in json for backwards compatibility
+	RemainingAttempts int               `pb:"3" json:"remaining_attempts"`
+	ErrorDetails      map[string]string `pb:"4" json:"error_details"`
+}
+
+type SessionService interface {
+	// Authenticate user by username and password challenge.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/authenticate",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Authenticate"},
+	//         Description: "Authenticate user session.",
+	//         Summary: `Authenticate user with username(or email) and password.
+	// 	   		Provide session info to enrich the login.`,
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/authenticateSession",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/rpcStatus",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	Login(LoginRequest) Session
+
+	// Get existing user session details.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/authenticate/{UserID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Authenticate"},
+	//         Description: "Get user session.",
+	//         Summary: `Get existing user session.
+	// 	   		Provide session info to enrich the login.`,
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/authenticateSession",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/rpcStatus",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	GetSession(GetSessionRequest) Session
+
+	// Authenticate user by username and password challenge.
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v1/authenticate/{MFAEventID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Authenticate"},
+	//         Description: "Retry MFA.",
+	//         Summary:     `Reset and re-send (if necessary) the MFA token.`,
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/authenticateSession",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/rpcStatus",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	RetryMFA(RetryMFARequest) Session
+}

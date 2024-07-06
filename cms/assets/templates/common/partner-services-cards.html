@@ -1,0 +1,62 @@
+<div id="{{ .SType}}" class="w-full service-type-card">
+    <div class="bg-white rounded pb-4">
+        <div class="card-header flex justify-between px-4 py-4 border-b border-b-gray-600">
+            <h5 class="text-lg font-normal font-sans text-black">
+                {{if eq .SType "REMITTANCE"}}
+                    Remittance
+                {{else if eq .SType "BILLSPAYMENT"}}
+                    Bills Payment
+                {{else if eq .SType "MICROINSURANCE"}}
+                    Micro Insurance
+                {{else if eq .SType "CASHINCASHOUT"}}
+                    Cash In/Cash Out
+                {{end}}
+            </h5>
+            <div>
+                <a onclick="changeAllPartnerStatus('{{ .SType}}', 'Enable')" id="{{ .SType}}-Enable" href="javaScript:;" class="text-base font-semibold endBtnColor">Enable all</a>
+                <span>|</span>
+                <a onclick="changeAllPartnerStatus('{{ .SType}}', 'Disable')" id="{{ .SType}}-Disable" href="javaScript:;" class="text-base font-semibold dsbBtnColor"> Disable all</a>
+            </div>
+        </div>
+        <ul>
+            {{range .ServicePartnerList}}
+                {{if eq .ServiceName $.SType}}
+                    <li>
+                        <div class="px-4 pt-4 flex justify-between">
+                            <div class="">
+                                <div class="text-base text-gray-700 font-normal">
+                                    <span class="">{{ .Name }}</span>
+                                    {{if and (ne .Status "ENABLED") (ne .DisableReason "")}}
+                                        <span class="inline-block -ml-1 -mt-4">
+                                            <div class="relative inline-block">
+                                                <img class="inline-flex infoImg cursor-pointer" src="{{ assetHash "/images/info1.png" }}" alt="">
+                                                <div class="hide absolute w-48 -mt-2 left-full py-2 ml-1 top-08 z-20 bg-black transform -translate-y-1/2 px-4 text-sm font-semibold text-white">
+                                                    <div class="absolute -left-1 top-1/2 -z-10 h-3 w-3 transform -translate-y-1/2 rotate-45 bg-black"></div>
+                                                    <p class="break-words text-xs">
+                                                        Disabled due to {{ .DisableReason}}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </span>
+                                    {{end}}
+                                </div>
+                                {{ if .UpdatedUsrName}}
+                                    <p class="text-xs font-normal text-gray-400 ">by <span>{{.UpdatedUsrName}}</span> on <span> {{formatDate .Updated "January 02, 2006"}} </span></p>
+                                {{end}}
+                            </div>
+                            <div class="flex justify-center">
+                                <label for="{{ $.SType}}-{{ .Stype}}-checkbox" class="flex items-center cursor-pointer">
+                                    <div class="relative">
+                                        <input name="{{ $.SType}}_{{ .Stype}}" value="{{ .Stype}}" type="checkbox" id="{{ $.SType}}-{{ .Stype}}-checkbox" class="sr-only toggle-checkbox" {{if eq .Status "ENABLED"}} checked{{end}}>
+                                        <div onclick="changePartnerStatus('{{ $.SType}}', this)" data-Name="{{ .Name}}" class="block toggle-label bg-gray-300 w-14 h-8 rounded-full"></div>
+                                        <div onclick="changePartnerStatus('{{ $.SType}}', this)" data-Name="{{ .Name}}" class="dot absolute  left-1 top-1 bg-white w-6 h-6 rounded-full transition"></div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </li>
+                {{end}}
+            {{end}}
+        </ul>
+    </div>
+</div>

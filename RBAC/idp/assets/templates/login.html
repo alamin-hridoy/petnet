@@ -1,0 +1,227 @@
+
+
+
+<!DOCTYPE html>
+<html class="no-js" lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{.ProjectName}} - Login</title>
+  <meta name="keywords" content="{{.ProjectName}}" />
+  <meta name="description" content="{{.ProjectName}}" />
+  <link rel="stylesheet" href="/assets/css/app.min.css" />
+
+<script>
+
+  function hideSignupNotify() {
+      document.getElementById("signup-notify").classList.add("hidden");
+  }
+
+  function submitForgotPassword() {
+    const errorMsg = {
+      invalidEmail:
+        "No account exists with this email address. Please enter correct email address associated with your account.",
+      genericError: "Sorry, something went wrong with our system.",
+    };
+    const email = document.getElementById("forgot-password-email").value;
+    const errorMsgContainer = document.getElementById("error-msg");
+    errorMsgContainer.classList.add("hidden");
+    if (email) {
+      const signupUrl = "{{.SignupURL}}";
+      const xhr = new XMLHttpRequest();
+      const modal = document.querySelector("#forgot-password-modal");
+      xhr.open("POST", `${signupUrl}/v1/forgotpassword`, true);
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.onreadystatechange = function () {
+        if (xhr.status === 200) {
+          document
+            .getElementById("forgot-password-form")
+            .classList.add("hidden");
+          document
+            .getElementById("forgot-password-success")
+            .classList.remove("hidden");
+        } else if (xhr.status === 404) {
+          errorMsgContainer.innerText = errorMsg.invalidEmail;
+          errorMsgContainer.classList.remove("hidden");
+        } else {
+          errorMsgContainer.innerText = errorMsg.genericError;
+          errorMsgContainer.classList.remove("hidden");
+        }
+        modal.classList.remove("loading");
+      };
+      modal.classList.add("loading");
+      xhr.send(JSON.stringify({ email }));
+    } else {
+      errorMsgContainer.innerText = errorMsg.invalidEmail;
+      errorMsgContainer.classList.remove("hidden");
+    }
+  }
+
+  window.addEventListener("load", (event) => {
+    const emailInput = document.querySelector("#email");
+    const passwordInput = document.querySelector("#password");
+    const closeButton = document.querySelector("#close-button");
+    const invalidEmailError = document.querySelector("#invalidEmailError");
+    const emptyEmailError = document.querySelector("#emptyEmailError");
+    const emptyPasswordError = document.querySelector("#emptyPasswordError");
+
+    emailInput.addEventListener("blur", (event) => {
+      const isValid = event.target.checkValidity();
+      if (emptyEmailError) {
+        emptyEmailError.classList.add("hidden");
+      }
+      if (!isValid && emailInput && emailInput.value) {
+        invalidEmailError.classList.remove("hidden");
+        emailInput.classList.add("error-message-border");
+      } else {
+        invalidEmailError.classList.add("hidden");
+        emailInput.classList.remove("error-message-border");
+      }
+    });
+
+    passwordInput.addEventListener("input", (event) => {
+      if (emptyPasswordError) {
+        emptyPasswordError.classList.add("hidden");
+        passwordInput.classList.remove("error-message-border")
+      }
+    });
+
+    if (closeButton) {
+      closeButton.addEventListener(
+        "click",
+        (event) => {
+          event.preventDefault();
+          closeButton.parentElement.classList.add("hidden");
+        },
+        false
+      );
+    }
+  });
+  // Toggle show password
+  //
+  function showPassword() {
+    var password = document.querySelector('input.password');
+    password.type = (password.type==="password") ? "text" : "password";
+  }
+</script>
+</head>
+
+<body>
+  <main>
+    <div class="bg-blue-dark-15 relative z-0">
+      <div class="container justify-center items-center m-auto flex flex-wrap">
+        <div class="w-full md:w-1/2 min-h-screen flex items-center justify-center py-24 px-6" id="contact-us">
+          <div class="w-full max-w-420 m-auto">
+				 <h1 class="mb-6 text-3xl text-white text-center font-medium">Login to {{.ProjectName}}</h1>
+            <div id="signup-notify" class="signup-notify flex flex-wrap justify-between px-4 mb-5 w-full h-10 leading-10 text-sm text-blue border rounded border-blue {{ if not .AfterSignup }}hidden{{ end }}">
+              <div>
+                <span class="font-medium">Registration completed successfully!</span>
+              </div>
+              <div class="leading-10 cursor-pointer" onclick="hideSignupNotify()">
+                <img class="close-button inline-block" alt="close" width="14" src="/assets/images/icons/close-blue.png">
+              </div>
+            </div>
+
+            <form action="/login" method="POST" data-abide novalidate class="form-wrapper">
+              <div class="">
+                {{ .CSRFField }}
+                <input type="hidden" name="challenge" value="{{ .Challenge }}" />
+                {{if .LoginErrors.username}}
+                <div class="flex justify-between invalid-message py-2 px-4 mb-2 items-center text-red text-sm border rounded border-red">
+                  <label>{{.LoginErrors.username}}</label>
+                  <button id="close-button" class="close-button">
+                    <img class="inline-block" alt="close" width="14" src="/assets/images/icons/close-red.png">
+                  </button>
+                </div>
+                {{end}}
+                <div>
+                  <div class="error-message mb-2 py-2 px-2 hidden text-red text-sm border rounded border-red" id="invalidEmailError">
+                    Please enter email in the format name@example.com
+                  </div>
+                  {{if .LoginErrors.emailError}}
+                  <div class="error-message mb-2 py-2 px-2 mb-2 mb-2 text-red text-sm border rounded border-red" id="emptyEmailError">
+                    {{.LoginErrors.emailError}}
+                  </div>
+                  <div class="relative">
+                    <img src="/assets/images/icons/email.svg" width="16" class="absolute top-0 left-0 mt-5 ml-5"/>
+                    <input type="email" id="email" name="email" placeholder="Email"
+                    pattern="^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$"
+                    value="{{.LoginErrors.email}}" class="error-message-border mb-3 pl-12 pr-4 h-14 w-full border rounded border-grey-dark-10 focus:border-blue-light-5 bg-blue-dark-15 focus:bg-blue-dark-20 text-white" required />
+                  </div>
+                  {{else}}
+                  <div class="relative">
+                    <img src="/assets/images/icons/email.svg" width="16" class="absolute top-0 left-0 mt-5 ml-5"/>
+                    <input type="email" id="email" name="email" placeholder="Email"
+                    pattern="^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$"
+                    value="{{.LoginErrors.email}}{{.RedirectionEmail}}" class="mb-3 pl-12 pr-4 h-14 w-full border rounded border-grey-dark-10 focus:border-blue-light-5 bg-blue-dark-15 focus:bg-blue-dark-20 text-white" required />
+                  </div>
+                  {{end}}
+                </div>
+                <div>
+                  {{if .LoginErrors.passwordError}}
+                  <div class="absolute error-message py-1 px-5" id="emptyPasswordError">
+                    {{.LoginErrors.passwordError}}
+                  </div>
+                  <div class="input password relative">
+                    <img src="/assets/images/icons/lock.svg" width="17" class="absolute top-0 left-0 mt-5 ml-5"/>
+                    <input
+                      type="password"
+                      id="password"
+                      name="password"
+                      placeholder="Password"
+                      class="error-message-border password mb-3 pl-12 pr-8 h-14 w-full border rounded border-grey-dark-10 focus:border-blue-light-5 bg-blue-dark-15 focus:bg-blue-dark-20 text-white"
+                      required />
+                    <span class="cursor-pointer absolute top-0 right-0 mt-5 mr-3" onclick="showPassword()">
+                      <img class="pw-show hidden" src="/assets/images/icons/show-password.svg" width="20">
+                      <img class="pw-hide hidden" src="/assets/images/icons/hide-password.svg" width="20">
+                    </span>
+                  </div>
+                  {{else}}
+                  <div class="input password relative">
+                    <img src="/assets/images/icons/lock.svg" width="17" class="absolute top-0 left-0 mt-5 ml-5"/>
+                    <input
+                      type="password"
+                      id="password"
+                      name="password"
+                      placeholder="Password"
+                      class="password mb-3 pl-12 pr-8 h-14 w-full border rounded border-grey-dark-10 focus:border-blue-light-5 bg-blue-dark-15 focus:bg-blue-dark-20 text-white"
+                      required />
+                    <span class="cursor-pointer absolute top-0 right-0 mt-5 mr-3" onclick="showPassword()">
+                      <img class="pw-show hidden" src="/assets/images/icons/show-password.svg" width="20">
+                      <img class="pw-hide hidden" src="/assets/images/icons/hide-password.svg" width="20">
+                    </span>
+                  </div>
+                  {{end}}
+                </div>
+                <div class="flex items-center justify-between mb-4 text-sm">
+                  <label class="checkbox inline-block relative leading-6 pl-8 cursor-pointer select-none text-white">
+                    Remember me
+                    <input type="checkbox" id="remember" name="remember" value="1" class="w-0 h-0 absolute opacity-0 cursor-pointer" />
+                    <span class="checkmark w-5 h-5 absolute top-0 left-0 border-2 border-grey-dark-10"></span>
+                  </label>
+                  <a href="/forgot-password" class="text-white hover:underline">
+                    Forgot password?
+                  </a>
+                </div>
+              </div>
+              <button
+                type="submit"
+                class="login-button mb-4 w-full h-14 rounded bg-blue hover:bg-blue-dark-5 text-white font-medium">
+                Login
+              </button>
+              <a href="{{.SignupURL}}" class="inline-block text-blue hover:underline" id="signup-link">
+                Signup for an account
+              </a>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+</body>
+
+</html>

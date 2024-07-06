@@ -1,0 +1,7 @@
+--options.theme.colors.primary.main='#1A2791'
+--options.theme.http.get='#05ACE5'
+--options.theme.http.post='#2ec76e'
+--options.theme.http.put='#6633CC'
+--options.theme.typography.fontFamily='avenirLT'
+--options.theme.rightPanel.backgroundColor='#3B4BCB'
+--options.sortPropsAlphabetically=true

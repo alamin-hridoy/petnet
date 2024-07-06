@@ -1,0 +1,238 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>Auth Code</title>
+</head>
+
+<body class="font-sans">
+    <div class="flex">
+        <!-- sidebar-start -->
+        {{ template "dsa-sidenav-menu.html" dict "Type" "api-pages" "Data" .}}
+        <!-- sidebar-end -->
+        <!-- right-top-header-start -->
+        <div class="min-h-screen w-full flex bg-petnetgray">
+            <div class="w-full">
+                {{ template "api-head.html" dict "Env" .Environment "RouteName" "auth-code" "UserInfo" .UserInfo "CompanyName" .CompanyName "OnboardingIncompleteStatus" .OnboardingIncompleteStatus "HasLiveAccess" .HasLiveAccess}}
+                <!-- right-top-header-end -->
+                <div class="">
+                    <div>
+                        <!-- first-section-start -->
+                        <div class="px-6 lg:px-32 py-10 flex flex-wrap">
+                            <div class="w-1/4 pr-2 flex flex-col">
+                                {{ template "api-sidenav.html" . }}
+                            </div>
+
+                            <div class="w-3/4 pl-2">
+                                {{if ne .ErrorMsg ""}}
+                                <div class="flex justify-center bg-white">
+                                    <div id="alert-show-error" role="alert" class="w-2/3 mt-5">
+                                        <!-- petnetpink text-white -->
+                                        <div
+                                            class="p-3 bg-petnetpink w-full text-black mb-4 bg-opacity-20 rounded-lg border border-petnetpink flex items-center ">
+                                            <span
+                                                class="p-2 rounded-lg bg-petnetpink flex justify-center items-center mr-3">
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                    class="h-6 w-6 text-white rounded-full" viewBox="0 0 20 20"
+                                                    fill="currentColor">
+                                                    <path fill-rule="evenodd"
+                                                        d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                                        clip-rule="evenodd" />
+                                                </svg>
+                                            </span>
+                                            <span>
+                                                {{.ErrorMsg}}
+                                            </span>
+                                            <a href="javascript:;" class="mr-2 text-gray-400 inline-block w-3 ml-auto"
+                                                id="alert-remove-error" onclick="hidealertMessage()">
+                                                <svg width="15" height="15" viewBox="0 0 12 12" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        d="M11.25 0.757931C11.0943 0.601887 10.8829 0.514193 10.6625 0.514193C10.442 0.514193 10.2307 0.601887 10.075 0.757931L5.99998 4.8246L1.92498 0.749597C1.76928 0.593553 1.55791 0.505859 1.33748 0.505859C1.11704 0.505859 0.905668 0.593553 0.749976 0.749597C0.424976 1.0746 0.424976 1.5996 0.749976 1.9246L4.82498 5.9996L0.749976 10.0746C0.424976 10.3996 0.424976 10.9246 0.749976 11.2496C1.07498 11.5746 1.59998 11.5746 1.92498 11.2496L5.99998 7.1746L10.075 11.2496C10.4 11.5746 10.925 11.5746 11.25 11.2496C11.575 10.9246 11.575 10.3996 11.25 10.0746L7.17497 5.9996L11.25 1.9246C11.5666 1.60793 11.5666 1.0746 11.25 0.757931Z"
+                                                        fill="#000000" />
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{end}}
+                                <div class="bg-white rounded mb-3 pb-4">
+                                    <form acction="/oauth2-authorization-code/{{.Environment}}" method="POST">
+                                        {{.CSRFField}}
+                                        <div class="border-b flex items-center justify-between">
+                                            <h4 class="text-xl font-bold text-petnetblue pt-7 px-6 pb-4">OAuth 2.0
+                                                Authorization Code</h4>
+                                            <button type="submit"
+                                                class="bg-petnetyellow rounded-lg h-14 font-bold text-lg m-6 p-4 text-petnetblue">
+                                                Generate Credentials
+                                            </button>
+                                        </div>
+                                        <div>
+                                            <div class="grid grid-cols-6 gap-6 mb-2 px-8 pt-3">
+                                                <div class="col-span-4 sm:col-span-3 pr-16">
+                                                    <label for="" class="block  font-medium ">Name
+                                                    </label>
+                                                    <input type="text" required="required" name="Name" id=""
+                                                        placeholder="name"
+                                                        class=" mt-2 w-full py-2 px-3 focus:outline-none border rounded bg-petnetgray">
+                                                </div>
+
+                                                <div class="col-span-4 sm:col-span-3 pr-16">
+                                                    <label for="" class="block  font-medium ">Logo URL
+                                                    </label>
+                                                    <input type="text" required="required" name="LogoURL" id=""
+                                                        placeholder="https://"
+                                                        class=" mt-2 w-full py-2 px-3 focus:outline-none border rounded bg-petnetgray">
+                                                </div>
+                                            </div>
+                                            <div class="grid grid-cols-6 gap-6 mb-2 px-8 pt-3">
+                                                <div class="col-span-4 sm:col-span-3 pr-16">
+                                                    <label for="" class="block  font-medium ">Logout URL
+                                                    </label>
+                                                    <input type="text" required="required" name="LogoutRedirectURL"
+                                                        id="" placeholder="https://"
+                                                        class="mt-2 w-full py-2 px-3 focus:outline-none border rounded bg-petnetgray">
+                                                </div>
+
+                                                <div class="col-span-6 sm:col-span-3 pr-16">
+                                                    <label for="" class="block  font-medium ">Cors Origin
+                                                    </label>
+                                                    <textarea rows="1" required="required" name="CORS" id=""
+                                                        placeholder="https://"
+                                                        class=" mt-2 w-full py-2 px-3 focus:outline-none border rounded bg-petnetgray appearance-none resize-none"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="grid grid-cols-6 gap-6 mb-2 px-8 pt-3">
+                                                <div class="col-span-6 sm:col-span-3 pr-16">
+                                                    <label for="" class="block  font-medium ">Redirect URL
+                                                    </label>
+                                                    <textarea rows="1" required="required" name="RedirectURL" id=""
+                                                        placeholder="https://"
+                                                        class="mt-2 w-full py-2 px-3 focus:outline-none border rounded bg-petnetgray appearance-none resize-none"></textarea>
+                                                </div>
+                                                <div class="col-span-6 sm:col-span-3 pt-6">
+                                                    <div class="relative inline-block">
+                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                            class="h-6 w-6 absolute top-2 right-2" fill="none"
+                                                            viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                        </svg>
+                                                        <select class="pr-6 pl-4 py-2 appearance-none"
+                                                            name="ClientType">
+                                                            <option value="1" class="px-6 py-2">Public</option>
+                                                            <option value="0" class="px-6 py-2 ">Private</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="grid grid-cols-6 gap-6 mb-2 px-8">
+                                                <div class="col-span-6 sm:col-span-3 pr-16">
+                                                    <label for="" class="block  font-medium ">Scope:
+                                                    </label>
+                                                    <textarea required="required" name="Scopes" id="" cols="30"
+                                                        rows="10"
+                                                        class="resize-none mt-2 w-full py-2 px-3 focus:outline-none border rounded bg-petnetgray appearance-none h-40"
+                                                        placeholder="Enter scope"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div>
+                                        <table class="w-full m-4">
+                                            <thead class="">
+                                                <tr>
+                                                    <td class="pl-12 text-lg p-4">
+                                                        Name
+                                                    </td>
+                                                    <td class="pl-12 text-lg p-4">
+                                                        Date Created
+                                                    </td>
+                                                    <td class="pl-12 text-lg p-4">
+                                                        Authorization Code
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{ range .Clients}}
+                                                <tr>
+                                                    <td class="pl-12 text-lg p-2">
+                                                        {{.Name}}
+                                                    </td>
+                                                    <td class="pl-12 text-lg p-2 w-32">
+                                                        {{formatTimestamp .Created "January 02, 2006"}}
+                                                    </td>
+                                                    <td class="pl-12 p-2">
+                                                        <div clas="flex items-center">
+                                                            <span
+                                                                class="bg-petnetgreen h-2 w-2 rounded-full mr-3 inline-block"></span>
+                                                            <span class="inline-block">{{.ClientID}}</span>
+                                                        </div>
+                                                    </td>
+                                                    <td class="pl-12 p-2">
+                                                        <a onclick="copyClientId('{{.ClientID}}',event)"
+                                                            href="javascript:;"
+                                                            class="bg-petnetlightyellow rounded-lg py-1 px-4 text-sm w-20 text-center inline-block">
+                                                            Copy
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                {{end}}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</body>
+<script>
+    function copyClientId(id, event) {
+        event.target.innerText = "Copied"
+        const el = document.createElement('textarea');
+        el.value = id;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        setTimeout(function () {
+            event.target.innerText = "Copy"
+        }, 1000);
+    }
+
+    function dropdownToggle(event) {
+        let targetItem = event.target;
+        while (!targetItem.classList.contains('dropdown-toggle')) {
+            targetItem = targetItem.parentElement;
+        }
+        targetItem = targetItem.nextElementSibling;
+
+        if (targetItem.classList.contains('hidden')) {
+            targetItem.classList.remove("hidden");
+        } else {
+            targetItem.classList.add("hidden");
+        }
+        let x = document.getElementsByClassName("dropdown-item");
+        for (let i = 0; i < x.length; i++) {
+            if (x[i] != targetItem) {
+                x[i].classList.add("hidden")
+            }
+        }
+    }
+
+    function hidealertMessage() {
+        var ase = document.getElementById("alert-show-error");
+        ase.classList.add('hidden');
+    }
+</script>
+
+</html>

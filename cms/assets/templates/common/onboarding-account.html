@@ -1,0 +1,739 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>Accounts</title>
+    <style>
+        .h-44rem{
+            height: 44rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div class="flex min-h-screen items-center justify-center bg-petnetblue">
+            <div class="w-full md:w-10/12  lg:w-7/12">
+                <!-- perahub logo -->
+                <div class="my-2 hidden sm:flex justify-center">
+					<img src="{{ assetHash "/images/DRP-white-horizontal.svg" }}" alt="" srcset="">
+				</div>
+				<div class="my-2 mx-6 flex justify-center sm:hidden">
+					<img src="{{ assetHash "/images/DRP-white-horizontal.svg" }}" alt="" srcset="">
+				</div>
+                <!-- content area -->
+                <div class="bg-white rounded mx-6">
+					<div class="bg-petnetheader bg-opacity-60 rounded-t sm:hidden justify-around px-4 py-4 flex">
+						<div class="border-2 rounded-full border-petnetpink h-10 w-10 bg-petnetpink text-white font-bold text-xl flex items-center justify-center">
+							1
+						</div>
+						<div class="border-2 rounded-full border-petnetorange h-10 w-10 bg-petnetorange text-white font-bold text-xl flex items-center justify-center">
+							2
+						</div>
+						<div class="border-2 rounded-full border-petnetlightblue h-10 w-10 bg-petnetlightblue text-white font-bold text-xl flex items-center justify-center">
+							3
+						</div>
+						<div class="border-2 rounded-full border-petnetblue h-10 w-10 text-petnetblue font-bold text-xl flex items-center justify-center">
+							4
+						</div>
+					</div>
+                    <!-- step area -->
+                    <div class="sm:flex bg-petnetheader bg-opacity-60 rounded-t hidden">
+                        <div class="w-1/4">
+                        <div class="flex bg-petnetpink p-4 items-center rounded-tl">
+                            <span
+                                class=" text-white text-2xl rounded-full border-white border h-8 w-8 inline-flex justify-center items-center mr-2">1</span>
+                            <p class="text-white text-xl ">Business Information</p>
+                        </div>
+                    </div>
+                        <div class="w-1/4">
+                        <div class="flex p-4 items-center bg-petnetorange">
+                            <span
+                                class=" text-white text-2xl rounded-full border-white border h-8 w-8 inline-flex justify-center items-center mr-2">2</span>
+                            <p class="text-white text-xl ">Financial Information</p>
+                        </div>
+                    </div>
+                    <div class="w-1/4">
+                        <div class="flex p-4 items-center bg-petnetlightblue">
+                            <span
+                                class=" text-white text-2xl rounded-full border-white border h-8 w-8 inline-flex justify-center items-center mr-2">3</span>
+                            <p class="text-white text-xl ">Account Onboarding</p>
+                        </div>
+                    </div>
+                    <div class="w-1/4">
+                        <div class="flex p-4 items-center text-petnetblue">
+                            <span
+                                class=" text-petnetblue text-2xl rounded-full border-petnetblue border h-8 w-8 inline-flex justify-center items-center mr-2">4</span>
+                            <p class="text-petnetblue text-xl ">DRP Onboarding</p>
+                        </div>
+                    </div>
+                    </div>
+                    <!-- form area -->
+                    <form method="POST" action="/register/accountinfo" enctype="multipart/form-data">
+                        {{ .CSRFField }}
+                        <div class="flex flex-wrap justify-center">
+                            <!-- header text -->
+                            <div>
+                                <p class="text-center text-gray-400 pt-4 pb-3">STEP 3</p>
+                                <p class="text-center pb-4 text-2xl font-bold">Bank Account Onboarding</p>
+                                <p class="text-center">Please fill in your account details to be used for settlement.
+                                </p>
+                            </div>
+
+                        </div>
+                        <div class="sm:px-48 pb-10 px-6">
+                            <h1 class="text-petnetblue py-4">ACCOUNT DETAILS</h1>
+                            <div>
+                                <div>
+                                    <div class="mb-4">
+                                        <label class="b text-gray-700">Bank<span class="text-petnetpink">*</span></label>
+                                        <div class="relative mt-3 inline-flex w-full mb-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                class="w-6 h-6 absolute top-0 right-0 m-2 pointer-events-none"
+                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                            <select name="Bank" class="w-full rounded border text-xs sm:text-base {{with .Errors.Bank}} border-red-500{{end}} border-gray-300 text-gray-700 py-2 pl-5 pr-10 bg-petnetgray hover:border-gray-400 focus:outline-none appearance-none">
+                                                <option value="">Choose among these banks</option>
+                                                <option {{if eq .Bank "UnionBank"}}selected{{end}} value="UnionBank">UnionBank of the Philippines</option>
+                                            </select>
+                                        </div>
+                                        {{with .Errors.Bank}}
+											<p class="text-red-700">{{.}}</p>
+									  {{end}}
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="text-gray-700">
+                                            Bank Account Number<span class="text-petnetpink">*</span>
+                                        </label>
+                                        <input
+                                            class="{{with .Errors.BankAccountNumber}} border-red-500{{end}}  mt-3 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-400  border border-gray-300 bg-petnetgray"
+                                            name="BankAccountNumber" value="{{ .BankAccountNumber }}"
+                                            id="BankAccountNumber">
+                                            {{with .Errors.BankAccountNumber}}
+												<p class="text-red-700 mt-2">{{.}}</p>
+												{{end}}
+                                    </div>
+                                    <div class="pb-0">
+                                        <div class="mb-8">
+                                            <label class="text-gray-700">
+                                                Account Holder<span class="text-petnetpink">*</span>
+                                            </label>
+                                            <input
+                                                class=" {{with .Errors.BankAccountHolder}} border-red-500{{end}} mt-3 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-400  border border-gray-300 bg-petnetgray"
+                                                name="BankAccountHolder" value="{{ .BankAccountHolder }}"
+                                                id="BankAccountHolder">
+                                                {{with .Errors.BankAccountHolder}}
+												<p class="text-red-700 mt-2">{{.}}</p>
+												{{end}}
+                                        </div>
+                                        <div class="flex items-center">
+
+                                            <div class="flex items-center mr-4 mb-2">
+                                                <input type="checkbox" id="terms" {{if eq .TermsCondition 1}}checked{{end}} value="1" name="TermsCondition"
+                                                    class="checkbox opacity-0 absolute h-5 w-5">
+                                                <div
+                                                    class="checkbox-mark bg-white text-black border-2 rounded {{with .Errors.TermsCondition}} border-red-500{{end}} border-black w-5 h-5 flex flex-shrink-0 justify-center items-center mr-5 focus-within:border-black">
+                                                    <svg version="1.1" viewBox="0 0 17 12"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        class="fill-current hidden w-3 h-3 text-black pointer-events-none"
+                                                        style="color: #000;">
+                                                        <g fill="none" fill-rule="evenodd">
+                                                            <g transform="translate(-9 -11)" fill-rule="nonzero"
+                                                                fill="#000">
+                                                                <path
+                                                                    d="m25.576 11.414c0.56558 0.55188 0.56558 1.4439 0 1.9961l-9.404 9.176c-0.28213 0.27529-0.65247 0.41385-1.0228 0.41385-0.37034 0-0.74068-0.13855-1.0228-0.41385l-4.7019-4.588c-0.56584-0.55188-0.56584-1.4442 0-1.9961 0.56558-0.55214 1.4798-0.55214 2.0456 0l3.679 3.5899 8.3812-8.1779c0.56558-0.55214 1.4798-0.55214 2.0456 0z">
+                                                                </path>
+                                                            </g>
+                                                        </g>
+                                                    </svg>
+                                                </div>
+                                                <label for="" class="select-none font-avenir text-base font-normal">I agree to the <span
+                                                        class="text-petnetpink cursor-pointer" onclick="modalShow()" >Terms &amp; Conditions</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center py-4 h-">
+                                            <input type="checkbox" id="ospf" {{if eq .OnlineSupplierCondition 1}}checked{{end}} value="1" name="OnlineSupplierCondition"
+                                                class="checkbox opacity-0 absolute h-5 w-5">
+                                            <div
+                                                class="checkbox-mark bg-white text-black border-2 {{with .Errors.OnlineSupplierCondition}} border-red-500{{end}} rounded border-black w-5 h-5 flex flex-shrink-0 justify-center items-center mr-5 focus-within:border-black">
+                                                <svg version="1.1" viewBox="0 0 17 12"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    class="fill-current hidden w-3 h-3 text-black pointer-events-none"
+                                                    style="color: #000;">
+                                                    <g fill="none" fill-rule="evenodd">
+                                                        <g transform="translate(-9 -11)" fill-rule="nonzero"
+                                                            fill="#000">
+                                                            <path
+                                                                d="m25.576 11.414c0.56558 0.55188 0.56558 1.4439 0 1.9961l-9.404 9.176c-0.28213 0.27529-0.65247 0.41385-1.0228 0.41385-0.37034 0-0.74068-0.13855-1.0228-0.41385l-4.7019-4.588c-0.56584-0.55188-0.56584-1.4442 0-1.9961 0.56558-0.55214 1.4798-0.55214 2.0456 0l3.679 3.5899 8.3812-8.1779c0.56558-0.55214 1.4798-0.55214 2.0456 0z">
+                                                            </path>
+                                                        </g>
+                                                    </g>
+                                                </svg>
+                                            </div>
+                                            <label for="" class="select-none font-avenir text-base font-normal">
+                                                I agree to PETNET’s <span class="text-petnetpink cursor-pointer" onclick="modalShow2()">Online supplier
+                                                    payment form</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+                </div>
+
+                <div class="sm:flex mt-5 justify-between mb-16 hidden mx-6">
+                    <div class="mt-2">
+                        <a href="/register/financialinfo" class="rounded-md font-bold text-white border border-white px-8 py-3">
+                            Go back
+                        </a>
+                    </div>
+                    <div class="lg:w-auto w-full lg:ml-auto text-center mr-1.5">
+                        <button id="SaveDraft" name="SaveDraft" value="SaveDraft" type="submit" class="bg-petnetlightblue border border-petnetlightblue text-sm text-white px-6 py-3 rounded-md font-bold">
+                        Save as Draft 
+                        </button>
+                    </div>
+                    <div>
+                        <button type="submit" class="bg-petnetyellow text-petnetblue px-8 py-3 rounded-md font-bold">
+                            Save & Continue
+                        </button>
+                    </div>
+                </div>
+                <div class="sm:hidden mt-5 mx-6 mb-16">
+                    <div>
+						<button id="SaveDraft" name="SaveDraft" value="SaveDraft" type="submit" class="bg-petnetlightblue border border-petnetlightblue text-sm text-white  px-8 py-3 rounded-md font-normal my-3 text-center w-full mb-4">
+						Save as Draft 
+						</button>
+					</div>
+					<div>
+                        <button type="submit" class="bg-petnetyellow text-petnetblue px-8 py-3 rounded-md font-bold w-full mb-4">
+                            Save & Continue
+                        </button>
+                    </div>
+                    <div>
+                        <a href="/register/financialinfo" class="w-full inline-block rounded-md font-bold text-white border border-white px-8 py-3 text-center">
+                            Go back
+                        </a>
+                    </div>
+                    
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div id="popUp" class="w-full hidden">
+        <div class="fixed top-24 left-1/2 transform -translate-x-1/2 z-50 w-full md:w-10/12  xl:w-7/12  h-44rem py-10">
+            <div class="mx-6">
+                <div class="bg-white shadow-lg w-full z-50 overflow-y-scroll rounded-md h-44rem">
+                    <div class="flex justify-end py-4 px-4">
+                        <button onclick="modalCancel()" class="text-base text-white font-semibo rounded-md">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M24.4 7.61425C24.1509 7.36458 23.8127 7.22427 23.46 7.22427C23.1073 7.22427 22.7691 7.36458 22.52 7.61425L16 14.1209L9.47996 7.60092C9.23085 7.35125 8.89265 7.21094 8.53996 7.21094C8.18727 7.21094 7.84907 7.35125 7.59996 7.60092C7.07996 8.12092 7.07996 8.96092 7.59996 9.48092L14.12 16.0009L7.59996 22.5209C7.07996 23.0409 7.07996 23.8809 7.59996 24.4009C8.11996 24.9209 8.95996 24.9209 9.47996 24.4009L16 17.8809L22.52 24.4009C23.04 24.9209 23.88 24.9209 24.4 24.4009C24.92 23.8809 24.92 23.0409 24.4 22.5209L17.88 16.0009L24.4 9.48092C24.9066 8.97425 24.9066 8.12092 24.4 7.61425Z" fill="#333333"/>
+                                </svg>
+                        </button>
+                    </div>
+                    <div class="p-8">
+                            <h1 class="sm:text-3xl text-3xl font-semibold">Terms and Conditions</h1>
+                            <p class="mt-4 text-black font-medium text-base">PERA HUB Digital Remittance Platform</p>
+                            <p class="mt-4 text-black font-medium text-base">These Terms constitute a legal and binding agreement between you and PETNET, Inc. (“PETNET”). </p>
+                            <p class="mt-4 text-black font-medium text-base">Welcome to the PERA HUB Service. The Application may be accessed through a mobile application, a web portal, or such other platforms (collectively, the “Application”). By downloading, installing, and/or using the Application , you acknowledge that you have read, understood, accept and agree to strictly abide and be bound by these Terms and Conditions of the Service (the “Terms”), which may be amended or modified from time to time. “Service” shall refer to all products and services directly offered by PETNET through the Application. It also includes the Application and its software components. If you do not agree to these Terms, please do not access and/or use this Service. PETNET may, at any time, modify the Terms of the Service without any prior notification to you. If you continue to use the Service you shall be considered as having agreed to accept and abide by the modified Terms. Changes related to the method PETNET processes personal data shall be notified to you and we shall procure your consent for substantial changes to our Privacy Policy. </p>
+                            <p class="mt-4 text-black font-medium text-base">You represent and warrant that you are competent and eligible to enter into any legally binding agreement. You shall not use the Application if you are not competent to contract under applicable laws, rules and regulations. </p>
+                            <p class="mt-4 text-black font-medium text-base">In order to access certain services, you may be required to be bound to additional terms and conditions (“Supplemental Terms”). Such terms and conditions shall be deemed to be part of this Terms. This Terms shall therefore suppletorily apply to such Supplemental Terms.</p>
+                            <div class="p-4">
+                                <div>
+                                    1. Definitions and Interpretation
+                                    <div class="p-4">
+                                        <p>
+                                           a. Any reference in these Terms to applicable law, rules and regulations shall be construed as a reference to that law and rules and regulations including any amendments thereto. 
+                                        </p>
+                                        <p class="pt-4">
+                                           b. Clause headings are inserted for convenience only and shall not affect the interpretation of these Terms. 
+                                        </p>
+                                        <p class="pt-4">
+                                           c. Any conflict or inconsistency between any two or more provisions contained herein shall be resolved and interpreted in a manner that shall allow for effective application of these Terms. 
+                                        </p>
+                                        <p class="pt-4">
+                                           d. The following words shall have the definitions provided in this section: 
+                                            <div class="p-4">
+                                                <p>
+                                                    <span>&#8560;</span>. Application shall refer to the mobile app or website of PETNET where users may access the Service.  
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8561;</span>. Service shall refer to .
+                                                </p>
+                                            </div>
+                                        </p>
+                                    </div>
+                                    2. Access to the Service 
+                                    <div class="p-4">
+                                        <p>
+                                            a. You agree to access and/or use the Service in good faith and only for lawful purposes and in a lawful manner at all times. 
+                                        </p>
+                                        <p class="pt-4">
+                                            b. You agree to comply with any and all guidelines, notices and instructions pertaining to the use of the Service as well as any amendments thereto that may be issued by PETNET from time to time. 
+                                        </p>
+                                        <p class="pt-4">
+                                            c. You agree that any information you provide to avail of the Service is true, accurate, current and complete, and that PETNET may rely on them as such. PETNET reserves the right to suspend or terminate your access to and use of the Service if any information provided during the registration process or thereafter proves to be inaccurate, false or misleading. You shall ensure that your information is current at all times. 
+                                        </p>
+                                        <p class="pt-4">
+                                            d. You understand that PETNET may add, remove, modify features, functionalities and products that comprise the Service at any time without prior notice to You. Should PETNET exercise its rights under this section, you acknowledge that PETNET will not be liable for any loss or damage suffered by You. 
+                                        </p>
+                                        <p class="pt-4">
+                                            e. PETNET shall provide you with the applicable fees and charges when using the Service. A summary is provided in Annex “1”. PETNET reserves the right to change and modify applicable service fees and charges for the use of any aspect of the Service. Any change in the fees and charges shall be communicated to prior to the effective date of such changes.
+                                        </p>
+                                    </div>
+                                    3. General Use of the Service
+                                    <div class="p-4">
+                                        <p>
+                                            a. Money Transfer Service. The Application will enable you to send and receive money via the Western Union money transfer service and Western Union Quick Pay. The Application may also allow you to access certain services, in addition to money transfer services.
+                                            <div class="p-4">
+                                                <p>
+                                                    <span>&#8560;</span>. By agreeing to these Terms, you also agree to the terms and conditions of international and domestic money transfer transactions of Western Union which by reference are incorporated herein.   
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8561;</span>. An electronic copy of your transaction receipt, for money transfer services, will be sent to the email address you provided.  
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8562;</span>. All transactions through the Application and the Service are subject to the limitations and requirements imposed by laws, regulations, and policies of PETNET and Western Union. Should you choose the option in the Application to transact through the PERA HUB card, you shall be limited to a maximum transaction amount of One Hundred Thousand Pesos (P100,000.00). All transactions beyond One Hundred Thousand Pesos (P100,000.00) can be done only at physical branches (PERA HUB) of PETNET.  
+                                                </p>
+
+                                            </div> 
+                                        </p>
+                                        <p class="pt-4">
+                                            b. Other Services. The Application may also allow you to access the services enumerated in Annex 2.  
+                                        </p>
+                                        <p class="pt-4">
+                                            c. Identity Verification
+                                            <div class="p-4">
+                                                <p>
+                                                    <span>&#8560;</span>. The Application registration process requires you to indicate one (1) valid identification (ID) document or card which reflects all the required personal information in order to become and continue to be a customer. When the submitted ID expires, you are required to provide another valid ID to continue using the Western Union money transfer and Quick Pay services. PETNET reserves the right to require additional identification documents or information when warranted by the circumstances and in compliance with applicable regulations. 
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8561;</span>. Upon registration, an online account for use in send and receive transactions (“Customer Account”) will be created. Each customer is allowed to register in the Application only once. Each customer may only have one (1) account in the App. You are only allowed to have one Customer Account. You may not create fictional or simulated Customer Accounts. You undertake not to create accounts using the identity of third parties or fictional identities.
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8562;</span>. PETNET will conduct know-your-customer and other verification processes in accordance with applicable laws, rules and regulations, before you can commence sending or receiving through your account.
+                                                </p>
+
+                                            </div>
+                                        </p>
+                                        <p class="pt-4">
+                                            d. Credentials
+                                            <div class="p-4">
+                                                <p>
+                                                    <span>&#8560;</span>. You are required to create a password containing six (6) to twenty (20) characters. To make your password more secure, we recommend a password that is unrelated to your personal information and uses a combination of letters, numbers, and symbols. 
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8561;</span>. You are solely responsible for keeping your password secure. You are encouraged to change your password on a regular basis. PETNET will not be liable for any disclosure or unauthorized use of your password due to your fault or negligence and transactions initiated with a stolen password. You agree not to divulge your password to any other person, and you agree not to use another person's password. If you disclose your password to another person, you will be deemed to have authorized such person to use that password for any and all purposes, without limitation. You must ensure that you keep your username and password secret and that you do not disclose them to anyone as you will be responsible for all activities which occur under your password. You agree to assume full responsibility at all times for the supervision, management, control and confidentiality of your password. You agree that you will assume the full risk for fraudulent or unintentional use of your password and PETNET shall have no responsibility or liability whatsoever to you or any other person for any losses or damages which you or anyone else may suffer if you disclose your password to any other person, including any losses or damages arising out of the disclosure of your password by the recipient to another person, or should your password be stolen and used without your consent. It is your responsibility to notify PETNET immediately of any unauthorized use of your password. Call PETNET at once at +63 2 812 92 09. 
+                                                </p>
+                                            </div>
+                                        </p>
+                                        <p class="pt-4">
+                                            e. You may have access to services of third parties when using the Service (“Third Party Services”). In said cases, you understand that the use of Third Party Services will be governed by the terms and conditions of said third parties. Your transactions with third parties and the use of Third Party Services will solely be between you and the relevant third party. PETNET shall not be responsible for the Third Party Services neither shall PETNET be liable for losses arising from such Third Party Services.
+                                        </p>
+                                        <p class="pt-4">
+                                            f. Transaction Authorization. In general, a transaction shall be deemed to have been authorized by you if the same was performed through your Customer Account. Proof of transaction authorizations include: 
+                                            <div class="p-4">
+                                                <p>
+                                                    <span>&#8560;</span>. the appearance of your signature on or when your signature is affixed on the sales slip for POS transactions;  
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8561;</span>. the password/authorization code is successfully keyed-in for e-commerce, electronic and/or cellular phone-based transactions; 
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8562;</span>. SMS is sent from your mobile number or device;
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8563;</span>. when you have successfully unlocked your Customer Account for internet transactions;  
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8564;</span>. when you have successfully entered your payment details (e.g., card account number, expiration date, card verification code); or  
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8565;</span>. once you authenticate and log in to the Application, or accessed the Application through an accredited third party platform or channel. 
+                                                </p>
+                                            </div>
+                                        </p>
+                                    </div>
+                                    4. Data Privacy 
+                                    <div class="p-4">
+                                        <p>
+                                            a. All personal information provided will be handled, stored and processed according to PETNET’s Privacy Policy (the “Privacy Policy”). By accepting these Terms, you acknowledge that you have read and agree to abide and be bound by the Privacy Policy and consent to our collection, use, and disclosure of your personal information for the purposes as set out in the Privacy Policy. The Privacy Policy is by reference deemed incorporated into these Terms. 
+                                        </p>
+                                    </div> 
+                                    5. Prohibited Activities 
+                                    <div class="p-4">
+                                        <p>
+                                            a. You must not: 
+                                            <div class="p-4">
+                                                <p>
+                                                    <span>&#8560;</span>. Violate or breach these Terms and the Privacy Policy; 
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8561;</span>. Infringe copyright, patent, trademark or other intellectual property rights of PETNET, Western Union, and any other party involved in providing the Application and the Service; 
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8562;</span>. Provide false, fraudulent, inaccurate or misleading information; 
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8563;</span>. Refuse to cooperate in any investigation and provide confirmation of identity or other requested information in relation to the Application and the Service 
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8564;</span>. Use the Application and/or the Service:
+                                                    <div class="p-4">
+                                                        <p>
+                                                            1. To violate any law, regulation, or issuance by any competent legal authority; 
+                                                        </p>
+                                                        <p class="pt-4">
+                                                            2. To facilitate the sale of any object that is outside the commerce of man; 
+                                                        </p>
+                                                        <p class="pt-4">
+                                                            3. To facilitate transactions involving illegal drugs, drug paraphernalia and other controlled substances in accordance with applicable law; 
+                                                        </p>
+                                                        <p class="pt-4">
+                                                            4. To facilitate transactions involving the sale of products which endanger the safety, health, and well-being of individuals; 
+                                                        </p>
+                                                        <p class="pt-4">
+                                                            5. To facilitate transactions that encourage or incentivize illegal activities; 
+                                                        </p>
+                                                        <p class="pt-4">
+                                                            6. To facilitate transactions involving stolen, smuggled, or otherwise illegally acquired goods and/or services; 
+                                                        </p>
+                                                        <p class="pt-4">
+                                                            7. To facilitate transactions involving firearms, explosives, ammunition and any other weapon or accessories of the aforementioned items that are prohibited under applicable law; 
+                                                        </p>
+                                                        <p class="pt-4">
+                                                            8. To facilitate the infringement of any intellectual property right; 
+                                                        </p>
+                                                        <p class="pt-4">
+                                                            9. To facilitate Cybercrimes as defined in R.A. 10175 and other applicable laws; 
+                                                        </p>
+                                                        <p class="pt-4">
+                                                            10. To facilitate Child-Pornography as defined in R.A. 9775 and other applicable laws; 
+                                                        </p>
+                                                        <p class="pt-4">
+                                                            11. To facilitate prostitution and other sexually-oriented services; 
+                                                        </p>
+                                                        <p class="pt-4">
+                                                            12. To facilitate transactions relating to pornography; 
+                                                        </p>
+                                                        <p class="pt-4">
+                                                            13. To facilitate Money-Laundering as defined in R.A. 9160 or terrorist financing; 
+                                                        </p>
+                                                        <p class="pt-4">
+                                                            14. To facilitate a “get rich quick” schemes, pyramid schemes, or Ponzi schemes; 
+                                                        </p>
+                                                        <p class="pt-4">
+                                                            15. To facilitate bribery or corruption of public officers; 
+                                                        </p>
+                                                        <p class="pt-4">
+                                                            16. To facilitate any form of ethical, legal, or illegal hacking; and 
+                                                        </p>
+                                                        <p class="pt-4">
+                                                            17. To facilitate any form of larceny, theft, robbery, or embezzlement.  
+                                                        </p>
+                                                    </div> 
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8564;</span>. Copy, modify, reverse-engineer, or lease the Application and/or the Service, in whole or in part in any way; 
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8565;</span>. Extract or attempt to extract any source code from the Application or use it to make any similar or derivative versions of the Application and the Service; and 
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8566;</span>. Knowingly introduce viruses or other malicious or harmful material into the Application and/or the Service or do anything that would impair or damage them including abusing usage limits or security protocols implemented by PETNET. 
+                                                </p>
+                                            </div>
+                                        </p>
+                                        <p class="pt-4">
+                                            b. Your involvement in any of the prohibited activities enumerated above may result in the immediate suspension or termination of your access to and use of the Application and the Service, at the sole and exclusive discretion of PETNET. This shall be without prejudice to recourse by PETNET to any other remedies available under the law, rules and regulations, policies of Western Union, and any other party involved in providing the Application and the Service. 
+                                        </p>
+                                    </div>
+                                    6. Promos
+                                    <div class="p-4">
+                                        <p>
+                                            a. You consent to and authorize the Company’s use of any information you provided for purposes of sending promotional notifications through the Application. If you participate in any of PETNET’s promotional campaigns, you are deemed to have also agreed to their terms and conditions as published in the Application. 
+                                        </p>
+                                    </div>
+                                    7. Representations and Warranties 
+                                    <div class="p-4">
+                                        <p>
+                                            a. By accepting these Terms, you represent and warrant that you are not violating any applicable laws or regulations through your use of the Application and the Service and agree to indemnify and hold PETNET, its officers, affiliates and authorized representatives harmless from any claim, demand including legal fees and costs, fines, penalties or other liability incurred by PETNET due to your breach of this representation and warranty. 
+                                        </p>
+                                        <p class="pt-4">
+                                            b. You accept the risks associated with the use of the Application and/or the Service such as but not limited to: failure of the app and/or software, hacking of servers, failure or interruption of internet connection; the introduction of malicious software, failure of security of your credentials; failure of communication; service disruptions, and lack of telecommunications equipment or facilities and failure of information technology or telecommunications equipment or facilities. To mitigate these risks, PETNET will exert reasonable efforts to secure the Application.  
+                                        </p>
+                                        <p class="pt-4">
+                                            c. Without limiting other remedies, we reserve the unqualified right to limit or modify your access to the services, your account, issue a warning, and impose penalties related registration and access, penalty fees, charges, charge you for losses and damages, offset damages incurred by us borne that are materially attributable to your use of the services or violations of the terms, and/or take legal action. In all cases, we also have the right to retain funds in our possession which we are otherwise required to deliver or make to you against any amounts which you owe to us arising from this terms and other agreements between you and us.  
+                                        </p>
+                                    </div>
+                                    8. Intellectual Property 
+                                    <div class="p-4">
+                                        <p>
+                                            a. All rights, title and interest, including all related intellectual property rights, in and to portions of the Application and the Service belong correspondingly to PETNET, Western Union, and their licensors. No part or parts of the Application and the Service may be reproduced, reverse, engineered, decompiled, disassembled, mirrored, framed, transferred or transmitted in any manner or by means or stored in an information retrieval system or installed on any server, system or equipment without the prior written permission of the relevant intellectual property owners. 
+                                        </p>
+                                        <p class="pt-4">
+                                            b. Nothing in the Application, the Service and these Terms shall be construed as granting, by implication, estoppel, or otherwise, any license or right to use any intellectual property displayed on the Application without the concerned party’s written permission. 
+                                        </p>
+                                    </div>
+                                    9. Disclaimer of Warranties 
+                                    <div class="p-4">
+                                        <p>
+                                            a. PETNET makes no representation, warranty, or guarantee as to the reliability, timeliness, quality, suitability, availability, accuracy or completeness of the Application and the Service. PETNET does not represent or warrant: 
+                                            <div class="p-4">
+                                                <p>
+                                                    <span>&#8560;</span>. that the Application and the Service will be available and/or secure at all times; 
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8561;</span>. that the Application and the Service will meet your requirements or expectations; 
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8562;</span>. that any data stored, or information published on the Application will be accurate or reliable;  
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8563;</span>. that any software error will be corrected; 
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8564;</span>. contents on the Application are free of viruses and use of the Application and the Service will not result in virus infection. 
+                                                </p>
+                                            </div>
+                                        </p>
+                                        <p class="pt-4">
+                                            b. The Application and the Service are provided to you on an “as is” basis. All representations, warranties and conditions, whether expressed or implied, statutory or otherwise are hereby excluded and disclaimed, including but not limited to the warranties of merchantability, non-infringement, and fitness for a particular purpose.
+                                        </p>
+                                    </div>
+                                    10. Limitation of Responsibility and Liability 
+                                    <div class="p-4">
+                                        <p>
+                                            a. PETNET shall not be liable for any loss, cost, expense, damage, penalties or settlement sums (unless such loss, cost, expense, damage, or penalties are materially attributable to PETNET’s willful misconduct or gross negligence) arising directly or indirectly from:
+                                            <div class="p-4">
+                                                <p>
+                                                    <span>&#8560;</span>. any defect or malfunction of your mobile device or network that prevents access and/or use of the Application and/or the Service; 
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8561;</span>. any system, server or connection failure, error, omission, interruption, and/or delay in transmission attributable to your internet or mobile service provider; 
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8562;</span>. any unauthorized use or interception of data or instruction at any point in the transaction process as you use the Application and the Service; 
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8563;</span>. any virus that may infect your devices due to access and use of the Application, its contents, and the Service; 
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8564;</span>. any unauthorized access/use of your personal data and your transaction data unless it is attributable to PETNET’s fault or gross negligence; 
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8565;</span>. any defects, errors, or limitations of the Application and the Service, whether or not they are rectified; 
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8566;</span>. the Application and the Service not performing in the manner you expect or wish them to;  
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8567;</span>. any content originating from you and/or third parties; and 
+                                                </p>
+                                                <p class="pt-4">
+                                                    <span>&#8568;</span>. any indirect, incidental, special, punitive, exemplary or consequential damages of any kind, nor for any lost profits or revenues, in connection with or arising out of the agreement, the operation, use or access to the Application and/or the Service.  
+                                                </p>
+                                            </div> 
+                                        </p>
+                                        <p class="pt-4">
+                                            b. If we delay exercising or fail to exercise or enforce any right or interest available to PETNET under these Terms, such delay or failure does not constitute a waiver of that right or any other rights under these Terms. All remedies available to us under these Terms shall be cumulative. 
+                                        </p>
+                                    </div>
+                                    11. Indemnification 
+                                    <div class="p-4">
+                                        You agree to indemnify and hold PETNET, its subsidiaries, affiliates, directors, officers, agents, partners and employees free and harmless from any claim or demand, including reasonable attorneys’ fees, made by any third party due to or arising out of information that you submit or transmit through Application and the Service, your use or misuse of the Service, your violation of law, regulations, and/or these Terms, or your violation of rights of another party. 
+                                    </div>
+                                    12. Suspension or Termination of Service 
+                                    <div class="p-4">
+                                        PETNET may, in its sole and absolute discretion, and without need of notice to you, suspend or terminate your access to and use of the Application and the Service should PETNET have a reasonable belief that you have violated this Terms, or if your continued access to and use of the Application and the Service would result in a violation of applicable law, rules and regulations, and Western Union policies. PETNET’s exercise of its rights under this Section shall be without prejudice to other remedies available to it under law or contract.
+                                    </div>
+                                    13. Governing Law and Venue for Disputes 
+                                    <div class="p-4">
+                                        <p>
+                                            These Terms shall be governed by Philippine law, without regard to the choice or conflicts of law provisions of any jurisdiction. 
+                                        </p>
+                                        <p class="pt-4">
+                                            In the event of a claim or dispute, you agree to observe good faith and exert best efforts towards an amicable resolution of any claim or dispute. Any claim or dispute initiated by you arising out of or relating to the Terms or Your use of the Services that is not resolved amicably within twelve (12) months after the initial of the claim or dispute shall be be referred for resolution to the  Philippine Dispute Resolution Center, Inc. (“PDRCI”) in accordance with its rules. The place of arbitration shall be the City of Taguig, Metro Manila, Philippines or another city in the Philippines if the parties so agree. Unless the parties agree to arbitration by a sole arbitrator, the dispute shall be resolved by three (3) arbitrators.
+                                        </p>
+                                        <p class="pt-4">
+                                            In the instances where the Terms allow that an action may be commenced in the courts of law, you agree to submit such action, claim, or dispute, to the exclusive venue of the courts in the City of Makati.
+                                        </p>
+                                    </div>
+                                    14. General Terms 
+                                    <div class="p-4">
+                                        <p>
+                                            a. Entire Agreement. These Terms and any amendments or modifications hereof shall constitute the entire agreement between you and PETNET relating to the subject matter hereof and supersedes in full any and all prior understandings, communications and agreements with respect to the subject matter hereof. 
+                                        </p>
+                                        <p class="pt-4">
+                                            b. Severability. If any of the provisions of these Terms is declared or found to be unenforceable, illegal, void, or otherwise ineffectual, then that provision shall be deemed removed from these Terms without affecting the validity, efficacy, and enforceability of all other provisions. 
+                                        </p>
+                                        <p class="pt-4">
+                                            c. Electronic Communications. These Terms or applicable laws require that some of the information or communications PETNET sends to you be in writing. When using the Service, You agree that PETNET may contact or notify you by email or provide you with information by posting notices on the Service. You agree to this electronic means of communication and You acknowledge that all contracts, notices, information and other communications that PETNET provides to You electronically comply with any legal requirement that such communications be in writing.  
+                                        </p>
+                                        <p class="pt-4">
+                                            d. Governing Law. All the provisions of these Terms are subject to all applicable Philippine laws, without regard to conflict of laws provisions. 
+                                        </p>
+                                        <p class="pt-4">
+                                            e. Force Majeure. PETNET will not be liable to you for any lack of performance, or the unavailability or failure, of the Services, or for any failure or delay by PETNET to comply with these Terms, where such lack, unavailability or failure arises from any cause beyond PETNET’s reasonable control or materially attributable to third parties such as but not limited to telecommunication providers, electricity providers and other suppliers. 
+                                        </p>
+                                        <p class="pt-4">
+                                            f. Non-Waiver. If PETNET delays exercising or fails to exercise or enforce any right or interest available to PETNET under these Terms, such delay or failure does not constitute a waiver of that right or any other rights under these Terms. All remedies available to PETNET under these Terms shall be cumulative.  
+                                        </p>
+                                    </div>
+                                    15. Consumer Complaints
+                                    <div class="p-4">
+                                        <p>
+                                            Should you have any complaints or concerns, please contact:
+                                            <br> 
+                                            <a class="text-petnetblue" href="mailto:customercare@perahub.com.ph ">customercare@perahub.com.ph</a>
+                                            <br>
+                                            <a class="text-petnetblue" href="tel:+32 8812-9209">(+32) 8812-9209</a> 
+                                        </p>
+                                    </div> 
+                                </div>
+                                <div>
+                                    <p>Annex 1</p>
+
+                                    <p class="pt-4">Applicable Charges and Fees</p>
+
+                                    <p class="pt-4">For Remittance Services:
+                                        <div class="p-4">
+                                            <p>
+                                                <span>&#8560;</span>. Transfer/remittance fee - charge for processing/sending the remittance: [provide]   
+                                            </p>
+                                            <p class="pt-4">
+                                                <span>&#8561;</span>. Exchange rate: This shall be published in the App and displayed to you prior to finalizing the transaction.    
+                                            </p>
+                                            <p class="pt-4">
+                                                <span>&#8562;</span>. Other currency conversion charges - commissions or service fees, if any: This shall be published in the App and displayed to you prior to finalizing the transaction.    
+                                            </p>
+                                            <p class="pt-4">
+                                                <span>&#8563;</span>. Other related charges - e.g., surcharges, postage, text message or telegram: PETNET may charge for the following [please provide]. The amounts shall be published in the App and displayed to you prior to finalizing the transaction.    
+                                            </p>
+                                            <p class="pt-4">
+                                                <span>&#8564;</span>. Amount/currency paid out to the recipient - The amount shall be published in the App and displayed to you.     
+                                            </p>
+                                            <p class="pt-4">
+                                                <span>&#8565;</span>. Delivery time to recipients/beneficiaries - delivery period of remittance to beneficiary stated in number of days, hours or minutes: [please provide] 
+                                            </p>
+                                        </div>
+                                    </p>
+                                    <p class="pt-4">
+                                        In case of domestic remittance transactions, all fees to the transactions shall be charged upfront by PETNET from the sender/remitter’s end, with appropriate disclosure to the sender/remitter of the components of the fees being charged. Domestic remittance transaction, for this purpose, is a transfer of funds between a sender/remitter and a beneficiary who are both within the Philippines. <br> [provider other applicable fees] 
+                                    </p> 
+                                </div>
+                                <div>
+                                    <p class="pt-4">Annex 2 </p>
+                                    <p class="pt-4">Other Services Accessible through the Application </p>
+                                    <p>
+                                        1. You may access the following services 
+                                        <div class="p-4">
+                                            <p>
+                                                a. Bills Payment. 
+                                                <div class="p-4">
+                                                    <p>
+                                                        <span>&#8560;</span>. Through the Application, you may pay your outstanding bills with certain merchants (each, a “Merchant”).   
+                                                    </p>
+                                                    <p class="pt-4">
+                                                        <span>&#8561;</span>. The payment transaction shall be deemed final when [insert how a transaction is concluded]. 
+                                                    </p>
+                                                </div>
+                                            </p>
+                                            <p>
+                                                b. eLoad
+                                                <div class="p-4">
+                                                    <p>
+                                                        <span>&#8560;</span>. Through the Application, you may purchase mobile phone credits ultimately provided by telecommunication companies (each, a “Telco”). The purchase transaction shall be deemed final when [insert how a transaction is concluded]. 
+                                                    </p>
+                                                    <p class="pt-4">
+                                                        <span>&#8561;</span>. You understand that PETNET is not the provider of the actual mobile phone credits. As such, PETNET shall not be liable for losses arising from such mobile phone credits. 
+                                                    </p>
+                                                </div>
+                                            </p>
+
+                                        </div>
+                                    </p>
+                                    <p class="pt-4">
+                                        2. In the event that you have a dispute with the Merchants or the Telcos, you must report the matter to the concerned Merchant. PETNET shall neither be liable for the goods and/or services provided by the Merchant or Telco, nor be made a party to the dispute between the Merchant and you, or the Telco and you. PETNET shall also not be required to mediate any such dispute. 
+                                    </p>
+                                    <p class="pt-4">
+                                        3. PETNET relies solely on information provided by you for initiating the transfer of funds from one party to another and PETNET will bear no responsibility or liability in the event that funds are not transferred to the desired transferee or are transferred incorrectly or fraudulently, unless such error is due to the willful misconduct or gross negligence of PETNET.  
+                                    </p>
+                                </div>
+                            </div>
+                            
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="popUp2" class="w-full hidden">
+        <div class="fixed top-0 z-50 w-screen min-h-screen bg-black bg-opacity-50 py-10">
+            <div class="sm:mx-20 mx-4">
+                <div class="bg-white shadow-lg w-full z-50 overflow-y-scroll h-screen">
+                    <div class="sm:py-12 sm:px-32 p-4">
+                            <h1 class="sm:text-5xl text-3xl font-semibold">Online supplier payment form</h1>
+                            <div class="w-full mb-2 pt-2">
+                                <div class="w-full">
+                                    <label id="param1" class="block font-medium "> Parameter 1
+                                    </label>
+                                    <input id="FParam1" name="Param1" type="text"
+                                        class="py-2 w-full rounded-md bg-petnetgray focus:outline-none focus:ring-1 focus:ring-blue-400 px-3 border border-gray-300 mt-1 text-gray-700">
+                                </div>
+                            </div>
+                            <div class="w-full mb-2 pt-2">
+                                <div class="w-full">
+                                    <label id="param2" class="block font-medium "> Parameter 2
+                                    </label>
+                                    <input id="FParam2" name="Param2" type="text"
+                                        class="py-2 w-full rounded-md bg-petnetgray focus:outline-none focus:ring-1 focus:ring-blue-400 px-3 border border-gray-300 mt-1 text-gray-700">
+                                </div>
+                            </div>
+                            <div class="flex justify-between py-8">
+                                <button type="submit" class="text-base text-petnetblue font-semibold px-12 py-3 bg-petnetyellow rounded-md">Submit</button>
+                                <button onclick="modalCancel2()" class="text-base text-white font-semibold px-12 py-3 bg-petnetblue rounded-md">Close</button>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    function modalShow() {
+        var getPopUp = document.getElementById("popUp")
+        var getPopUpClass = getPopUp.className
+        getPopUp.classList.remove("hidden");
+    }
+
+    function modalShow2() {
+        var getPopUp = document.getElementById("popUp2")
+        var getPopUpClass = getPopUp.className
+        getPopUp.classList.remove("hidden");
+    }
+
+    function modalCancel() {
+        var getPopUp = document.getElementById("popUp")
+        var getPopUpClass = getPopUp.className
+        getPopUp.classList.add("hidden");
+    }
+
+    function modalCancel2() {
+        var getPopUp = document.getElementById("popUp2")
+        var getPopUpClass = getPopUp.className
+        getPopUp.classList.add("hidden");
+    }
+</script>
+</html>

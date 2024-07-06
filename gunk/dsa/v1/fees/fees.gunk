@@ -1,0 +1,125 @@
+package fees // proto "petnet.v1.fees"
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+type FeeStatus int
+
+const (
+	UnknownFeeStatus FeeStatus = iota
+	Active
+	Disabled
+)
+
+type Amount struct {
+	Currency string `pb:"1"`
+	Amount   string `pb:"2"`
+}
+
+type DSAFeeSchedule struct {
+	ID      string      `pb:"1" json:"id"`
+	OrgID   string      `pb:"2" json:"org_id"`
+	Fees    FeeSchedule `pb:"3" json:"fees"`
+	Created time.Time   `pb:"4" json:"created"`
+	Updated time.Time   `pb:"5" json:"updated"`
+	Deleted time.Time   `pb:"6" json:"deleted"`
+}
+
+type FeeSchedule struct {
+	Status    FeeStatus `pb:"1" json:"fee_status"`
+	StartDate time.Time `pb:"2" json:"start_date"`
+	EndDate   time.Time `pb:"3" json:"end_date"`
+	Updated   time.Time `pb:"4" json:"updated"`
+	Rates     []FeeRate `pb:"5" json:"rates"`
+}
+
+type FeeRate struct {
+	MinVolume      string `pb:"1"`
+	MaxVolume      string `pb:"2"`
+	TxnRate        string `pb:"3"`
+	TxnFee         Amount `pb:"4"`
+	CommissionRate string `pb:"5"`
+	CommissionFee  Amount `pb:"6"`
+}
+
+type UpsertFeesRequest struct {
+	Fees DSAFeeSchedule `pb:"1"`
+}
+type UpsertFeesResponse struct {
+	ID string `pb:"1"`
+}
+
+type GetFeesRequest struct {
+	ID     string    `pb:"1"`
+	After  time.Time `pb:"2"`
+	Before time.Time `pb:"3"`
+}
+
+type GetFeesResponse struct {
+	Fees []DSAFeeSchedule `pb:"1"`
+}
+
+type OrgFeesService interface {
+	// Upsert org fees.
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v1/dsafees/{Fees.ID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Org Fees"},
+	//         Description: "Create or update an org fees.",
+	//         Summary:     "Upsert org fees.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/orgFeesUpsertFeesResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	UpsertFees(UpsertFeesRequest) UpsertFeesResponse
+
+	// List org fees.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/orgfees",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Org Fees"},
+	//         Description: "List all created org fees.",
+	//         Summary:     "List org feess.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/orgFeesGetFeesResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	GetFees(GetFeesRequest) GetFeesResponse
+}

@@ -1,0 +1,1475 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/drp/v1/revenue-commission/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "RevenueCommissionService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/revenue-commission/commission-fee": {
+      "get": {
+        "summary": "List Remco Commission Fee records",
+        "description": "List all Remco Commission Fee records.",
+        "operationId": "RevenueCommissionService_ListRemcoCommissionFee",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/revenueCommissionListRemcoCommissionFeeResponse"
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "internal error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Revenue Commission"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      },
+      "post": {
+        "summary": "Creates Remco Commission Fee record",
+        "description": "Creates new Remco Commission Fee record.",
+        "operationId": "RevenueCommissionService_CreateRemcoCommissionFee",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/revenueCommissionRemcoCommissionFee"
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "internal error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/revenue_commissionCreateRemcoCommissionFeeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Revenue Commission"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/revenue-commission/commission-fee/{id}": {
+      "get": {
+        "summary": "Gets Remco Commission Fee record",
+        "description": "Gets Remco Commission Fee record by ID.",
+        "operationId": "RevenueCommissionService_GetRemcoCommissionFeeByID",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/revenueCommissionRemcoCommissionFee"
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "internal error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "Revenue Commission"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      },
+      "delete": {
+        "summary": "Deletes Remco Commission Fee record",
+        "description": "Deletes Remco Commission Fee record by ID.",
+        "operationId": "RevenueCommissionService_DeleteRemcoCommissionFee",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/revenueCommissionRemcoCommissionFee"
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "internal error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "Revenue Commission"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      },
+      "put": {
+        "summary": "Updates Remco Commission Fee record",
+        "description": "Updates new Remco Commission Fee record.",
+        "operationId": "RevenueCommissionService_UpdateRemcoCommissionFee",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/revenueCommissionRemcoCommissionFee"
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "internal error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/revenue_commissionUpdateRemcoCommissionFeeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Revenue Commission"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/revenue-commission/dsa-comm-tier": {
+      "get": {
+        "summary": "List DSA Commission Tier records",
+        "description": "List all DSA Commission Tier records",
+        "operationId": "RevenueCommissionService_ListDSACommissionTier",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/revenueCommissionListDSACommissionTierResponse"
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "internal error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "DSA Commission Tier"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      },
+      "post": {
+        "summary": "Creates DSA Commission Tier record",
+        "description": "Creates new DSA Commission Tier record.",
+        "operationId": "RevenueCommissionService_CreateDSACommissionTier",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/revenueCommissionDSACommissionTier"
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "internal error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "DSA Commission Tier"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/revenue-commission/dsa-comm-tier/{id}": {
+      "get": {
+        "summary": "Gets DSA Commission Tier record",
+        "description": "Gets DSA Commission Tier record by ID.",
+        "operationId": "RevenueCommissionService_GetDSACommissionTierByID",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/revenueCommissionDSACommissionTier"
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "internal error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "DSA Commission Tier"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      },
+      "delete": {
+        "summary": "Deletes DSA Commission Tier record",
+        "description": "Deletes DSA Commission Tier record by ID.",
+        "operationId": "RevenueCommissionService_DeleteDSACommissionTier",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/revenueCommissionDSACommissionTier"
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "internal error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "DSA Commission Tier"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      },
+      "put": {
+        "summary": "Updates DSA Commission Tier record",
+        "description": "Updates DSA Commission Tier record by ID.",
+        "operationId": "RevenueCommissionService_UpdateDSACommissionTier",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/revenueCommissionDSACommissionTier"
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "internal error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "DSA Commission Tier"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/revenue-commission/dsa-commission": {
+      "get": {
+        "summary": "List DSA Commission records",
+        "description": "List DSA Commission records.",
+        "operationId": "RevenueCommissionService_ListDSACommission",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/revenueCommissionListDSACommissionResponse"
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "internal error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "DSA Commission"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      },
+      "post": {
+        "summary": "Creates DSA Commission record",
+        "description": "Creates new DSA Commission record.",
+        "operationId": "RevenueCommissionService_CreateDSACommission",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/revenueCommissionDSACommission"
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "internal error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "DSA Commission"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/revenue-commission/dsa-commission/{id}": {
+      "get": {
+        "summary": "Gets DSA Commission record",
+        "description": "Gets DSA Commission record by ID.",
+        "operationId": "RevenueCommissionService_GetDSACommissionByID",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/revenueCommissionDSACommission"
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "internal error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "DSA Commission"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      },
+      "delete": {
+        "summary": "Deletes DSA Commission record",
+        "description": "Deletes DSA Commission record by ID.",
+        "operationId": "RevenueCommissionService_DeleteDSACommission",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/revenueCommissionDSACommission"
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "internal error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "DSA Commission"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      },
+      "put": {
+        "summary": "Updates DSA Commission record",
+        "description": "Updates DSA Commission record by ID.",
+        "operationId": "RevenueCommissionService_UpdateDSACommission",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/revenueCommissionDSACommission"
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "internal error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "DSA Commission"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/revenue-commission/dsa-trx-count": {
+      "get": {
+        "summary": "List all DSA Transaction Count record",
+        "description": "List all DSA Transaction Count records.",
+        "operationId": "RevenueCommissionService_ListDSATransactionCountAll",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/revenueCommissionListDSATransactionCountResponse"
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "internal error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "DSA Transaction Count"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      },
+      "post": {
+        "summary": "Creates DSA Transaction Count record",
+        "description": "Creates new DSA Transaction Count record.",
+        "operationId": "RevenueCommissionService_CreateDSATransactionCount",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/revenueCommissionDSATransactionCount"
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "internal error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "DSA Transaction Count"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/revenue-commission/dsa-trx-count/year-month/{year_month}": {
+      "get": {
+        "summary": "List all DSA Transaction Count record by year and month",
+        "description": "List DSA Transaction Count records by year and month.",
+        "operationId": "RevenueCommissionService_ListDSATransactionCountByYearMonth",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/revenueCommissionListDSATransactionCountResponse"
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "internal error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "year_month",
+            "description": "YearMonth is year and month string in format YYYYMM. Ex 202207",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "DSA Transaction Count"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/revenue-commission/dsa-trx-count/{id}": {
+      "get": {
+        "summary": "Gets DSA Transaction Count record",
+        "description": "Gets DSA Transaction Count record by transaction count ID.",
+        "operationId": "RevenueCommissionService_GetDSATransactionCountByID",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/revenueCommissionDSATransactionCount"
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "internal error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "DSA Transaction Count"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      },
+      "delete": {
+        "summary": "Deletes DSA Transaction Count record",
+        "description": "Deletes DSA Transaction Count record by transaction count ID.",
+        "operationId": "RevenueCommissionService_DeleteDSATransactionCount",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/revenueCommissionDSATransactionCount"
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "internal error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "DSA Transaction Count"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      },
+      "put": {
+        "summary": "Updates DSA Transaction Count record",
+        "description": "Updates DSA Transaction Count record.",
+        "operationId": "RevenueCommissionService_UpdateDSATransactionCount",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/revenueCommissionDSATransactionCount"
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "internal error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "DSA Transaction Count"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/send-transaction-report": {
+      "get": {
+        "summary": "Send Transaction Report",
+        "description": "Send Transaction Report",
+        "operationId": "RevenueCommissionService_SendTransactionReport",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/sendtransactionreport"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "year_month",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "DSA Transaction Count"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "revenue_commissionCommissionType": {
+      "type": "string",
+      "enum": [
+        "CommissionTypeAbsolute",
+        "CommissionTypeRange",
+        "CommissionTypePercent"
+      ],
+      "default": "CommissionTypeAbsolute",
+      "title": "CommissionType is commission type, can be either absolute or range"
+    },
+    "revenue_commissionCreateRemcoCommissionFeeRequest": {
+      "type": "object",
+      "properties": {
+        "remco_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "min_amount": {
+          "type": "string"
+        },
+        "max_amount": {
+          "type": "string"
+        },
+        "service_fee": {
+          "type": "string"
+        },
+        "commission_type": {
+          "$ref": "#/definitions/revenue_commissionCommissionType"
+        },
+        "commission_amount": {
+          "type": "string"
+        },
+        "commission_amount_otc": {
+          "type": "string"
+        },
+        "trx_type": {
+          "$ref": "#/definitions/revenue_commissionTrxType"
+        },
+        "updated_by": {
+          "type": "string"
+        }
+      },
+      "title": "CreateRemcoCommissionFeeRequest is request for save new remco commission fee",
+      "required": [
+        "remco_id",
+        "min_amount",
+        "max_amount",
+        "service_fee",
+        "commission_type",
+        "commission_amount",
+        "trx_type",
+        "updated_by"
+      ]
+    },
+    "revenue_commissionDSACommission": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "dsa_code": {
+          "type": "string"
+        },
+        "commission_type": {
+          "$ref": "#/definitions/revenue_commissionCommissionType"
+        },
+        "tier": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "commissiont_amount": {
+          "type": "string"
+        },
+        "commission_currency": {
+          "type": "string"
+        },
+        "updated_by": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "effective_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "trx_type": {
+          "type": "string"
+        },
+        "remit_type": {
+          "type": "string"
+        }
+      },
+      "description": "DSACommission ..."
+    },
+    "revenue_commissionDSACommissionTier": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "tier_no": {
+          "type": "string"
+        },
+        "minimum": {
+          "type": "string"
+        },
+        "maximum": {
+          "type": "string"
+        },
+        "updated_by": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "description": "DSACommissionTier ..."
+    },
+    "revenue_commissionDSATransactionCount": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "dsa_code": {
+          "type": "string"
+        },
+        "year_month": {
+          "type": "string"
+        },
+        "remittance_count": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "cico_count": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "bills_payment_count": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "insurance_count": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "updated_by": {
+          "type": "string"
+        },
+        "dsa_commission": {
+          "type": "string"
+        },
+        "dsa_commission_type": {
+          "$ref": "#/definitions/revenue_commissionCommissionType"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "description": "DSATransactionCount ..."
+    },
+    "revenue_commissionListDSACommissionResponse": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/revenue_commissionDSACommission"
+          }
+        }
+      },
+      "title": "ListDSACommissionResponse response for ListDSACommission"
+    },
+    "revenue_commissionListDSACommissionTierResponse": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/revenue_commissionDSACommissionTier"
+          }
+        }
+      },
+      "title": "ListDSACommissionTierResponse response for ListDSACommissionTier"
+    },
+    "revenue_commissionListDSATransactionCountResponse": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/revenue_commissionDSATransactionCount"
+          }
+        }
+      },
+      "title": "ListDSATransactionCountResponse response for list of transaction counts"
+    },
+    "revenue_commissionListRemcoCommissionFeeResponse": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/revenue_commissionRemcoCommissionFee"
+          }
+        }
+      },
+      "title": "ListRemcoCommissionFeeResponse response for ListRemcoCommissionFee"
+    },
+    "revenue_commissionRemcoCommissionFee": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "remco_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "min_amount": {
+          "type": "string"
+        },
+        "max_amount": {
+          "type": "string"
+        },
+        "service_fee": {
+          "type": "string"
+        },
+        "commission_amount": {
+          "type": "string"
+        },
+        "commission_amount_otc": {
+          "type": "string"
+        },
+        "commission_type": {
+          "$ref": "#/definitions/revenue_commissionCommissionType"
+        },
+        "trx_type": {
+          "$ref": "#/definitions/revenue_commissionTrxType"
+        },
+        "updated_by": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "title": "RemcoCommissionFee is commission fee details for remco"
+    },
+    "revenue_commissionTrxType": {
+      "type": "string",
+      "enum": [
+        "TrxTypeInbound",
+        "TrxTypeOutbound"
+      ],
+      "default": "TrxTypeInbound",
+      "title": "TrxType is transaction type, can be either inbound or outbound"
+    },
+    "revenue_commissionUpdateRemcoCommissionFeeRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "remco_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "min_amount": {
+          "type": "string"
+        },
+        "max_amount": {
+          "type": "string"
+        },
+        "service_fee": {
+          "type": "string"
+        },
+        "commission_type": {
+          "$ref": "#/definitions/revenue_commissionCommissionType"
+        },
+        "commission_amount": {
+          "type": "string"
+        },
+        "commission_amount_otc": {
+          "type": "string"
+        },
+        "trx_type": {
+          "$ref": "#/definitions/revenue_commissionTrxType"
+        },
+        "updated_by": {
+          "type": "string"
+        }
+      },
+      "title": "UpdateRemcoCommissionFeeRequest is request for save new remco commission fee",
+      "required": [
+        "id",
+        "remco_id",
+        "min_amount",
+        "max_amount",
+        "service_fee",
+        "commission_type",
+        "commission_amount",
+        "trx_type",
+        "updated_by"
+      ]
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

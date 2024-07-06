@@ -1,0 +1,147 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>Partners</title>
+</head>
+
+<body class="font-proxima-nova-reg">
+    <div>
+        <div class="flex min-h-screen items-center justify-center bg-petnetblue">
+            <div class="w-full md:w-10/12  lg:w-7/12">
+                <!-- perahub logo -->
+                <div class="my-2 hidden sm:flex justify-center">
+                    <img src="{{ assetHash "/images/DRP-white-horizontal.svg" }}" alt="" srcset="">
+                </div>
+                <div class="my-2 mx-6 flex justify-center sm:hidden">
+                    <img src="{{ assetHash "/images/DRP-white-horizontal.svg" }}" alt="" srcset="">
+                </div>
+                <!-- content area -->
+                <div class="bg-white rounded mx-6">
+                    <div class="bg-petnetheader bg-opacity-60 rounded-t sm:hidden justify-around px-4 py-4 flex">
+                        <div
+                            class="border-2 rounded-full border-petnetpink h-10 w-10 bg-petnetpink text-white font-bold text-xl flex items-center justify-center">
+                            1
+                        </div>
+                        <div
+                            class="border-2 rounded-full border-petnetorange h-10 w-10 bg-petnetorange text-white font-bold text-xl flex items-center justify-center">
+                            2
+                        </div>
+                        <div
+                            class="border-2 rounded-full border-petnetlightblue h-10 w-10 bg-petnetlightblue text-white font-bold text-xl flex items-center justify-center">
+                            3
+                        </div>
+                        <div
+                            class="border-2 rounded-full border-petnetgreen h-10 w-10 bg-petnetgreen text-white font-bold text-xl flex items-center justify-center">
+                            4
+                        </div>
+                    </div>
+                    <!-- step area -->
+                    <div class="sm:flex bg-petnetheader bg-opacity-60 rounded-t hidden">
+                        <div class="w-1/4">
+                        <div class="flex bg-petnetpink p-4 items-center rounded-tl">
+                            <span
+                                class=" text-white text-2xl rounded-full border-white border h-8 w-8 inline-flex justify-center items-center mr-2">1</span>
+                            <p class="text-white text-xl ">Business Information</p>
+                        </div>
+                    </div>
+                    <div class="w-1/4">
+                        <div class="flex p-4 items-center bg-petnetorange">
+                            <span
+                                class=" text-white text-2xl rounded-full border-white border h-8 w-8 inline-flex justify-center items-center mr-2">2</span>
+                            <p class="text-white text-xl ">Financial Information</p>
+                        </div>
+                    </div>
+                    <div class="w-1/4">
+                        <div class="flex p-4 items-center bg-petnetlightblue">
+                            <span
+                                class=" text-white text-2xl rounded-full border-white border h-8 w-8 inline-flex justify-center items-center mr-2">3</span>
+                            <p class="text-white text-xl ">Account Onboarding</p>
+                        </div>
+                    </div>
+                    <div class="w-1/4">
+                        <div class="flex p-4 items-center bg-petnetgreen rounded-tr">
+                            <span
+                                class=" text-white text-2xl rounded-full border-white border h-8 w-8 inline-flex justify-center items-center mr-2">4</span>
+                            <p class="text-white text-xl ">Risk Assessment</p>
+                        </div>
+                    </div>
+                    </div>
+                    <!-- form area -->
+                    <form action="/register/drpinfo" method="POST" enctype="multipart/form-data" id="drpform">
+                        {{ .CSRFField }}
+                        <div class="flex flex-wrap justify-center">
+                            <!-- header text -->
+                            <div>
+                                <p class="text-center text-gray-400 pt-4 pb-3">STEP 4</p>
+                                <p class="text-center pb-4 text-2xl font-bold">Risk Assessment</p>
+                            </div>
+
+                        </div>
+                        <div class="sm:px-48 px-6">
+                            <div>
+                                <div class="pb-12">
+                                    <h1 class="py-2 text-lg">Risk Questionnaire:</h1>
+                                    <p class="text-gray-400 font-normal pb-3">You may download the risk questionnaire template<a
+                                            class="text-petnetblue" href="/images/doc/Risk_Assessment_Questionnaire.pdf" download target="_blank"> here.</a> </p>
+                                    <!-- upload form -->
+                                    <div id="file-upload-Questionnaires"
+                                        class="w-full bg-petnetgray {{with .Errors.Questionnaires}}border border-red-500{{end}}">
+                                    </div>
+                                    {{with .Errors.Questionnaires}}
+                                    <p class="text-red-700 mt-2">{{.}}</p>
+                                    {{end}}
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                <div class="sm:flex mt-5 justify-between mb-16 hidden mx-6">
+                    <a href="/register/accountinfo"
+                        class="rounded-md font-bold text-white border border-white px-8 py-3">
+                        Go back
+                    </a>
+                    <div class="flex ">
+                        <div class="mr-8">
+                            <button type="submit" class="bg-petnetlightblue text-white px-8 py-3 rounded-md font-bold">
+                                Save as draft
+                            </button>
+                        </div>
+
+                        <button type="submit" class="bg-petnetyellow text-petnetblue px-8 py-3 rounded-md font-bold">
+                            Submit
+                        </button>
+                    </div>
+                </div>
+                <div class="sm:hidden mt-5 mx-6 mb-16">
+                    <div class="">
+                        <button type="submit"
+                            class="bg-petnetyellow text-petnetblue px-8 py-3 rounded-md font-bold w-full mb-4">
+                            Save & Continue
+                        </button>
+                    </div>
+                    <div class="">
+                        <a href="/register/accountinfo"
+                            class="w-full inline-block rounded-md font-bold text-white border border-white px-8 py-3 text-center">
+                            Go back
+                        </a>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="{{ assetHash "/js/fileupload.js" }}"></script>
+    <script>
+        // example 1
+        const questionnaires = [];
+        new FileUpload("Questionnaires", 20, ["png", "pdf", "doc", "docx"],
+            "", "Choose file/s to upload answered questionnaire", questionnaires, '', {
+                'previewImages': true,
+                'multiple': true
+            });
+    </script>
+</body>
+</html>

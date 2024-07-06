@@ -1,0 +1,33 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-config
+data:
+  RUNTIME_LOGLEVEL: debug
+  RUNTIME_ENVIRONMENT: live
+  DATABASE_HOST: 172.30.225.22
+  DATABASE_DBNAME: petnetdb
+  CORS_ORIGINS: "https://api.drp.perahub.com.ph,https://*.api.drp.perahub.com.ph"
+  HYDRA_ADMINURL: http://hydra-admin
+  HYDRA_AUDIENCE: https://api.drp.perahub.com.ph
+  AUTH_OAUTHURL: https://auth.drp.perahub.com.ph
+  AUTH_ISSUER: https://auth.drp.perahub.com.ph
+  AUTH_TOKEN: https://auth.drp.perahub.com.ph/oauth2/token
+  AUTH_COOKIEMAXAGE: "0"
+  PERAHUB_BASEURL: https://newkycgateway.perahub.com.ph/gateway/
+  PERAHUB_NONEXURL: https://privatedrp.perahub.com.ph/v1/remit/nonex/
+  PERAHUB_BILLERURL: https://privatedrp.perahub.com.ph/v1/billspay/wrapper/api/
+  PERAHUB_TRANSACTURL: https://privatedrp.perahub.com.ph/v1/transactions/api/
+  PERAHUB_BILLSURL: https://privatedrp.perahub.com.ph/v1/billspay/
+  PERAHUB_REVCOMMURL: https://privatedrp.perahub.com.ph/v1/drp/
+  PERAHUB_CICOURL: https://privatedrp.perahub.com.ph/v1/cico/wrapper/
+  PERAHUB_REMITTANCEURL: https://privatedrp.perahub.com.ph/v1/remit/dmt/
+  PERAHUB_MICINSURL: https://privatedrp.perahub.com.ph/v1/insurance/ruralnet/
+  PERAHUB_SERVERIP: 34.87.153.43
+  PERAHUB_TIMEOUT: 45s
+  PERAHUB_AUTHMOCK: "false"
+  INFLUXDB_BUCKET: conexprod
+  INFLUXDB_ORGANIZATION: conex
+
+...

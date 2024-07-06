@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Token</title>
+</head>
+<body>
+  <h1>Token</h1><input type="search" value="{{ .Token }}"
+  placeholder="" style=
+  "width: 600px; height: 25px; margin-bottom: 10px;"><br>
+  <button onclick="copyKey('{{ .Token }}',event)" style=
+  "width: 100px; height: 50px;">Copy</button> 
+  <form action="/logout">
+    <input type="submit" value="Log Out" />
+  </form>
+  <script>
+        function copyKey(id, event) {
+            event.target.innerText = "Copied"
+            const el = document.createElement('textarea');
+            el.value = id;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            setTimeout(function(){ 
+                event.target.innerText = "Copy"
+            }, 1000);
+        }  
+  </script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+package useraccount
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+type GetUserRequest struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type GetUserResponse struct {
+	User User `pb:"1" json:"user"`
+}
+
+type User struct {
+	ID           string    `pb:"1" json:"id"`
+	OrgID        string    `pb:"2" json:"org_id"`
+	OrgName      string    `pb:"3" json:"org_name"`
+	FirstName    string    `pb:"4" json:"first_name"`
+	LastName     string    `pb:"5" json:"last_name"`
+	Email        string    `pb:"6" json:"email"`
+	InviteStatus string    `pb:"7" json:"invite_status"`
+	CountryCode  string    `pb:"8" json:"country_code"`
+	Phone        string    `pb:"9" json:"phone"`
+	Created      time.Time `pb:"10" json:"created"`
+	Updated      time.Time `pb:"11" json:"updated"`
+}
+
+type ListUsersRequest struct {
+	OrgID string `pb:"1" json:"org_id"`
+}
+
+type ListUsersResponse struct {
+	Users []User `pb:"1" json:"users"`
+}
+
+type UserService interface {
+	// Get user by ID.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/user/{ID}",
+	// }
+	GetUser(GetUserRequest) GetUserResponse
+
+	// Get users associated with the org.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/user",
+	//         Body:   "*",
+	// }
+	ListUsers(ListUsersRequest) ListUsersResponse
+}

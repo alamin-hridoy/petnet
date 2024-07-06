@@ -1,0 +1,39 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Perahub DRP API",
+    "version": "0.0.1"
+  },
+  "apis": [
+    {
+      "url": "./drp/v1/profile/all.swagger.json"
+    },
+    {
+      "url": "./drp/v1/terminal/all.swagger.json"
+    },
+    {
+      "url": "./drp/v1/partner/all.swagger.json"
+    },
+    {
+      "url": "./drp/v1/microinsurance/all.swagger.json"
+    },
+    {
+      "url": "./drp/v1/fee/all.swagger.json"
+    },
+    {
+      "url": "./drp/v1/quote/all.swagger.json"
+    },
+    {
+      "url": "./drp/v1/remittance/all.swagger.json"
+    },
+    {
+      "url": "./drp/v1/cashincashout/all.swagger.json"
+    },
+    {
+      "url": "./drp/v1/remittoaccount/all.swagger.json"
+    },
+    {
+      "url": "./drp/v1/bills-payment/all.swagger.json"
+    }
+  ]
+}

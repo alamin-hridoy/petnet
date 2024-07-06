@@ -1,0 +1,673 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>Location</title>
+</head>
+
+<body class="font-sans relative z-10">
+    <div class="flex">
+        <!-- sidebar-start -->
+        <div class="bg-petnetblue w-32 min-h-screen">
+            <div class="min-h-screen">
+                <img src="{{ assetHash "/images/DRP-Vertical.svg" }}" class="mx-auto my-5">
+                <!-- Sidebar menu start -->
+                {{ template "admin-sidenav-menu.html" dict "Type" "dsa-list" "Data" .}}
+                <!-- Sidebar menu end -->
+            </div>
+        </div>
+        <!-- sidebar-end -->
+
+        <!-- right-top-header-start -->
+        <div class="min-h-screen w-full flex bg-petnetgray">
+            <div class="w-full">
+                {{ template "admin-head.html" . }}
+                <!-- first-section-start -->
+                <div class="px-6 lg:px-32 py-10 flex flex-wrap">
+                    <div class="w-1/4 pr-2 flex flex-col">
+                        {{ template "application-sidenav.html" .}}
+                    </div>
+                    <div class="w-3/4 pl-2 flex flex-col">
+                        {{if .PresetPermission.branch.read}}
+                        <div class="mb-8">
+                            <div class="bg-white rounded">
+                                <div class="bg-white rounded flex justify-between border-b">
+                                    <h4 class="text-xl font-bold text-petnetblue pt-7 px-6 pb-4">Head Office
+                                        Business Address</h4>
+                                    {{if .PresetPermission.branch.update}}
+                                    <button
+                                        class="pt-7 px-6 pb-2 flex items-center text-petnetlightblue text-xl font-semibold modal-show focus:outline-none"
+                                        onclick="editModalShow()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 pr-2 pointer-events-none"
+                                            viewBox="0 0 24 24" fill="currentColor">
+                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                d="M20.71 4.04207C21.1 3.65211 21.1 3.02217 20.71 2.63221L18.37 0.292455C18.1832 0.105222 17.9295 0 17.665 0C17.4005 0 17.1468 0.105222 16.96 0.292455L15 2.25225L18.75 6.00186L20.71 4.04207ZM17.75 7.00176L14 3.25215L4.15 13.1011C4.05 13.2011 4 13.3211 4 13.4611V16.5008C4 16.7807 4.22 17.0007 4.5 17.0007H7.54C7.67 17.0007 7.8 16.9507 7.89 16.8507L17.75 7.00176ZM22 20.0004H2C0.9 20.0004 0 20.9003 0 22.0002C0 23.1001 0.9 24 2 24H22C23.1 24 24 23.1001 24 22.0002C24 20.9003 23.1 20.0004 22 20.0004Z"
+                                                fill="#05ACE5" /> />
+                                        </svg>
+                                        EDIT
+                                    </button>
+                                    {{end}}
+                                </div>
+                                <div class="p-6">
+                                    <!-- input form -->
+                                    <div class="grid grid-cols-6 gap-6 mb-4">
+                                        <div class="col-span-6 sm:col-span-3">
+                                            <label for="first_name"
+                                                class="block  font-medium text-petnetheadertext ">BUILDING/STREET
+                                            </label>
+                                            <input type="text" name="b-s" id="b-s" required
+                                                value="{{.BusinessInfo.Address.Address1}}"
+                                                class=" mt-3  w-full py-2 px-3 focus:outline-none border-b ">
+                                        </div>
+
+                                        <div class="col-span-6 sm:col-span-3">
+                                            <label for="last_name"
+                                                class="block  font-medium text-petnetheadertext ">TWON/CITY
+                                            </label>
+                                            <input type="text" name="t-c" id="t-c" placeholder="" required
+                                                value="{{.BusinessInfo.Address.City}}"
+                                                class=" mt-3  w-full py-2 px-3 focus:outline-none  border-b">
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-6 gap-6">
+                                        <div class="col-span-6 sm:col-span-3">
+                                            <label for="first_name"
+                                                class="block  font-medium text-petnetheadertext">PROVINCE
+                                            </label>
+                                            <p class="mt-3 px-3">{{.BusinessInfo.Address.State}}</p>
+
+                                        </div>
+                                        <div class="col-span-6 sm:col-span-3">
+                                            <label for="first_name"
+                                                class="block  font-medium text-petnetheadertext">ZIP/POSTAL CODE
+                                            </label>
+                                            <p class="py-2 px-3">{{.BusinessInfo.Address.PostalCode}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded mt-8 flex justify-between border-b">
+                                <h4 class="text-xl font-bold text-petnetblue pt-7 px-6 pb-4">Branch Locations
+                                </h4>
+                                {{if .PresetPermission.branch.create}}
+                                <button
+                                    class="pt-7 px-6 pb-2 flex items-center text-petnetlightblue text-xl font-semibold modal-show focus:outline-none"
+                                    onclick="modalShow()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 pointer-events-none"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    Add Branch
+                                </button>
+                                {{end}}
+                            </div>
+                            <div class="bg-white rounded  pt-2 ">
+                                <div class=" flex items-center px-8">
+                                    <input type="text" value="{{.SearchTerm}}" id="search"
+                                        class="bg-petnetgray border rounded-l p-2" placeholder="Search for branch">
+                                    <button class="searchbtnloc">
+                                        <img class="bg-petnetblue p-3 rounded-r" src="/images/search.png" alt="">
+                                    </button>
+                                </div>
+                                <table class="w-full">
+                                    <thead class="">
+                                        <tr>
+                                            <td class="pt-6 pb-8 font-bold px-8">
+                                                Branches
+                                            </td>
+                                            <td class="pt-6 pb-8 font-bold px-8">
+                                                Updated date
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{range $key,$branch := .Branches}}
+                                        <tr class="{{if eq $key (sub (len $.Branches) 1)}}border-b{{end}}">
+                                            <td class="pb-4 px-8 w-1/4">
+                                                {{$branch.Title}}
+                                            </td>
+                                            <td class="pb-4 px-8 w-2/4">
+                                                {{formatTimestamp $branch.Updated "January 02, 2006"}}
+                                            </td>
+                                            <td class="pb-4 px-8 w-1/4">
+                                                <div class="flex w-full items-center justify-end">
+                                                    <div class=" pr-14">
+                                                        <div class="relative dropdown">
+                                                            <button class="dropdown-toggle"
+                                                                onclick="dropdownToggle(event)">
+                                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                                    class="text-petnetblue h-6 w-6" fill="none"
+                                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                                        stroke-width="2"
+                                                                        d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                                                                </svg>
+                                                            </button>
+                                                            <div class="absolute right-0 top-12 hidden dropdown-item">
+                                                                <div
+                                                                    class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                                                </div>
+                                                                <div class="shadow  absolute top-3 -right-5 rounded">
+                                                                    <div
+                                                                        class="relative z-20 p-3 w-36 bg-white rounded flex flex-col">
+                                                                        <span
+                                                                            class="text-gray-300 text-xs mb-2 px-6">ACTIONS</span>
+                                                                        {{if $.PresetPermission.branch.update}}
+                                                                        <a onclick="modalShow('{{$branch.ID}}')"
+                                                                            href="javascript:;"
+                                                                            class="px-6 hover:bg-petnetblue hover:bg-opacity-20 py-2 modal-show">Edit</a>
+                                                                        {{end}}
+                                                                        {{if $.PresetPermission.branch.delete}}
+                                                                        <a href="javascript:;"
+                                                                            onclick="deleteModalShow('{{$branch.ID}}')"
+                                                                            class="px-6 hover:bg-petnetblue hover:bg-opacity-20 py-2 delete-modal-show">Delete</a>
+                                                                        {{end}}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <button onclick="expandShow(event)">
+                                                            <img class="h-2 w-4 transform" src="/images/downarrow.png"
+                                                                alt="">
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3">
+                                                <div class="hidden">
+                                                    <div class="bg-green-50 px-8 flex pb-6">
+                                                        <table class="w-full">
+                                                            <thead>
+                                                                <tr class="pr-32">
+                                                                    <td class="py-4 text-petnetheadertext w-1/4">
+                                                                        BUILDING/STREET
+                                                                    </td>
+                                                                    <td class="py-4 text-petnetheadertext w-3/4">
+                                                                        TOWN/CITY
+                                                                    </td>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>
+                                                                        {{$branch.Address.Address1}}
+                                                                    </td>
+                                                                    <td class="w-3/4">
+                                                                        {{$branch.Address.City}}
+                                                                    </td>
+                                                                </tr>
+
+                                                            </tbody>
+                                                        </table>
+
+                                                    </div>
+
+                                                    <div class="bg-green-50 px-8 flex pb-6">
+                                                        <table class="w-full">
+                                                            <thead>
+                                                                <tr class="pr-32">
+                                                                    <td class="py-4 text-petnetheadertext w-1/4">
+                                                                        PROVINCE
+                                                                    </td>
+                                                                    <td class="py-4 text-petnetheadertext w-3/4">
+                                                                        ZIP/POSTAL CODE
+                                                                    </td>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>
+                                                                        {{$branch.Address.State}}
+                                                                    </td>
+                                                                    <td class="w-3/4">
+                                                                        {{$branch.Address.PostalCode}}
+                                                                    </td>
+                                                                </tr>
+
+                                                            </tbody>
+                                                        </table>
+
+                                                    </div>
+                                                    <div class="bg-green-50 px-8 flex pb-6">
+
+                                                        <table class="w-full">
+                                                            <thead>
+                                                                <tr class="pr-32">
+                                                                    <td class="py-4 text-petnetheadertext w-1/4">
+                                                                        FAX NUMBER
+                                                                    </td>
+                                                                    <td class="py-4 text-petnetheadertext w-3/4">
+                                                                        PHONE NUMBER
+                                                                    </td>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>
+                                                                        {{$branch.FaxNumber}}
+                                                                    </td>
+                                                                    <td class="w-3/4">
+                                                                        {{$branch.PhoneNumber}}
+                                                                    </td>
+                                                                </tr>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="bg-green-50 px-8 flex pb-6">
+
+                                                        <table>
+                                                            <thead>
+                                                                <tr class="pr-32">
+                                                                    <td class="py-4 text-petnetheadertext">
+                                                                        CONTACT PERSON
+                                                                    </td>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>
+                                                                        {{$branch.ContactPerson}}
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {{end}}
+                                    </tbody>
+                                </table>
+                                <div>
+                                </div>
+                            </div>
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{if or (.PresetPermission.branch.create) (.PresetPermission.branch.update)}}
+    <div id="addBranchPopUp" class="{{with .Errors}}{{else}}hidden{{end}}">
+        <div onClick="this.disabled=true;"
+            class="absolute inset-0 z-50 min-w-screen min-h-screen bg-black bg-opacity-50 py-6 flex flex-col justify-center sm:py-12">
+            <div class="py-3 sm:max-w-full sm:mx-auto">
+                <div class="w-full modal-container">
+                    <div class="bg-white flex flex-col shadow-lg w-full z-50 rounded-lg overflow-hidden">
+                        <div class="flex flex-col items-center">
+                            <form class="w-full flex flex-col px-20" id="dataReset" method="POST"
+                                action="/dashboard/location/{{.OrgID}}">
+                                {{.CSRFField}}
+                                <div class="mb-2 w-full">
+                                    <div class="mt-16">
+                                        <h1 id="modal-title" class="mt-8 text-3xl font-bold px-8">Add Branch Location
+                                        </h1>
+                                        <p class="my-4 px-8">Please fill up the following information.</p>
+                                        <div class="pb-2 pt px-8">
+                                            <label for="" class=" block font-medium ">Branch Title<span class="text-petnetpink">*</span>
+                                            </label>
+                                            <input type="text" name="Title" id="Title" value="{{.Title}}" placeholder=""
+                                                required
+                                                class=" mt-2 w-full py-2 px-3 focus:outline-none border rounded bg-petnetgray">
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-6 gap-6 mb-2 px-8 pt-3">
+                                        <div class="col-span-6 sm:col-span-3">
+                                            <label for="" class="block  font-medium ">Building/Street<span class="text-petnetpink">*</span>
+                                            </label>
+                                            <input type="text" name="Address.Address1" value="{{.Address.Address1}}"
+                                                id="Address1" required
+                                                class=" mt-2 w-full py-2 px-3 focus:outline-none border rounded bg-petnetgray">
+                                        </div>
+
+                                        <div class="col-span-6 sm:col-span-3">
+                                            <label for="" class="block  font-medium ">Town/City<span class="text-petnetpink">*</span>
+                                            </label>
+                                            <input type="text" name="Address.City" value="{{.Address.City}}" id="City"
+                                                placeholder="" required
+                                                class=" mt-2 w-full py-2 px-3 focus:outline-none border rounded bg-petnetgray">
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-6 gap-6 mb-2 px-8 pt-3">
+                                        <div class="col-span-6 sm:col-span-3">
+                                            <label for="" class="block  font-medium ">Province<span class="text-petnetpink">*</span>
+                                            </label>
+                                            <input type="text" name="Address.State" value="{{.Address.State}}"
+                                                id="State" required
+                                                class=" mt-2 w-full py-2 px-3 focus:outline-none border rounded bg-petnetgray ">
+                                        </div>
+
+                                        <div class="col-span-6 sm:col-span-3">
+                                            <label for="" class="block  font-medium ">Zip/Postal Code<span class="text-petnetpink">*</span>
+                                            </label>
+                                            <input type="text" name="Address.PostalCode" value="{{.Address.PostalCode}}"
+                                                id="PostalCode" placeholder="" required
+                                                class=" mt-2 w-full py-2 px-3 focus:outline-none border rounded bg-petnetgray">
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-6 gap-6 mb-2 px-8 pt-3">
+                                        <div class="col-span-6 sm:col-span-3">
+                                            <label for="" class="block  font-medium ">Phone Number<span class="text-petnetpink">*</span>
+                                            </label>
+                                            <input type="text" name="PhoneNumber" value="{{.PhoneNumber}}"
+                                                id="PhoneNumber" required
+                                                class=" mt-2 w-full py-2 px-3 focus:outline-none border rounded bg-petnetgray">
+                                            {{with .Errors.PhoneNumber}}
+                                            <p class="text-red-700 mt-2">{{.}}</p>
+                                            {{end}}
+                                        </div>
+
+                                        <div class="col-span-6 sm:col-span-3">
+                                            <label for="" class="block  font-medium ">Fax Number
+                                            </label>
+                                            <input type="text" name="FaxNumber" value="{{.FaxNumber}}" id="FaxNumber"
+                                                placeholder=""
+                                                class="mt-2 w-full py-2 px-3 focus:outline-none border rounded bg-petnetgray">
+                                            {{with .Errors.FaxNumber}}
+                                            <p class="text-red-700 mt-2">{{.}}</p>
+                                            {{end}}
+                                        </div>
+                                    </div>
+                                    <div class="pb-8 pt-3 px-8">
+                                        <label for="" class="block  font-medium ">Contact Person
+                                        </label>
+                                        <input type="text" name="ContactPerson" value="{{.ContactPerson}}"
+                                            id="ContactPerson" placeholder=""
+                                            class="mt-2 w-full py-2 px-3 focus:outline-none border rounded bg-petnetgray">
+                                    </div>
+                                </div>
+                                <div class="flex justify-between pb-12 px-8 ">
+                                    <a href="/dashboard/location/{{.OrgID}}"
+                                        class=" py-3 px-4 mr-2 w-1/2 text-lg inline-block text-center font-bold rounded-md text-petnetblue focus:outline-none border border-petnetblue">Cancel</a>
+                                    <button type="submit" id="submit-button"
+                                        class=" py-3 px-4 ml-4 w-1/2 text-lg font-bold rounded-md text-petnetblue bg-petnetyellow focus:outline-none">Add</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{end}}
+    {{if .PresetPermission.branch.delete}}
+    <div id="deleteBranchModal" class="hidden">
+        <div
+            class="fixed top-0 left-0 z-50 w-screen min-h-screen bg-black bg-opacity-50 py-6 flex flex-col justify-center sm:py-12">
+            <div class="py-3 sm:max-w-full sm:mx-auto">
+                <div class="w-full delete-modal-container">
+                    <div class="bg-white flex flex-col shadow-lg w-full z-50 rounded-lg overflow-hidden">
+                        <div class="flex flex-col items-center">
+                            <form class="w-full flex flex-col px-20" id="deleteForm" method="POST" action="">
+                                {{.CSRFField}}
+                                <div class="mt-16 text-center">
+                                    <h1 class="mt-8 text-3xl font-bold px-8 mb-4">Are you sure you want to delete this?
+                                    </h1>
+                                    <p class="mt-4 px-8 text-gray-600 mb-8">This action cannot be revoked.</p>
+                                </div>
+                                <div class="flex justify-between pb-12 px-8 ">
+                                    <a href="javascript:;" onclick="deleteModalNotNow()"
+                                        class="py-3 px-4 mr-2 w-1/2 text-lg font-bold rounded-md text-petnetblue focus:outline-none border border-petnetblue inline-block text-center">Not
+                                        now</a>
+                                    <button type="submit"
+                                        class=" py-3 px-4 ml-4 w-1/2 text-lg font-bold rounded-md text-petnetblue bg-petnetyellow focus:outline-none">Yes
+                                        I’m sure.</button>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{end}}
+    <div id="EditPopUp" class="hidden">
+        <div onClick=""
+            class="absolute inset-0 z-50 min-w-screen min-h-screen bg-black bg-opacity-50 py-6 flex flex-col justify-center sm:py-12">
+            <div class="py-3 sm:max-w-full sm:mx-auto">
+                <div class="w-full modal-container">
+                    <div class="bg-white flex flex-col shadow-lg w-full z-50 rounded-lg overflow-hidden">
+                        <div class="flex flex-col items-center">
+                            <form class="w-full flex flex-col px-20" id="" method="POST"
+                                action="/dashboard/locationUpdate">
+                                {{.CSRFField}}
+                                <div class="mb-2 w-full">
+                                    <div class="mt-16">
+                                        <h1 id="modal-title" class="mt-8 text-3xl font-bold px-8">Edit Head Office
+                                            Business Address
+                                        </h1>
+                                        <p class="my-4 px-8">Please fill up the following information.</p>
+                                    </div>
+                                    <div class="grid grid-cols-6 gap-6 mb-2 px-8 pt-3">
+                                        <div class="col-span-6 sm:col-span-3">
+                                            <label for="" class="block  font-medium ">Building/Street<span class="text-petnetpink">*</span>
+                                            </label>
+                                            <input type="text" name="Address1"
+                                                value="{{.BusinessInfo.Address.Address1}}" id="Address1" required
+                                                class=" mt-2 w-full py-2 px-3 focus:outline-none border rounded bg-petnetgray">
+                                        </div>
+
+                                        <div class="col-span-6 sm:col-span-3">
+                                            <label for="" class="block  font-medium ">Town/City<span class="text-petnetpink">*</span>
+                                            </label>
+                                            <input type="text" name="City" value="{{.BusinessInfo.Address.City}}"
+                                                id="City" placeholder="" required
+                                                class=" mt-2 w-full py-2 px-3 focus:outline-none border rounded bg-petnetgray">
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-6 gap-6 mb-2 px-8 pt-3">
+                                        <div class="col-span-6 sm:col-span-3">
+                                            <label for="" class="block  font-medium ">Province<span class="text-petnetpink">*</span>
+                                            </label>
+                                            <input type="text" name="State" value="{{.BusinessInfo.Address.State}}"
+                                                id="State" required
+                                                class=" mt-2 w-full py-2 px-3 focus:outline-none border rounded bg-petnetgray ">
+                                        </div>
+
+                                        <div class="col-span-6 sm:col-span-3">
+                                            <label for="" class="block  font-medium ">Zip/Postal Code<span class="text-petnetpink">*</span>
+                                            </label>
+                                            <input type="text" name="PostalCode"
+                                                value="{{.BusinessInfo.Address.PostalCode}}" id="PostalCode"
+                                                placeholder="" required
+                                                class=" mt-2 w-full py-2 px-3 focus:outline-none border rounded bg-petnetgray">
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-between pb-12 px-8 pt-8">
+                                        <a href="/dashboard/location/{{.OrgID}}"
+                                            class=" py-3 px-4 mr-2 w-1/2 text-lg inline-block text-center font-bold rounded-md text-petnetblue focus:outline-none border border-petnetblue">Cancel</a>
+                                        <button type="submit"
+                                            class=" py-3 px-4 ml-4 w-1/2 text-lg font-bold rounded-md text-petnetblue bg-petnetyellow focus:outline-none">Update</button>
+                                    </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    const branches = JSON.parse('{{jsonStringify .Branches}}');
+
+    function editModalShow() {
+        var getPopUp = document.getElementById("EditPopUp")
+        var getPopUpClass = getPopUp.className
+        getPopUp.classList.remove("hidden");
+    }
+
+    document.addEventListener("click", function (event) {
+        var getModalContainer = event.target.closest('.modal-container');
+        var modalButton = event.target.classList.contains('modal-show');
+        var getPopUp = document.getElementById("EditPopUp")
+        var getPopUpClass = getPopUp.className
+        if (!getModalContainer && !modalButton) {
+            getPopUp.classList.add("hidden");
+            document.getElementById("dataReset").reset();
+        }
+    });
+
+    function modalShow(id) {
+        if (id) {
+            setFormValue(id);
+        }
+        var getPopUp = document.getElementById("addBranchPopUp")
+        var getPopUpClass = getPopUp.className
+        getPopUp.classList.remove("hidden");
+    }
+
+    function modalCancel() {
+        var getPopUp = document.getElementById("addBranchPopUp")
+        var getPopUpClass = getPopUp.className
+        getPopUp.classList.add("hidden");
+        document.getElementById("dataReset").reset();
+    }
+    document.addEventListener("click", function (event) {
+        var getModalContainer = event.target.closest('.modal-container');
+        var modalButton = event.target.classList.contains('modal-show');
+        var getPopUp = document.getElementById("addBranchPopUp")
+        var getPopUpClass = getPopUp.className
+        if (!getModalContainer && !modalButton) {
+            getPopUp.classList.add("hidden");
+            document.getElementById("dataReset").reset();
+        }
+    });
+
+    function setFormValue(id) {
+        const row = branches.find(function (data) {
+            return data.id == id;
+        });
+        if (Object.keys(row).length > 0) {
+            if (row.fax_number == undefined || row.fax_number == "undefined") {
+                row.fax_number = ""
+            }
+            if (row.contact_person == undefined || row.contact_person == "undefined") {
+                row.contact_person = ""
+            }
+            const targetForm = document.getElementById("dataReset");
+            targetForm.reset();
+            document.getElementById('modal-title').innerHTML = "Edit Branch Location"
+            document.getElementById('submit-button').innerHTML = "Update"
+            document.getElementById('dataReset').action = "/dashboard/location/{{.OrgID}}/update/" + row.id;
+            document.getElementById('Title').value = row.title;
+            document.getElementById('Address1').value = row.address.address1;
+            document.getElementById('City').value = row.address.city;
+            document.getElementById('State').value = row.address.state;
+            document.getElementById('PostalCode').value = row.address.postal_code;
+            document.getElementById('PhoneNumber').value = row.phone_number;
+            document.getElementById('FaxNumber').value = row.fax_number;
+            document.getElementById('ContactPerson').value = row.contact_person;
+        }
+    }
+
+    function expandShow(event) {
+        let targetItem = event.target;
+        while (targetItem.tagName != 'TR') {
+            targetItem = targetItem.parentElement;
+        }
+        targetItem = targetItem.nextElementSibling;
+        while (targetItem.tagName != 'DIV') {
+            targetItem = targetItem.children[0];
+        }
+        if (targetItem.classList.contains('hidden')) {
+            targetItem.classList.remove("hidden");
+            event.target.classList.add('rotate-180')
+        } else {
+            targetItem.classList.add("hidden");
+            event.target.classList.remove('rotate-180')
+
+        }
+
+    }
+
+    function dropdownToggle(event) {
+        let targetItem = event.target;
+        while (!targetItem.classList.contains('dropdown-toggle')) {
+            targetItem = targetItem.parentElement;
+        }
+        targetItem = targetItem.nextElementSibling;
+
+        if (targetItem.classList.contains('hidden')) {
+            targetItem.classList.remove("hidden");
+        } else {
+            targetItem.classList.add("hidden");
+        }
+        let x = document.getElementsByClassName("dropdown-item");
+        for (let i = 0; i < x.length; i++) {
+            if (x[i] != targetItem) {
+                x[i].classList.add("hidden")
+            }
+        }
+    }
+
+    function deleteModalShow(id) {
+        var getPopUp = document.getElementById("deleteBranchModal")
+        document.getElementById('deleteForm').action = "/dashboard/location/{{.OrgID}}/delete/" + id;
+        var getPopUpClass = getPopUp.className
+        getPopUp.classList.remove("hidden");
+    }
+
+    function deleteModalNotNow() {
+        var getPopUp = document.getElementById("deleteBranchModal")
+        var getPopUpClass = getPopUp.className
+        getPopUp.classList.add("hidden");
+    }
+
+    document.addEventListener("click", function (event) {
+        var getModalContainer = event.target.closest('.delete-modal-container');
+        var modalButton = event.target.classList.contains('delete-modal-show');
+        var getPopUp = document.getElementById("deleteBranchModal")
+        var getPopUpClass = getPopUp.className
+        if (!getModalContainer && !modalButton) {
+            getPopUp.classList.add("hidden");
+        }
+    });
+    const params = new URLSearchParams(window.location.search)
+    function search() {
+        let searchTerm = document.getElementById("search").value;
+        if (params.has("search-term")) {
+            params.delete("search-term");
+        }
+        params.append("search-term", searchTerm);
+        window.location.search = params.toString();
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        let menus = document.querySelectorAll(".mailsend");
+        let searchbtn = document.querySelectorAll(".searchbtn");
+        let form = document.getElementById("sendform")
+        for (let i = 0; i < menus.length; i++) {
+            menus[i].addEventListener("click", function (e) {
+                menus[i].disabled = true;
+            });
+        }
+        for (let i = 0; i < searchbtn.length; i++) {
+            searchbtn[i].addEventListener("click", function (e) {
+                e.preventDefault();
+                search();
+                searchbtn[i].disabled = true;
+            });
+        }
+        for (let i = 0; i < searchbtn.length; i++) {
+            searchbtn[i].addEventListener("click", function (e) {
+                e.preventDefault();
+                searchbtn[i].disabled = true;
+                search();
+            });
+        }
+    });
+</script>
+
+</html>

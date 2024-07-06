@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+set -ex
+
+# Determine GCP project id from passed through environment
+case "$DRONE_BRANCH" in
+staging-test|master)
+	ENV=staging
+	GCP_PROJECT_ID=o-staging
+	;;
+*)
+	echo "Unknown environment '$DRONE_BRANCH'" >&2
+	exit 1
+	;;
+esac
+
+if [[ -n $DRONE_REPO_NAME ]]; then
+	# we need GOOGLE_APPLICATION_CREDENTIALS on CI
+	if [[ -z $GOOGLE_APPLICATION_CREDENTIALS ]]; then
+		# temporary backwards compatibility with $GOOGLE_CREDENTIALS
+		if [[ -z $GOOGLE_CREDENTIALS ]]; then
+			echo '$GOOGLE_APPLICATION_CREDENTIALS missing' >&2
+			exit 1
+		fi
+		echo "$GOOGLE_CREDENTIALS" >google_creds.json
+		export GOOGLE_APPLICATION_CREDENTIALS="$PWD/google_creds.json"
+	fi
+
+	# set up auth for gcloud and kubectl on CI
+	gcloud auth activate-service-account --key-file "$GOOGLE_APPLICATION_CREDENTIALS" || exit 1
+	gcloud config set project $GCP_PROJECT_ID || exit 1
+	gcloud container clusters get-credentials brankas-staging --zone asia-southeast1-b || exit 1
+
+	# log all version information on CI
+	kubectl version
+fi
+
+for d in usermgm ; do
+	TAG=$(./scripts/docker-image-tag "$d")
+	pushd "$d"
+	pushd deploy/overlays/${ENV}
+	kustomize edit set image IMAGE_TAG=$TAG
+	kustomize build --load_restrictor=none | kubectl apply --namespace cebuana-corporate -f -
+	popd
+	popd
+done

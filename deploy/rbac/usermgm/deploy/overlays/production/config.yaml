@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: usermgm-config
+data:
+  RUNTIME_ENVIRONMENT: 'production'
+  HYDRA_AUDIENCE: drp.perahub.com.ph
+  HYDRA_ADMINURL: 'http://hydra-admin'
+  CORS_ORIGINS: 'https://drp.perahub.com.ph,https://*.drp.perahub.com.ph'
+  BASE_URL: 'https://drp.perahub.com.ph'
+  API_HOST: 'https://api.drp.perahub.com.ph'
+  API_AUTHHOST: 'https://auth.drp.perahub.com.ph/oauth2/token'
+  DATABASE_HOST: 172.30.225.22
+  DATABASE_DBNAME: identitydb
+  ORG_AUTOCREATE: "true"
+  BOOTSTRAP_NAME: admin
+  BOOTSTRAP_EMAIL: admin@example.com
+  BOOTSTRAP_ENVLIST: sandbox live
+  KETO_HOST: keto-api
+  INFLUXDB_BUCKET: conexprod
+  INFLUXDB_ORGANIZATION: conex
+  IDP_URL: https://auth.drp.perahub.com.ph
+  MAILER_EMAILCONFIRMURL: https://drp.perahub.com.ph/registration/preliminary-screen
+  MAILER_SIGNUPURL: https://drp.perahub.com.ph/registration/account-details
+  USER_EXISTERROR: "true"

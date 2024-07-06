@@ -1,0 +1,262 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>Transactions</title>
+</head>
+
+<body class="font-sans">
+    <div>
+        <div class="flex">
+            <!-- sidebar-left-start -->
+            <div class="bg-petnetblue w-32 min-h-screen">
+                <div class="min-h-screen">
+                    <img src="{{ assetHash "/images/DRP-Vertical.svg" }}" class="mx-auto my-5">
+                    <ul class="">
+                        <li class="w-full px-2 py-4  p-2 flex items-center justify-center">
+                            <a href="javascript:;" class="text-center text-white">
+                                <img src="{{ assetHash "/images/settings-system-daydream.png" }}" width="28"
+                                    class="mx-auto mb-3">
+                                <span class="leading-5 font-bold">API Integration</span>
+                            </a>
+                        </li>
+                        <li class="w-full px-2 py-4 bg-white bg-opacity-30 flex items-center justify-center">
+                            <a href="javascript:;" class="text-center text-petnetyellow">
+                                <img src="{{ assetHash "/images/Subtract.png" }}" width="28" class="mx-auto mb-3">
+                                <span class="leading-5 font-bold">Transactions</span>
+                            </a>
+                        </li>
+                        <li class="w-full px-2 py-4 flex items-center justify-center">
+                            <a href="javascript:;" class="text-center text-white">
+                                <img src="{{ assetHash "/images/docs.svg" }}" width="28" class="mx-auto mb-3">
+                                <span class="leading-5 font-bold">Doc Portal</span>
+                            </a>
+                        </li>
+                        <li class="w-full px-2 py-4 flex items-center justify-center">
+                            <a href="javascript:;" class="text-center text-white">
+                                <img src="{{ assetHash "/images/settings.png" }}" width="28" class="mx-auto mb-3">
+                                <span class="leading-5 font-bold">Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- sidebarleft-end -->
+
+            <!-- top-header-start -->
+            <div class="min-h-screen w-full flex bg-petnetgray ">
+                <div class="w-full">
+                    <div class="px-6 lg:px-32 py-10  bg-white shadow-md relative z-10">
+                        <ul class="flex justify-end items-center space-x-4 mb-16">
+                            <li class="mr-auto font-bold">
+                                <a href="javascript:;" class="inline-flex text-petnetlightblue text-sm items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-4" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                                    </svg>
+                                    Back to List
+                                </a>
+                            </li>
+                            <li>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                </svg>
+                            </li>
+                            <li>
+                                <span
+                                    class="inline-flex items-center justify-center bg-pink-500 uppercase w-9 h-9 rounded-full text-white">ac</span>
+                            </li>
+                            <li>
+                                <div class="relative" id="topDropdownBox">
+                                    <a href="javascript:;" onclick="toggleTopButton('openTopDropdown')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </a>
+                                    <div class="absolute right-0 top-12 hidden" id="openTopDropdown">
+                                        <div
+                                            class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                        </div>
+                                        <div class="shadow-lg  absolute top-3 -right-5 rounded">
+                                            <div class="relative z-20 p-3 w-36 bg-white rounded space-y-2">
+                                                <a class="flex text-sm items-center" href="/profile">
+                                                    <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M16 8C16 10.21 14.21 12 12 12C9.79 12 8 10.21 8 8C8 5.79 9.79 4 12 4C14.21 4 16 5.79 16 8ZM4 18C4 15.34 9.33 14 12 14C14.67 14 20 15.34 20 18V19C20 19.55 19.55 20 19 20H5C4.45 20 4 19.55 4 19V18Z" fill="#333333"/>
+                                                    </svg>
+                                                    Profile
+                                                </a>
+                                                <a href="/logout" class="flex text-sm">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2"
+                                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                                    </svg>
+                                                    Logout
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+
+                        </ul>
+                        <div class="mb-4">
+
+
+                            <h2 class="text-4xl text-petnetblue">XYZ Company</h2>
+                        </div>
+                    </div>
+                    <!-- top-header-end -->
+                    <!-- side-nav -->
+                    <div>
+                        <div class="px-6 lg:px-32 py-10 flex flex-wrap">
+                            <div class="w-1/4 pr-2 flex flex-col rounded">
+                                <div class="mb-8">
+                                    <div class="bg-white rounded">
+                                        <h4 class="text-xl font-bold text-petnetblue pt-7 px-6 pb-4 border-b">Summary
+                                        </h4>
+                                        <div class="flex items-center border-l-4 border-white hover:bg-petnetlightblue hover:bg-opacity-10 hover:border-petnetblue py-5 px-10">
+
+                                            <span class="mr-3 inline-block"><img
+                                                    src="{{ assetHash "/images/details.png" }}" alt=""></span>Details
+                                        </div>
+                                        <div class="flex items-center border-l-4 bg-petnetlightblue bg-opacity-10 border-petnetblue py-5 px-10">
+                                            <span class="mr-3 inline-block"><img
+                                                    src="{{ assetHash "/images/history.png" }}" alt=""></span>Transaction History
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-3/4 pl-2">
+                                <div class="bg-white rounded mb-3">
+                                    <div class="border-b flex items-center justify-between">
+                                        <h4 class="text-xl font-bold text-petnetblue pt-7 px-6 pb-4">Transaction History
+                                        </h4>
+                                    </div>
+                                    <h3 class="mb-2 px-8 pt-5 text-lg font-bold">
+                                        Remittance Details
+                                    </h3>
+                                    <!-- table-start -->
+                                    <div class="flex flex-col">
+                                        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                                            <div class="py-4 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                                                <div class=" overflow-hidden">
+                                                    <table class="min-w-full">
+                                                        <thead class="bg-white">
+                                                            <tr>
+                                                                <th scope="col"
+                                                                    class="px-8 py-3 text-left  font-semibold tracking-wider text-lg">
+                                                                    Transaction Date
+                                                                </th>
+                                                                <th scope="col"
+                                                                    class="px-6 py-3 text-left  font-semibold tracking-wider text-lg">
+                                                                    Total Remitted <br> Amount
+                                                                </th>
+                                                                <th scope="col"
+                                                                    class="px-6 py-3 text-left  font-semibold tracking-wider text-lg">
+                                                                    Service
+                                                                </th>
+                                                                <th scope="col"
+                                                                    class="px-6 py-3 text-left  font-semibold tracking-wider">
+
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="bg-white">
+                                                            <tr>
+                                                                <td class="px-8 py-4 whitespace-nowrap">
+                                                                    May 26, 2021
+                                                                </td>
+                                                                <td
+                                                                    class="px-6 py-4 whitespace-nowrap flex items-center ">
+                                                                    <div class="h-2 w-2 rounded-full bg-petnetgreen">
+                                                                    </div>
+                                                                    <div class="text-lg pl-4">P 50,000n</div>
+                                                                </td>
+                                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                                    Western Union Remittance
+                                                                </td>
+                                                                <td
+                                                                    class="px-6 py-4 whitespace-nowrap flex items-center">
+                                                                    <a href="javascript:;" class=""><img
+                                                                            src="{{ assetHash "/images/arrowright.png" }}"
+                                                                            alt=""></a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="px-8 py-4 whitespace-nowrap">
+                                                                    May 26, 2021
+                                                                </td>
+                                                                <td
+                                                                    class="px-6 py-4 whitespace-nowrap flex items-center">
+                                                                    <div class="h-2 w-2 rounded-full bg-petnetgreen">
+                                                                    </div>
+                                                                    <div class="text-lg pl-4">P 50,000n</div>
+                                                                </td>
+                                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                                    Western Union Remittance
+                                                                </td>
+                                                                <td
+                                                                    class="px-6 py-4 whitespace-nowrap flex items-center">
+                                                                    <a href="javascript:;" class=""><img
+                                                                            src="{{ assetHash "/images/arrowright.png" }}"
+                                                                            alt=""></a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr class="">
+                                                                <td class="px-8 py-4 whitespace-nowrap">
+                                                                    May 26, 2021
+                                                                </td>
+                                                                <td
+                                                                    class="px-6 py-4 whitespace-nowrap flex items-center">
+                                                                    <div class="h-2 w-2 rounded-full bg-petnetred ">
+                                                                    </div>
+                                                                    <div class="text-lg pl-4">P 50,000n</div>
+                                                                </td>
+                                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                                    Western Union Remittance
+                                                                </td>
+                                                                <td
+                                                                    class="px-6 py-4 whitespace-nowrap flex items-center">
+                                                                    <a href="javascript:;" class=""><img
+                                                                            src="{{ assetHash "/images/arrowright.png" }}"
+                                                                            alt=""></a>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <!-- table-end -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            function toggleTopButton(id) {
+                let getDropdownItem = document.getElementById(id)
+                let isHiddenClass = getDropdownItem.classList.contains('hidden');
+                if (!isHiddenClass) {
+                    getDropdownItem.classList.add("hidden");
+                } else {
+                    getDropdownItem.classList.remove("hidden");
+                }
+            }
+        </script>
+</body>
+
+</html>

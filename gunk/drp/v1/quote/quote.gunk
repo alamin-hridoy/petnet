@@ -1,0 +1,228 @@
+package quote
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+
+	"brank.as/petnet/gunk/drp/v1/profile"
+)
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "remit_partner",
+//                 "amount",
+//         },
+// }}
+type QuoteInquiryRequest struct {
+	RemitPartner string      `pb:"1" json:"remit_partner"`
+	Amount       QuoteAmount `pb:"2" json:"amount"`
+}
+
+type QuoteInquiryResponse struct {
+	Amount         QuoteAmount       `pb:"1" json:"amount"`
+	FeeBreakdown   map[string]string `pb:"2" json:"fee_breakdown"`
+	TotalFee       string            `pb:"3" json:"total_fee"`
+	TransferAmount string            `pb:"4" json:"transfer_amount"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "remit_partner",
+//                 "amount",
+//         },
+// }}
+type QuoteRequirementsRequest struct {
+	RemitPartner string      `pb:"1" json:"remit_partner"`
+	Amount       QuoteAmount `pb:"2" json:"amount"`
+}
+
+type QuoteRequirementsResponse struct {
+	Requirements []Requirement `pb:"1" json:"requirements"`
+	Quote        Quote         `pb:"2" json:"quote"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "remit_partner",
+//                 "email",
+//                 "amount",
+//         },
+// }}
+type CreateQuoteRequest struct {
+	RemitPartner string      `pb:"1" json:"remit_partner"`
+	Email        string      `pb:"2" json:"email"`
+	Amount       QuoteAmount `pb:"3" json:"amount"`
+}
+
+type CreateQuoteResponse struct {
+	Requirements []Requirement `pb:"1" json:"requirements"`
+	QuoteSummary QuoteSummary  `pb:"2" json:"quote_summary"`
+}
+
+type QuoteSummary struct {
+	SourceCurrency      string            `pb:"1" json:"source_currency"`
+	DestinationCurrency string            `pb:"2" json:"destination_currency"`
+	SourceAmount        string            `pb:"3" json:"source_amount"`
+	DestinationAmount   string            `pb:"4" json:"destination_amount"`
+	FeeBreakdown        map[string]string `pb:"5" json:"fee_breakdown"`
+	TotalFee            string            `pb:"6" json:"total_fee"`
+	TransferAmount      string            `pb:"7" json:"transfer_amount"`
+	Payout              string            `pb:"8" json:"payout"`
+	Rate                string            `pb:"9" json:"rate"`
+}
+
+type Quote struct {
+	SourceCurrency      string `pb:"1" json:"source_currency"`
+	DestinationCurrency string `pb:"2" json:"destination_currency"`
+	SourceAmount        string `pb:"3" json:"source_amount"`
+}
+
+type Requirement struct {
+	Type      string  `pb:"1" json:"type"`
+	Title     string  `pb:"2" json:"title"`
+	UsageInfo string  `pb:"3" json:"usage_info"`
+	Fields    []Field `pb:"4" json:"fields"`
+}
+
+type Field struct {
+	Name   string  `pb:"1" json:"name"`
+	Groups []Group `pb:"2" json:"group"`
+}
+
+type Group struct {
+	Key                         string          `pb:"1" json:"key"`
+	Name                        string          `pb:"2" json:"name"`
+	Type                        string          `pb:"3" json:"type"`
+	RefreshRequirementsOnChange bool            `pb:"4" json:"refresh_requirements_on_change"`
+	Required                    bool            `pb:"5" json:"required"`
+	Example                     string          `pb:"6" json:"example"`
+	DisplayFormat               string          `pb:"7" json:"display_format"`
+	MinLength                   string          `pb:"8" json:"min_length"`
+	MaxLength                   string          `pb:"9" json:"max_length"`
+	ValidationRegexp            string          `pb:"10" json:"validation_regexp"`
+	ValidationAsync             ValidationAsync `pb:"11" json:"validation_async"`
+	ValuesAllowed               []ValueAllowed  `pb:"12" json:"values_allowed"`
+}
+
+type ValueAllowed struct {
+	Key  string `pb:"1" json:"key"`
+	Name string `pb:"2" json:"name"`
+}
+
+type ValidationAsync struct {
+	URL    string  `pb:"1" json:"url"`
+	Params []Param `pb:"2" json:"params"`
+}
+
+type Param struct {
+	Key           string `pb:"1" json:"key"`
+	ParamaterName string `pb:"2" json:"parameter_name"`
+	Required      bool   `pb:"3" json:"required"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "source_amount",
+//                 "source_currency",
+//                 "destination_currency",
+//         },
+// }}
+type QuoteAmount struct {
+	// Monetary amount in the smallest currency denomination.  Example: USD $10.25 => "1025".
+	SourceAmount string `pb:"1" json:"source_amount"`
+	// Source currency code using ISO-4217 3-letter codes.
+	SourceCurrency string `pb:"2" json:"source_currency"`
+	// Destination currency code using ISO-4217 3-letter codes.
+	DestinationCurrency string `pb:"3" json:"destination_currency"`
+}
+
+type QuoteService interface {
+	// Get a quote for choosen remit partner.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Body:   "*",
+	//         Path:   "/v1/quote/{RemitPartner}/inquiry",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Quote"},
+	//         Summary:     "Remit Quote Inquiry.",
+	//         Description: "Get a quote for choosen remit partner, currency and amount.",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/quoteQuoteInquiryResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	QuoteInquiry(QuoteInquiryRequest) QuoteInquiryResponse
+
+	// Get quote requirements for making a transaction.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Body:   "*",
+	//         Path:   "/v1/quote/{RemitPartner}/requirements",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Quote"},
+	//         Summary:     "Remit Quote Requirements.",
+	//         Description: "Get quote requirements for choosen remit partner.",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/quoteQuoteRequirementsResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	QuoteRequirements(QuoteRequirementsRequest) QuoteRequirementsResponse
+
+	// Create quote for making a transaction.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Body:   "*",
+	//         Path:   "/v1/quote/{RemitPartner}/create",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Quote"},
+	//         Summary:     "Create Remit Quote.",
+	//         Description: "Create remit quote for choosen remit partner.",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/quoteCreateQuoteResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	CreateQuote(CreateQuoteRequest) CreateQuoteResponse
+}

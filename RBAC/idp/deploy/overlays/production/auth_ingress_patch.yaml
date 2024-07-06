@@ -1,0 +1,18 @@
+- op: replace
+  path: /spec/tls/0/hosts
+  value:
+    - account.proxtera.com
+    - api.proxtera.com
+    - sso.proxtera.com
+
+- op: replace
+  path: /spec/tls/0/secretName
+  value: sso-cert 
+
+- op: replace
+  path: /spec/rules/0/host
+  value: sso.proxtera.com
+
+- op: add
+  path: /metadata/annotations/cert-manager.io~1cluster-issuer
+  value: letsencrypt-http-real

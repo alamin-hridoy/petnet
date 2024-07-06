@@ -1,0 +1,1029 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/drp/v1/bills-payment/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "BillspaymentService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/bills-payment/billerlist": {
+      "get": {
+        "summary": "Get Transaction history for BillsPayment.",
+        "description": "Get Transaction List for BillsPayment.",
+        "operationId": "BillspaymentService_BillsPaymentTransactList",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/bills_paymentBillsPaymentTransactListResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when not found.",
+            "schema": {
+              "example": {
+                "code": 400,
+                "message": "BillsPayment Biller List Error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "until",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "DESC",
+              "ASC"
+            ],
+            "default": "DESC"
+          },
+          {
+            "name": "sort_by_column",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "OmitSortByColumn",
+              "ReferenceNumber",
+              "GrossAmount",
+              "TransactionCompletedTime",
+              "Partner",
+              "Fee",
+              "Commission"
+            ],
+            "default": "OmitSortByColumn"
+          },
+          {
+            "name": "reference_number",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "exclude_partner",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "org_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Transaction List for BillsPayment"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/bills-payment/billerlist/{partner}": {
+      "get": {
+        "summary": "Bills Payment Biller List",
+        "description": "Bills Payment Biller List",
+        "operationId": "BillspaymentService_BPBillerList",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/bills_paymentBPBillerListResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when not found.",
+            "schema": {
+              "example": {
+                "code": 400,
+                "message": "BillsPayment Biller List Error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "partner",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "BillsPayment"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/bills-payment/transact": {
+      "post": {
+        "summary": "Bills Payment Transact",
+        "description": "Bills Payment Transact",
+        "operationId": "BillspaymentService_BPTransact",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/bills_paymentBPTransactResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when not found.",
+            "schema": {
+              "example": {
+                "code": 400,
+                "message": "BillsPayment Transact Error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/bills_paymentBPTransactRequest"
+            }
+          }
+        ],
+        "tags": [
+          "BillsPayment"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/bills-payment/transactinquire": {
+      "post": {
+        "summary": "Bills Payment Transact Inquire",
+        "description": "Bills Payment Transact Inquire",
+        "operationId": "BillspaymentService_BPTransactInquire",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/bills_paymentBPTransactInquireResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when not found.",
+            "schema": {
+              "example": {
+                "code": 400,
+                "message": "BillsPayment Transact Inquire Error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/bills_paymentBPTransactInquireRequest"
+            }
+          }
+        ],
+        "tags": [
+          "BillsPayment"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/bills-payment/validate": {
+      "post": {
+        "summary": "Bills Payment Validate",
+        "description": "Bills Payment Validate",
+        "operationId": "BillspaymentService_BPValidate",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/bills_paymentBPValidateResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when not found.",
+            "schema": {
+              "example": {
+                "code": 400,
+                "message": "BillsPayment Validate Error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/bills_paymentBPValidateRequest"
+            }
+          }
+        ],
+        "tags": [
+          "BillsPayment"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "bills_paymentAmount": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string",
+          "description": "Monetary amount in the smallest currency denomination.  Example: USD $10.25 =\u003e \"1025\"."
+        },
+        "currency": {
+          "type": "string",
+          "description": "Currency code using ISO-4217 3-letter codes."
+        }
+      },
+      "required": [
+        "amount",
+        "currency"
+      ]
+    },
+    "bills_paymentBPBillerListFieldList": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "order": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/bills_paymentBPBillerListRules"
+          }
+        },
+        "description": {
+          "type": "string"
+        },
+        "placeholder": {
+          "type": "string"
+        }
+      }
+    },
+    "bills_paymentBPBillerListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/bills_paymentBPBillerListResult"
+          }
+        },
+        "remco_id": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "bills_paymentBPBillerListResult": {
+      "type": "object",
+      "properties": {
+        "biller_tag": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "first_field": {
+          "type": "string"
+        },
+        "first_field_format": {
+          "type": "string"
+        },
+        "first_field_width": {
+          "type": "string"
+        },
+        "second_field": {
+          "type": "string"
+        },
+        "second_field_format": {
+          "type": "string"
+        },
+        "second_field_width": {
+          "type": "string"
+        },
+        "service_charge": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "logo": {
+          "type": "string"
+        },
+        "is_multiple_bills": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "is_cde": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "is_async": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "partner_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "field_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/bills_paymentBPBillerListFieldList"
+          }
+        }
+      }
+    },
+    "bills_paymentBPBillerListRules": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "type": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "options": {
+          "type": "string"
+        }
+      }
+    },
+    "bills_paymentBPTransactInquireMessage": {
+      "type": "object",
+      "properties": {
+        "header": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "footer": {
+          "type": "string"
+        }
+      }
+    },
+    "bills_paymentBPTransactInquireRequest": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "client_reference": {
+          "type": "string"
+        },
+        "account_number": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "contact_number": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "partner"
+      ]
+    },
+    "bills_paymentBPTransactInquireResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/bills_paymentBPTransactInquireResult"
+        },
+        "remco_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    "bills_paymentBPTransactInquireResult": {
+      "type": "object",
+      "properties": {
+        "transaction_id": {
+          "type": "string"
+        },
+        "reference_number": {
+          "type": "string"
+        },
+        "client_reference": {
+          "type": "string"
+        },
+        "biller_reference": {
+          "type": "string"
+        },
+        "payment_method": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "other_charges": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "message": {
+          "$ref": "#/definitions/bills_paymentBPTransactInquireMessage"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/bills_paymentDetails"
+          }
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "account_number": {
+          "type": "string"
+        },
+        "biller": {
+          "type": "string"
+        }
+      }
+    },
+    "bills_paymentBPTransactOtherInfo": {
+      "type": "object",
+      "properties": {
+        "last_name": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "middle_name": {
+          "type": "string"
+        },
+        "payment_type": {
+          "type": "string"
+        },
+        "course": {
+          "type": "string"
+        },
+        "total_assessment": {
+          "type": "string"
+        },
+        "school_year": {
+          "type": "string"
+        },
+        "term": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "bills_paymentBPTransactRequest": {
+      "type": "object",
+      "properties": {
+        "biller_tag": {
+          "type": "string"
+        },
+        "remote_user_id": {
+          "type": "string"
+        },
+        "location_id": {
+          "type": "string"
+        },
+        "remote_location_id": {
+          "type": "string"
+        },
+        "currency_id": {
+          "type": "string"
+        },
+        "form_type": {
+          "type": "string"
+        },
+        "form_number": {
+          "type": "string"
+        },
+        "identifier": {
+          "type": "string"
+        },
+        "total_amount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "client_reference_number": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "customer_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "location_name": {
+          "type": "string"
+        },
+        "coy": {
+          "type": "string"
+        },
+        "callback_url": {
+          "type": "string"
+        },
+        "bill_id": {
+          "type": "string"
+        },
+        "biller_name": {
+          "type": "string"
+        },
+        "trx_date": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "service_charge": {
+          "type": "string"
+        },
+        "partner_charge": {
+          "type": "string"
+        },
+        "account_number": {
+          "type": "string"
+        },
+        "payment_method": {
+          "type": "string"
+        },
+        "reference_number": {
+          "type": "string"
+        },
+        "validation_number": {
+          "type": "string"
+        },
+        "receipt_validation_number": {
+          "type": "string"
+        },
+        "tpa_id": {
+          "type": "string"
+        },
+        "other_info": {
+          "$ref": "#/definitions/bills_paymentBPTransactOtherInfo"
+        },
+        "type": {
+          "type": "string"
+        },
+        "txnid": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "amount",
+        "bill_id",
+        "biller_tag",
+        "trx_date",
+        "user_id",
+        "customer_id",
+        "location_id",
+        "location_name",
+        "coy",
+        "currency_id",
+        "form_type",
+        "form_number",
+        "account_number",
+        "identifier",
+        "service_charge",
+        "total_amount",
+        "client_reference_number",
+        "partner"
+      ]
+    },
+    "bills_paymentBPTransactResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/bills_paymentBPTransactResult"
+        },
+        "remco_id": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "bills_paymentBPTransactResult": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "service_charge": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "reference_number": {
+          "type": "string"
+        },
+        "transaction_id": {
+          "type": "string"
+        },
+        "client_reference": {
+          "type": "string"
+        },
+        "biller_reference": {
+          "type": "string"
+        },
+        "payment_method": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "other_charges": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/bills_paymentDetails"
+          }
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "bills_paymentBPValidateRequest": {
+      "type": "object",
+      "properties": {
+        "account_no": {
+          "type": "string"
+        },
+        "identifier": {
+          "type": "string"
+        },
+        "biller_tag": {
+          "type": "string"
+        },
+        "bill_partner_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "code": {
+          "type": "string"
+        },
+        "account_number": {
+          "type": "string"
+        },
+        "payment_method": {
+          "type": "string"
+        },
+        "other_charges": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "other_info": {
+          "$ref": "#/definitions/bills_paymentBPTransactOtherInfo"
+        },
+        "contact_number": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "account_no",
+        "identifier",
+        "biller_tag",
+        "partner"
+      ]
+    },
+    "bills_paymentBPValidateResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/bills_paymentBPValidateResult"
+        },
+        "remco_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    "bills_paymentBPValidateResult": {
+      "type": "object",
+      "properties": {
+        "valid": {
+          "type": "boolean"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "account": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/bills_paymentDetails"
+          }
+        },
+        "validation_number": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "refno": {
+          "type": "string"
+        },
+        "txnid": {
+          "type": "string"
+        },
+        "biller": {
+          "type": "string"
+        },
+        "meta": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/bills_paymentDetails"
+          }
+        }
+      }
+    },
+    "bills_paymentBillsPayment": {
+      "type": "object",
+      "properties": {
+        "reference_number": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "total_amount": {
+          "$ref": "#/definitions/bills_paymentAmount"
+        },
+        "transact_fee": {
+          "$ref": "#/definitions/bills_paymentAmount"
+        },
+        "transact_commission": {
+          "$ref": "#/definitions/bills_paymentAmount"
+        },
+        "transaction_completed_time": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "bills_paymentBillsPaymentTransactListResponse": {
+      "type": "object",
+      "properties": {
+        "next": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "bills_payments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/bills_paymentBillsPayment"
+          }
+        },
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "bills_paymentDetails": {
+      "type": "object"
+    },
+    "bills_paymentSortByColumn": {
+      "type": "string",
+      "enum": [
+        "OmitSortByColumn",
+        "ReferenceNumber",
+        "GrossAmount",
+        "TransactionCompletedTime",
+        "Partner",
+        "Fee",
+        "Commission"
+      ],
+      "default": "OmitSortByColumn"
+    },
+    "bills_paymentSortOrder": {
+      "type": "string",
+      "enum": [
+        "DESC",
+        "ASC"
+      ],
+      "default": "DESC"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,5582 @@
+openapi: 3.0.0
+info:
+  title: RBAC API
+  version: 0.0.1
+paths:
+  /v1/authenticate:
+    post:
+      summary: |-
+        Authenticate user with username(or email) and password.
+        	   		Provide session info to enrich the login.
+      description: Authenticate user session.
+      operationId: SessionService_Login
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  user_id:
+                    type: string
+                    description: User unique identifier.
+                  org_id:
+                    type: string
+                    description: Organization unique identifier.
+                  session:
+                    type: object
+                    additionalProperties:
+                      type: string
+                    description: Internal session data, will be accessible in authentication
+                      middleware.
+                  open_id:
+                    type: object
+                    additionalProperties:
+                      type: string
+                    description: Public session data, will be accessible in OpenID userinfo
+                      endpoint.
+                  mfa_event_id:
+                    type: string
+                    description: Returned when MFA is required before the session is created.
+                  mfa_type:
+                    description: Expected type of MFA.
+                    type: string
+                    enum:
+                      - PASS
+                      - TOTP
+                      - CODE
+                      - SMS
+                      - RECOVERY
+                      - EMAIL
+                    default: PASS
+                  password_expiry:
+                    type: string
+                    format: date-time
+                    description: Included when password is expiring.
+                  reset_required:
+                    type: boolean
+                    description: Password change/reset is required.  Login cannot complete until
+                      reset is complete.
+                  attempt:
+                    type: integer
+                    format: int32
+                    description: Auth attempt count.
+                  force_login:
+                    type: boolean
+                    description: >-
+                      User login is required or the user's session is
+                      inconsistent.
+
+                      Identity to be authenticated must be set in `UserID` field.
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                client_id:
+                  type: string
+                  description: Auth Client ID for identifying the organization that is requesting
+                    the session.
+                extra:
+                  type: object
+                  additionalProperties:
+                    type: string
+                  description: Additional or alternative form inputs for authentication.
+                mfa_event_id:
+                  type: string
+                  description: MFA event identifier for confirming user identity.
+                mfa_type:
+                  description: Expected type of MFA.
+                  type: string
+                  enum:
+                    - PASS
+                    - TOTP
+                    - CODE
+                    - SMS
+                    - RECOVERY
+                    - EMAIL
+                  default: PASS
+                mfa_token:
+                  type: string
+                  description: MFA Token for authentication.
+                subject:
+                  type: string
+                  description: Auth Subject ID for identifying the user that is being validated.
+        required: true
+      tags:
+        - Authenticate
+  "/v1/authenticate/{mfa_event_id}":
+    put:
+      summary: Reset and re-send (if necessary) the MFA token.
+      description: Retry MFA.
+      operationId: SessionService_RetryMFA
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  user_id:
+                    type: string
+                    description: User unique identifier.
+                  org_id:
+                    type: string
+                    description: Organization unique identifier.
+                  session:
+                    type: object
+                    additionalProperties:
+                      type: string
+                    description: Internal session data, will be accessible in authentication
+                      middleware.
+                  open_id:
+                    type: object
+                    additionalProperties:
+                      type: string
+                    description: Public session data, will be accessible in OpenID userinfo
+                      endpoint.
+                  mfa_event_id:
+                    type: string
+                    description: Returned when MFA is required before the session is created.
+                  mfa_type:
+                    description: Expected type of MFA.
+                    type: string
+                    enum:
+                      - PASS
+                      - TOTP
+                      - CODE
+                      - SMS
+                      - RECOVERY
+                      - EMAIL
+                    default: PASS
+                  password_expiry:
+                    type: string
+                    format: date-time
+                    description: Included when password is expiring.
+                  reset_required:
+                    type: boolean
+                    description: Password change/reset is required.  Login cannot complete until
+                      reset is complete.
+                  attempt:
+                    type: integer
+                    format: int32
+                    description: Auth attempt count.
+                  force_login:
+                    type: boolean
+                    description: >-
+                      User login is required or the user's session is
+                      inconsistent.
+
+                      Identity to be authenticated must be set in `UserID` field.
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: mfa_event_id
+          description: MFA event identifier for confirming user identity.
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subject:
+                  type: string
+                  description: Auth Subject ID for identifying the user that is being validated.
+                client_id:
+                  type: string
+                  description: Auth Client ID for identifying the organization that is requesting
+                    the session.
+                mfa_event_id:
+                  type: string
+                  description: MFA event identifier for confirming user identity.
+                mfa_type:
+                  description: Expected type of MFA.
+                  type: string
+                  enum:
+                    - PASS
+                    - TOTP
+                    - CODE
+                    - SMS
+                    - RECOVERY
+                    - EMAIL
+                  default: PASS
+        required: true
+      tags:
+        - Authenticate
+  "/v1/authenticate/{user_id}":
+    get:
+      summary: |-
+        Get existing user session.
+        	   		Provide session info to enrich the login.
+      description: Get user session.
+      operationId: SessionService_GetSession
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  user_id:
+                    type: string
+                    description: User unique identifier.
+                  org_id:
+                    type: string
+                    description: Organization unique identifier.
+                  session:
+                    type: object
+                    additionalProperties:
+                      type: string
+                    description: Internal session data, will be accessible in authentication
+                      middleware.
+                  open_id:
+                    type: object
+                    additionalProperties:
+                      type: string
+                    description: Public session data, will be accessible in OpenID userinfo
+                      endpoint.
+                  mfa_event_id:
+                    type: string
+                    description: Returned when MFA is required before the session is created.
+                  mfa_type:
+                    description: Expected type of MFA.
+                    type: string
+                    enum:
+                      - PASS
+                      - TOTP
+                      - CODE
+                      - SMS
+                      - RECOVERY
+                      - EMAIL
+                    default: PASS
+                  password_expiry:
+                    type: string
+                    format: date-time
+                    description: Included when password is expiring.
+                  reset_required:
+                    type: boolean
+                    description: Password change/reset is required.  Login cannot complete until
+                      reset is complete.
+                  attempt:
+                    type: integer
+                    format: int32
+                    description: Auth attempt count.
+                  force_login:
+                    type: boolean
+                    description: >-
+                      User login is required or the user's session is
+                      inconsistent.
+
+                      Identity to be authenticated must be set in `UserID` field.
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: user_id
+          description: User unique identifier.
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: client_id
+          description: Auth Client ID for identifying the organization that is requesting
+            the session.
+          in: query
+          required: false
+          schema:
+            type: string
+      tags:
+        - Authenticate
+  /v1/invite:
+    get:
+      summary: ListInvite gets a list of invite statuses.
+      operationId: InviteService_ListInvite
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  invites:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        org_id:
+                          type: string
+                        contact_email:
+                          type: string
+                        invited:
+                          type: string
+                          format: date-time
+                        role:
+                          type: string
+                        status:
+                          type: string
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      tags:
+        - InviteService
+  /v1/invite/user:
+    post:
+      summary: InviteUser creates a new user (developer) in our database.
+      operationId: InviteService_InviteUser
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    title: ID is the user identifier in our database
+                  org_id:
+                    type: string
+                    description: ID of the user's organization.
+                  invitation_code:
+                    type: string
+                    title: InvitationCode is the code for validating new signups
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                org_id:
+                  type: string
+                org_name:
+                  type: string
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                email:
+                  type: string
+                phone:
+                  type: string
+                role:
+                  type: string
+                template_data:
+                  type: object
+                  additionalProperties:
+                    type: string
+        required: true
+      tags:
+        - InviteService
+  "/v1/invite/{id}":
+    get:
+      summary: RetrieveInvite details from platform application.
+      operationId: InviteService_RetrieveInvite
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  org_id:
+                    type: string
+                  email:
+                    type: string
+                  country_code:
+                    type: string
+                  phone:
+                    type: string
+                  company_name:
+                    type: string
+                  active:
+                    type: boolean
+                  invitation_email:
+                    type: string
+                  invite_status:
+                    type: string
+                  invited:
+                    type: string
+                    format: date-time
+                  first_name:
+                    type: string
+                  last_name:
+                    type: string
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: code
+          in: query
+          required: false
+          schema:
+            type: string
+      tags:
+        - InviteService
+    delete:
+      summary: CancelInvite revokes the invite from the platform.
+      operationId: InviteService_CancelInvite
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - InviteService
+    patch:
+      summary: Approve the platform application.
+      operationId: InviteService_Approve
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/InviteService_ApproveBody"
+      tags:
+        - InviteService
+  "/v1/invite/{id}/resend":
+    post:
+      summary: Resend the invite email.
+      operationId: InviteService_Resend
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: id
+          description: ID is the invite identifier
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - InviteService
+  "/v1/invite/{id}/revoke":
+    patch:
+      summary: |-
+        Revoke the platform application. This operation
+        is valid at any point (even after the platform has been approved)
+      operationId: InviteService_Revoke
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/InviteService_ApproveBody"
+      tags:
+        - InviteService
+  "/v1/mfa/{event_id}":
+    patch:
+      summary: Record external MFA.
+      description: External MFA systems (esp SMS and e-mail) that generate codes can
+        be integrated using an update to record the new code.
+      operationId: MFAAuthService_ExternalMFA
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  event_id:
+                    type: string
+                  updated:
+                    type: string
+                    format: date-time
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        "401":
+          description: Returned when not authorized to perform this action.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: event_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_id:
+                  type: string
+                value:
+                  type: string
+                source_id:
+                  type: string
+        required: true
+      tags:
+        - MFA
+  "/v1/mfa/{user_id}":
+    get:
+      summary: Get MFA.
+      description: Get all multi-factor auth sources associated the user ID.
+      operationId: MFAService_GetRegisteredMFA
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  user_id:
+                    type: string
+                  mfa:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        type:
+                          type: string
+                          enum:
+                            - PASS
+                            - TOTP
+                            - CODE
+                            - SMS
+                            - RECOVERY
+                            - EMAIL
+                          default: PASS
+                        source:
+                          type: string
+                        enabled:
+                          type: string
+                          format: date-time
+                        disabled:
+                          type: string
+                          format: date-time
+                        updated:
+                          type: string
+                          format: date-time
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        "401":
+          description: Returned when not authorized to perform this action.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - MFA
+    post:
+      summary: Enable MFA Source.
+      description: Enable source as an MFA associated with the user ID.
+      operationId: MFAService_EnableMFA
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  initialize_code:
+                    type: string
+                  event_id:
+                    type: string
+                  codes:
+                    type: array
+                    items:
+                      type: string
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        "401":
+          description: Returned when not authorized to perform this action.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                type:
+                  type: string
+                  enum:
+                    - PASS
+                    - TOTP
+                    - CODE
+                    - SMS
+                    - RECOVERY
+                    - EMAIL
+                  default: PASS
+                source:
+                  type: string
+        required: true
+      tags:
+        - MFA
+  "/v1/mfa/{user_id}/initiate":
+    post:
+      summary: Initiate MFA event.
+      description: Create an event entry for valiating user identity with MFA.
+      operationId: MFAAuthService_InitiateMFA
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  event_id:
+                    type: string
+                  sources:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        type:
+                          type: string
+                          enum:
+                            - PASS
+                            - TOTP
+                            - CODE
+                            - SMS
+                            - RECOVERY
+                            - EMAIL
+                          default: PASS
+                        source:
+                          type: string
+                        enabled:
+                          type: string
+                          format: date-time
+                        disabled:
+                          type: string
+                          format: date-time
+                        updated:
+                          type: string
+                          format: date-time
+                  value:
+                    type: string
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        "401":
+          description: Returned when not authorized to perform this action.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                type:
+                  type: string
+                  enum:
+                    - PASS
+                    - TOTP
+                    - CODE
+                    - SMS
+                    - RECOVERY
+                    - EMAIL
+                  default: PASS
+                source_id:
+                  type: string
+                description:
+                  type: string
+        required: true
+      tags:
+        - MFA
+  "/v1/mfa/{user_id}/retry":
+    post:
+      summary: Retry MFA event.
+      description: Reset event and retry MFA for valiating user identity with MFA.
+      operationId: MFAAuthService_RetryMFA
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  event_id:
+                    type: string
+                  sources:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        type:
+                          type: string
+                          enum:
+                            - PASS
+                            - TOTP
+                            - CODE
+                            - SMS
+                            - RECOVERY
+                            - EMAIL
+                          default: PASS
+                        source:
+                          type: string
+                        enabled:
+                          type: string
+                          format: date-time
+                        disabled:
+                          type: string
+                          format: date-time
+                        updated:
+                          type: string
+                          format: date-time
+                  value:
+                    type: string
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        "401":
+          description: Returned when not authorized to perform this action.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                event_id:
+                  type: string
+        required: true
+      tags:
+        - MFA
+  "/v1/mfa/{user_id}/source/{mfa_id}":
+    delete:
+      summary: Disable MFA Source.
+      description: Disable source as an MFA associated with the user ID.
+      operationId: MFAService_DisableMFA
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  disabled:
+                    type: string
+                    format: date-time
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        "401":
+          description: Returned when not authorized to perform this action.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: mfa_id
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - MFA
+  "/v1/mfa/{user_id}/validate":
+    post:
+      summary: Validate MFA.
+      description: Validate MFA code associated with the user ID.
+      operationId: MFAAuthService_ValidateMFA
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  event_id:
+                    type: string
+                  validated:
+                    type: string
+                    format: date-time
+                  external_id:
+                    type: string
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        "401":
+          description: Returned when not authorized to perform this action.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                type:
+                  type: string
+                  enum:
+                    - PASS
+                    - TOTP
+                    - CODE
+                    - SMS
+                    - RECOVERY
+                    - EMAIL
+                  default: PASS
+                token:
+                  type: string
+                event_id:
+                  type: string
+        required: true
+      tags:
+        - MFA
+  /v1/oauth2client:
+    get:
+      summary: List all OAuth2 clients.
+      description: List all created OAuth2 clients.
+      operationId: AuthClientService_ListClients
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  clients:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        env:
+                          type: string
+                        org_id:
+                          type: string
+                        client_id:
+                          type: string
+                        logo_url:
+                          type: string
+                        scopes:
+                          type: array
+                          items:
+                            type: string
+                        redirect_url:
+                          type: array
+                          items:
+                            type: string
+                        logout_redirect_url:
+                          type: string
+                        creator:
+                          type: string
+                        created:
+                          type: string
+                          format: date-time
+                        disabled:
+                          type: string
+                          format: date-time
+                        config:
+                          type: object
+                          properties:
+                            login_template:
+                              type: string
+                            otp_template:
+                              type: string
+                            consent_template:
+                              type: string
+                            force_consent:
+                              type: boolean
+                              description: Force the user to grant consent for each login.
+                            session_duration:
+                              type: string
+                            identity_source:
+                              type: string
+                              description: IdentitySource to use when authenticating user login.
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema: {}
+        "401":
+          description: Returned when not authorized to perform this action.
+          content:
+            "*/*":
+              schema: {}
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: client_id
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: env
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: org_id
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: list_disable
+          in: query
+          required: false
+          schema:
+            type: boolean
+      tags:
+        - OAuth2 Client
+    post:
+      summary: Create OAuth2 client
+      description: Create a new OAuth2 client.
+      operationId: AuthClientService_CreateClient
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  client_id:
+                    type: string
+                    description: OAuth2 Client ID.
+                  secret:
+                    type: string
+                    description: Client Secret for OAuth2 client.
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema: {}
+        "401":
+          description: Returned when not authorized to perform this action.
+          content:
+            "*/*":
+              schema: {}
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  title: Name is the friendly name of the service client to be created
+                audience:
+                  type: string
+                  description: Audience is the target service for the requested authentication.
+                env:
+                  type: string
+                  description: Environment is the valid environment for the client.
+                role:
+                  type: string
+                  description: Role is the assigned permissions role.
+                client_type:
+                  description: ClientType is the oauth2 client type.
+                  type: string
+                  enum:
+                    - Private
+                    - Public
+                  default: Private
+                cors:
+                  type: array
+                  items:
+                    type: string
+                  description: CORS lists the allowed CORS Origins.
+                logo_url:
+                  type: string
+                  description: Partner logo url for display on idp.
+                scopes:
+                  type: array
+                  items:
+                    type: string
+                  description: Requested scopes for user consent.
+                redirect_url:
+                  type: array
+                  items:
+                    type: string
+                  description: Redirect URLs accepted by client.
+                logout_redirect_url:
+                  type: string
+                  description: URL to redirect user to once logout is complete.
+                identity_source:
+                  type: string
+                  description: IdentitySource to use when authenticating user login.
+                config:
+                  description: Configuration for auth flow.
+                  type: object
+                  properties:
+                    login_template:
+                      type: string
+                    otp_template:
+                      type: string
+                    consent_template:
+                      type: string
+                    force_consent:
+                      type: boolean
+                      description: Force the user to grant consent for each login.
+                    session_duration:
+                      type: string
+                    identity_source:
+                      type: string
+                      description: IdentitySource to use when authenticating user login.
+        required: true
+      tags:
+        - OAuth2 Client
+  "/v1/oauth2client/{clientID}":
+    post:
+      summary: Update OAuth2 client
+      description: Update an OAuth2 client.
+      operationId: AuthClientService_UpdateClient
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  client_id:
+                    type: string
+                    description: OAuth2 Client ID.
+                  secret:
+                    type: string
+                    description: Client Secret for OAuth2 client.
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema: {}
+        "401":
+          description: Returned when not authorized to perform this action.
+          content:
+            "*/*":
+              schema: {}
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: clientID
+          description: ClientID is the client identifier of the client to be updated
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                clientID:
+                  type: string
+                  title: ClientID is the client identifier of the client to be updated
+                name:
+                  type: string
+                  title: Name is the friendly name of the client to be updated
+                cors:
+                  type: array
+                  items:
+                    type: string
+                  description: CORS lists the allowed CORS Origins.
+                logo_url:
+                  type: string
+                  description: Partner logo url for display on idp.
+                scopes:
+                  type: array
+                  items:
+                    type: string
+                  description: Requested scopes for user consent.
+                redirect_url:
+                  type: array
+                  items:
+                    type: string
+                  description: Redirect URLs accepted by client.
+                logout_redirect_url:
+                  type: string
+                  description: URL to redirect user to once logout is complete.
+                config:
+                  description: Configuration for auth flow.
+                  type: object
+                  properties:
+                    login_template:
+                      type: string
+                    otp_template:
+                      type: string
+                    consent_template:
+                      type: string
+                    force_consent:
+                      type: boolean
+                      description: Force the user to grant consent for each login.
+                    session_duration:
+                      type: string
+                    identity_source:
+                      type: string
+                      description: IdentitySource to use when authenticating user login.
+        required: true
+      tags:
+        - OAuth2 Client
+  "/v1/oauth2client/{client_id}":
+    delete:
+      summary: Disable OAuth2 Client.
+      description: Permanently Disable OAuth2 client.
+      operationId: AuthClientService_DisableClient
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema: {}
+        "401":
+          description: Returned when not authorized to perform this action.
+          content:
+            "*/*":
+              schema: {}
+        "404":
+          description: Returned when service client is not found.
+          content:
+            "*/*":
+              schema: {}
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: client_id
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - OAuth2 Client
+  /v1/consent:
+    get:
+      summary: Get consent request details.
+      description: |-
+        Prepare a consent request for user grant.
+        	   	Used by consent provider for displaying to a user.
+      operationId: GrantService_ServeGrant
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  scopes:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        scope:
+                          type: string
+                        name:
+                          type: string
+                        group:
+                          type: string
+                        description:
+                          type: string
+                    description: Scope requests not previously granted.
+                  granted_scopes:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        scope:
+                          type: string
+                        name:
+                          type: string
+                        group:
+                          type: string
+                        description:
+                          type: string
+                    description: Previously granted scopes.
+                  groups:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        description:
+                          type: string
+                    description: Grouping details for all of the requested scopes.
+                  skip:
+                    type: boolean
+                    description: Skip explicit consent grant.  Used to mark first-party logins.
+                  org_id:
+                    type: string
+                    description: OrgID requesting the consent.
+                  org_name:
+                    type: string
+                    description: Organization name requesting consent.
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: user_id
+          description: User unique identifier.
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: client_id
+          description: Authentication client identifier.
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: owner_id
+          description: Authentication client owner identifier.
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: requested
+          description: New scope grants requested by client.
+          in: query
+          required: false
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+        - name: granted
+          description: Scopes previously granted to client by user.
+          in: query
+          required: false
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+      tags:
+        - Consent Grant
+    post:
+      summary: User Consent Grant.
+      description: Record user consent grant.
+      operationId: GrantService_Grant
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  grant_id:
+                    type: string
+                    description: Unique consent grant identifier.
+                  remember:
+                    type: boolean
+                    description: Single grants are not remembered for future consent requests by the
+                      same client.
+                  grants:
+                    type: array
+                    items:
+                      type: string
+                    description: User consent grants recorded.
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  description: User unique identifier.
+                client_id:
+                  type: string
+                  description: Authentication client identifier.
+                owner_id:
+                  type: string
+                  description: Authentication client owner identifier.
+                scopes:
+                  type: array
+                  items:
+                    type: string
+                  description: User-granted scopes requested by client.
+                timestamp:
+                  type: string
+                  format: date-time
+                  description: Recorded timestamp of user consent grant.
+        required: true
+      tags:
+        - Consent Grant
+  /v1/scope:
+    get:
+      summary: Get scope details.
+      description: Get scope details and descriptions, along with groupings for display.
+      operationId: ScopeService_GetScope
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  scopes:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        scope:
+                          type: string
+                        name:
+                          type: string
+                        group:
+                          type: string
+                        description:
+                          type: string
+                  groups:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        description:
+                          type: string
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: scopes
+          in: query
+          required: false
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+      tags:
+        - Scopes
+    post:
+      summary: Upsert consent scope.
+      description: Insert or update a consent grant scope.
+      operationId: ScopeService_UpsertScope
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  updated:
+                    type: string
+                    format: date-time
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                scope:
+                  type: string
+                name:
+                  type: string
+                group_name:
+                  type: string
+                description:
+                  type: string
+        required: true
+      tags:
+        - Scopes
+    put:
+      summary: Update scope group.
+      description: >-
+        Update a consent grant scope group.
+        	   	Scope groups are used to display user consent requests in
+        		logical groupings, while allowing detailed display of individual scopes.
+      operationId: ScopeService_UpdateGroup
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  updated:
+                    type: string
+                    format: date-time
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                group_name:
+                  type: string
+                description:
+                  type: string
+        required: true
+      tags:
+        - Scopes
+  /v1/permission:
+    get:
+      operationId: PermissionService_ListPermission
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  permissions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        service_name:
+                          type: string
+                        name:
+                          type: string
+                        description:
+                          type: string
+                        environment:
+                          type: string
+                        restrict:
+                          type: boolean
+                        action:
+                          type: string
+                        resource:
+                          type: string
+                        groups:
+                          type: array
+                          items:
+                            type: string
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: org_id
+          description: OrgID will show the given org if allowed.
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: environment
+          description: Environment in which to list permissions.
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: id
+          description: ID will filter to show those permissions.
+          in: query
+          required: false
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+      tags:
+        - PermissionService
+    post:
+      operationId: PermissionService_CreatePermission
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: object
+                    additionalProperties:
+                      type: string
+                  service_id:
+                    type: string
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                service_name:
+                  type: string
+                description:
+                  type: string
+                permissions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      actions:
+                        type: array
+                        items:
+                          type: string
+                      resource:
+                        type: string
+        required: true
+      tags:
+        - PermissionService
+  "/v1/permission/{id}":
+    delete:
+      operationId: PermissionService_DeletePermission
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  deleted:
+                    type: string
+                    format: date-time
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: service_id
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: service_name
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+      tags:
+        - PermissionService
+  "/v1/permission/{id}/validate":
+    get:
+      operationId: ValidationService_ValidatePermission
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  org_id:
+                    type: string
+                  validated:
+                    type: string
+                    format: date-time
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: action
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: resource
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: org_id
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: environment
+          in: query
+          required: false
+          schema:
+            type: string
+      tags:
+        - ValidationService
+  "/v1/permission/{permission}/user":
+    post:
+      operationId: PermissionService_AssignPermission
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: permission
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                permission:
+                  type: string
+        required: true
+      tags:
+        - PermissionService
+  "/v1/permission/{permission}/user/{user_id}":
+    delete:
+      operationId: PermissionService_RevokePermission
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: permission
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - PermissionService
+  /v1/role:
+    get:
+      operationId: RoleService_ListRole
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  roles:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        org_id:
+                          type: string
+                        name:
+                          type: string
+                        description:
+                          type: string
+                        members:
+                          type: array
+                          items:
+                            type: string
+                          description: Members is the list of user IDs with this role.
+                        permissions:
+                          type: array
+                          items:
+                            type: string
+                          description: Permissions is the list of permission IDs assigned to this role.
+                        createuid:
+                          type: string
+                        deleteuid:
+                          type: string
+                        created:
+                          type: string
+                          format: date-time
+                        updateduid:
+                          type: string
+                        updated:
+                          type: string
+                          format: date-time
+                  total:
+                    type: integer
+                    format: int32
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: org_id
+          description: OrgID will show the given org if allowed.
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: id
+          description: ID will filter to show those roles.
+          in: query
+          required: false
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+        - name: sort_by
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - DESC
+              - ASC
+            default: DESC
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: user_id
+          description: UserID will filter by user id to show those roles.
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+      tags:
+        - RoleService
+    post:
+      operationId: RoleService_CreateRole
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+        required: true
+      tags:
+        - RoleService
+  "/v1/role/{id}":
+    delete:
+      operationId: RoleService_DeleteRole
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  deleted:
+                    type: string
+                    format: date-time
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - RoleService
+    put:
+      operationId: RoleService_UpdateRole
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  role:
+                    description: Role is the updated role.
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      org_id:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      members:
+                        type: array
+                        items:
+                          type: string
+                        description: Members is the list of user IDs with this role.
+                      permissions:
+                        type: array
+                        items:
+                          type: string
+                        description: Permissions is the list of permission IDs assigned to this role.
+                      createuid:
+                        type: string
+                      deleteuid:
+                        type: string
+                      created:
+                        type: string
+                        format: date-time
+                      updateduid:
+                        type: string
+                      updated:
+                        type: string
+                        format: date-time
+                  updated:
+                    type: string
+                    format: date-time
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+                description:
+                  type: string
+        required: true
+      tags:
+        - RoleService
+  "/v1/role/{role_id}/permission":
+    post:
+      operationId: RoleService_AssignRolePermission
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  role:
+                    description: Role is the updated role.
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      org_id:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      members:
+                        type: array
+                        items:
+                          type: string
+                        description: Members is the list of user IDs with this role.
+                      permissions:
+                        type: array
+                        items:
+                          type: string
+                        description: Permissions is the list of permission IDs assigned to this role.
+                      createuid:
+                        type: string
+                      deleteuid:
+                        type: string
+                      created:
+                        type: string
+                        format: date-time
+                      updateduid:
+                        type: string
+                      updated:
+                        type: string
+                        format: date-time
+                  updated:
+                    type: string
+                    format: date-time
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: role_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role_id:
+                  type: string
+                permission:
+                  type: string
+        required: true
+      tags:
+        - RoleService
+  "/v1/role/{role_id}/permission/{permission}":
+    delete:
+      operationId: RoleService_RevokeRolePermission
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  role:
+                    description: Role is the updated role.
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      org_id:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      members:
+                        type: array
+                        items:
+                          type: string
+                        description: Members is the list of user IDs with this role.
+                      permissions:
+                        type: array
+                        items:
+                          type: string
+                        description: Permissions is the list of permission IDs assigned to this role.
+                      createuid:
+                        type: string
+                      deleteuid:
+                        type: string
+                      created:
+                        type: string
+                        format: date-time
+                      updateduid:
+                        type: string
+                      updated:
+                        type: string
+                        format: date-time
+                  updated:
+                    type: string
+                    format: date-time
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: role_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: permission
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - RoleService
+  "/v1/role/{role_id}/user":
+    post:
+      operationId: RoleService_AddUser
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  role:
+                    description: Role is the updated role.
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      org_id:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      members:
+                        type: array
+                        items:
+                          type: string
+                        description: Members is the list of user IDs with this role.
+                      permissions:
+                        type: array
+                        items:
+                          type: string
+                        description: Permissions is the list of permission IDs assigned to this role.
+                      createuid:
+                        type: string
+                      deleteuid:
+                        type: string
+                      created:
+                        type: string
+                        format: date-time
+                      updateduid:
+                        type: string
+                      updated:
+                        type: string
+                        format: date-time
+                  updated:
+                    type: string
+                    format: date-time
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: role_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role_id:
+                  type: string
+                user_id:
+                  type: string
+        required: true
+      tags:
+        - RoleService
+  "/v1/role/{role_id}/user/{user_id}":
+    delete:
+      operationId: RoleService_RemoveUser
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  role:
+                    description: Role is the updated role.
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      org_id:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      members:
+                        type: array
+                        items:
+                          type: string
+                        description: Members is the list of user IDs with this role.
+                      permissions:
+                        type: array
+                        items:
+                          type: string
+                        description: Permissions is the list of permission IDs assigned to this role.
+                      createuid:
+                        type: string
+                      deleteuid:
+                        type: string
+                      created:
+                        type: string
+                        format: date-time
+                      updateduid:
+                        type: string
+                      updated:
+                        type: string
+                        format: date-time
+                  updated:
+                    type: string
+                    format: date-time
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: role_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - RoleService
+  /v1/service:
+    get:
+      operationId: ProductService_ListServices
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  services:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        service_id:
+                          type: string
+                        service_name:
+                          type: string
+                        description:
+                          type: string
+                        environment:
+                          type: string
+                  public:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        service_id:
+                          type: string
+                        service_name:
+                          type: string
+                        description:
+                          type: string
+                        environment:
+                          type: string
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      tags:
+        - ProductService
+    post:
+      operationId: ProductService_GrantService
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                service_id:
+                  type: string
+                org_id:
+                  type: string
+                environment:
+                  type: string
+        required: true
+      tags:
+        - ProductService
+  /v1/service/grant:
+    get:
+      operationId: ProductService_ListServiceAssignments
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  service_assignments:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        grant:
+                          type: string
+                        org_id:
+                          type: string
+                        service_id:
+                          type: string
+                        service_name:
+                          type: string
+                        environment:
+                          type: string
+                        granted_by:
+                          type: string
+                        granted:
+                          type: string
+                          format: date-time
+                        revoked_by:
+                          type: string
+                        revoked:
+                          type: string
+                          format: date-time
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: org_id
+          description: OrgID will show the given org if allowed.
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: service_id
+          description: ID will filter to show those services.
+          in: query
+          required: false
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+      tags:
+        - ProductService
+  "/v1/service/{service_id}":
+    put:
+      operationId: ProductService_PublicService
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  processed:
+                    type: string
+                    format: date-time
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: service_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                service_id:
+                  type: string
+                environment:
+                  type: string
+                enabled:
+                  type: boolean
+        required: true
+      tags:
+        - ProductService
+  "/v1/service/{service_id}/org/{org_id}":
+    delete:
+      operationId: ProductService_RevokeService
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  revoked:
+                    type: string
+                    format: date-time
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: service_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: org_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: environment
+          in: query
+          required: false
+          schema:
+            type: string
+      tags:
+        - ProductService
+  /v1/userroles:
+    get:
+      operationId: RoleService_ListUserRoles
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  roles:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        userroles:
+                          type: array
+                          items:
+                            type: string
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: user_id
+          description: UserID will filter by user id to show those roles.
+          in: query
+          required: false
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+      tags:
+        - RoleService
+  /v1/serviceaccount:
+    get:
+      summary: List all service accounts.
+      description: List all created service accounts.
+      operationId: SvcAccountService_ListAccounts
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  accounts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        env:
+                          type: string
+                        client_id:
+                          type: string
+                        creator:
+                          type: string
+                        created:
+                          type: string
+                          format: date-time
+                        disabled:
+                          type: string
+                          format: date-time
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        "401":
+          description: Returned when not authorized to perform this action.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      tags:
+        - Service Account
+    post:
+      summary: Create service account
+      description: Create a new service account.
+      operationId: SvcAccountService_CreateAccount
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  client_id:
+                    type: string
+                    description: OAuth2 Client ID.
+                  secret:
+                    type: string
+                    description: |-
+                      Secret will contain the secret value.
+                      Client Secret for OAuth2 service accounts.
+                      API Key for APIKey service accounts.
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        "401":
+          description: Returned when not authorized to perform this action.  Platform must
+            be activated to create production service accounts.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  title: Name is the friendly name of the service account to be created
+                env:
+                  type: string
+                  description: Environment is the valid environment for the key.
+                role:
+                  type: string
+                  description: Role is the assigned permissions role.
+                auth_type:
+                  description: AuthType is the authentication method to be used.
+                  type: string
+                  enum:
+                    - OAuth2
+                    - APIKey
+                  default: OAuth2
+        required: true
+      tags:
+        - Service Account
+  "/v1/serviceaccount/{client_id}":
+    get:
+      summary: Validate service account
+      description: Validate service account.
+      operationId: ValidationService_ValidateAccount
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  environment:
+                    type: string
+                  client_name:
+                    type: string
+                  org_id:
+                    type: string
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        "404":
+          description: Returned when service account is not found.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: client_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: operation
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: resource
+          in: query
+          required: false
+          schema:
+            type: string
+      tags:
+        - Service Account
+  "/v1/serviceaccount/{name}":
+    delete:
+      summary: Disable service account.
+      description: Permanently Disable service account.
+      operationId: SvcAccountService_DisableAccount
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        "401":
+          description: Returned when not authorized to perform this action.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        "404":
+          description: Returned when service account is not found.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - Service Account
+  /v1/confirmemail:
+    post:
+      summary: ResendConfirmEmail resends email to confirm user
+      operationId: Signup_ResendConfirmEmail
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+        required: true
+      tags:
+        - Signup
+  "/v1/disableuser/{user_id}":
+    post:
+      summary: Disable User.
+      description: Disable User from user UserID.
+      operationId: UserService_DisableUser
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  "":
+                    type: string
+                    format: date-time
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema: {}
+        "401":
+          description: Returned when not authorized to perform this action.
+          content:
+            "*/*":
+              schema: {}
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - User
+  /v1/emailconfirmation:
+    post:
+      summary: EmailConfirmation verifies the confirmation code sent to the users email
+      operationId: Signup_EmailConfirmation
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  email:
+                    type: string
+                    title: Email address that was confirmed
+                  user_id:
+                    type: string
+                    title: UserID of user that was confirmed
+                  org_id:
+                    type: string
+                    title: OrgID of user that was confirmed
+                  username:
+                    type: string
+                    description: Username of the confirmed user.
+                  first_name:
+                    type: string
+                    description: FirstName of the confirmed user.
+                  last_name:
+                    type: string
+                    description: LastName of the confirmed user.
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                  description: Code is the code generated and sent to the user on signup for
+                    validation purposes.
+        required: true
+      tags:
+        - Signup
+  "/v1/enableuser/{user_id}":
+    post:
+      summary: Enable User.
+      description: Enable User from user UserID.
+      operationId: UserService_EnableUser
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  "":
+                    type: string
+                    format: date-time
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema: {}
+        "401":
+          description: Returned when not authorized to perform this action.
+          content:
+            "*/*":
+              schema: {}
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - User
+  /v1/forgotpassword:
+    post:
+      summary: |-
+        ForgotPassword is for sending a password reset mail containing
+        token for changing the password
+      operationId: Signup_ForgotPassword
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  title: Email is the email of the user account requesting password reset
+        required: true
+      tags:
+        - Signup
+  "/v1/forgotpassword/{code}/reset":
+    post:
+      summary: ResetPassword is for resetting the user's password with the sent token
+      operationId: Signup_ResetPassword
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: code
+          description: Code is the password reset token sent to the user's email
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                  title: Code is the password reset token sent to the user's email
+                password:
+                  type: string
+                  title: Password is the new password of the user's choosing
+        required: true
+      tags:
+        - Signup
+  /v1/signup:
+    post:
+      summary: Signup signs up a user using the passed in details
+      operationId: Signup_Signup
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  user_id:
+                    type: string
+                  org_id:
+                    type: string
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  title: Username to be registered
+                first_name:
+                  type: string
+                  title: First Name of the user
+                last_name:
+                  type: string
+                  title: Last Name of the user
+                email:
+                  type: string
+                  title: |-
+                    Email is the email that will be used for subsequent logins
+                    and will also be used to contact the user in future
+                password:
+                  type: string
+                  title: Password will be used as the account password
+                invite_code:
+                  type: string
+                  description: Invite Code is the invite if the user was invited by an org.
+                org_id:
+                  type: string
+                  title: OrgID is the organization identifier for use in org-specific signups
+        required: true
+      tags:
+        - Signup
+  /v1/user:
+    get:
+      summary: List users.
+      description: Get all created user user from user ID.
+      operationId: UserService_ListUsers
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        org_id:
+                          type: string
+                        org_name:
+                          type: string
+                        first_name:
+                          type: string
+                        last_name:
+                          type: string
+                        email:
+                          type: string
+                        invite_status:
+                          type: string
+                        country_code:
+                          type: string
+                        phone:
+                          type: string
+                        created:
+                          type: string
+                          format: date-time
+                        updated:
+                          type: string
+                          format: date-time
+                        deleted:
+                          type: string
+                          format: date-time
+                  total:
+                    type: integer
+                    format: int32
+                  user:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        org_id:
+                          type: string
+                        org_name:
+                          type: string
+                        first_name:
+                          type: string
+                        last_name:
+                          type: string
+                        email:
+                          type: string
+                        invite_status:
+                          type: string
+                        country_code:
+                          type: string
+                        phone:
+                          type: string
+                        created:
+                          type: string
+                          format: date-time
+                        updated:
+                          type: string
+                          format: date-time
+                        deleted:
+                          type: string
+                          format: date-time
+                    description: User list mapped by User ID.
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema: {}
+        "401":
+          description: Returned when not authorized to perform this action.
+          content:
+            "*/*":
+              schema: {}
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: org_id
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort_by
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - DESC
+              - ASC
+            default: DESC
+        - name: sort_by_column
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - CreatedDate
+              - UserName
+            default: CreatedDate
+        - name: status
+          in: query
+          required: false
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - Invited
+                - InviteSent
+                - Expired
+                - InProgress
+                - Revoked
+                - Approved
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: id
+          description: List of User IDs.
+          in: query
+          required: false
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+      tags:
+        - User
+    post:
+      summary: Authenticate user with username(or email) and password.
+      description: Authenticate user.
+      operationId: UserAuthService_AuthenticateUser
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  user_id:
+                    type: string
+                  org_id:
+                    type: string
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema: {}
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+        required: true
+      tags:
+        - Authenticate User
+  "/v1/user/{id}":
+    get:
+      summary: Get user.
+      description: Get all created user user from user ID.
+      operationId: UserService_GetUser
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      org_id:
+                        type: string
+                      org_name:
+                        type: string
+                      first_name:
+                        type: string
+                      last_name:
+                        type: string
+                      email:
+                        type: string
+                      invite_status:
+                        type: string
+                      country_code:
+                        type: string
+                      phone:
+                        type: string
+                      created:
+                        type: string
+                        format: date-time
+                      updated:
+                        type: string
+                        format: date-time
+                      deleted:
+                        type: string
+                        format: date-time
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema: {}
+        "401":
+          description: Returned when not authorized to perform this action.
+          content:
+            "*/*":
+              schema: {}
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - User
+  "/v1/user/{user_id}":
+    post:
+      summary: Change the user's record.
+      description: Update User.
+      operationId: UserService_UpdateUser
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  mfa_event_id:
+                    type: string
+                    description: Returned when MFA confirmation is required before the password
+                      change is applied.
+                  mfa_type:
+                    description: Expected type of MFA.
+                    type: string
+                    enum:
+                      - PASS
+                      - TOTP
+                      - CODE
+                      - SMS
+                      - RECOVERY
+                      - EMAIL
+                    default: PASS
+                  "":
+                    type: string
+                    format: date-time
+                    description: Update confirmation timestamp.
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema: {}
+        "401":
+          description: Returned when not authorized to perform this action.
+          content:
+            "*/*":
+              schema: {}
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: user_id
+          description: User unique identifier.
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  description: User unique identifier.
+                first_name:
+                  type: string
+                  description: First Name of the user.
+                last_name:
+                  type: string
+                  description: Last Name of the user.
+                email:
+                  type: string
+                  description: |-
+                    Email is the email that will be used for subsequent logins
+                    and will also be used to contact the user in future.
+                    Must be confirmed using MFA via the email given.
+                mfa_type:
+                  description: Preferred MFA method.
+                  type: string
+                  enum:
+                    - PASS
+                    - TOTP
+                    - CODE
+                    - SMS
+                    - RECOVERY
+                    - EMAIL
+                  default: PASS
+                login_mfa:
+                  description: Require MFA challenge on login.
+                  type: string
+                  enum:
+                    - NoChange
+                    - Enable
+                    - Disable
+                  default: NoChange
+        required: true
+      tags:
+        - User
+  "/v1/user/{user_id}/password":
+    post:
+      summary: Change the user's password.
+      description: Change Password.
+      operationId: UserService_ChangePassword
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  mfa_event_id:
+                    type: string
+                    description: Returned when MFA confirmation is required before the password
+                      change is applied.
+                  mfa_type:
+                    description: Expected type of MFA.
+                    type: string
+                    enum:
+                      - PASS
+                      - TOTP
+                      - CODE
+                      - SMS
+                      - RECOVERY
+                      - EMAIL
+                    default: PASS
+                  "":
+                    type: string
+                    format: date-time
+                    description: Uptate confirmation timestamp.
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema: {}
+        "401":
+          description: Returned when not authorized to perform this action.
+          content:
+            "*/*":
+              schema: {}
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                event_id:
+                  type: string
+                old_password:
+                  type: string
+                new_password:
+                  type: string
+        required: true
+      tags:
+        - User
+  "/v1/user/{user_id}/password/{mfa_event_id}":
+    put:
+      summary: Confirm identity to apply the submitted password change.
+      description: Confirm Password.
+      operationId: UserService_ConfirmUpdate
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  "":
+                    type: string
+                    format: date-time
+                    description: Uptate confirmation timestamp.
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema: {}
+        "401":
+          description: Returned when not authorized to perform this action.
+          content:
+            "*/*":
+              schema: {}
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: user_id
+          description: User unique identifier.
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: mfa_event_id
+          description: MFA event identifier for confirming user identity.
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  description: User unique identifier.
+                mfa_event_id:
+                  type: string
+                  description: MFA event identifier for confirming user identity.
+                mfa_type:
+                  description: Expected type of MFA.
+                  type: string
+                  enum:
+                    - PASS
+                    - TOTP
+                    - CODE
+                    - SMS
+                    - RECOVERY
+                    - EMAIL
+                  default: PASS
+                mfa_token:
+                  type: string
+                  description: MFA Token for authentication.
+        required: true
+      tags:
+        - User
+  /v1/organization:
+    get:
+      summary: Get organization profile record.
+      description: Get organization.
+      operationId: OrganizationService_GetOrganization
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  organization:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        email:
+                          type: string
+                        phone:
+                          type: string
+                        active:
+                          type: boolean
+                        login_mfa:
+                          type: boolean
+                        created:
+                          type: string
+                          format: date-time
+                        updated:
+                          type: string
+                          format: date-time
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema: {}
+        "401":
+          description: Returned when not authorized to perform this action.
+          content:
+            "*/*":
+              schema: {}
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: id
+          in: query
+          required: false
+          schema:
+            type: string
+      tags:
+        - Organization
+  "/v1/organization/{mfa_event_id}":
+    put:
+      summary: Confirm identity to apply the submitted changes.
+      description: Confirm Update.
+      operationId: OrganizationService_ConfirmUpdate
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  "":
+                    type: string
+                    format: date-time
+                    description: Uptate confirmation timestamp.
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema: {}
+        "401":
+          description: Returned when not authorized to perform this action.
+          content:
+            "*/*":
+              schema: {}
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: mfa_event_id
+          description: MFA event identifier for confirming organization identity.
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                organization_id:
+                  type: string
+                  description: Organization unique identifier.
+                mfa_event_id:
+                  type: string
+                  description: MFA event identifier for confirming organization identity.
+                mfa_type:
+                  description: Expected type of MFA.
+                  type: string
+                  enum:
+                    - PASS
+                    - TOTP
+                    - CODE
+                    - SMS
+                    - RECOVERY
+                    - EMAIL
+                  default: PASS
+                mfa_token:
+                  type: string
+                  description: MFA Token for authentication.
+        required: true
+      tags:
+        - Organization
+  "/v1/organization/{organization_id}":
+    post:
+      summary: Change the organization's record.
+      description: Update Organization.
+      operationId: OrganizationService_UpdateOrganization
+      responses:
+        "200":
+          description: Request executed successfully.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  mfa_event_id:
+                    type: string
+                    description: Returned when MFA confirmation is required before the change is
+                      applied.
+                  mfa_type:
+                    description: Expected type of MFA.
+                    type: string
+                    enum:
+                      - PASS
+                      - TOTP
+                      - CODE
+                      - SMS
+                      - RECOVERY
+                      - EMAIL
+                    default: PASS
+                  "":
+                    type: string
+                    format: date-time
+                    description: Update confirmation timestamp.
+        "400":
+          description: Returned when request is incorrect or malformed.
+          content:
+            "*/*":
+              schema: {}
+        "401":
+          description: Returned when not authorized to perform this action.
+          content:
+            "*/*":
+              schema: {}
+        default:
+          description: An unexpected error response.
+          content:
+            "*/*":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeUrl:
+                          type: string
+                        value:
+                          type: string
+                          format: byte
+      parameters:
+        - name: organization_id
+          description: Organization unique identifier.
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                organization_id:
+                  type: string
+                  description: Organization unique identifier.
+                name:
+                  type: string
+                  description: Name of the organization.
+                email:
+                  type: string
+                  description: >-
+                    Email address that will be used for contacting the
+                    organization,
+
+                    including service alerts, billing, and updates.
+                phone:
+                  type: string
+                  description: Contact phone number for the organization.
+                login_mfa:
+                  description: |-
+                    Require MFA challenge on login.
+                    All users in the organization will be
+                    required to enable and use MFA for login authentication.
+                  type: string
+                  enum:
+                    - NoChange
+                    - Enable
+                    - Disable
+                  default: NoChange
+        required: true
+      tags:
+        - Organization
+components:
+  requestBodies:
+    InviteService_ApproveBody:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+      required: true

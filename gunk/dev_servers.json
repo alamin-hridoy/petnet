@@ -1,0 +1,12 @@
+{
+  "servers": [
+    {
+      "url": "https://api.staging.petnet.dev",
+      "description": "Development Server"
+    },
+    {
+      "url": "https://api.uat.petnet.dev",
+      "description": "UAT Server"
+    },
+  ]
+}

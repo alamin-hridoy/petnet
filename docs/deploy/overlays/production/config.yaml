@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: docs-config
+data:
+  ENV: production
+  BASE_URL: https://drp.perahub.com.ph
+  AUTH_ISSUER: https://auth.drp.perahub.com.ph/
+
+...

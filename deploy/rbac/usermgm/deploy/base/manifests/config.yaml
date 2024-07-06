@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: usermgm-config
+data:
+  TZ: "Asia/Manila"
+  RUNTIME_ENVIRONMENT: "DEPLOY_ENV"
+  SERVER_HOST: "OVERLAY_ME"
+  CORS_ORIGINS: "https://OVERLAY_ME,*.OVERLAY_ME"
+  ORG_AUTOCREATE: "true"
+  ORG_AUTOAPPROVE: "true"
+  INFLUXDB_HOST: influxdb2.influxdb.svc.cluster.local
+  INFLUXDB_PORT: '8086'
+  INFLUXDB_BATCHSIZE: '100'
+  INFLUXDB_GRPCMEASURE: identity_grpc_latency
+  INFLUXDB_HTTPMEASURE: identity_http_latency
+  SMTP_FROMNAME: PETNET
+  MAILER_ASSETDIR: integrations/email/assets

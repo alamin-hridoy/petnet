@@ -1,0 +1,2006 @@
+package remittance
+
+import (
+	"encoding/json"
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+	"time"
+)
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "partner_reference_number",
+//                 "principal_amount",
+//                 "service_fee",
+//                 "iso_currency",
+//                 "conversion_rate",
+//                 "iso_originating_country",
+//                 "iso_destination_country",
+//                 "sender_last_name",
+//                 "sender_first_name",
+//                 "sender_middle_name",
+//                 "receiver_last_name",
+//                 "receiver_first_name",
+//                 "receiver_middle_name",
+//                 "sender_birth_date",
+//                 "sender_birth_place",
+//                 "sender_birth_country",
+//                 "sender_gender",
+//                 "sender_relationship",
+//                 "sender_purpose",
+//                 "sender_source_of_fund",
+//                 "sender_occupation",
+//                 "sender_employment_nature",
+//                 "send_partner_code",
+//         },
+// }}
+type ValidateSendMoneyRequest struct {
+	PartnerReferenceNumber string `pb:"1" json:"partner_reference_number"`
+	PrincipalAmount        string `pb:"2" json:"principal_amount"`
+	ServiceFee             string `pb:"3" json:"service_fee"`
+	IsoCurrency            string `pb:"4" json:"iso_currency"`
+	conversion_rate        string `pb:"5" json:"conversion_rate"`
+	IsoOriginatingCountry  string `pb:"6" json:"iso_originating_country"`
+	IsoDestinationCountry  string `pb:"7" json:"iso_destination_country"`
+	SenderLastName         string `pb:"8" json:"sender_last_name"`
+	SenderFirstName        string `pb:"9" json:"sender_first_name"`
+	SenderMiddleName       string `pb:"10" json:"sender_middle_name"`
+	ReceiverLastName       string `pb:"11" json:"receiver_last_name"`
+	ReceiverFirstName      string `pb:"12" json:"receiver_first_name"`
+	ReceiverMiddleName     string `pb:"13" json:"receiver_middle_name"`
+	SenderBirthDate        string `pb:"14" json:"sender_birth_date"`
+	SenderBirthPlace       string `pb:"15" json:"sender_birth_place"`
+	SenderBirthCountry     string `pb:"16" json:"sender_birth_country"`
+	SenderGender           string `pb:"17" json:"sender_gender"`
+	SenderRelationship     string `pb:"18" json:"sender_relationship"`
+	SenderPurpose          string `pb:"19" json:"sender_purpose"`
+	SenderOccupation       string `pb:"20" json:"sender_occupation"`
+	SenderEmploymentNature string `pb:"21" json:"sender_employment_nature"`
+	SendPartnerCode        string `pb:"22" json:"send_partner_code"`
+	SenderSourceOfFund     string `pb:"23" json:"sender_source_of_fund"`
+}
+
+type ValidateSendMoneyResult struct {
+	SendValidateReferenceNumber string `pb:"1" json:"send_validate_reference_number"`
+}
+
+type ValidateSendMoneyResponse struct {
+	Code    int                     `pb:"1" json:"code"`
+	Message string                  `pb:"2" json:"message"`
+	Result  ValidateSendMoneyResult `pb:"3" json:"result"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "send_validate_reference_number",
+//         },
+// }}
+type ConfirmSendMoneyRequest struct {
+	SendValidateReferenceNumber string `pb:"1" json:"send_validate_reference_number"`
+}
+
+type ConfirmSendMoneyResult struct {
+	Phrn string `pb:"1" json:"phrn"`
+}
+
+type ConfirmSendMoneyResponse struct {
+	Code    int                    `pb:"1" json:"code"`
+	Message string                 `pb:"2" json:"message"`
+	Result  ConfirmSendMoneyResult `pb:"3" json:"result"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "phrn",
+//                 "partner_code",
+//                 "remarks",
+//         },
+// }}
+type CancelSendMoneyRequest struct {
+	Phrn        string `pb:"1" json:"phrn"`
+	PartnerCode string `pb:"2" json:"partner_code"`
+	Remarks     string `pb:"3" json:"remarks"`
+}
+
+type CancelSendMoneyResponse struct {
+	Code    int                   `pb:"1" json:"code"`
+	Message string                `pb:"2" json:"message"`
+	Result  CancelSendMoneyResult `pb:"3" json:"result"`
+}
+
+type CancelSendMoneyResult struct {
+	Phrn                      string `pb:"1" json:"phrn"`
+	CancelSendDate            string `pb:"2" json:"cancel_send_date"`
+	CancelSendReferenceNumber string `pb:"3" json:"cancel_send_reference_number"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "phrn",
+//                 "principal_amount",
+//                 "iso_originating_country",
+//                 "iso_destination_country",
+//                 "sender_last_name",
+//                 "sender_first_name",
+//                 "sender_middle_name",
+//                 "receiver_last_name",
+//                 "receiver_first_name",
+//                 "receiver_middle_name",
+//                 "payout_partner_code",
+//         },
+// }}
+type ValidateReceiveMoneyRequest struct {
+	Phrn                  string `pb:"1" json:"phrn"`
+	PrincipalAmount       string `pb:"2" json:"principal_amount"`
+	IsoOriginatingCountry string `pb:"3" json:"iso_originating_country"`
+	IsoDestinationCountry string `pb:"4" json:"iso_destination_country"`
+	SenderLastName        string `pb:"5" json:"sender_last_name"`
+	SenderFirstName       string `pb:"6" json:"sender_first_name"`
+	SenderMiddleName      string `pb:"7" json:"sender_middle_name"`
+	ReceiverLastName      string `pb:"8" json:"receiver_last_name"`
+	ReceiverFirstName     string `pb:"9" json:"receiver_first_name"`
+	ReceiverMiddleName    string `pb:"10" json:"receiver_middle_name"`
+	PayoutPartnerCode     string `pb:"11" json:"payout_partner_code"`
+}
+
+type ValidateReceiveMoneyResult struct {
+	PayoutValidateReferenceNumber string `pb:"1" json:"payout_validate_reference_number"`
+}
+
+type ValidateReceiveMoneyResponse struct {
+	Code    int                        `pb:"1" json:"code"`
+	Message string                     `pb:"2" json:"message"`
+	Result  ValidateReceiveMoneyResult `pb:"3" json:"result"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "phrn",
+//         },
+// }}
+type InquireRequest struct {
+	Phrn string `pb:"1" json:"phrn"`
+}
+
+type InquireResult struct {
+	Phrn                  string `pb:"1" json:"phrn"`
+	PrincipalAmount       int    `pb:"2" json:"principal_amount"`
+	IsoCurrency           string `pb:"3" json:"iso_currency"`
+	ConversionRate        int    `pb:"4" json:"conversion_rate"`
+	IsoOriginatingCountry string `pb:"5" json:"iso_originating_country"`
+	IsoDestinationCountry string `pb:"6" json:"iso_destination_country"`
+	SenderLastName        string `pb:"7" json:"sender_last_name"`
+	SenderFirstName       string `pb:"8" json:"sender_first_name"`
+	SenderMiddleName      string `pb:"9" json:"sender_middle_name"`
+	ReceiverLastName      string `pb:"10" json:"receiver_last_name"`
+	ReceiverFirstName     string `pb:"11" json:"receiver_first_name"`
+	ReceiverMiddleName    string `pb:"12" json:"receiver_middle_name"`
+}
+
+type InquireResponse struct {
+	Code    int           `pb:"1" json:"code"`
+	Message string        `pb:"2" json:"message"`
+	Result  InquireResult `pb:"3" json:"result"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "payout_validate_reference_number",
+//         },
+// }}
+type ConfirmReceiveMoneyRequest struct {
+	PayoutValidateReferenceNumber string `pb:"1" json:"payout_validate_reference_number"`
+}
+
+type ConfirmReceiveMoneyResult struct {
+	Phrn                  string `pb:"1" json:"phrn"`
+	PrincipalAmount       int    `pb:"2" json:"principal_amount"`
+	IsoOriginatingCountry string `pb:"3" json:"iso_originating_country"`
+	IsoDestinationCountry string `pb:"4" json:"iso_destination_country"`
+	SenderLastName        string `pb:"5" json:"sender_last_name"`
+	SenderFirstName       string `pb:"6" json:"sender_first_name"`
+	SenderMiddleName      string `pb:"7" json:"sender_middle_name"`
+	ReceiverLastName      string `pb:"8" json:"receiver_last_name"`
+	ReceiverFirstName     string `pb:"9" json:"receiver_first_name"`
+	ReceiverMiddleName    string `pb:"10" json:"receiver_middle_name"`
+}
+
+type ConfirmReceiveMoneyResponse struct {
+	Code    int                       `pb:"1" json:"code"`
+	Message string                    `pb:"2" json:"message"`
+	Result  ConfirmReceiveMoneyResult `pb:"3" json:"result"`
+}
+
+type PartnersGridResponse struct {
+	Code    int                  `pb:"1" json:"code"`
+	Message string               `pb:"2" json:"message"`
+	Result  []PartnersGridResult `pb:"3" json:"result"`
+}
+
+type PartnersGridResult struct {
+	ID           int       `pb:"1" json:"id"`
+	PartnerCode  string    `pb:"2" json:"partner_code"`
+	PartnerName  string    `pb:"3" json:"partner_name"`
+	ClientSecret string    `pb:"4" json:"client_secret"`
+	Status       int       `pb:"5" json:"status"`
+	CreatedAt    time.Time `pb:"6" json:"created_at"`
+	UpdatedAt    time.Time `pb:"7" json:"updated_at"`
+	DeletedAt    time.Time `pb:"8" json:"deleted_at"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "partner_code",
+//                 "partner_name",
+//                 "service",
+//         },
+// }}
+type PartnersCreateRequest struct {
+	PartnerCode string `pb:"1" json:"partner_code"`
+	PartnerName string `pb:"2" json:"partner_name"`
+	Service     string `pb:"3" json:"service"`
+}
+
+type PartnersCreateResponse struct {
+	Code    int                  `pb:"1" json:"code"`
+	Message string               `pb:"2" json:"message"`
+	Result  PartnersCreateResult `pb:"3" json:"result"`
+}
+
+type PartnersCreateResult struct {
+	ID           int       `pb:"1" json:"id"`
+	PartnerCode  string    `pb:"2" json:"partner_code"`
+	PartnerName  string    `pb:"3" json:"partner_name"`
+	ClientSecret string    `pb:"4" json:"client_secret"`
+	CreatedAt    time.Time `pb:"5" json:"created_at"`
+	UpdatedAt    time.Time `pb:"6" json:"updated_at"`
+}
+
+type PurposeOfRemittanceGridResult struct {
+	ID                  string    `pb:"1" json:"id"`
+	PurposeOfRemittance string    `pb:"2" json:"purpose_of_remittance"`
+	CreatedAt           time.Time `pb:"3" json:"created_at"`
+	UpdatedAt           time.Time `pb:"4" json:"updated_at"`
+	DeletedAt           time.Time `pb:"5" json:"deleted_at"`
+}
+
+type PurposeOfRemittanceGridResponse struct {
+	Code    int                             `pb:"1" json:"code"`
+	Message string                          `pb:"2" json:"message"`
+	Result  []PurposeOfRemittanceGridResult `pb:"3" json:"result"`
+}
+
+type PurposeOfRemittanceGetRequest struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type PurposeOfRemittanceGetResult struct {
+	ID                  int       `pb:"1" json:"id"`
+	PurposeOfRemittance string    `pb:"2" json:"purpose_of_remittance"`
+	CreatedAt           time.Time `pb:"3" json:"created_at"`
+	UpdatedAt           time.Time `pb:"4" json:"updated_at"`
+	DeletedAt           time.Time `pb:"5" json:"deleted_at"`
+}
+
+type PurposeOfRemittanceGetResponse struct {
+	Code    int                          `pb:"1" json:"code"`
+	Message string                       `pb:"2" json:"message"`
+	Result  PurposeOfRemittanceGetResult `pb:"3" json:"result"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "purpose_of_remittance",
+//         },
+// }}
+type PurposeOfRemittanceUpdateRequest struct {
+	PurposeOfRemittance string `pb:"1" json:"purpose_of_remittance"`
+	ID                  string `pb:"2" json:"id"`
+}
+
+type PurposeOfRemittanceUpdateResult struct {
+	ID                  int       `pb:"1" json:"id"`
+	PurposeOfRemittance string    `pb:"2" json:"purpose_of_remittance"`
+	CreatedAt           time.Time `pb:"3" json:"created_at"`
+	UpdatedAt           time.Time `pb:"4" json:"updated_at"`
+	DeletedAt           time.Time `pb:"5" json:"deleted_at"`
+}
+
+type PurposeOfRemittanceUpdateResponse struct {
+	Code    int                             `pb:"1" json:"code"`
+	Message string                          `pb:"2" json:"message"`
+	Result  PurposeOfRemittanceUpdateResult `pb:"3" json:"result"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "purpose_of_remittance",
+//         },
+// }}
+type PurposeOfRemittanceCreateRequest struct {
+	PurposeOfRemittance string `pb:"1" json:"purpose_of_remittance"`
+}
+
+type PurposeOfRemittanceCreateResult struct {
+	ID                  int       `pb:"1" json:"id"`
+	PurposeOfRemittance string    `pb:"2" json:"purpose_of_remittance"`
+	CreatedAt           time.Time `pb:"3" json:"created_at"`
+	UpdatedAt           time.Time `pb:"4" json:"updated_at"`
+}
+
+type PurposeOfRemittanceCreateResponse struct {
+	Code    int                             `pb:"1" json:"code"`
+	Message string                          `pb:"2" json:"message"`
+	Result  PurposeOfRemittanceCreateResult `pb:"3" json:"result"`
+}
+
+type SourceOfFundGridResult struct {
+	ID           string    `pb:"1" json:"id"`
+	SourceOfFund string    `pb:"2" json:"source_of_fund"`
+	CreatedAt    time.Time `pb:"3" json:"created_at"`
+	UpdatedAt    time.Time `pb:"4" json:"updated_at"`
+	DeletedAt    time.Time `pb:"5" json:"deleted_at"`
+}
+
+type SourceOfFundGridResponse struct {
+	Code    int                      `pb:"1" json:"code"`
+	Message string                   `pb:"2" json:"message"`
+	Result  []SourceOfFundGridResult `pb:"3" json:"result"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "source_of_fund",
+//         },
+// }}
+type SourceOfFundCreateRequest struct {
+	SourceOfFund string `pb:"1" json:"source_of_fund"`
+}
+
+type SourceOfFundCreateResult struct {
+	ID           int       `pb:"1" json:"id"`
+	SourceOfFund string    `pb:"2" json:"source_of_fund"`
+	CreatedAt    time.Time `pb:"3" json:"created_at"`
+	UpdatedAt    time.Time `pb:"4" json:"updated_at"`
+}
+
+type SourceOfFundCreateResponse struct {
+	Code    int                      `pb:"1" json:"code"`
+	Message string                   `pb:"2" json:"message"`
+	Result  SourceOfFundCreateResult `pb:"3" json:"result"`
+}
+
+type SourceOfFundGetRequest struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type SourceOfFundGetResult struct {
+	ID           int       `pb:"1" json:"id"`
+	SourceOfFund string    `pb:"2" json:"source_of_fund"`
+	CreatedAt    time.Time `pb:"3" json:"created_at"`
+	UpdatedAt    time.Time `pb:"4" json:"updated_at"`
+	DeletedAt    time.Time `pb:"5" json:"deleted_at"`
+}
+
+type SourceOfFundGetResponse struct {
+	Code    int                   `pb:"1" json:"code"`
+	Message string                `pb:"2" json:"message"`
+	Result  SourceOfFundGetResult `pb:"3" json:"result"`
+}
+
+type EmploymentGridResponse struct {
+	Code    int                    `pb:"1" json:"code"`
+	Message string                 `pb:"2" json:"message"`
+	Result  []EmploymentGridResult `pb:"3" json:"result"`
+}
+
+type EmploymentGridResult struct {
+	ID               int       `pb:"1" json:"id"`
+	EmploymentNature string    `pb:"2" json:"employment_nature"`
+	CreatedAt        time.Time `pb:"3" json:"created_at"`
+	UpdatedAt        time.Time `pb:"4" json:"updated_at"`
+	DeletedAt        time.Time `pb:"5" json:"deleted_at"`
+}
+
+type EmploymentGetRequest struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type EmploymentGetResponse struct {
+	Code    int                 `pb:"1" json:"code"`
+	Message string              `pb:"2" json:"message"`
+	Result  EmploymentGetResult `pb:"3" json:"result"`
+}
+
+type EmploymentGetResult struct {
+	ID               int       `pb:"1" json:"id"`
+	EmploymentNature string    `pb:"2" json:"employment_nature"`
+	CreatedAt        time.Time `pb:"3" json:"created_at"`
+	UpdatedAt        time.Time `pb:"4" json:"updated_at"`
+	DeletedAt        time.Time `pb:"5" json:"deleted_at"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "employment",
+//                 "employment_nature",
+//         },
+// }}
+type RemittanceEmploymentCreateRequest struct {
+	Employment       string `pb:"1" json:"employment"`
+	EmploymentNature string `pb:"2" json:"employment_nature"`
+}
+type RemittanceEmploymentCreateResult struct {
+	ID               int       `pb:"1" json:"id"`
+	EmploymentNature string    `pb:"2" json:"employment_nature"`
+	CreatedAt        time.Time `pb:"3" json:"created_at"`
+	UpdatedAt        time.Time `pb:"4" json:"updated_at"`
+}
+
+type RemittanceEmploymentCreateResponse struct {
+	Code    int                              `pb:"1" json:"code"`
+	Message string                           `pb:"2" json:"message"`
+	Result  RemittanceEmploymentCreateResult `pb:"3" json:"result"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "employment",
+//                 "employment_nature",
+//         },
+// }}
+type RemittanceEmploymentUpdateRequest struct {
+	Employment       string `pb:"1" json:"employment"`
+	ID               string `pb:"2" json:"id"`
+	EmploymentNature string `pb:"3" json:"employment_nature"`
+}
+
+type RemittanceEmploymentUpdateResult struct {
+	ID               int       `pb:"1" json:"id"`
+	EmploymentNature string    `pb:"2" json:"employment_nature"`
+	CreatedAt        time.Time `pb:"3" json:"created_at"`
+	UpdatedAt        time.Time `pb:"4" json:"updated_at"`
+	DeletedAt        time.Time `pb:"5" json:"deleted_at"`
+}
+
+type RemittanceEmploymentUpdateResponse struct {
+	Code    int                              `pb:"1" json:"code"`
+	Message string                           `pb:"2" json:"message"`
+	Result  RemittanceEmploymentUpdateResult `pb:"3" json:"result"`
+}
+
+type OccupationGridResult struct {
+	ID         int       `pb:"1" json:"id"`
+	Occupation string    `pb:"2" json:"occupation"`
+	CreatedAt  time.Time `pb:"3" json:"created_at"`
+	UpdatedAt  time.Time `pb:"4" json:"updated_at"`
+	DeletedAt  time.Time `pb:"5" json:"deleted_at"`
+}
+
+type OccupationGridResponse struct {
+	Code    int                    `pb:"1" json:"code"`
+	Message string                 `pb:"2" json:"message"`
+	Result  []OccupationGridResult `pb:"3" json:"result"`
+}
+
+type OccupationGetRequest struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type OccupationGetResult struct {
+	ID         int       `pb:"1" json:"id"`
+	Occupation string    `pb:"2" json:"occupation"`
+	CreatedAt  time.Time `pb:"3" json:"created_at"`
+	UpdatedAt  time.Time `pb:"4" json:"updated_at"`
+	DeletedAt  time.Time `pb:"5" json:"deleted_at"`
+}
+
+type OccupationGetResponse struct {
+	Code    int                 `pb:"1" json:"code"`
+	Message string              `pb:"2" json:"message"`
+	Result  OccupationGetResult `pb:"3" json:"result"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "occupation",
+//         },
+// }}
+type OccupationCreateRequest struct {
+	Occupation string `pb:"1" json:"occupation"`
+}
+
+type OccupationCreateResult struct {
+	ID         int       `pb:"1" json:"id"`
+	Occupation string    `pb:"2" json:"occupation"`
+	CreatedAt  time.Time `pb:"3" json:"created_at"`
+	UpdatedAt  time.Time `pb:"4" json:"updated_at"`
+}
+
+type OccupationCreateResponse struct {
+	Code    int                    `pb:"1" json:"code"`
+	Message string                 `pb:"2" json:"message"`
+	Result  OccupationCreateResult `pb:"3" json:"result"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "occupation",
+//         },
+// }}
+type OccupationUpdateRequest struct {
+	Occupation string `pb:"1" json:"occupation"`
+	ID         string `pb:"2" json:"id"`
+}
+
+type OccupationUpdateResult struct {
+	ID         int       `pb:"1" json:"id"`
+	Occupation string    `pb:"2" json:"occupation"`
+	CreatedAt  time.Time `pb:"3" json:"created_at"`
+	UpdatedAt  time.Time `pb:"4" json:"updated_at"`
+	DeletedAt  time.Time `pb:"5" json:"deleted_at"`
+}
+type OccupationUpdateResponse struct {
+	Code    int                    `pb:"1" json:"code"`
+	Message string                 `pb:"2" json:"message"`
+	Result  OccupationUpdateResult `pb:"3" json:"result"`
+}
+
+type OccupationDeleteRequest struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type OccupationDeleteResult struct {
+	ID         int       `pb:"1" json:"id"`
+	Occupation string    `pb:"2" json:"occupation"`
+	CreatedAt  time.Time `pb:"3" json:"created_at"`
+	UpdatedAt  time.Time `pb:"4" json:"updated_at"`
+	DeletedAt  time.Time `pb:"5" json:"deleted_at"`
+}
+
+type OccupationDeleteResponse struct {
+	Code    int                    `pb:"1" json:"code"`
+	Message string                 `pb:"2" json:"message"`
+	Result  OccupationDeleteResult `pb:"3" json:"result"`
+}
+
+type RelationshipGetRequest struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type RelationshipGetResult struct {
+	ID           int       `pb:"1" json:"id"`
+	Relationship string    `pb:"2" json:"relationship"`
+	CreatedAt    time.Time `pb:"3" json:"created_at"`
+	UpdatedAt    time.Time `pb:"4" json:"updated_at"`
+	DeletedAt    time.Time `pb:"5" json:"deleted_at"`
+}
+
+type RelationshipGetResponse struct {
+	Code    int                   `pb:"1" json:"code"`
+	Message string                `pb:"2" json:"message"`
+	Result  RelationshipGetResult `pb:"3" json:"result"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "source_of_fund",
+//         },
+// }}
+type SourceOfFundUpdateRequest struct {
+	SourceOfFund string `pb:"1" json:"source_of_fund"`
+	ID           string `pb:"2" json:"id"`
+}
+
+type SourceOfFundUpdateResult struct {
+	ID           int       `pb:"1" json:"id"`
+	SourceOfFund string    `pb:"2" json:"source_of_fund"`
+	CreatedAt    time.Time `pb:"3" json:"created_at"`
+	UpdatedAt    time.Time `pb:"4" json:"updated_at"`
+	DeletedAt    time.Time `pb:"5" json:"deleted_at"`
+}
+
+type SourceOfFundUpdateResponse struct {
+	Code    int                      `pb:"1" json:"code"`
+	Message string                   `pb:"2" json:"message"`
+	Result  SourceOfFundUpdateResult `pb:"3" json:"result"`
+}
+
+type SourceOfFundDeleteRequest struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type SourceOfFundDeleteResult struct {
+	ID           int       `pb:"1" json:"id"`
+	SourceOfFund string    `pb:"2" json:"source_of_fund"`
+	CreatedAt    time.Time `pb:"3" json:"created_at"`
+	UpdatedAt    time.Time `pb:"4" json:"updated_at"`
+	DeletedAt    time.Time `pb:"5" json:"deleted_at"`
+}
+
+type SourceOfFundDeleteResponse struct {
+	Code    int                      `pb:"1" json:"code"`
+	Message string                   `pb:"2" json:"message"`
+	Result  SourceOfFundDeleteResult `pb:"3" json:"result"`
+}
+
+type PurposeOfRemittanceDeleteRequest struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type PurposeOfRemittanceDeleteResult struct {
+	ID                  int       `pb:"1" json:"id"`
+	PurposeOfRemittance string    `pb:"2" json:"purpose_of_remittance"`
+	CreatedAt           time.Time `pb:"3" json:"created_at"`
+	UpdatedAt           time.Time `pb:"4" json:"updated_at"`
+	DeletedAt           time.Time `pb:"5" json:"deleted_at"`
+}
+
+type PurposeOfRemittanceDeleteResponse struct {
+	Code    int                             `pb:"1" json:"code"`
+	Message string                          `pb:"2" json:"message"`
+	Result  PurposeOfRemittanceDeleteResult `pb:"3" json:"result"`
+}
+
+type RelationshipDeleteRequest struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type RelationshipDeleteResult struct {
+	ID           int       `pb:"1" json:"id"`
+	Relationship string    `pb:"2" json:"relationship"`
+	CreatedAt    time.Time `pb:"3" json:"created_at"`
+	UpdatedAt    time.Time `pb:"4" json:"updated_at"`
+	DeletedAt    time.Time `pb:"5" json:"deleted_at"`
+}
+
+type RelationshipDeleteResponse struct {
+	Code    int                      `pb:"1" json:"code"`
+	Message string                   `pb:"2" json:"message"`
+	Result  RelationshipDeleteResult `pb:"3" json:"result"`
+}
+
+type RemittanceEmploymentDeleteRequest struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type RemittanceEmploymentDeleteResult struct {
+	ID               int       `pb:"1" json:"id"`
+	EmploymentNature string    `pb:"2" json:"employment_nature"`
+	CreatedAt        time.Time `pb:"3" json:"created_at"`
+	UpdatedAt        time.Time `pb:"4" json:"updated_at"`
+	DeletedAt        time.Time `pb:"5" json:"deleted_at"`
+}
+
+type RemittanceEmploymentDeleteResponse struct {
+	Code    int                              `pb:"1" json:"code"`
+	Message string                           `pb:"2" json:"message"`
+	Result  RemittanceEmploymentDeleteResult `pb:"3" json:"result"`
+}
+
+type RelationshipGridRequest struct {
+}
+
+type RelationshipGridResult struct {
+	ID           int       `pb:"1" json:"id"`
+	Relationship string    `pb:"2" json:"relationship"`
+	CreatedAt    time.Time `pb:"3" json:"created_at"`
+	UpdatedAt    time.Time `pb:"4" json:"updated_at"`
+	DeletedAt    time.Time `pb:"5" json:"deleted_at"`
+}
+
+type RelationshipGridResponse struct {
+	Code    int                      `pb:"1" json:"code"`
+	Message string                   `pb:"2" json:"message"`
+	Result  []RelationshipGridResult `pb:"3" json:"result"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "relationship",
+//         },
+// }}
+type RelationshipUpdateRequest struct {
+	Relationship string `pb:"1" json:"relationship"`
+	ID           string `pb:"2" json:"id"`
+}
+
+type RelationshipUpdateResult struct {
+	ID           int       `pb:"1" json:"id"`
+	Relationship string    `pb:"2" json:"relationship"`
+	CreatedAt    time.Time `pb:"3" json:"created_at"`
+	UpdatedAt    time.Time `pb:"4" json:"updated_at"`
+	DeletedAt    time.Time `pb:"5" json:"deleted_at"`
+}
+
+type RelationshipUpdateResponse struct {
+	Code    int                      `pb:"1" json:"code"`
+	Message string                   `pb:"2" json:"message"`
+	Result  RelationshipUpdateResult `pb:"3" json:"result"`
+}
+
+type PartnersDeleteRequest struct {
+	ID          string `pb:"1" json:"id"`
+	PartnerCode string `pb:"2" json:"partner_code"`
+	PartnerName string `pb:"3" json:"partner_name"`
+}
+
+type PartnersDeleteResult struct {
+	ID           int       `pb:"1" json:"id"`
+	PartnerCode  string    `pb:"2" json:"partner_code"`
+	PartnerName  string    `pb:"3" json:"partner_name"`
+	ClientSecret string    `pb:"4" json:"client_secret"`
+	Status       int       `pb:"5" json:"status"`
+	CreatedAt    time.Time `pb:"6" json:"created_at"`
+	UpdatedAt    time.Time `pb:"7" json:"updated_at"`
+	DeletedAt    time.Time `pb:"8" json:"deleted_at"`
+}
+
+type PartnersDeleteResponse struct {
+	Code    int                  `pb:"1" json:"code"`
+	Message string               `pb:"2" json:"message"`
+	Result  PartnersDeleteResult `pb:"3" json:"result"`
+}
+
+type PartnersGetRequest struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type PartnersGetResponse struct {
+	Code    int               `pb:"1" json:"code"`
+	Message string            `pb:"2" json:"message"`
+	Result  PartnersGetResult `pb:"3" json:"result"`
+}
+
+type PartnersGetResult struct {
+	ID           int       `pb:"1" json:"id"`
+	PartnerCode  string    `pb:"2" json:"partner_code"`
+	PartnerName  string    `pb:"3" json:"partner_name"`
+	ClientSecret string    `pb:"4" json:"client_secret"`
+	Status       int       `pb:"5" json:"status"`
+	CreatedAt    time.Time `pb:"6" json:"created_at"`
+	UpdatedAt    time.Time `pb:"7" json:"updated_at"`
+	DeletedAt    string    `pb:"8" json:"deleted_at"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "partner_code",
+//                 "partner_name",
+//         },
+// }}
+type PartnersUpdateRequest struct {
+	ID          string `pb:"1" json:"id"`
+	PartnerCode string `pb:"2" json:"partner_code"`
+	PartnerName string `pb:"3" json:"partner_name"`
+	Service     string `pb:"4" json:"service"`
+}
+
+type PartnersUpdateResponse struct {
+	Code    int                  `pb:"1" json:"code"`
+	Message string               `pb:"2" json:"message"`
+	Result  PartnersUpdateResult `pb:"3" json:"result"`
+}
+
+type PartnersUpdateResult struct {
+	ID           int       `pb:"1" json:"id"`
+	PartnerCode  string    `pb:"2" json:"partner_code"`
+	PartnerName  string    `pb:"3" json:"partner_name"`
+	ClientSecret string    `pb:"4" json:"client_secret"`
+	Status       int       `pb:"5" json:"status"`
+	CreatedAt    time.Time `pb:"6" json:"created_at"`
+	UpdatedAt    time.Time `pb:"7" json:"updated_at"`
+	DeletedAt    string    `pb:"8" json:"deleted_at"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "relationship",
+//         },
+// }}
+type RelationshipCreateRequest struct {
+	Relationship string `pb:"1" json:"relationship"`
+}
+
+type RelationshipCreateResponse struct {
+	Code    int                      `pb:"1" json:"code"`
+	Message string                   `pb:"2" json:"message"`
+	Result  RelationshipCreateResult `pb:"3" json:"result"`
+}
+
+type RelationshipCreateResult struct {
+	Relationship string    `pb:"1" json:"relationship"`
+	CreatedAt    time.Time `pb:"2" json:"created_at"`
+	UpdatedAt    time.Time `pb:"3" json:"updated_at"`
+	ID           int       `pb:"4" json:"id"`
+}
+
+type RemittanceService interface {
+	// Validate Send Money
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/remittance/send-validate",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: "Validate send money transaction",
+	//         Summary:     "Validate Send Money",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittanceValidateSendMoneyResponse",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"The given data was invalid.\" }",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	ValidateSendMoney(ValidateSendMoneyRequest) ValidateSendMoneyResponse
+
+	// Confirm Send Money
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/remittance/confirm-send-money",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: "Confirm send money transaction",
+	//         Summary:     "Confirm Send Money",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittanceConfirmSendMoneyResponse",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"The given data was invalid.\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"Failed\" }",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	ConfirmSendMoney(ConfirmSendMoneyRequest) ConfirmSendMoneyResponse
+
+	// Cancel Send Money
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/remittance/cancel-send-money",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: "Cancel send money transaction",
+	//         Summary:     "Cancel Send Money",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittanceCancelSendMoneyResponse",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"The given data was invalid.\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"Failed\" }",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	CancelSendMoney(CancelSendMoneyRequest) CancelSendMoneyResponse
+
+	// Validate Receive Money
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/remittance/validate-receive-money",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: "Validate receive money transaction",
+	//         Summary:     "Validate Receive Money",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittanceValidateReceiveMoneyResponse",
+	//                         }},
+	//                 },
+	//                 "412": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 412, \"message\": \"Receive money failed!\" }",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"The given data was invalid.\" }",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	ValidateReceiveMoney(ValidateReceiveMoneyRequest) ValidateReceiveMoneyResponse
+
+	// Remitance Inquire
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/remittance/inquire",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: "Inquire remittance transaction",
+	//         Summary:     "Inquire remittance",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittanceInquireResponse",
+	//                         }},
+	//                 },
+	//                 "405": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 405, \"message\": \"Failed\" }",
+	//                         }},
+	//                 },
+	//                 "406": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 406, \"message\": \"Failed\" }",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"The given data was invalid.\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"Failed\" }",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	Inquire(InquireRequest) InquireResponse
+
+	// Confirm Receive Money
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/remittance/confirm-receive-money",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: "Confirm Receive money transaction",
+	//         Summary:     "Confirm Receive Money",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittanceConfirmReceiveMoneyResponse",
+	//                         }},
+	//                 },
+	//                 "405": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 405, \"message\": \"Failed\" }",
+	//                         }},
+	//                 },
+	//                 "406": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 406, \"message\": \"Failed\" }",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"The given data was invalid.\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"Receive money Failed\" }",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	ConfirmReceiveMoney(ConfirmReceiveMoneyRequest) ConfirmReceiveMoneyResponse
+
+	// Remitance Partner Grid
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/remittance/partner",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: `Get all Partners`,
+	//         Summary:     "Partners GRID",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittancePartnersGridResponse",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	PartnersGrid() PartnersGridResponse
+
+	// Purpose Of Remittance Grid
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/remittance/purpose-of-remittance",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: `Get all Purpose of remittance`,
+	//         Summary:     "Purpose Of Remittance GRID",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittancePurposeOfRemittanceGridResponse",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	PurposeOfRemittanceGrid() PurposeOfRemittanceGridResponse
+
+	// Purpose Of Remittance Get
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/remittance/purpose-of-remittance/{ID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: `Get one Purpose of Remittance`,
+	//         Summary:     "Purpose Of Remittance GET",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittancePurposeOfRemittanceGetResponse",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	PurposeOfRemittanceGet(PurposeOfRemittanceGetRequest) PurposeOfRemittanceGetResponse
+
+	// Update Purpose of Remittance
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v1/remittance/purpose-of-remittance/{ID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: "Update Purpose of Remittance",
+	//         Summary:     "Purpose Of Remittance UPDATE",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittancePurposeOfRemittanceUpdateResponse",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"The given data was invalid.\" }",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	PurposeOfRemittanceUpdate(PurposeOfRemittanceUpdateRequest) PurposeOfRemittanceUpdateResponse
+
+	// Create Purpose of Remittance
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/remittance/purpose-of-remittance",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: "Create Purpose of Remittance",
+	//         Summary:     "Purpose Of Remittance CREATE",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittancePurposeOfRemittanceCreateResponse",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"The given data was invalid.\" }",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	PurposeOfRemittanceCreate(PurposeOfRemittanceCreateRequest) PurposeOfRemittanceCreateResponse
+
+	// Remitance Partner Create
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/remittance/partner",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: "Create partner",
+	//         Summary:     "Partners CREATE",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittancePartnersCreateResponse",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"The given data was invalid.\" }",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	PartnersCreate(PartnersCreateRequest) PartnersCreateResponse
+
+	// Source Of Fund Grid
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/remittance/source-of-fund",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: `Get all Source of Fund`,
+	//         Summary:     "Source Of Fund GRID",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittanceSourceOfFundGridResponse",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	SourceOfFundGrid() SourceOfFundGridResponse
+
+	// Create Source Of Fund
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/remittance/source-of-fund",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: "Create Source of Fund",
+	//         Summary:     "Source Of Fund CREATE",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittanceSourceOfFundCreateResponse",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"The given data was invalid.\" }",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	SourceOfFundCreate(SourceOfFundCreateRequest) SourceOfFundCreateResponse
+
+	// Source Of Fund Get
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/remittance/source-of-fund/{ID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: `Get one Source of Fund`,
+	//         Summary:     "Source Of Fund GET",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittanceSourceOfFundGetResponse",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	SourceOfFundGet(SourceOfFundGetRequest) SourceOfFundGetResponse
+
+	// Remittance Employment Grid
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/remittance/employment",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: `Get all Employment`,
+	//         Summary:     "Employment GRID",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittanceEmploymentGridResponse",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	EmploymentGrid() EmploymentGridResponse
+
+	// Remittance Employment Get
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/remittance/employment/{ID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: `Get Employment by ID`,
+	//         Summary:     "Employment GET",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittanceEmploymentGetResponse",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	EmploymentGet(EmploymentGetRequest) EmploymentGetResponse
+
+	// Create Partners employment of Remittance
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/remittance/employment",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: "Create Partners Employment Remittance",
+	//         Summary:     "Employment CREATE",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittanceRemittanceEmploymentCreateResponse",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"The given data was invalid.\" }",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	RemittanceEmploymentCreate(RemittanceEmploymentCreateRequest) RemittanceEmploymentCreateResponse
+
+	// Update Employment Remittance
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v1/remittance/employment/{ID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: "Update Employment of Remittance",
+	//         Summary:     "Employment UPDATE",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittanceRemittanceEmploymentUpdateResponse",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"The given data was invalid.\" }",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	RemittanceEmploymentUpdate(RemittanceEmploymentUpdateRequest) RemittanceEmploymentUpdateResponse
+
+	// Occupation Grid
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/remittance/occupation",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: `Get all Occupation`,
+	//         Summary:     "Occupation GRID",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittanceOccupationGridResponse",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	OccupationGrid() OccupationGridResponse
+
+	// Occupation Get
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/remittance/occupation/{ID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: `Get one Occupation`,
+	//         Summary:     "Occupation GET",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittanceOccupationGetResponse",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	OccupationGet(OccupationGetRequest) OccupationGetResponse
+
+	// Create Occupation
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/remittance/occupation",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: "Create Occupation",
+	//         Summary:     "Occupation CREATE",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittanceOccupationCreateResponse",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"The given data was invalid.\" }",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	OccupationCreate(OccupationCreateRequest) OccupationCreateResponse
+
+	// Update Occupation
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v1/remittance/occupation/{ID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: "Update Occupation",
+	//         Summary:     "Occupation UPDATE",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittanceOccupationUpdateResponse",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"The given data was invalid.\" }",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	OccupationUpdate(OccupationUpdateRequest) OccupationUpdateResponse
+
+	// Occupation Delete
+	//
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v1/remittance/occupation/{ID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: `Delete one Occupation`,
+	//         Summary:     "Occupation Delete",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittanceOccupationDeleteResponse",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	OccupationDelete(OccupationDeleteRequest) OccupationDeleteResponse
+
+	// Relationship Get
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/remittance/relationship/{ID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: `Get one Relationship`,
+	//         Summary:     "Relationship GET",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittanceRelationshipGetResponse",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	RelationshipGet(RelationshipGetRequest) RelationshipGetResponse
+
+	// Update Source Of Fund
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v1/remittance/source-of-fund/{ID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: "Update Source of Fund",
+	//         Summary:     "Source Of Fund UPDATE",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittanceSourceOfFundUpdateResponse",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"The given data was invalid.\" }",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	SourceOfFundUpdate(SourceOfFundUpdateRequest) SourceOfFundUpdateResponse
+
+	// Source Of Fund Delete
+	//
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v1/remittance/source-of-fund/{ID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: `Delete one Source of Fund`,
+	//         Summary:     "Source Of Fund DELETE",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittanceSourceOfFundDeleteResponse",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	SourceOfFundDelete(SourceOfFundDeleteRequest) SourceOfFundDeleteResponse
+
+	// Purpose Of Remittance Delete
+	//
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v1/remittance/purpose-of-remittance/{ID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: `Delete one Purpose of Remittance`,
+	//         Summary:     "Purpose Of Remittance DELETE",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittancePurposeOfRemittanceDeleteResponse",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	PurposeOfRemittanceDelete(PurposeOfRemittanceDeleteRequest) PurposeOfRemittanceDeleteResponse
+
+	// Relationship Delete
+	//
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v1/remittance/relationship/{ID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: `Delete one Relationship`,
+	//         Summary:     "Relationship DELETE",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittanceRelationshipDeleteResponse",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	RelationshipDelete(RelationshipDeleteRequest) RelationshipDeleteResponse
+
+	// Remittance Employment Delete
+	//
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v1/remittance/employment/{ID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: `Delete one Remittance Employment`,
+	//         Summary:     "Employment DELETE",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittanceRemittanceEmploymentDeleteResponse",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	RemittanceEmploymentDelete(RemittanceEmploymentDeleteRequest) RemittanceEmploymentDeleteResponse
+
+	// Relationship Grid
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/remittance/relationship",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: `Get all Relationship`,
+	//         Summary:     "Relationship GRID",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittanceRelationshipGridResponse",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	RelationshipGrid() RelationshipGridResponse
+
+	// Update Relationship
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v1/remittance/relationship/{ID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: "Update Relationship",
+	//         Summary:     "Relationship UPDATE",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittanceRelationshipUpdateResponse",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"The given data was invalid.\" }",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	RelationshipUpdate(RelationshipUpdateRequest) RelationshipUpdateResponse
+
+	// Partners Delete
+	//
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v1/remittance/partner/{ID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: `Delete one Partner`,
+	//         Summary:     "Partners DELETE",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittancePartnersDeleteResponse",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	PartnersDelete(PartnersDeleteRequest) PartnersDeleteResponse
+
+	// Remitance Partner Get
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/remittance/partner/{ID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: `Get one Partner`,
+	//         Summary:     "Partners GET",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittancePartnersGetResponse",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	PartnersGet(PartnersGetRequest) PartnersGetResponse
+
+	// Remitance Partner Update
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v1/remittance/partner/{ID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: "Update partner",
+	//         Summary:     "Partners UPDATE",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittancePartnersUpdateResponse",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"The given data was invalid.\" }",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	PartnersUpdate(PartnersUpdateRequest) PartnersUpdateResponse
+
+	// Remitance Relationship Create
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/remittance/relationship",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Perahub Remittance"},
+	//         Description: "Create Relationship",
+	//         Summary:     "Relationship CREATE",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittanceRelationshipCreateResponse",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"The given data was invalid.\" }",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Not Found.\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	RelationshipCreate(RelationshipCreateRequest) RelationshipCreateResponse
+}

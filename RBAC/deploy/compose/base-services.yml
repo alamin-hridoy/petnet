@@ -1,0 +1,171 @@
+version: '3'
+
+services:
+  rbac-site:
+    container_name: rbac_site
+    depends_on:
+      - hydra
+    build:
+      context: ..
+      dockerfile: compose/Dockerfile.testsite
+    environment:
+      RUNTIME_ENVIRONMENT: 'development'
+      SERVER_HOST: 127.0.0.1
+      SERVER_PORT: '4000'
+      HYDRA_ADMINURL: http://hydra:4445
+      SCOPES_HOST: "${USERMGM_INTERNAL:-rbac-usermgm:3030}"
+      AUTH_ISSUER: "${HYDRA_HOST:-http://127.0.0.1:4444}"
+      AUTH_TOKEN: "${HYDRA_ADMINURL:-http://hydra:4444}"
+      AUTH_COOKIENAME: localdev
+      # Generated if blank
+      AUTH_COOKIESECRET: "${AUTH_COOKIESECRET}"
+      AUTH_CLIENTID: "${HYDRA_CLIENTID}"
+      AUTH_CLIENTSECRET: "${HYDRA_CLIENTSECRET}"
+      AUTH_REDIRECTURL: http://127.0.0.1:4000/oauth2/callback
+      CSRF_SECRET: somethingsecret
+    restart: unless-stopped
+
+  usermgm:
+    build:
+      context: ../..
+      dockerfile: deploy/compose/Dockerfile.usermgm
+      target: "${USERMGM_TARGET:-normal}" # 'debug' for delve, then 'dlv connect host:port'
+    security_opt:
+      - "seccomp:unconfined"
+    environment:
+      TZ: "${TZ:-Asia/Manila}"
+      RUNTIME_ENV: 'development'
+      LOG_LEVEL: trace
+      SERVER_HOST: 127.0.0.1
+      SERVER_PORT: '3000'
+      DATABASE_HOST: postgresd
+      DATABASE_PORT: '5432'
+      DATABASE_USER: usermgmdb_user
+      DATABASE_DBNAME: usermgmdb
+      DATABASE_PASSWORD: secret
+      HYDRA_AUDIENCE: '127.0.0.1:4040'
+      HYDRA_ADMINURL: http://hydra:4445
+      KETO_HOST: keto
+      ORG_AUTOCREATE: "true"
+      ORG_AUTOAPPROVE: "true"
+      BOOTSTRAP_NAME: admin
+      BOOTSTRAP_EMAIL: admin@example.com
+      BOOTSTRAP_HYDRACLIENT: bootstrap
+      BOOTSTRAP_HYDRASECRET: secret
+      BOOTSTRAP_ENVLIST: sandbox
+      API_HOST: "127.0.0.1"
+      API_PORT: "3030"
+      API_AUTHHOST: "127.0.0.1:3000"
+      CORS_ORIGINS: "${CORS_ORIGINS:-https://rbac.brank.as,*.rbac.brank.as}"
+      SMTP_USERNAME: "${SMTP_USERNAME:-placeholder}"
+      SMTP_PASSWORD: "${SMTP_PASSWORD:-placeholder}"
+      IDP_URL: "${IDP_URL:-http://127.0.0.1:3000}"
+      MAILER_EMAILCONFIRMURL: "${MAILER_EMAILCONFIRMURL:-http://127.0.0.1:3000/user/confirm}"
+      PROJECT_MFAISSUER: "Brankas"
+      PROJECT_MFATIMEOUT: 30m
+      MAILER_ASSETDIR: integrations/email/assets
+      # GRPC_GO_LOG_SEVERITY_LEVEL: info
+      # GRPC_GO_LOG_VERBOSITY_LEVEL: '99'
+    restart: unless-stopped
+
+  idp:
+    build:
+      context: ../..
+      dockerfile: deploy/compose/Dockerfile.idp
+      target: "${IDP_TARGET:-normal}" # 'debug' for delve, then 'dlv connect host:port'
+    environment:
+      TZ: "${TZ:-Asia/Manila}"
+      RUNTIME_ENVIRONMENT: 'localdev'
+      LOG_LEVEL: debug
+      SERVER_HOST: 127.0.0.1
+      SERVER_PORT: '3000'
+      ELECTOR_SOCK: /var/lib/leaderelex/lead.sock
+      ELECTOR_MOCK: 'true'
+      SITE_URL: "${SITE_URL:-http://127.0.0.1:3000}"
+      SITE_ERRORURL: "${SITE_URL:-http://127.0.0.1:4000/error}"
+      AUTH_SOURCE: usermgm
+      USERMGM_API: "${USERMGM_API:-rbac-usermgm:3000}"
+      USERMGM_INTERNAL: "${USERMGM_INTERNAL:-rbac-usermgm:3030}"
+      AUTHENTICATOR_NAMES: "usermgm"
+      AUTHENTICATOR_DEFAULT: "usermgm"
+      AUTHENTICATOR_USERMGM_TYPE: "session"
+      AUTHENTICATOR_USERMGM_HOST: "${SESSION_API:-rbac-usermgm:3030}"
+      AUTHENTICATOR_USERMGM_DURATION: "3h"
+      AUTH_CLIENTID: "${AUTH_CLIENTID:-rbac-dev}"
+      AUTH_CLIENTSECRET: "${AUTH_CLIENTSECRET:-secret}"
+      AUTH_URL: "${HYDRA_HOST:-http://hydra:4444}"
+      HYDRA_ADMINURL: http://hydra:4445
+      SMTP_USERNAME: "${SMTP_USERNAME:-placeholder}"
+      SMTP_PASSWORD: "${SMTP_PASSWORD:-placeholder}"
+      CSRF_SECRET: somethingsecret
+      # GRPC_GO_LOG_SEVERITY_LEVEL: info
+      # GRPC_GO_LOG_VERBOSITY_LEVEL: '99'
+    restart: unless-stopped
+
+  hydra-migrate:
+    image: oryd/hydra:v1.10.3-alpine
+    environment:
+      - DSN=postgres://hydradb_user:secret@postgresd:5432/hydradb?sslmode=disable&max_conns=20&max_idle_conns=4
+    command:
+      migrate sql -e --yes
+    restart: on-failure
+
+  hydra:
+    image: oryd/hydra:v1.10.3-alpine
+    command:
+      serve all --dangerous-force-http --sqa-opt-out --dangerous-allow-insecure-redirect-urls http://127.0.0.1:4000/oauth2/callback --dangerous-allow-insecure-redirect-urls http://127.0.0.1:4000/
+    environment:
+      - CORS_ENABLED=true
+      - CORS_ALLOWED_ORIGINS=http://127.0.0.1:*
+      - URLS_SELF_ISSUER=${URLS_SELF_ISSUER:-http://127.0.0.1:4444}
+      - URLS_CONSENT=${URLS_CONSENT:-http://127.0.0.1:3000/consent}
+      - URLS_LOGIN=${URLS_LOGIN:-http://127.0.0.1:3000/login}
+      - URLS_LOGOUT=${URLS_LOGOUT:-http://127.0.0.1:3000/logout}
+      - URLS_POST_LOGOUT_REDIRECT:${URLS_POST_LOGOUT_REDIRECT:-http://127.0.0.1:4000/}
+      - DSN=postgres://hydradb_user:secret@postgresd:5432/hydradb?sslmode=disable&max_conns=20&max_idle_conns=4
+      - SECRETS_SYSTEM=youReallyNeedToChangeThis
+      - OIDC_SUBJECT_TYPES_SUPPORTED=public,pairwise
+      - OIDC_SUBJECT_TYPE_PAIRWISE_SALT=youReallyNeedToChangeThis
+      - OAUTH2_EXPOSE_INTERNAL_ERRORS=true
+      - TTL_ACCESS_TOKEN=10m # shorter for testing expiry
+      - LOG_LEVEL=debug
+      - LOG_LEAK_SENSITIVE_VALUES=true
+      - OAUTH2_SHARE_ERROR_DEBUG=1
+      - SERVE_COOKIES_SAME_SITE_MODE=Lax
+    restart: unless-stopped
+
+  hydra-init-client:
+    image: byrnedo/alpine-curl:0.1.8
+    volumes:
+      - ./create-auth-client.sh:/usr/bin/create-auth-client.sh
+    entrypoint:
+      - /usr/bin/create-auth-client.sh
+
+  keto-migrate:
+    image: oryd/keto:v0.5.7
+    command:
+      migrate sql -e
+    environment:
+      - DSN=postgres://ketodb_user:secret@postgresd:5432/ketodb?sslmode=disable&max_conns=20&max_idle_conns=4
+    restart: on-failure
+
+  keto:
+    image: oryd/keto:v0.5.7
+    command:
+      serve
+    environment:
+      - DSN=postgres://ketodb_user:secret@postgresd:5432/ketodb?sslmode=disable&max_conns=20&max_idle_conns=4
+      - LOG_LEVEL=debug
+      - LOG_LEAK_SENSITIVE_VALUES=true
+    restart: unless-stopped
+
+  jaeger:
+    container_name: rbac_jaeger
+    image: jaegertracing/all-in-one:1.22.0
+
+  otel-collector:
+    container_name: rbac_otel-collector
+    image: otel/opentelemetry-collector-dev:faa78aa7f6efdb5544613ab189e87d62f13bdc33
+    command: ["--config=/etc/otel-collector-config.yaml", "${OTELCOL_ARGS:---log-level=debug}"]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml

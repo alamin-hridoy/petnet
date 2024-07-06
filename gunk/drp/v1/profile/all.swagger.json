@@ -1,0 +1,1083 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/drp/v1/profile/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "ProfileService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/getuser/{remit_partner}": {
+      "get": {
+        "summary": "Get user.",
+        "description": "Gets an existing user which is added before",
+        "operationId": "ProfileService_GetUser",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/profileGetUserResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when user account does not exist.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "remit_partner",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "first_name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "last_name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "birth_date",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "user_number",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "User"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/profile/{remit_partner}": {
+      "post": {
+        "summary": "Create user KYC profile.",
+        "description": "Create user KYC profile details.",
+        "operationId": "ProfileService_CreateProfile",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/profileCreateProfileResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when user account does not exist.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "remit_partner",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/profileCreateProfileRequest"
+            }
+          }
+        ],
+        "tags": [
+          "User"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/profile/{remit_partner}/{email}": {
+      "get": {
+        "summary": "Get user KYC profile.",
+        "description": "Get registered user KYC profile details.",
+        "operationId": "ProfileService_GetProfile",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/profileGetProfileResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when profile does not exist.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "remit_partner",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "User"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/recipient/{remit_partner}": {
+      "get": {
+        "summary": "Get user's recipients.",
+        "description": "Get the user's registered recipients which are used as the receivers of a transaction.",
+        "operationId": "ProfileService_GetRecipients",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/profileGetRecipientsResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when recipient does not exist.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "remit_partner",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "sender_user_email",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "currency",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "sender_user_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "User"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      },
+      "post": {
+        "summary": "Create recipient.",
+        "description": "Creates a recipient for a user which is used and a receiver of a transaction.",
+        "operationId": "ProfileService_CreateRecipient",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/profileCreateRecipientResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when user account does not exist.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "remit_partner",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/profileCreateRecipientRequest"
+            }
+          }
+        ],
+        "tags": [
+          "User"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      },
+      "put": {
+        "summary": "Update recipient.",
+        "description": "Updates an existing recipient which is used as a receiver of a transaction.",
+        "operationId": "ProfileService_UpdateRecipient",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/profileUpdateRecipientResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when recipient account does not exist.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "remit_partner",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/profileUpdateRecipientRequest"
+            }
+          }
+        ],
+        "tags": [
+          "User"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/recipient/{remit_partner}/{email}": {
+      "delete": {
+        "summary": "Delete recipient.",
+        "description": "Deletes a recipient which is used as a receiver of a transaction.",
+        "operationId": "ProfileService_DeleteRecipient",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/profileDeleteRecipientResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when recipient account does not exist.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "remit_partner",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "recipient_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "User"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/user/{remit_partner}": {
+      "post": {
+        "summary": "Register user.",
+        "description": "Register a remittance user to the perahub DRP platform.",
+        "operationId": "ProfileService_RegisterUser",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/profileRegisterUserResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "remit_partner",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/profileRegisterUserRequest"
+            }
+          }
+        ],
+        "tags": [
+          "User"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "profileAddress": {
+      "type": "object",
+      "properties": {
+        "address1": {
+          "type": "string"
+        },
+        "address2": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "province": {
+          "type": "string"
+        },
+        "zone": {
+          "type": "string"
+        },
+        "postal_code": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "address1",
+        "city",
+        "state",
+        "province",
+        "postal_code",
+        "country"
+      ]
+    },
+    "profileCreateProfileRequest": {
+      "type": "object",
+      "properties": {
+        "remit_partner": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "birth_date": {
+          "type": "string"
+        },
+        "phone": {
+          "$ref": "#/definitions/profilePhoneNumber"
+        },
+        "address": {
+          "$ref": "#/definitions/profileAddress"
+        },
+        "occupation": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "remit_partner",
+        "email",
+        "type",
+        "first_name",
+        "last_name",
+        "birth_date",
+        "phone",
+        "address",
+        "occupation"
+      ]
+    },
+    "profileCreateProfileResponse": {
+      "type": "object"
+    },
+    "profileCreateRecipientRequest": {
+      "type": "object",
+      "properties": {
+        "remit_partner": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "owned_by_customer": {
+          "type": "boolean"
+        },
+        "account_holder_name": {
+          "type": "string"
+        },
+        "requirements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/profileRequirement"
+          }
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "middle_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "sender_user_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "birth_date": {
+          "type": "string"
+        },
+        "mobile_country_id": {
+          "type": "string"
+        },
+        "contact_number": {
+          "type": "string"
+        },
+        "phone_country_id": {
+          "type": "string"
+        },
+        "phone_area_code": {
+          "type": "string"
+        },
+        "phone_number": {
+          "type": "string"
+        },
+        "country_address_id": {
+          "type": "string"
+        },
+        "birth_country_id": {
+          "type": "string"
+        },
+        "province_address": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "occupation": {
+          "type": "string"
+        },
+        "postal_code": {
+          "type": "string"
+        },
+        "state_id_address": {
+          "type": "string"
+        },
+        "tin": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "remit_partner",
+        "email",
+        "currency",
+        "type",
+        "owned_by_customer",
+        "account_holder_name",
+        "requirements"
+      ]
+    },
+    "profileCreateRecipientResponse": {
+      "type": "object",
+      "properties": {
+        "recipient_id": {
+          "type": "string"
+        }
+      }
+    },
+    "profileDeleteRecipientResponse": {
+      "type": "object"
+    },
+    "profileDetails": {
+      "type": "object",
+      "properties": {
+        "account_number": {
+          "type": "string"
+        },
+        "sort_code": {
+          "type": "string"
+        },
+        "hash_by_loose_algorithm": {
+          "type": "string"
+        }
+      }
+    },
+    "profileDisplayField": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "profileGUResult": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/profileUser"
+        }
+      }
+    },
+    "profileGetProfileResponse": {
+      "type": "object",
+      "properties": {
+        "profile": {
+          "$ref": "#/definitions/profileProfile"
+        }
+      }
+    },
+    "profileGetRecipientsResponse": {
+      "type": "object",
+      "properties": {
+        "recipients": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/profileRecipient"
+          }
+        }
+      }
+    },
+    "profileGetUserResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/profileGUResult"
+        },
+        "remco_id": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "profilePhoneNumber": {
+      "type": "object",
+      "properties": {
+        "country_code": {
+          "type": "string"
+        },
+        "number": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "country_code",
+        "number"
+      ]
+    },
+    "profileProfile": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "birth_date": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "occupation": {
+          "type": "string"
+        },
+        "address": {
+          "$ref": "#/definitions/profileAddress"
+        }
+      }
+    },
+    "profileRUResult": {
+      "type": "object",
+      "properties": {
+        "result_status": {
+          "type": "string"
+        },
+        "message_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "log_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "user_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "user_number": {
+          "type": "string"
+        }
+      }
+    },
+    "profileRecipient": {
+      "type": "object",
+      "properties": {
+        "recipient_id": {
+          "type": "string"
+        },
+        "details": {
+          "$ref": "#/definitions/profileDetails"
+        },
+        "account_summary": {
+          "type": "string"
+        },
+        "long_account_summary": {
+          "type": "string"
+        },
+        "display_fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/profileDisplayField"
+          }
+        },
+        "full_name": {
+          "type": "string"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "middle_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "birth_date": {
+          "type": "string"
+        },
+        "state_id_address": {
+          "type": "string"
+        },
+        "mobile_country": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "phone_country": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "country_address": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "birth_country": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "profileRegisterUserRequest": {
+      "type": "object",
+      "properties": {
+        "remit_partner": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "birth_date": {
+          "type": "string"
+        },
+        "mobile_country_id": {
+          "type": "string"
+        },
+        "contact_number": {
+          "type": "string"
+        },
+        "phone_country_id": {
+          "type": "string"
+        },
+        "phone_area_code": {
+          "type": "string"
+        },
+        "country_address_id": {
+          "type": "string"
+        },
+        "province_address": {
+          "type": "string"
+        },
+        "current_address": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "source_of_fund_id": {
+          "type": "string"
+        },
+        "tin": {
+          "type": "string"
+        },
+        "phone_number": {
+          "type": "string"
+        },
+        "agent_code": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "remit_partner",
+        "email"
+      ]
+    },
+    "profileRegisterUserResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/profileRUResult"
+        },
+        "remco_id": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "profileRequirement": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "title": "Value is used when requirement is a single value"
+        },
+        "values": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Values is used when requirement has multiple values"
+        }
+      }
+    },
+    "profileUpdateRecipientRequest": {
+      "type": "object",
+      "properties": {
+        "remit_partner": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "owned_by_customer": {
+          "type": "boolean"
+        },
+        "account_holder_name": {
+          "type": "string"
+        },
+        "requirements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/profileRequirement"
+          }
+        }
+      },
+      "required": [
+        "remit_partner",
+        "email",
+        "currency",
+        "type",
+        "owned_by_customer",
+        "account_holder_name",
+        "requirements"
+      ]
+    },
+    "profileUpdateRecipientResponse": {
+      "type": "object"
+    },
+    "profileUser": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "user_number": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "middle_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "birth_date": {
+          "type": "string"
+        },
+        "mobile_country": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "phone_country": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "country_address": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "source_fund_id": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

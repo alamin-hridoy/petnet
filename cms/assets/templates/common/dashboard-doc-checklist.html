@@ -1,0 +1,264 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>Home Screen</title>
+</head>
+    <body class="font-body">
+        <div class="flex">
+            <!-- left-section -->
+            <div class="bg-petnetblue w-32 min-h-screen">
+                <div class="min-h-screen">
+                    <img src="{{ assetHash "/images/DRP-Vertical.svg" }}" class="mx-auto my-5">
+                    <!-- Sidebar menu start -->
+                    {{ template "admin-sidenav-menu.html" dict "Type" "dsa-list" "Data" .}}
+                    <!-- Sidebar menu end -->
+                </div>
+            </div>
+            <!-- right-section -->
+            <div class="min-h-screen w-full flex bg-petnetgray">
+                <div class="w-full">
+                    {{ template "admin-head.html" . }}
+                    <div class="px-6 lg:px-32 py-10 flex flex-wrap">
+                        <div class="w-1/4 pr-2 flex flex-col">
+                            {{ template "application-sidenav.html" .}}
+                        </div>
+                        <div class="w-3/4 pl-2">
+                            <div class="bg-white rounded mb-6">
+                                <div class="border-b pt-7 px-6 pb-4">
+                                    <h4 class="text-xl text-petnetblue">Document Checklist</h4>
+                                </div>
+                                <div class="p-6">
+                                    <h5 class="mb-5 text-sm px-2">Indicate which documents have been submitted via hardcopy</h5>
+                                    <table class="w-full">
+                                        <thead>
+                                            <tr>
+                                                <td class="text-gray-600 p-4">
+                                                    Submitted
+                                                </td>
+                                                <td class="text-gray-600 p-4">
+                                                    Document List
+                                                </td>
+                                                <td class="text-gray-600 p-4">
+                                                    Date Checked
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="border-b">
+                                                {{if .FinancialInfo.IsFinancialSubmitted}}
+                                                <td class="p-4">
+                                                    <span data-value="Finance" class="onchecked w-5 h-5 border-2 border-petnetblue bg-petnetblue inline-block rounded text-white">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path id="FinancePath" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                    </span>
+                                                </td>
+                                                <td class="text-petnetblue p-4">Financial Statement (last 3 months)</td>
+                                                <td class="text-gray-500 p-4">{{.FinancialInfo.FinancialStatementDateCheck}}</td>
+                                                {{else}}
+                                                <td class="p-4">
+                                                    <input onclick="formSubmission(event)" value="Finance" {{if eq .PresetPermission.documentChecklist.update false}} disabled="true" {{end}} class="w-5 h-5 border-2 border-gray-400  inline-block rounded text-white cursor-pointer">
+                                                </td>
+                                                <td class="text-petnetblue p-4">Financial Statement (last 3 months)</td>
+                                                <td class="text-gray-500 p-4"></td>
+                                                {{end}}
+                                            </tr>
+                                            <tr class="border-b">
+                                                {{if .FinancialInfo.IsBankSubmitted}}
+                                                <td class="p-4">
+                                                    <span data-value="Bank" class="onchecked w-5 h-5 border-2 border-petnetblue bg-petnetblue inline-block rounded text-white">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path id="BankPath" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                    </span>
+                                                </td>
+                                                <td class="text-petnetblue p-4">Bank Statement</td>
+                                                <td class="text-gray-500 p-4">{{.FinancialInfo.BankStatementDateCheck}}</td>
+                                                {{else}}
+                                                <td class="p-4">
+                                                    <input onclick="formSubmission(event)" {{if eq .PresetPermission.documentChecklist.update false}} disabled="true" {{end}} value="Bank" class="w-5 h-5 border-2 border-gray-400  inline-block rounded text-white cursor-pointer">
+                                                </td>
+                                                <td class="text-petnetblue p-4">Bank Statement</td>
+                                                <td class="text-gray-500 p-4"></td>
+                                                {{end}}
+                                            </tr>
+                                            <tr class="border-b">
+                                                {{if .BusinessInfo.IsIDPhotoSubmitted}}
+                                                <td class="p-4">
+                                                    <span data-value="IDPhoto" class="onchecked w-5 h-5 border-2 border-petnetblue bg-petnetblue inline-block rounded text-white">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path id="IDPhotoPath" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                    </span>
+                                                </td>
+                                                <td class="text-petnetblue p-4">Valid ID (to be submitted by Principal/Owner and each FLA)</td>
+                                                <td class="text-gray-500 p-4">{{.BusinessInfo.IDPhotoDateCheck}}</td>
+                                                {{else}}
+                                                <td class="p-4">
+                                                    <input onclick="formSubmission(event)" {{if eq .PresetPermission.documentChecklist.update false}} disabled="true" {{end}} value="IDPhoto" class="w-5 h-5 border-2 border-gray-400  inline-block rounded text-white cursor-pointer">
+                                                </td>
+                                                <td class="text-petnetblue p-4">Valid ID (to be submitted by Principal/Owner and each FLA)</td>
+                                                <td class="text-gray-500 p-4"></td>
+                                                {{end}}
+                                            </tr>
+                                            <tr class="border-b">
+                                                {{if .BusinessInfo.IsPictureSubmitted}}
+                                                <td class="p-4">
+                                                    <span data-value="Picture" class="onchecked w-5 h-5 border-2 border-petnetblue bg-petnetblue inline-block rounded text-white">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path id="PicturePath" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                    </span>
+                                                </td>
+                                                <td class="text-petnetblue p-4">2x2 picture (to be submitted by Principal/Owner and each FLA)</td>
+                                                <td class="text-gray-500 p-4">{{.BusinessInfo.PictureDateCheck}}</td>
+                                                {{else}}
+                                                <td class="p-4">
+                                                    <input onclick="formSubmission(event)" {{if eq .PresetPermission.documentChecklist.update false}} disabled="true" {{end}} value="Picture" class="w-5 h-5 border-2 border-gray-400  inline-block rounded text-white cursor-pointer">
+                                                </td>
+                                                <td class="text-petnetblue p-4">2x2 picture (to be submitted by Principal/Owner and each FLA)</td>
+                                                <td class="text-gray-500 p-4"></td>
+                                                {{end}}
+                                            </tr>
+                                            <tr class="border-b">
+                                                {{if .BusinessInfo.IsNBISubmitted}}
+                                                <td class="p-4">
+                                                    <span data-value="Nbi" class="onchecked w-5 h-5 border-2 border-petnetblue bg-petnetblue inline-block rounded text-white">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path id="NbiPath" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                    </span>
+                                                </td>
+                                                <td class="text-petnetblue p-4">NBI Clearance</td>
+                                                <td class="text-gray-500 p-4">{{.BusinessInfo.NBIClearanceDateCheck}}</td>
+                                                {{else}}
+                                                <td class="p-4">
+                                                    <input onclick="formSubmission(event)" {{if eq .PresetPermission.documentChecklist.update false}} disabled="true" {{end}} value="Nbi" class="w-5 h-5 border-2 border-gray-400  inline-block rounded text-white cursor-pointer">
+                                                </td>
+                                                <td class="text-petnetblue p-4">NBI Clearance</td>
+                                                <td class="text-gray-500 p-4"></td>
+                                                {{end}}
+                                            </tr>
+                                            <tr class="border-b">
+                                                {{if .BusinessInfo.IsCourtClearanceSubmitted}}
+                                                <td class="p-4">
+                                                    <span data-value="Court" class="onchecked w-5 h-5 border-2 border-petnetblue bg-petnetblue inline-block rounded text-white">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path id="CourtPath" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                    </span>
+                                                </td>
+                                                <td class="text-petnetblue p-4">Court Clearance</td>
+                                                <td class="text-gray-500 p-4">{{.BusinessInfo.CourtClearanceDateCheck}}</td>
+                                                {{else}}
+                                                <td class="p-4">
+                                                    <input onclick="formSubmission(event)" {{if eq .PresetPermission.documentChecklist.update false}} disabled="true" {{end}} value="Court" class="w-5 h-5 border-2 border-gray-400  inline-block rounded text-white cursor-pointer">
+                                                </td>
+                                                <td class="text-petnetblue p-4">Court Clearance</td>
+                                                <td class="text-gray-500 p-4"></td>
+                                                {{end}}
+                                            </tr>
+                                            <tr class="border-b">
+                                                {{if .BusinessInfo.IsIncorpPapersSubmitted}}
+                                                <td class="p-4">
+                                                    <span data-value="Incorp" class="onchecked w-5 h-5 border-2 border-petnetblue bg-petnetblue inline-block rounded text-white">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path id="IncorpPath" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                    </span>
+                                                </td>
+                                                <td class="text-petnetblue p-4">Incorporation Papers</td>
+                                                <td class="text-gray-500 p-4">{{.BusinessInfo.IncorporationPapersDateCheck}}</td>
+                                                {{else}}
+                                                <td class="p-4">
+                                                    <input onclick="formSubmission(event)" {{if eq .PresetPermission.documentChecklist.update false}} disabled="true" {{end}} value="Incorp" class="w-5 h-5 border-2 border-gray-400  inline-block rounded text-white cursor-pointer">
+                                                </td>
+                                                <td class="text-petnetblue p-4">Incorporation Papers</td>
+                                                <td class="text-gray-500 p-4"></td>
+                                                {{end}}
+                                            </tr>
+                                            <tr class="border-b">
+                                                {{if .BusinessInfo.IsMayorsPermitSubmitted}}
+                                                <td class="p-4">
+                                                    <span data-value="Mayor" class="onchecked w-5 h-5 border-2 border-petnetblue bg-petnetblue inline-block rounded text-white">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path id="MayorPath" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                    </span>
+                                                </td>
+                                                <td class="text-petnetblue p-4">Mayors Permit</td>
+                                                <td class="text-gray-500 p-4">{{.BusinessInfo.MayorsPermitDateCheck}}</td>
+                                                {{else}}
+                                                <td class="p-4">
+                                                    <input onclick="formSubmission(event)" {{if eq .PresetPermission.documentChecklist.update false}} disabled="true" {{end}} value="Mayor" class="w-5 h-5 border-2 border-gray-400  inline-block rounded text-white cursor-pointer">
+                                                </td>
+                                                <td class="text-petnetblue p-4">Mayors Permit</td>
+                                                <td class="text-gray-500 p-4"></td>
+                                                {{end}}
+                                            </tr>
+                                            <tr class="border-b">
+                                                {{if .DRPInfo.QuestionnaireSubmitted}}
+                                                <td class="p-4">
+                                                    <span data-value="Que" class="onchecked w-5 h-5 border-2 border-petnetblue bg-petnetblue inline-block rounded text-white">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path id="QuePath" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                    </span>
+                                                </td>
+                                                <td class="text-petnetblue p-4">Questionnaire</td>
+                                                <td class="text-gray-500 p-4">{{.DRPInfo.QuestionnaireDateCheck}}</td>
+                                                {{else}}
+                                                <td class="p-4">
+                                                    <input onclick="formSubmission(event)" {{if eq .PresetPermission.documentChecklist.update false}} disabled="true" {{end}} value="Que" class="w-5 h-5 border-2 border-gray-400  inline-block rounded text-white cursor-pointer">
+                                                </td>
+                                                <td class="text-petnetblue p-4">Questionnaire</td>
+                                                <td class="text-gray-500 p-4"></td>
+                                                {{end}}
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <form id="doc-post" action="/dashboard/checkout-list/{{.OrgID}}" method="POST" class="hidden">
+        {{ .CSRFField }}
+        <input id="docFieldName" type="hidden" name="DocFieldName">
+        <input id="docFieldIsChecked" type="hidden" name="DocFieldIsChecked" value="checked">
+    </form>
+    <script>
+        function formSubmission(event){
+            if(event.target.tagName=="INPUT")
+            document.getElementById("docFieldName").value=event.target.value
+            document.getElementById("docFieldIsChecked").value= "checked";
+            document.getElementById("doc-post").submit();
+        }
+        function formSubmissionUpdate(){
+            var elements = document.getElementsByClassName("onchecked");
+            var ClickCheckBox = function() {
+                this.classList.remove("border-petnetblue");
+                this.classList.remove("bg-petnetblue");
+                this.classList.add("border-gray-400");
+                this.classList.add("bg-white");
+                dataValue = this.getAttribute("data-value");
+                document.getElementById(dataValue+"Path").remove();
+                document.getElementById("docFieldName").value= dataValue;
+                document.getElementById("docFieldIsChecked").value= "unchecked";
+                document.getElementById("doc-post").submit();
+            };
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].addEventListener('click', ClickCheckBox, false);
+            }
+        }
+        document.addEventListener('DOMContentLoaded', (event) => {
+            formSubmissionUpdate();
+        });
+    </script>
+</body>
+</html>

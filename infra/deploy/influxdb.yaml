@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: influxdb
+  namespace: influxdb
+  labels:
+    app.kubernetes.io/name: influxdb
+    app.kubernetes.io/instance: influxdb
+    app.kubernetes.io/version: "2.0.6"
+    app.kubernetes.io/component: metrics
+    app.kubernetes.io/part-of: petnet-monitoring
+    app.kubernetes.io/managed-by: sysadmin
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: influxdb
+  replicas: 1
+  template:
+    metadata:
+      name: influxdb
+      labels:
+        app.kubernetes.io/name: influxdb
+        app.kubernetes.io/instance: influxdb
+        app.kubernetes.io/version: "2.0.6"
+        app.kubernetes.io/component: metrics
+        app.kubernetes.io/part-of: petnet-monitoring
+        app.kubernetes.io/managed-by: sysadmin
+    spec:
+      containers:
+      - name: influxdb
+        image: influxdb:2.0.6-alpine
+        ports:
+        - name: influxdb-port
+          containerPort: 8086
+        volumeMounts:
+        - mountPath: /var/lib/influxdb/
+          name: database-volume
+      volumes:
+      - name: database-volume
+        persistentVolumeClaim:
+          claimName: influxdb-vol-claim
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: influxdb
+  namespace: influxdb
+  labels:
+    app.kubernetes.io/name: influxdb
+    app.kubernetes.io/instance: influxdb
+    app.kubernetes.io/version: "2.0.6"
+    app.kubernetes.io/component: metrics
+    app.kubernetes.io/part-of: petnet-monitoring
+    app.kubernetes.io/managed-by: sysadmin
+spec:
+  ports:
+  - name: influxdb
+    port: 8086
+    targetPort: influxdb-port
+  selector:
+    app.kubernetes.io/instance: influxdb
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: influxdb-vol-claim
+  namespace: influxdb
+  labels:
+    app.kubernetes.io/name: influxdb
+    app.kubernetes.io/instance: influxdb
+    app.kubernetes.io/component: metrics
+    app.kubernetes.io/part-of: petnet-monitoring
+    app.kubernetes.io/managed-by: sysadmin
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: "5Gi"
+
+...

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: usermgm-config
+data:
+  RUNTIME_ENVIRONMENT: 'staging'
+  HYDRA_AUDIENCE: cebcorp.staging.bnk.to
+  HYDRA_ADMINURL: 'http://hydra-admin'
+  CORS_ORIGINS: 'https://cebcorp.staging.bnk.to,https://*.cebcorp.staging.bnk.to'
+  BASE_URL: 'https://cebcorp.staging.bnk.to'
+  API_HOST: 'https://api.cebcorp.staging.bnk.to'
+  API_AUTHHOST: 'https://sso.cebcorp.staging.bnk.to/oauth2/token'
+  DATABASE_HOST: 10.236.0.3
+  DATABASE_DBNAME: cebcorp-usermgm
+  ORG_AUTOCREATE: "true"
+  BOOTSTRAP_NAME: admin
+  BOOTSTRAP_EMAIL: admin@example.com
+  KETO_HOST: keto-api

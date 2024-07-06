@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cms-config
+data:
+  RUNTIME_ENVIRONMENT: staging
+  RUNTIME_LOGLEVEL: debug
+  SERVER_HOST: ""
+  CORS_ORIGINS: "https://staging.petnet.dev,*.staging.petnet.dev"
+  HYDRA_ADMINURL: http://hydra-admin
+  AUTH_URL: https://auth.staging.petnet.dev
+  AUTH_OAUTHURL: https://staging.petnet.dev/oauth2
+  AUTH_ISSUER: https://auth.staging.petnet.dev/
+  AUTH_TOKEN: https://auth.staging.petnet.dev/
+  AUTH_COOKIEMAXAGE: "0"
+  TEMPLATES_LOGINURL: https://auth.staging.petnet.dev
+  PROFILE_INTERNAL: "profile-admin:80"
+  GCS_BUCKETNAME: "dsa-onboarding"
+  SERVER_BASEURL: "https://staging.petnet.dev"
+  IDENTITY_INTERNAL: usermgm-admin:80
+  IDENTITY_EXTERNAL: usermgm:80
+  DRP_LIVEMOCK: "true"
+  DRP_SANDBOXINTERNAL: drp-api-internal-sandbox:80
+  DRP_LIVEINTERNAL: drp-api-internal:80
+  TRACE_COLLECTORHOST: my-opentelemetry-collector.tracing.svc.cluster.local:4317
+  INFLUXDB_BUCKET: conexdev
+  INFLUXDB_ORGANIZATION: petnetdev
+  FEATURE_SERVICEREQUEST: "true"

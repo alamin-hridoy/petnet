@@ -1,0 +1,127 @@
+package session // proto "petnet.v1.session"
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+type IDType int32
+
+const (
+	EMAIL IDType = iota
+	USERID
+)
+
+type SetSessionExpiryRequest struct {
+	IDType IDType    `pb:"1" json:"id_type"`
+	ID     string    `pb:"2" json:"id"`
+	Expiry time.Time `pb:"3" json:"expiry"`
+}
+
+type SetSessionExpiryResponse struct{}
+
+type ExpireSessionRequest struct {
+	IDType IDType `pb:"1" json:"id_type"`
+	ID     string `pb:"2" json:"id"`
+}
+
+type ExpireSessionResponse struct{}
+
+type GetSessionRequest struct {
+	IDType IDType `pb:"1" json:"id_type"`
+	ID     string `pb:"2" json:"id"`
+}
+
+type GetSessionResponse struct {
+	Expired bool      `pb:"1" json:"expired"`
+	Expiry  time.Time `pb:"2" json:"expiry"`
+}
+
+type SessionService interface {
+	// Set session expiry.
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v1/session/{ID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Session"},
+	//         Summary:     "Set session expiry.",
+	//         Description: "Set the expiry date/time for logged in session.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/setSessionExpiryResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	SetSessionExpiry(SetSessionExpiryRequest) SetSessionExpiryResponse
+
+	// Expire session.
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v1/session/{ID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Session"},
+	//         Summary:     "Expire session.",
+	//         Description: "Expires the user's logged in session.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/expireSessionResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	ExpireSession(ExpireSessionRequest) ExpireSessionResponse
+
+	// Get session by email or user ID.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/session/{ID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Session"},
+	//         Description: "Get session by email or user ID.",
+	//         Summary:     "Get session.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/sessionGetSessionResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	GetSession(GetSessionRequest) GetSessionResponse
+}

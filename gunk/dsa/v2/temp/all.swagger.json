@@ -1,0 +1,187 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/dsa/v2/temp/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "EventService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v2/eventdata/{eventData.event_id}": {
+      "post": {
+        "summary": "Create event data.",
+        "description": "Save data related to an event so it can be used once an event has been confirmed to proceed with an action on a resource.",
+        "operationId": "EventService_CreateEventData",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/eventDataCreateEventDataResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "eventData.event_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/tempCreateEventDataRequest"
+            }
+          }
+        ],
+        "tags": [
+          "EventData"
+        ]
+      }
+    },
+    "/v2/eventdata/{event_id}": {
+      "get": {
+        "summary": "Get event.",
+        "description": "Get event data by event ID which is then used to proceed once the resource and action has been confirmed.",
+        "operationId": "EventService_GetEventData",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/eventDataGetEventDataResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "event_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "EventData"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "tempActionType": {
+      "type": "string",
+      "enum": [
+        "UnknownActionType",
+        "Create",
+        "Read",
+        "Update",
+        "Delete"
+      ],
+      "default": "UnknownActionType"
+    },
+    "tempCreateEventDataRequest": {
+      "type": "object",
+      "properties": {
+        "event_data": {
+          "$ref": "#/definitions/tempEventData"
+        }
+      }
+    },
+    "tempCreateEventDataResponse": {
+      "type": "object"
+    },
+    "tempEventData": {
+      "type": "object",
+      "properties": {
+        "event_id": {
+          "type": "string"
+        },
+        "resource": {
+          "type": "string"
+        },
+        "action": {
+          "$ref": "#/definitions/tempActionType"
+        },
+        "data": {
+          "type": "string"
+        }
+      }
+    },
+    "tempGetEventDataResponse": {
+      "type": "object",
+      "properties": {
+        "event_data": {
+          "$ref": "#/definitions/tempEventData"
+        }
+      }
+    }
+  }
+}

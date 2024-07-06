@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -ex
+
+API_TAG=$(./scripts/docker-image-tag .)
+
+TAGGER="$(pwd)"/scripts/docker-image-tag
+export VERSION=$(cat .version)
+for d in . docs sso/idp sso/usermgm cms; do
+	pushd "$d"
+	IMAGE=$(cat image-name)
+	TAG=$(${TAGGER} .)
+	pushd deploy/overlays/${ENV}
+	kustomize edit set image ${IMAGE}=${TAG}
+	if [[ $d == "docs" ]] && [[ $ENV == "staging" ]]; then
+		kustomize edit set image ${IMAGE}_v2=${TAG/:/_v2:}
+	fi
+	# the load_restrictor flag allows kustomize to reference files from outside the overlays directory
+	# this is particularly used for referencing .envs/*.txt files
+	kustomize build --load-restrictor=LoadRestrictionsNone | kubectl apply --dry-run=client -f -
+
+	popd
+	popd
+done

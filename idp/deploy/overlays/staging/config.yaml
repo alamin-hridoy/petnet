@@ -1,0 +1,31 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: idp-config
+data:
+  RUNTIME_ENVIRONMENT: "staging"
+  SERVER_HOST: ""
+  SITE_URL: https://staging.petnet.dev
+  SIGNUP_URL: https://staging.petnet.dev/registration/account-details
+  LOGIN_URL: https://staging.petnet.dev/login
+  USERMGM_API: profile-admin:80
+  AUTHENTICATOR_NAMES: usermgm perahub
+  AUTHENTICATOR_DEFAULT: usermgm
+  AUTHENTICATOR_USERMGM_TYPE: session
+  AUTHENTICATOR_USERMGM_HOST: profile-admin:80
+  AUTHENTICATOR_USERMGM_DURATION: 24h
+  AUTHENTICATOR_PERAHUB_TYPE: session
+  AUTHENTICATOR_PERAHUB_HOST: drp-api-internal:80
+  AUTHENTICATOR_PERAHUB_DURATION: 24h
+  SERVER_ERRORURL: https://staging.petnet.dev/docs
+  CORS_ORIGINS: https://auth.staging.petnet.dev
+  REMEMBER_FOR: "259200" # 3 days
+  HYDRA_ADMINURL: http://hydra-admin
+  GOOGLE_CALLBACK: https://auth.staging.petnet.dev/login/google-callback
+  INFLUXDB_BUCKET: conexdev
+  INFLUXDB_ORGANIZATION: petnetdev
+  AUTH_URL: https://auth.staging.petnet.dev
+  TRACE_COLLECTORHOST: my-opentelemetry-collector.tracing.svc.cluster.local:4317
+
+...

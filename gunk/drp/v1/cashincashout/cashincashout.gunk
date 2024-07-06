@@ -1,0 +1,505 @@
+package cashincashout
+
+import (
+	"encoding/json"
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+	"time"
+)
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "partner_code",
+//                 "provider",
+//                 "trx_type",
+//                 "reference_number",
+//                 "petnet_trackingno",
+//                 "message",
+//                 "provider_trackingno",
+//         },
+// }}
+type CiCoInquireRequest struct {
+	PartnerCode        string `pb:"1" json:"partner_code"`
+	Provider           string `pb:"2" json:"provider"`
+	TrxType            string `pb:"3" json:"trx_type"`
+	ReferenceNumber    string `pb:"4" json:"reference_number"`
+	PetnetTrackingno   string `pb:"5" json:"petnet_trackingno"`
+	Message            string `pb:"6" json:"message"`
+	ProviderTrackingno string `pb:"7" json:"provider_trackingno"`
+}
+type CicoInquireResult struct {
+	StatusMessage      string `pb:"1" json:"status_message"`
+	PetnetTrackingno   string `pb:"2" json:"petnet_trackingno"`
+	TrxType            string `pb:"3" json:"trx_type"`
+	ReferenceNumber    string `pb:"4" json:"reference_number"`
+	Amount             string `pb:"5" json:"amount"`
+	ProviderTrackingno string `pb:"6" json:"provider_trackingno"`
+	Expiry             string `pb:"7" json:"expiry"`
+	CustomerName       string `pb:"8" json:"customer_name"`
+	CustomerFirstname  string `pb:"9" json:"customer_firstname"`
+	CustomerLastname   string `pb:"10" json:"customer_lastname"`
+	MerchantID         string `pb:"11" json:"MerchantId"`
+	PartnerCode        string `pb:"12" json:"partner_code"`
+	AccountNumber      string `pb:"13" json:"account_number"`
+	ServiceCharge      int    `pb:"14" json:"service_charge"`
+	CreatedAt          string `pb:"15" json:"created_at"`
+}
+type CiCoInquireResponse struct {
+	Code    int               `pb:"1" json:"code"`
+	Message string            `pb:"2" json:"message"`
+	Result  CicoInquireResult `pb:"3" json:"result"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "partner_code",
+//                 "petnet_trackingno",
+//                 "trx_date",
+//                 "provider",
+//         },
+// }}
+type CiCoExecuteRequest struct {
+	PartnerCode      string `pb:"1" json:"partner_code"`
+	PetnetTrackingno string `pb:"2" json:"petnet_trackingno"`
+	TrxDate          string `pb:"3" json:"trx_date"`
+	Provider         string `pb:"4" json:"provider"`
+}
+type CicoExecuteResult struct {
+	PartnerCode        string `pb:"1" json:"partner_code"`
+	Provider           string `pb:"2" json:"provider"`
+	PetnetTrackingno   string `pb:"3" json:"petnet_trackingno"`
+	TrxDate            string `pb:"4" json:"trx_date"`
+	TrxType            string `pb:"5" json:"trx_type"`
+	ProviderTrackingno string `pb:"6" json:"provider_trackingno"`
+	ReferenceNumber    string `pb:"7" json:"reference_number"`
+	PrincipalAmount    int    `pb:"8" json:"principal_amount"`
+	Charges            int    `pb:"9" json:"charges"`
+	TotalAmount        int    `pb:"10" json:"total_amount"`
+}
+type CiCoExecuteResponse struct {
+	Code    int               `pb:"1" json:"code"`
+	Message string            `pb:"2" json:"message"`
+	Result  CicoExecuteResult `pb:"3" json:"result"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "partner_code",
+//                 "petnet_trackingno",
+//                 "trx_date",
+//                 "provider",
+//         },
+// }}
+type CiCoRetryRequest struct {
+	PartnerCode      string `pb:"1" json:"partner_code"`
+	PetnetTrackingno string `pb:"2" json:"petnet_trackingno"`
+	TrxDate          string `pb:"3" json:"trx_date"`
+	Provider         string `pb:"4" json:"provider"`
+}
+
+type CicoRetryResult struct {
+	PartnerCode        string     `pb:"1" json:"partner_code"`
+	Provider           string     `pb:"2" json:"provider"`
+	PetnetTrackingno   string     `pb:"3" json:"petnet_trackingno"`
+	TrxDate            string     `pb:"4" json:"trx_date"`
+	TrxType            string     `pb:"5" json:"trx_type"`
+	ProviderTrackingno string     `pb:"6" json:"provider_trackingno"`
+	ReferenceNumber    string     `pb:"7" json:"reference_number"`
+	PrincipalAmount    int        `pb:"8" json:"principal_amount"`
+	Charges            int        `pb:"9" json:"charges"`
+	TotalAmount        int        `pb:"10" json:"total_amount"`
+	OTPPayload         OTPPayload `pb:"11" json:"otp_payload"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "commandId",
+//                 "payload",
+//         },
+// }}
+type OTPPayload struct {
+	CommandID int    `pb:"1" json:"commandId"`
+	Payload   string `pb:"2" json:"payload"`
+}
+type CiCoRetryResponse struct {
+	Code    int             `pb:"1" json:"code"`
+	Message string          `pb:"2" json:"message"`
+	Result  CicoRetryResult `pb:"3" json:"result"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "partner_code",
+//                 "petnet_trackingno",
+//                 "trx_date",
+//                 "otp",
+//                 "otp_payload",
+//                 "provider",
+//         },
+// }}
+type CiCoOTPConfirmRequest struct {
+	PartnerCode      string     `pb:"1" json:"partner_code"`
+	PetnetTrackingno string     `pb:"2" json:"petnet_trackingno"`
+	TrxDate          string     `pb:"3" json:"trx_date"`
+	OTP              string     `pb:"4" json:"otp"`
+	OTPPayload       OTPPayload `pb:"5" json:"otp_payload"`
+	Provider         string     `pb:"6" json:"provider"`
+}
+
+type CicoOTPConfirmResult struct {
+	PartnerCode        string `pb:"1" json:"partner_code"`
+	Provider           string `pb:"2" json:"provider"`
+	PetnetTrackingno   string `pb:"3" json:"petnet_trackingno"`
+	TrxDate            string `pb:"4" json:"trx_date"`
+	TrxType            string `pb:"5" json:"trx_type"`
+	ProviderTrackingno string `pb:"6" json:"provider_trackingno"`
+	ReferenceNumber    string `pb:"7" json:"reference_number"`
+	PrincipalAmount    int    `pb:"8" json:"principal_amount"`
+	Charges            int    `pb:"9" json:"charges"`
+	TotalAmount        int    `pb:"10" json:"total_amount"`
+}
+
+type CiCoOTPConfirmResponse struct {
+	Code    int                  `pb:"1" json:"code"`
+	Message string               `pb:"2" json:"message"`
+	Result  CicoOTPConfirmResult `pb:"3" json:"result"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "customer_id",
+//                 "customer_firstname",
+//                 "customer_lastname",
+//                 "curr_address",
+//                 "curr_barangay",
+//                 "curr_city",
+//                 "curr_province",
+//                 "curr_country",
+//                 "birth_date",
+//                 "birth_place",
+//                 "birth_country",
+//                 "contact_no",
+//                 "id_type",
+//                 "id_number",
+//         },
+// }}
+type CicoValidateCustomer struct {
+	CustomerID        string `pb:"1" json:"customer_id"`
+	CustomerFirstname string `pb:"2" json:"customer_firstname"`
+	CustomerLastname  string `pb:"3" json:"customer_lastname"`
+	CurrAddress       string `pb:"4" json:"curr_address"`
+	CurrBarangay      string `pb:"5" json:"curr_barangay"`
+	CurrCity          string `pb:"6" json:"curr_city"`
+	CurrProvince      string `pb:"7" json:"curr_province"`
+	CurrCountry       string `pb:"8" json:"curr_country"`
+	BirthDate         string `pb:"9" json:"birth_date"`
+	BirthPlace        string `pb:"10" json:"birth_place"`
+	BirthCountry      string `pb:"11" json:"birth_country"`
+	ContactNo         string `pb:"12" json:"contact_no"`
+	IDType            string `pb:"13" json:"id_type"`
+	IDNumber          string `pb:"14" json:"id_number"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "provider",
+//                 "reference_number",
+//                 "trx_type",
+//                 "principal_amount",
+//         },
+// }}
+type CicoValidateTrx struct {
+	Provider        string `pb:"1" json:"provider"`
+	ReferenceNumber string `pb:"2" json:"reference_number"`
+	TrxType         string `pb:"3" json:"trx_type"`
+	PrincipalAmount int    `pb:"4" json:"principal_amount"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "partner_code",
+//                 "trx",
+//                 "customer",
+//         },
+// }}
+type CiCoValidateRequest struct {
+	PartnerCode string               `pb:"1" json:"partner_code"`
+	Trx         CicoValidateTrx      `pb:"2" json:"trx"`
+	Customer    CicoValidateCustomer `pb:"3" json:"customer"`
+}
+
+type CicoValidateResult struct {
+	PetnetTrackingno   string `pb:"1" json:"petnet_trackingno"`
+	TrxDate            string `pb:"2" json:"trx_date"`
+	TrxType            string `pb:"3" json:"trx_type"`
+	Provider           string `pb:"4" json:"provider"`
+	ProviderTrackingno string `pb:"5" json:"provider_trackingno"`
+	ReferenceNumber    string `pb:"6" json:"reference_number"`
+	PrincipalAmount    int    `pb:"7" json:"principal_amount"`
+	Charges            int    `pb:"8" json:"charges"`
+	TotalAmount        int    `pb:"9" json:"total_amount"`
+	Timestamp          string `pb:"10" json:"timestamp"`
+}
+
+type CiCoValidateResponse struct {
+	Code    int                `pb:"1" json:"code"`
+	Message string             `pb:"2" json:"message"`
+	Result  CicoValidateResult `pb:"3" json:"result"`
+}
+
+type SortOrder int
+
+const (
+	DESC SortOrder = iota
+	ASC
+)
+
+type SortByColumn int
+
+const (
+	OmitSortByColumn SortByColumn = iota
+	ReferenceNumber
+	TotalAmount
+	TransactionCompletedTime
+	Provider
+	Fee
+	Commission
+)
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "org_id",
+//         },
+// }}
+type CICOTransactListRequest struct {
+	From             string       `pb:"1" json:"from"`
+	Until            string       `pb:"2" json:"until"`
+	Limit            int32        `pb:"3" json:"limit"`
+	Offset           int32        `pb:"4" json:"offset"`
+	SortOrder        SortOrder    `pb:"5" json:"sort_order"`
+	SortByColumn     SortByColumn `pb:"6" json:"sort_by_column"`
+	ReferenceNumber  string       `pb:"7" json:"reference_number"`
+	ExcludeProviders []string     `pb:"8" json:"exclude_provider"`
+	OrgID            string       `pb:"9" json:"org_id"`
+}
+
+type CICOTransactListResponse struct {
+	Next          int32          `pb:"1" json:"next"`
+	CICOTransacts []CICOTransact `pb:"2" json:"cico_transact"`
+	Total         int32          `pb:"3" json:"total"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "amount",
+//                 "currency",
+//         },
+// }}
+type Amount struct {
+	// Monetary amount in the smallest currency denomination.  Example: USD $10.25 => "1025".
+	Amount string `pb:"1" json:"amount"`
+	// Currency code using ISO-4217 3-letter codes.
+	Currency string `pb:"2" json:"currency"`
+}
+
+type CICOTransact struct {
+	ReferenceNumber          string    `pb:"1" json:"reference_number"`
+	Provider                 string    `pb:"2" json:"provider"`
+	TotalAmount              Amount    `pb:"3" json:"total_amount"`
+	TransactFee              Amount    `pb:"4" json:"transact_fee"`
+	TransactCommission       Amount    `pb:"5" json:"transact_commission"`
+	TransactionCompletedTime time.Time `pb:"6" json:"transaction_completed_time"`
+}
+
+type CashInCashOutService interface {
+	// Inquire
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/cashincashout/inquire",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"CashInCashOut"},
+	//         Description: "Inquire Transaction",
+	//         Summary:     "Inquire Transaction",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/cashincashoutCiCoInquireResponse",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"Transaction can’t be found\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	CiCoInquire(CiCoInquireRequest) CiCoInquireResponse
+
+	// Execute
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/cashincashout/execute",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"CashInCashOut"},
+	//         Description: "Execute Transaction",
+	//         Summary:     "Execute Transaction",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/cashincashoutCiCoExecuteResponse",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"CICO - EXECUTE ERROR\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"CICO - EXECUTE ERROR - GCASH\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	CiCoExecute(CiCoExecuteRequest) CiCoExecuteResponse
+
+	// Retry
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/cashincashout/retry",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"CashInCashOut"},
+	//         Description: "Retry Transaction",
+	//         Summary:     "Retry Transaction",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/cashincashoutCiCoRetryResponse",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"CICO - EXECUTE ERROR\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"CICO - EXECUTE ERROR - GCASH\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	CiCoRetry(CiCoRetryRequest) CiCoRetryResponse
+
+	// OTP Confirm
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/cashincashout/otp",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"CashInCashOut"},
+	//         Description: "OTP Confirm Transaction",
+	//         Summary:     "OTP Confirm Transaction",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/cashincashoutCiCoOTPConfirmResponse",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"CICO - OTP ERROR\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	CiCoOTPConfirm(CiCoOTPConfirmRequest) CiCoOTPConfirmResponse
+
+	// Validate
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/cashincashout/validate",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"CashInCashOut"},
+	//         Description: "Validate Transaction",
+	//         Summary:     "Validate Transaction",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request Validate successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/cashincashoutCiCoValidateResponse",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"The given data was invalid.\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"CICO - VALIDATE ERROR - GCASH\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	CiCoValidate(CiCoValidateRequest) CiCoValidateResponse
+
+	// Get Transaction List for CI/CO
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/ci-co/billerlist",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Transaction List for CI/CO"},
+	//         Description: "Get Transaction List for CI/CO.",
+	//         Summary:     "Get Transaction history for CI/CO.",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/cashincashoutCICOTransactListResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when not found.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 400, \"message\": \"CICO transact List Error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	CICOTransactList(CICOTransactListRequest) CICOTransactListResponse
+}

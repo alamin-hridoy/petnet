@@ -1,0 +1,162 @@
+package riskassesment // proto "petnet.v1.riskassesment"
+
+import (
+	"time"
+
+	"brank.as/petnet/gunk/dsa/v1/profile"
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+type RiskAssesmentQuestionRequest struct {
+	Question Question `pb:"1" json:"question"`
+}
+
+type RiskAssesmentQuestionResponse struct {
+	Question Question `pb:"1" json:"question"`
+}
+
+type ListQuestionRequest struct {
+	ID     string `pb:"1" json:"qid"`
+	UserID string `pb:"2" json:"user_id"`
+	OrgID  string `pb:"3" json:"org_id"`
+	QType  string `pb:"4" json:"qtype"`
+}
+
+type ListQuestionResponse struct {
+	Question []Question `pb:"1" json:"question"`
+}
+
+type Question struct {
+	ID             string    `pb:"1" json:"id"`
+	OrgID          string    `pb:"2" json:"org_id"`
+	UserID         string    `pb:"3" json:"user_id"`
+	QID            string    `pb:"4" json:"qid"`
+	ANS            string    `pb:"5" json:"ans"`
+	QType          string    `pb:"6" json:"qtype"`
+	CustomersTotal string    `pb:"7" json:"customers_total"`
+	HrTotal        string    `pb:"8" json:"hr_total"`
+	ImpactScore    string    `pb:"9" json:"impact_score"`
+	Created        time.Time `pb:"10" json:"created"`
+	Updated        time.Time `pb:"11" json:"updated"`
+}
+
+type RiskAssesmentService interface {
+	// Upsert  riskassesment.
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v1/riskassesment/{Question.QID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{" Question"},
+	//         Description: "Create or update an  question.",
+	//         Summary:     "Upsert  question.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/RiskAssesmentQuestionResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	UpsertQuestion(RiskAssesmentQuestionRequest) RiskAssesmentQuestionResponse
+
+	// Upsert  mltfriskassesment.
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v1/mltfriskassesment/{Question.QID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{" Question"},
+	//         Description: "Create or update an  question.",
+	//         Summary:     "Upsert  question.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/RiskAssesmentQuestionResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	UpsertMlTfQuestion(RiskAssesmentQuestionRequest) RiskAssesmentQuestionResponse
+
+	// List  riskassesment.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/riskassesment",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{" Question"},
+	//         Description: "List all created  riskassesments.",
+	//         Summary:     "List  riskassesments.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/riskassesmentListQuestionResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	ListQuestion(ListQuestionRequest) ListQuestionResponse
+
+	// List  riskassesment.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/mltfriskassesment",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{" Question"},
+	//         Description: "List all created  riskassesments.",
+	//         Summary:     "List  riskassesments.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/riskassesmentListQuestionResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	ListMlTfQuestion(ListQuestionRequest) ListQuestionResponse
+}

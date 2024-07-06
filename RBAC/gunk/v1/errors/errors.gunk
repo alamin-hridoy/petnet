@@ -1,0 +1,7 @@
+package errors // proto "rbac.brankas.errors"
+
+type Details struct {
+	ID       string            `pb:"1" json:"id"`
+	Error    string            `pb:"2" json:"error"`
+	Messages map[string]string `pb:"3" json:"messages"`
+}

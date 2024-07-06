@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: profile-config
+data:
+  ENV: "DEPLOY_ENV"
+  HOST: "OVERLAY_ME"

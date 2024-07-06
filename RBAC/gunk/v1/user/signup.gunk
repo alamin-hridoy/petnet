@@ -1,0 +1,114 @@
+package user
+
+import "github.com/gunk/opt/http"
+
+type SignupRequest struct {
+	// Username to be registered
+	Username string `pb:"1" json:"username"`
+	// First Name of the user
+	FirstName string `pb:"2" json:"first_name"`
+	// Last Name of the user
+	LastName string `pb:"3" json:"last_name"`
+	// Email is the email that will be used for subsequent logins
+	// and will also be used to contact the user in future
+	Email string `pb:"4" json:"email"`
+	// Password will be used as the account password
+	Password string `pb:"5" json:"password"`
+	// Invite Code is the invite if the user was invited by an org.
+	InviteCode string `pb:"6" json:"invite_code"`
+	// OrgID is the organization identifier for use in org-specific signups
+	OrgID string `pb:"7" json:"org_id"`
+}
+
+type SignupResponse struct {
+	UserID string `pb:"1" json:"user_id"`
+	OrgID  string `pb:"2" json:"org_id"`
+}
+
+type ResendConfirmEmailRequest struct {
+	UserID string `pb:"1" json:"user_id"`
+}
+
+type ResendConfirmEmailResponse struct{}
+
+type EmailConfirmationRequest struct {
+	// Code is the code generated and sent to the user on signup for validation purposes.
+	Code string `pb:"1"  json:"code"`
+}
+
+type EmailConfirmationResponse struct {
+	// Email address that was confirmed
+	Email string `pb:"1" json:"email"`
+	// UserID of user that was confirmed
+	UserID string `pb:"2" json:"user_id"`
+	// OrgID of user that was confirmed
+	OrgID string `pb:"3" json:"org_id"`
+	// Username of the confirmed user.
+	Username string `pb:"4" json:"username"`
+	// FirstName of the confirmed user.
+	FirstName string `pb:"5" json:"first_name"`
+	// LastName of the confirmed user.
+	LastName string `pb:"6" json:"last_name"`
+}
+
+type ForgotPasswordRequest struct {
+	// Email is the email of the user account requesting password reset
+	Email string `pb:"1" json:"email"`
+}
+type ForgotPasswordResponse struct{}
+
+type ResetPasswordRequest struct {
+	// Code is the password reset token sent to the user's email
+	Code string `pb:"1" json:"code"`
+	// Password is the new password of the user's choosing
+	Password string `pb:"2" json:"password"`
+}
+type ResetPasswordResponse struct{}
+
+type Signup interface {
+	// Signup signs up a user using the passed in details
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/signup",
+	//         Body:   "*",
+	// }
+	Signup(SignupRequest) SignupResponse
+
+	// ResendConfirmEmail resends email to confirm user
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/confirmemail",
+	//         Body:   "*",
+	// }
+	ResendConfirmEmail(ResendConfirmEmailRequest) ResendConfirmEmailResponse
+
+	// EmailConfirmation verifies the confirmation code sent to the users email
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/emailconfirmation",
+	//         Body:   "*",
+	// }
+	EmailConfirmation(EmailConfirmationRequest) EmailConfirmationResponse
+
+	// ForgotPassword is for sending a password reset mail containing
+	// token for changing the password
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/forgotpassword",
+	//         Body:   "*",
+	// }
+	ForgotPassword(ForgotPasswordRequest) ForgotPasswordResponse
+
+	// ResetPassword is for resetting the user's password with the sent token
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/forgotpassword/{Code}/reset",
+	//         Body:   "*",
+	// }
+	ResetPassword(ResetPasswordRequest) ResetPasswordResponse
+}

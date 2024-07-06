@@ -1,0 +1,306 @@
+<div class="bg-blue-50 pl-11 py-5">
+    <div class="">
+        <div>
+            <input type="hidden" class="err_field" id="{{ .Prefix }}dgt_err" name="{{ .Prefix }}dgt_err" value="1">
+            <input type="hidden" name="TransactionDIGITALID[{{ .Prefix }}]" value="{{.Data.DIGITAL.ID}}">
+            <input name="TransactionDigital[{{ .Prefix }}]" {{if eq .Data.DIGITAL.TransactionType "DIGITAL"}} checked {{end}} onclick="handleSectionExpend(this)" class="h-4 w-4 checkBoxColor cursor-pointer TransactionTypeCls" type="checkbox" value="DIGITAL" id="{{ .Prefix }}flexCheckDefault">
+            <label class="font-normal text-base ml-4 cursor-pointer" for="{{ .Prefix }}flexCheckDefault">Digital</label>
+        </div>
+        <div class="pl-9 pt-3 hidden tier-wrap">
+            <div class="mb-5">
+                <div class="flex items-center">
+                    <input {{if eq .Data.DIGITAL.TierType "FIXED"}} checked {{end}} onclick="handleRadioBtn(this)" class="h-4 w-4 checkBoxColor RadioBtnElm cursor-pointer TierTypeCls" type="radio" name="TransactionTypeDigital[{{ .Prefix }}]" value="FIXED" id="{{ .Prefix }}dgt_fixedAmount">
+                    <label class="font-normal text-base ml-2 cursor-pointer" for="{{ .Prefix }}dgt_fixedAmount">Fixed Amount</label>
+                </div>
+                <div class="pl-7 pt-4 hidden overRadioBtn">
+                    <p class="mb-2 text-red-600 italic validMsg"></p>
+                    <div class="mb-2">
+                        <input onkeyup="handleFixedAmount(this)" class="FixedAmount bg-petnetgray px-4 py-2 w-41 focus:border-petnetblue focus:outline-none border rounded" type="number" value="{{.Data.DIGITAL.Amount}}" prefix="{{ .Prefix }}dgt" name="FixedAmountDigital[{{ .Prefix }}]" id="fixedAmount" placeholder="Enter amount">
+                    </div>
+                </div>
+            </div>
+            <div class="mb-5">
+                <div class="flex items-center">
+                    <input {{if eq .Data.DIGITAL.TierType "PERCENTAGE"}} checked {{end}} onclick="handleRadioBtn(this)" class="h-4 w-4 checkBoxColor RadioBtnElm cursor-pointer TierTypeCls" type="radio" name="TransactionTypeDigital[{{ .Prefix }}]" value="PERCENTAGE" id="{{ .Prefix }}dgt_fixedPercentage">
+                    <label class="font-normal text-base ml-2 cursor-pointer" for="{{ .Prefix }}dgt_fixedPercentage">Fixed Percentage</label>
+                </div>
+                <div class="pl-7 pt-4 hidden overRadioBtn">
+                    <p class="mb-2 text-red-600 italic validMsg"></p>
+                    <div class="mb-2">
+                        <input onkeyup="handlePercentageAmount(this)" class="FixedPercentage bg-petnetgray px-4 py-2 w-41 focus:border-petnetblue focus:outline-none border rounded" type="number" value="{{.Data.DIGITAL.Amount}}" name="FixedPercentageDigital[{{ .Prefix }}]" id="fixedPercentage" prefix="{{ .Prefix }}dgt" placeholder="Enter amount (in %)" min="0.01" max="100">
+                    </div>
+                </div>
+            </div>
+            <div class="mb-5">
+                <div class="flex items-center">
+                    <input {{if eq .Data.DIGITAL.TierType "TIERAMOUNT"}} checked {{end}} onclick="handleRadioBtn(this)" class="h-4 w-4 checkBoxColor RadioBtnElm cursor-pointer TierTypeCls" type="radio" name="TransactionTypeDigital[{{ .Prefix }}]" value="TIERAMOUNT" id="{{ .Prefix }}dgt_tieredAmount">
+                    <label class="font-normal text-base ml-2 cursor-pointer" for="{{ .Prefix }}dgt_tieredAmount">Tiered - Amount</label>
+                </div>
+                <div class="pl-7 pt-4 hidden overRadioBtn">
+                    <p class="mb-2 text-red-600 italic validMsg"></p>
+                    <table>
+                        <thead>
+                            <tr class="font-semibold text-left text-sm">
+                                <th class="w-60 pb-3">Minimum Amount*</th>
+                                <th class="w-60 pb-3">Maximum Amount*</th>
+                                <th class="w-60 pb-3">Fee*</th>
+                            </tr>
+                        </thead>
+                        <tbody id="{{ $.Prefix }}dgt_tierwrap" class="tierMainWrap">
+                        {{if (gt (len .Data.DIGITAL.TierList) 0)}}
+                            {{ range $i, $value := .Data.DIGITAL.TierList}}
+                                    <tr class="text-lg font-normal">
+                                        <td class="border-r-2 pl-4 py-1 border-2 border-gray-300 bg-petnetgray" id="minValue">
+                                            <input type="hidden" name="IDTieredAmountDigital{{$i}}[{{ $.Prefix }}]" value="{{$value.ID}}">
+                                            <input name="MinTieredAmountDigital{{$i}}[{{ $.Prefix }}]" onkeyup='onChangeValidate(this)' min="1" value="{{$value.MinValue}}" class="bg-petnetgray minvalcal focus:outline-none px-2 w-full" type="number" >
+                                        </td>
+                                        <td class="border-r-2 pl-4 py-1 border-2 border-gray-300 bg-petnetgray" id="maxValue">
+                                            <input name="MaxTieredAmountDigital{{$i}}[{{ $.Prefix }}]" onkeyup='onChangeValidate(this)' min="1" value="{{$value.MaxValue}}" class="bg-petnetgray maxvalcal focus:outline-none px-2 w-full" type="number">
+                                        </td>
+                                        <td class="pl-4 py-1 border-2 border-gray-300 bg-petnetgray" id="feeAmount">
+                                            <input name="FeeTieredAmountDigital{{$i}}[{{ $.Prefix }}]" onkeyup='onChangeValidate(this)' value="{{$value.Amount}}" class="bg-petnetgray DSAShareV focus:outline-none px-2 w-full" type="number" min="0.01" step="any">
+                                        </td>
+                                        <td class="pl-3 py-1 w-8">
+                                            {{if ne $i 0}}
+                                                <img class="deleteRow cursor-pointer" onclick='deleteRow(this, "{{$value.ID}}")' src="{{assetHash "/images/cross.svg"}}" alt="">
+                                            {{end}}
+                                        </td>
+                                    </tr>
+                            {{end}}
+                        {{else}}
+                                <tr class="text-lg font-normal">
+                                    <td class="border-r-2 pl-4 py-1 border-2 border-gray-300 bg-petnetgray" id="minValue">
+                                        <input type="hidden" name="IDTieredAmountDigital0[{{ $.Prefix }}]" value="">
+                                        <input name="MinTieredAmountDigital0[{{ .Prefix }}]" onkeyup='onChangeValidate(this)' min="1" value="" class="bg-petnetgray minvalcal focus:outline-none px-2 w-full" type="number" >
+                                    </td>
+                                    <td class="border-r-2 pl-4 py-1 border-2 border-gray-300 bg-petnetgray" id="maxValue">
+                                        <input name="MaxTieredAmountDigital0[{{ .Prefix }}]" onkeyup='onChangeValidate(this)' min="1" value="" class="bg-petnetgray maxvalcal focus:outline-none px-2 w-full" type="number">
+                                    </td>
+                                    <td class="pl-4 py-1 border-2 border-gray-300 bg-petnetgray" id="feeAmount">
+                                        <input name="FeeTieredAmountDigital0[{{ .Prefix }}]" onkeyup='onChangeValidate(this)' value="" class="bg-petnetgray DSAShareV focus:outline-none px-2 w-full" type="number" min="0.01" step="any">
+                                    </td>
+                                    <td class="pl-3 py-1 w-8"></td>
+                                </tr>
+                            {{end}}
+                        </tbody>
+                    </table>
+                    <div class="mt-2 mb-3">
+                        <input type="hidden" name="LenTieredAmountDigital[{{ .Prefix }}]" class="feetierlen" value="{{with $v:=.Data.DIGITAL.TierList}}{{len $v}}{{else}}1{{end}}">
+                        <a href="javascript:;" onclick="addRow('TieredAmountDigital', '{{ .Prefix }}', '{{ .Prefix }}dgt_tierwrap')" class="font-semibold text-petnetlightblue"> Add row</a>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-5">
+                <div class="flex items-center">
+                    <input {{if eq .Data.DIGITAL.TierType "TIERPERCENTAGE"}} checked {{end}} onclick="handleRadioBtn(this)" class="h-4 w-4 checkBoxColor RadioBtnElm cursor-pointer TierTypeCls" type="radio" name="TransactionTypeDigital[{{ .Prefix }}]" value="TIERPERCENTAGE" id="{{ .Prefix }}dgt_tieredPercentage">
+                    <label class="font-normal text-base ml-2 cursor-pointer" for="{{ .Prefix }}dgt_tieredPercentage">Tiered - Percentage</label>
+                </div>
+                <div class="pl-7 pt-4 hidden overRadioBtn">
+                    <p class="mb-2 text-red-600 italic validMsg"></p>
+                    <table id="myTable" class="w-41">
+                        <thead>
+                            <tr class="font-semibold text-left text-sm">
+                                <th class="w-60 pb-3">Minimum Amount*</th>
+                                <th class="w-60 pb-3">Maximum Amount*</th>
+                                <th class="w-60 pb-3">Fee*</th>
+                            </tr>
+                        </thead>
+                        <tbody id="{{ $.Prefix }}dgt_tierPerwrap" class="tierMainWrap">
+                        {{if (gt (len .Data.DIGITAL.TierList) 0)}}
+                            {{ range $i, $value := .Data.DIGITAL.TierList}}
+                                    <tr class="text-lg font-normal">
+                                        <td class="border-r-2 pl-4 py-1 border-2 border-gray-300 bg-petnetgray" id="minValue">
+                                            <input type="hidden" name="IDTieredPercentageDigital{{$i}}[{{ $.Prefix }}]" value="{{$value.ID}}">
+                                            <input name="MinTieredPercentageDigital{{$i}}[{{ $.Prefix }}]" onkeyup='onChangeValidate(this)' min="1" value="{{$value.MinValue}}" class="bg-petnetgray minvalcal focus:outline-none px-2 w-full" type="number">
+                                        </td>
+                                        <td class="border-r-2 pl-4 py-1 border-2 border-gray-300 bg-petnetgray" id="maxValue">
+                                            <input name="MaxTieredPercentageDigital{{$i}}[{{ $.Prefix }}]" onkeyup='onChangeValidate(this)' min="1" value="{{$value.MaxValue}}" class="bg-petnetgray maxvalcal focus:outline-none px-2 w-full" type="number">
+                                        </td>
+                                        <td class="pl-4 py-1 border-2 border-gray-300 bg-petnetgray" id="feeAmount">
+                                            <input name="FeeTieredPercentageDigital{{$i}}[{{ $.Prefix }}]" onkeyup='onChangeValidate(this)' min="0.01" max="100" value="{{$value.Amount}}" class="bg-petnetgray DSAShareV focus:outline-none px-2 w-full" type="number" step="any">
+                                        </td>
+                                        <td class="pl-3 py-1 w-8">
+                                            {{if ne $i 0}}
+                                                <img class="deleteRow cursor-pointer" onclick='deleteRow(this, "{{$value.ID}}")' src="{{assetHash "/images/cross.svg"}}" alt="">
+                                            {{end}}
+                                        </td>
+                                    </tr>
+                            {{end}}
+                        {{else}}
+                                <tr class="text-lg font-normal">
+                                    <td class="border-r-2 pl-4 py-1 border-2 border-gray-300 bg-petnetgray" id="minValue">
+                                        <input type="hidden" name="IDTieredPercentageDigital0[{{ $.Prefix }}]" value="">
+                                        <input name="MinTieredPercentageDigital0[{{ .Prefix }}]" onkeyup='onChangeValidate(this)' min="1" value="" class="bg-petnetgray minvalcal focus:outline-none px-2 w-full" type="number">
+                                    </td>
+                                    <td class="border-r-2 pl-4 py-1 border-2 border-gray-300 bg-petnetgray" id="maxValue">
+                                        <input name="MaxTieredPercentageDigital0[{{ .Prefix }}]" onkeyup='onChangeValidate(this)' min="1" value="" class="bg-petnetgray maxvalcal focus:outline-none px-2 w-full" type="number">
+                                    </td>
+                                    <td class="pl-4 py-1 border-2 border-gray-300 bg-petnetgray" id="feeAmount">
+                                        <input name="FeeTieredPercentageDigital0[{{ .Prefix }}]" onkeyup='onChangeValidate(this)' min="0.01" max="100" value="" class="bg-petnetgray DSAShareV focus:outline-none px-2 w-full" type="number" step="any">
+                                    </td>
+                                    <td class="pl-3 py-1 w-8"></td>
+                                </tr>
+                            {{end}}
+                        </tbody>
+                    </table>
+                    <div class="mt-2 mb-3">
+                        <input type="hidden" name="LenTieredPercentageDigital[{{ .Prefix }}]" class="feetierlen"  value="{{with $v:=.Data.DIGITAL.TierList}}{{len $v}}{{else}}1{{end}}">
+                        <a href="javascript:;" onclick="addRow('TieredPercentageDigital', '{{ .Prefix }}', '{{ .Prefix }}dgt_tierPerwrap')" class="font-semibold text-petnetlightblue"> Add row</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="">
+        <div>
+            <input type="hidden" class="err_field" id="{{ .Prefix }}otc_err" name="{{ .Prefix }}otc_err" value="1">
+            <input type="hidden" name="TransactionOTCID[{{ .Prefix }}]" value="{{.Data.OTC.ID}}">
+            <input name="TransactionOTC[{{ .Prefix }}]" onclick="handleSectionExpend(this)" {{if eq .Data.OTC.TransactionType "OTC"}} checked {{end}} class="h-4 w-4 checkBoxColor cursor-pointer TransactionTypeCls" type="checkbox" value="OTC" id="{{ .Prefix }}overTheCounter">
+            <label class="font-normal text-base ml-4 cursor-pointer" for="{{ .Prefix }}overTheCounter">Over the Counter</label>
+        </div>
+        <div class="pl-9 pt-3 hidden tier-wrap">
+            <div class="mb-5">
+                <div class="flex items-center">
+                    <input {{if eq .Data.OTC.TierType "FIXED"}} checked {{end}} onclick="handleRadioBtn(this)" class="h-4 w-4 checkBoxColor RadioBtnElm cursor-pointer TierTypeCls" type="radio" name="TransactionTypeOTC[{{ .Prefix }}]" value="FIXED" id="{{ .Prefix }}otc_overFixedAmount">
+                    <label class="font-normal text-base ml-2 cursor-pointer" for="{{ .Prefix }}otc_overFixedAmount">Fixed Amount</label>
+                </div>
+                <div class="pl-7 pt-4 hidden overRadioBtn">
+                    <p class="mb-2 text-red-600 italic validMsg"></p>
+                    <div class="mb-2">
+                        <input onkeyup="handleFixedAmount(this)" class="FixedAmount bg-petnetgray px-4 py-2 w-41 focus:border-petnetblue focus:outline-none border rounded" type="number" value="{{.Data.OTC.Amount}}" prefix="{{ .Prefix }}otc" name="FixedAmountOTC[{{ .Prefix }}]" id="overFixedAmount" placeholder="Enter amount">
+                    </div>
+                </div>
+            </div>
+            <div class="mb-5">
+                <div class="flex items-center">
+                    <input {{if eq .Data.OTC.TierType "PERCENTAGE"}} checked {{end}} onclick="handleRadioBtn(this)" class="h-4 w-4 checkBoxColor RadioBtnElm cursor-pointer TierTypeCls" type="radio" name="TransactionTypeOTC[{{ .Prefix }}]" value="PERCENTAGE" id="{{ .Prefix }}otc_overFixedPercentage">
+                    <label class="font-normal text-base ml-2 cursor-pointer" for="{{ .Prefix }}otc_overFixedPercentage">Fixed Percentage</label>
+                </div>
+                <div class="pl-7 pt-4 hidden overRadioBtn">
+                    <p class="mb-2 text-red-600 italic validMsg"></p>
+                    <div class="mb-2">
+                        <input onkeyup="handlePercentageAmount(this)" class="FixedPercentage bg-petnetgray px-4 py-2 w-41 focus:border-petnetblue focus:outline-none border rounded" type="number" value="{{.Data.OTC.Amount}}" name="FixedPercentageOTC[{{ .Prefix }}]" id="overFixedAmountPer" placeholder="Enter amount (in %)" prefix="{{ .Prefix }}otc" min="0.01" max="100">
+                    </div>
+                </div>
+            </div>
+            <div class="mb-5">
+                <div class="flex items-center">
+                    <input {{if eq .Data.OTC.TierType "TIERAMOUNT"}} checked {{end}} onclick="handleRadioBtn(this)" class="h-4 w-4 checkBoxColor RadioBtnElm cursor-pointer TierTypeCls" type="radio" name="TransactionTypeOTC[{{ .Prefix }}]" value="TIERAMOUNT" id="{{ .Prefix }}otc_overTieredAmount">
+                    <label class="font-normal text-base ml-2 cursor-pointer" for="{{ .Prefix }}otc_overTieredAmount">Tiered - Amount</label>
+                </div>
+                <div class="pl-7 pt-4 hidden overRadioBtn">
+                    <p class="mb-2 text-red-600 italic validMsg"></p>
+                    <table>
+                        <thead>
+                            <tr class="font-semibold text-left text-sm">
+                                <th class="w-60 pb-3">Minimum Amount*</th>
+                                <th class="w-60 pb-3">Maximum Amount*</th>
+                                <th class="w-60 pb-3">Fee*</th>
+                            </tr>
+                        </thead>
+                        <tbody id="{{ $.Prefix }}otc_tierwrap" class="tierMainWrap">
+                        {{if (gt (len .Data.OTC.TierList) 0)}}
+                            {{ range $i, $value := .Data.OTC.TierList}}
+                                    <tr class="text-lg font-normal">
+                                        <td class="border-r-2 pl-4 py-1 border-2 border-gray-300 bg-petnetgray" id="minValue">
+                                            <input type="hidden" name="IDTieredAmountOTC{{$i}}[{{ $.Prefix }}]" value="{{$value.ID}}">
+                                            <input name="MinTieredAmountOTC{{$i}}[{{ $.Prefix }}]" onkeyup='onChangeValidate(this)' min="1" value="{{$value.MinValue}}" class="bg-petnetgray minvalcal focus:outline-none px-2 w-full" type="number">
+                                        </td>
+                                        <td class="border-r-2 pl-4 py-1 border-2 border-gray-300 bg-petnetgray" id="maxValue">
+                                            <input name="MaxTieredAmountOTC{{$i}}[{{ $.Prefix }}]" onkeyup='onChangeValidate(this)' min="1" value="{{$value.MaxValue}}" class="bg-petnetgray maxvalcal focus:outline-none px-2 w-full" type="number">
+                                        </td>
+                                        <td class="pl-4 py-1 border-2 border-gray-300 bg-petnetgray" id="feeAmount">
+                                            <input name="FeeTieredAmountOTC{{$i}}[{{ $.Prefix }}]" onkeyup='onChangeValidate(this)' min="0.01" value="{{$value.Amount}}" class="bg-petnetgray DSAShareV focus:outline-none px-2 w-full" type="number" step="any">
+                                        </td>
+                                        <td class="pl-3 py-1 w-8">
+                                            {{if ne $i 0}}
+                                                <img class="deleteRow cursor-pointer" onclick='deleteRow(this, "{{$value.ID}}")' src="{{assetHash "/images/cross.svg"}}" alt="">
+                                            {{end}}
+                                        </td>
+                                    </tr>
+                            {{end}}
+                        {{else}}
+                                <tr class="text-lg font-normal">
+                                    <td class="border-r-2 pl-4 py-1 border-2 border-gray-300 bg-petnetgray" id="minValue">
+                                        <input type="hidden" name="IDTieredAmountOTC0[{{ $.Prefix }}]" value="">
+                                        <input name="MinTieredAmountOTC0[{{ .Prefix }}]" onkeyup='onChangeValidate(this)' min="1" value="" class="bg-petnetgray minvalcal focus:outline-none px-2 w-full" type="number">
+                                    </td>
+                                    <td class="border-r-2 pl-4 py-1 border-2 border-gray-300 bg-petnetgray" id="maxValue">
+                                        <input name="MaxTieredAmountOTC0[{{ .Prefix }}]" onkeyup='onChangeValidate(this)' min="1" value="" class="bg-petnetgray maxvalcal focus:outline-none px-2 w-full" type="number">
+                                    </td>
+                                    <td class="pl-4 py-1 border-2 border-gray-300 bg-petnetgray" id="feeAmount">
+                                        <input name="FeeTieredAmountOTC0[{{ .Prefix }}]" onkeyup='onChangeValidate(this)' min="0.01" value="" class="bg-petnetgray DSAShareV focus:outline-none px-2 w-full" type="number" step="any">
+                                    </td>
+                                    <td class="pl-3 py-1 w-8"></td>
+                                </tr>
+                            {{end}}
+                        </tbody>
+                    </table>
+                    <div class="mt-2 mb-3">
+                        <input type="hidden" name="LenTieredAmountOTC[{{ .Prefix }}]" class="feetierlen"  value="{{with $v:=.Data.OTC.TierList}}{{len $v}}{{else}}1{{end}}">
+                        <a href="javascript:;" onclick="addRow('TieredAmountOTC', '{{ .Prefix }}', '{{ .Prefix }}otc_tierwrap')" class="font-semibold text-petnetlightblue"> Add row</a>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-5">
+                <div class="flex items-center">
+                    <input  {{if eq .Data.OTC.TierType "TIERPERCENTAGE"}} checked {{end}} onclick="handleRadioBtn(this)" class="h-4 w-4 checkBoxColor RadioBtnElm cursor-pointer TierTypeCls" type="radio" name="TransactionTypeOTC[{{ .Prefix }}]" value="TIERPERCENTAGE" id="{{ .Prefix }}otc_overTieredPercentage">
+                    <label class="font-normal text-base ml-2 cursor-pointer" for="{{ .Prefix }}otc_overTieredPercentage">Tiered - Percentage</label>
+                </div>
+                <div class="pl-7 pt-4 hidden overRadioBtn">
+                    <p class="mb-2 text-red-600 italic validMsg"></p>
+                    <table id="myTable" class="w-41">
+                        <thead>
+                            <tr class="font-semibold text-left text-sm">
+                                <th class="w-60 pb-3">Minimum Amount*</th>
+                                <th class="w-60 pb-3">Maximum Amount*</th>
+                                <th class="w-60 pb-3">Fee*</th>
+                            </tr>
+                        </thead>
+                        <tbody id="{{ $.Prefix }}otc_tierPerwrap" class="tierMainWrap">
+                        {{if (gt (len .Data.OTC.TierList) 0)}}
+                            {{ range $i, $value := .Data.OTC.TierList}}
+                                    <tr class="text-lg font-normal">
+                                        <td class="border-r-2 pl-4 py-1 border-2 border-gray-300 bg-petnetgray" id="minValue">
+                                            <input type="hidden" name="IDTieredPercentageOTC{{$i}}[{{ $.Prefix }}]" value="{{$value.ID}}">
+                                            <input name="MinTieredPercentageOTC{{$i}}[{{ $.Prefix }}]" onkeyup='onChangeValidate(this)' min="1" value="{{$value.MinValue}}" class="bg-petnetgray minvalcal focus:outline-none px-2 w-full" type="number">
+                                        </td>
+                                        <td class="border-r-2 pl-4 py-1 border-2 border-gray-300 bg-petnetgray" id="maxValue">
+                                            <input name="MaxTieredPercentageOTC{{$i}}[{{ $.Prefix }}]" onkeyup='onChangeValidate(this)' min="1" value="{{$value.MaxValue}}" class="bg-petnetgray maxvalcal focus:outline-none px-2 w-full" type="number">
+                                        </td>
+                                        <td class="pl-4 py-1 border-2 border-gray-300 bg-petnetgray" id="feeAmount">
+                                            <input name="FeeTieredPercentageOTC{{$i}}[{{ $.Prefix }}]" onkeyup='onChangeValidate(this)' min="0.01" max="100" value="{{$value.Amount}}" class="bg-petnetgray DSAShareV focus:outline-none px-2 w-full" type="number" step="any">
+                                        </td>
+                                        <td class="pl-3 py-1 w-8">
+                                            {{if ne $i 0}}
+                                                <img class="deleteRow cursor-pointer" onclick='deleteRow(this, "{{$value.ID}}")' src="{{assetHash "/images/cross.svg"}}" alt="">
+                                            {{end}}
+                                        </td>
+                                    </tr>
+                            {{end}}
+                        {{else}}
+                                <tr class="text-lg font-normal">
+                                    <td class="border-r-2 pl-4 py-1 border-2 border-gray-300 bg-petnetgray" id="minValue">
+                                        <input type="hidden" name="IDTieredPercentageOTC0[{{ $.Prefix }}]" value="">
+                                        <input name="MinTieredPercentageOTC0[{{ .Prefix }}]" onkeyup='onChangeValidate(this)' min="1" value="" class="bg-petnetgray minvalcal focus:outline-none px-2 w-full" type="number">
+                                    </td>
+                                    <td class="border-r-2 pl-4 py-1 border-2 border-gray-300 bg-petnetgray" id="maxValue">
+                                        <input name="MaxTieredPercentageOTC0[{{ .Prefix }}]" onkeyup='onChangeValidate(this)' min="1" value="" class="bg-petnetgray maxvalcal focus:outline-none px-2 w-full" type="number">
+                                    </td>
+                                    <td class="pl-4 py-1 border-2 border-gray-300 bg-petnetgray" id="feeAmount">
+                                        <input name="FeeTieredPercentageOTC0[{{ .Prefix }}]" onkeyup='onChangeValidate(this)' min="0.01" max="100" value="" class="bg-petnetgray DSAShareV focus:outline-none px-2 w-full" type="number" step="any">
+                                    </td>
+                                    <td class="pl-3 py-1 w-8"></td>
+                                </tr>
+                            {{end}}
+                        </tbody>
+                    </table>
+                    <div class="mt-2 mb-3">
+                        <input type="hidden" name="LenTieredPercentageOTC[{{ .Prefix }}]" class="feetierlen" value="{{with $v:=.Data.OTC.TierList}}{{len $v}}{{else}}1{{end}}">
+                        <a href="javascript:;" onclick="addRow('TieredPercentageOTC', '{{ .Prefix }}', '{{ .Prefix }}otc_tierPerwrap')" class="font-semibold text-petnetlightblue"> Add row</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

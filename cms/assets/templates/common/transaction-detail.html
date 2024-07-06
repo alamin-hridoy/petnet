@@ -1,0 +1,156 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>Transactions</title>
+</head>
+
+<body class="font-sans">
+    <div>
+        <div class="flex">
+            <!-- sidebar-left-start -->
+            <div class="bg-petnetblue w-32 min-h-screen">
+                <div class="min-h-screen">
+                    <img src="{{ assetHash "/images/DRP-Vertical.svg" }}" class="mx-auto my-5">
+                    {{ template "admin-sidenav-menu.html" dict "Type" "transaction-list" "Data" .}}
+                </div>
+            </div>
+            <!-- sidebarleft-end -->
+            <!-- top-header-start -->
+            <div class="min-h-screen w-full flex bg-petnetgray ">
+                <div class="w-full">
+                    {{ template "transaction-head.html" . }}
+                    <!-- top-header-end -->
+                    <!-- side-nav -->
+                    <div>
+                        <div class="px-6 lg:px-32 py-10 flex flex-wrap">
+                            <div class="w-1/4 pr-2 flex flex-col rounded">
+                                <div class="mb-8">
+                                    <div class="bg-white rounded">
+                                        <h4 class="text-xl font-bold text-petnetblue pt-7 px-6 pb-4 border-b">Summary
+                                        </h4>
+                                        <div
+                                            class="flex items-center border-l-4 bg-petnetlightblue bg-opacity-10 border-petnetblue py-5 px-10">
+                                            <a href="/dashboard/transactions/{{.RemitDetails.ControlNumber }}/{{.OrgID}}">
+                                                <span class="mr-3 inline-block"><img
+                                                    src="{{ assetHash "/images/details.png" }}" alt=""></span>
+                                                    Create Remit
+                                            </a>
+                                        </div>
+                                        {{if .LinkedTrans}}
+                                            <div
+                                            class="flex items-center border-l-4 bg-white bg-opacity-10 border-white py-5 px-10">
+                                                <a href="/dashboard/transactions-disburse/{{.RemitDetails.ControlNumber }}/{{.OrgID}}">
+                                                    <span class="mr-3 inline-block">
+                                                        <img src="{{ assetHash "/images/details.png" }}" alt=""></span>
+                                                        Disburse Remit
+                                                </a>
+                                            </div>
+                                        {{end}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-3/4 pl-2">
+                                <div class="bg-white rounded mb-3">
+                                    <div class="border-b flex items-center justify-between">
+                                        <h4 class="text-xl font-bold text-petnetblue pt-7 px-6 pb-4">Control No {{ .RemitDetails.ControlNumber }}</h4>
+                                        <span class="bg-petnetgreen font-bold text-lg h-20 w-48 rounded-tr text-center py-7">
+                                            <p class=" text-white">{{ .RemitDetails.RemitType }}</p>
+                                        </span>
+                                    </div>
+                                    <h3 class="mb-2 px-8 pt-5 text-lg font-bold">
+                                        Remittance Details
+                                    </h3>
+                                    <div>
+                                        <div class="grid grid-cols-6 gap-6 mb-2 px-8 pt-3">
+                                            <div class="col-span-6 sm:col-span-3 pr-16">
+                                                <label for="" class="block  font-medium text-petnetheadertext">REMITTED
+                                                    TO
+                                                </label>
+                                                <input type="text" name="" id="" placeholder=""
+                                                    class="mt-2 w-full py-2 px-3 focus:outline-none border-b" disabled value="{{.RemitDetails.Remitter.FirstName}}">
+                                            </div>
+                                            <div class="col-span-6 sm:col-span-3 pr-16">
+                                                <label for="" class="block  font-medium text-petnetheadertext ">TOTAL
+                                                    REMIT AMOUNT
+                                                </label>
+                                                <input type="text" name="" id="" placeholder=""
+                                                    class="mt-2 w-full py-2 px-3 focus:outline-none border-b" disabled value="{{minorToAmount .RemitDetails.RemitAmount.Amount .RemitDetails.RemitAmount.Currency}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="grid grid-cols-6 gap-6 mb-2 px-8 pt-3">
+                                            <div class="col-span-6 sm:col-span-3 pr-16">
+                                                <label for=""
+                                                    class="block  font-medium text-petnetheadertext">COMMISSION
+                                                </label>
+                                                <input type="text" name="" id="" placeholder=""
+                                                    class="mt-2 w-full py-2 px-3 focus:outline-none border-b" disabled value="0">
+                                            </div>
+                                            <div class="col-span-6 sm:col-span-3 pr-16">
+                                                <label for="" class="block  font-medium text-petnetheadertext">FEE
+                                                </label>
+                                                <input type="text" name="" id="" placeholder=""
+                                                    class="mt-2 w-full py-2 px-3 focus:outline-none border-b" disabled value="0">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="grid grid-cols-6 gap-6 mb-2 px-8 pt-3">
+                                            <div class="col-span-6 sm:col-span-3 pr-16">
+                                                <label for="" class="block  font-medium text-petnetheadertext">CREATED
+                                                    DATE
+                                                </label>
+                                                <input type="text" name="" id="" placeholder=""
+                                                    class="mt-2 w-full py-2 px-3 focus:outline-none border-b" disabled value="{{formatTimestamp .RemitDetails.TransactionStagedTime "January 02, 2006"}}">
+                                            </div>
+                                            <div class="col-span-6 sm:col-span-3 pr-16 ">
+                                                <label for="" class="block  font-medium text-petnetheadertext">PROCESSED
+                                                    DATE
+                                                </label>
+                                                <input type="text" name="" id="" placeholder=""
+                                                    class="mt-2 w-full py-2 px-3 focus:outline-none border-b" disabled value="{{formatTimestamp .RemitDetails.TransactionCompletedTime "January 02, 2006"}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="grid grid-cols-6 gap-6 mb-2 px-8 pt-3 pb-8">
+                                            <div class="col-span-6 sm:col-span-3 pr-16">
+                                                <label for="" class="block  font-medium text-petnetheadertext">SERVICE
+                                                </label>
+                                                <input type="text" name="" id="" placeholder=""
+                                                    class="mt-2 w-full py-2 px-3 focus:outline-none border-b" disabled value="{{.RemitDetails.RemitPartner}}">
+                                            </div>
+                                            <div class="col-span-6 sm:col-span-3 pr-16">
+                                                <label for="" class="block  font-medium text-petnetheadertext">EMAIL
+                                                    ADDRESS
+                                                </label>
+                                                <input type="text" name="" id="" placeholder=""
+                                                    class="mt-2 w-full py-2 px-3 focus:outline-none border-b" disabled value="{{.RemitDetails.Remitter.Email}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            function toggleTopButton(id) {
+                let getDropdownItem = document.getElementById(id)
+                let isHiddenClass = getDropdownItem.classList.contains('hidden');
+                if (!isHiddenClass) {
+                    getDropdownItem.classList.add("hidden");
+                } else {
+                    getDropdownItem.classList.remove("hidden");
+                }
+            }
+        </script>
+</body>
+</html>

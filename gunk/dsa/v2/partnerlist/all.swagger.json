@@ -1,0 +1,721 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/dsa/v2/partnerlist/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "PartnerListService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v2/deletepartnerlist": {
+      "delete": {
+        "summary": "Delete partnerlist.",
+        "description": "Delete partnerlist by ID.",
+        "operationId": "PartnerListService_DeletePartnerList",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/partnerlistDeletePartnerListResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "stype",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "partnerlist"
+        ]
+      }
+    },
+    "/v2/disable-multiple-partnerlist": {
+      "post": {
+        "summary": "Disable multiple partnerlist.",
+        "description": "Disable multiple partnerlist.",
+        "operationId": "PartnerListService_DisableMultiplePartnerList",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/partnerlistDisableMultiplePartnerListResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/partnerlistDisableMultiplePartnerListRequest"
+            }
+          }
+        ],
+        "tags": [
+          "partnerlist"
+        ]
+      }
+    },
+    "/v2/disablepartnerlist": {
+      "post": {
+        "summary": "Disable partnerlist.",
+        "description": "Disable partnerlist.",
+        "operationId": "PartnerListService_DisablePartnerList",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/partnerlistDisablePartnerListResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/partnerlistDisablePartnerListRequest"
+            }
+          }
+        ],
+        "tags": [
+          "partnerlist"
+        ]
+      }
+    },
+    "/v2/enable-multiple-partnerlist": {
+      "post": {
+        "summary": "Enable multiple partnerlist.",
+        "description": "Enable multiple partnerlist.",
+        "operationId": "PartnerListService_EnableMultiplePartnerList",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/partnerlistEnableMultiplePartnerListResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/partnerlistEnableMultiplePartnerListRequest"
+            }
+          }
+        ],
+        "tags": [
+          "partnerlist"
+        ]
+      }
+    },
+    "/v2/enablepartnerlist": {
+      "post": {
+        "summary": "Enable partnerlist.",
+        "description": "Enable partnerlist.",
+        "operationId": "PartnerListService_EnablePartnerList",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/partnerlistEnablePartnerListResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/partnerlistEnablePartnerListRequest"
+            }
+          }
+        ],
+        "tags": [
+          "partnerlist"
+        ]
+      }
+    },
+    "/v2/getdsapartnerlist": {
+      "get": {
+        "summary": "Get dsa partnerlist.",
+        "description": "Get dsa partnerlist",
+        "operationId": "PartnerListService_GetDSAPartnerList",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/partnerlistGetDSAPartnerListResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "transaction_type",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "partnerlist"
+        ]
+      }
+    },
+    "/v2/getpartnerlist": {
+      "get": {
+        "summary": "Get partnerlist.",
+        "description": "Get created partnerlist by org ID.",
+        "operationId": "PartnerListService_GetPartnerList",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/partnerlistGetPartnerListResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "stype",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "service_name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "platform",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "is_provider",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "partnerlist"
+        ]
+      }
+    },
+    "/v2/getpartnerlist/{stype}": {
+      "get": {
+        "summary": "Get partner.",
+        "description": "Get created partner by stype.",
+        "operationId": "PartnerListService_GetPartnerByStype",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/partnerlistGetPartnerByStypeResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "stype",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "partner"
+        ]
+      }
+    },
+    "/v2/partnerlist": {
+      "post": {
+        "summary": "Create partnerlist.",
+        "description": "Create one or more dsa partnerlist.",
+        "operationId": "PartnerListService_CreatePartnerList",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/partnerlistCreatePartnerListResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/partnerlistCreatePartnerListRequest"
+            }
+          }
+        ],
+        "tags": [
+          "partnerlist"
+        ]
+      }
+    },
+    "/v2/updatepartnerlist": {
+      "put": {
+        "summary": "Update partnerlist.",
+        "description": "Update one or more dsa partnerlist.",
+        "operationId": "PartnerListService_UpdatePartnerList",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/partnerlistUpdatePartnerListResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/partnerlistUpdatePartnerListRequest"
+            }
+          }
+        ],
+        "tags": [
+          "partnerlist"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "partnerlistCreatePartnerListRequest": {
+      "type": "object",
+      "properties": {
+        "partnerlist": {
+          "$ref": "#/definitions/partnerlistPartnerList"
+        }
+      }
+    },
+    "partnerlistCreatePartnerListResponse": {
+      "type": "object",
+      "properties": {
+        "partnerlist": {
+          "$ref": "#/definitions/partnerlistPartnerList"
+        }
+      }
+    },
+    "partnerlistDSAPartnerList": {
+      "type": "object",
+      "properties": {
+        "partner": {
+          "type": "string"
+        },
+        "transaction_type": {
+          "type": "string"
+        }
+      }
+    },
+    "partnerlistDeletePartnerListResponse": {
+      "type": "object",
+      "properties": {
+        "stype": {
+          "type": "string"
+        }
+      }
+    },
+    "partnerlistDisableMultiplePartnerListRequest": {
+      "type": "object",
+      "properties": {
+        "stypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "disable_reason": {
+          "type": "string"
+        },
+        "updated_by": {
+          "type": "string"
+        }
+      }
+    },
+    "partnerlistDisableMultiplePartnerListResponse": {
+      "type": "object",
+      "properties": {
+        "stypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "disable_reason": {
+          "type": "string"
+        }
+      }
+    },
+    "partnerlistDisablePartnerListRequest": {
+      "type": "object",
+      "properties": {
+        "stype": {
+          "type": "string"
+        },
+        "disable_reason": {
+          "type": "string"
+        }
+      }
+    },
+    "partnerlistDisablePartnerListResponse": {
+      "type": "object",
+      "properties": {
+        "stype": {
+          "type": "string"
+        },
+        "disable_reason": {
+          "type": "string"
+        }
+      }
+    },
+    "partnerlistEnableMultiplePartnerListRequest": {
+      "type": "object",
+      "properties": {
+        "stypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "updated_by": {
+          "type": "string"
+        }
+      }
+    },
+    "partnerlistEnableMultiplePartnerListResponse": {
+      "type": "object",
+      "properties": {
+        "stypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "partnerlistEnablePartnerListRequest": {
+      "type": "object",
+      "properties": {
+        "stype": {
+          "type": "string"
+        }
+      }
+    },
+    "partnerlistEnablePartnerListResponse": {
+      "type": "object",
+      "properties": {
+        "stype": {
+          "type": "string"
+        }
+      }
+    },
+    "partnerlistGetDSAPartnerListResponse": {
+      "type": "object",
+      "properties": {
+        "dsapartnerList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/partnerlistDSAPartnerList"
+          }
+        }
+      }
+    },
+    "partnerlistGetPartnerByStypeResponse": {
+      "type": "object",
+      "properties": {
+        "partnerlist": {
+          "$ref": "#/definitions/partnerlistPartnerList"
+        }
+      }
+    },
+    "partnerlistGetPartnerListResponse": {
+      "type": "object",
+      "properties": {
+        "partnerlist": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/partnerlistPartnerList"
+          }
+        }
+      }
+    },
+    "partnerlistPartnerList": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "stype": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string"
+        },
+        "service_name": {
+          "type": "string"
+        },
+        "updated_by": {
+          "type": "string"
+        },
+        "disable_reason": {
+          "type": "string"
+        },
+        "platform": {
+          "type": "string"
+        },
+        "is_provider": {
+          "type": "boolean"
+        },
+        "perahub_partner_id": {
+          "type": "string"
+        },
+        "remco_id": {
+          "type": "string"
+        }
+      }
+    },
+    "partnerlistUpdatePartnerListRequest": {
+      "type": "object",
+      "properties": {
+        "partnerlist": {
+          "$ref": "#/definitions/partnerlistPartnerList"
+        }
+      }
+    },
+    "partnerlistUpdatePartnerListResponse": {
+      "type": "object",
+      "properties": {
+        "partnerlist": {
+          "$ref": "#/definitions/partnerlistPartnerList"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,227 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>DSA Services</title>
+</head>
+<body class="font-sans">
+    <div>
+        <div class="flex">
+            <!-- sidebar-start -->
+            {{ template "dsa-sidenav-menu.html" dict "Type" "dsa-services" "Data" .}}
+            <!-- sidebar-end -->
+            <!-- top-header-start -->
+            <div class="min-h-screen w-full flex bg-petnetgray ">
+                <div class="w-full">
+                  <div class="px-20 py-4 shadow-md bg-white">
+                    <ul class="flex justify-end items-center space-x-4 mb-16">
+                      <li>
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" fill="none" viewBox="0 0 24 24"
+                              stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                          </svg>
+                      </li>
+                      <li>
+                        {{ template "top-head-profile.html" dict "UserInfo" .UserInfo "CompanyName" .CompanyName .}}
+                        </li>
+                      <li>
+                          <div class="relative" id="topDropdownBox">
+                              <a href="javascript:;" onclick="toggleTopButton('openTopDropdown')">
+                                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                      viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M19 9l-7 7-7-7" />
+                                  </svg>
+                              </a>
+                              <div class="absolute right-0 top-12 hidden" id="openTopDropdown">
+                                  <div
+                                      class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                  </div>
+                                  <div class="shadow-lg  absolute top-3 -right-5 rounded">
+                                      <div class="relative z-20 p-3 w-36 bg-white rounded space-y-2">
+                                          <a class="flex text-sm items-center" href="/profile">
+                                              <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                  <path fill-rule="evenodd" clip-rule="evenodd" d="M16 8C16 10.21 14.21 12 12 12C9.79 12 8 10.21 8 8C8 5.79 9.79 4 12 4C14.21 4 16 5.79 16 8ZM4 18C4 15.34 9.33 14 12 14C14.67 14 20 15.34 20 18V19C20 19.55 19.55 20 19 20H5C4.45 20 4 19.55 4 19V18Z" fill="#333333"/>
+                                              </svg>
+                                              Profile
+                                          </a>
+                                          <a href="/logout" class="flex text-sm pl-1">
+                                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
+                                                  viewBox="0 0 24 24" stroke="currentColor">
+                                                  <path stroke-linecap="round" stroke-linejoin="round"
+                                                      stroke-width="2"
+                                                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                              </svg>
+                                              Logout
+                                          </a>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </li>
+                  </ul>
+                <div class="mb-4">
+                    <h2 class="sm:text-5xl text-petnetblue font-semibold">Services</h2>
+                </div>
+                  </div>
+                    <!-- top-header-end -->
+                    <!-- main content-start -->
+                    <div class="px-20 py-8 w-full">
+                      <div class="shadow overflow-hidden">
+                        <table class="min-w-full bg-white">
+                          <thead class="bg-white font-semibold text-base border-b-2 border-gray-300">
+                            <tr>
+                              <th class="w-2/5 text-left py-4 px-4">List of Services</th>
+                              <th class="w-1/5 text-left py-4 px-4">Date Requested</th>
+                              <th class="w-1/5 text-left py-4 px-8">Status</td>
+                              <th class="w-1/5 text-left py-4 px-4">Actions</td>
+                            </tr>
+                          </thead>
+                        <tbody class="">
+                            {{range .ServiceRequestList}}
+                                <tr data-allselected="{{.AllPartnersSelected}}" data-status="{{.Status}}" data-svc-name="{{.ServiceName}}">
+                                    <td class="flex items-center py-5 px-4 font-semibold text-petnettextgray">
+                                        <span class="pr-4">
+                                            <img src="{{assetHash "/images/ser-log.png"}}" alt="">
+                                        </span>
+                                        {{if eq .ServiceName "CASHINCASHOUT"}}
+                                            Cash In/Cash Out
+                                        {{else if eq .ServiceName "REMITTANCE"}}
+                                            Remittance
+                                        {{else if eq .ServiceName "BILLSPAYMENT"}}
+                                            Bills Payment
+                                        {{else if eq .ServiceName "MICROINSURANCE"}}
+                                            Micro Insurance
+                                        {{else if eq .ServiceName "PROVIDERS"}}
+                                            Invited Provider
+                                        {{end}}
+                                    </td>
+                                    <td class="text-left py-5 px-4 text-gray-400 font-normal">
+                                        {{formatDate .RequestDate "January 02, 2006"}}
+                                    </td>
+                                    <td class="text-left py-3 px-4">
+                                        <span class="py-2 px-4 text-sm {{if and (ne .Status "NOSTATUS") (ne .Status "")}} bg-{{serviceStatusClass .Status}} {{end}} rounded-full">
+                                            {{if or (eq .Status "PARTNERDRAFT") (eq .Status "ADDIDOCDRAFT") (eq .Status "REQDOCDRAFT")}}
+                                                {{if or (eq .ServiceName "REMITTANCE")}}
+                                                    Incomplete
+                                                {{else if eq .ServiceName "CASHINCASHOUT"}}
+                                                    Incomplete
+                                                {{else if eq .ServiceName  "MICROINSURANCE"}}
+                                                    Incomplete
+                                                {{else if eq .ServiceName  "BILLSPAYMENT"}}
+                                                    Incomplete
+                                                {{end}}
+                                            {{else if or (eq .Status "NOSTATUS") (eq .Status "")}}
+
+                                            {{else if and (ne .Status "NOSTATUS") (ne .Status "PARTNERDRAFT") (ne .Status "REQDOCDRAFT") (ne .Status "ADDIDOCDRAFT")}}
+                                                {{stringTitle .Status}}
+                                            {{end}}
+                                        </span>
+                                    </td>
+                                    <td class="text-left px-4">
+                                        {{if eq .Status "PARTNERDRAFT"}}
+                                            {{if eq .ServiceName "CASHINCASHOUT"}}
+                                                <a href="/dsa-select-provider" class="text-petnetlightblue" href="javascript:;">Request Service</a>
+                                            {{else if eq .ServiceName  "MICROINSURANCE"}}
+                                                <a href="#" class="text-petnetlightblue" href="javascript:;">Request Service</a>
+                                            {{else if eq .ServiceName  "BILLSPAYMENT"}}
+                                                <a href="/dsa-req-docs-bills-payment" class="text-petnetlightblue" href="javascript:;">Request Service</a>
+                                            {{else}}
+                                                <a href="/dsa-select-partners" class="text-petnetlightblue" href="javascript:;">Request Service</a>
+                                            {{end}}
+                                        {{else if eq .Status "REQDOCDRAFT"}}
+                                            {{if eq .ServiceName "CASHINCASHOUT"}}
+                                            <a href="/dsa-req-docs-cico" class="text-petnetlightblue" href="javascript:;">Upload Documents</a>
+                                            {{else if eq .ServiceName  "MICROINSURANCE"}}
+                                            <a href="/dsa-req-docs-micro-insurance" class="text-petnetlightblue" href="javascript:;">Upload Documents</a>
+                                            {{else if eq .ServiceName  "BILLSPAYMENT"}}
+                                            <a href="/dsa-additional-docs-bills-payment" class="text-petnetlightblue" href="javascript:;">Upload Documents</a>
+                                            {{else}}
+                                            <a href="/dsa-req-docs" class="text-petnetlightblue" href="javascript:;">Upload Documents</a>
+                                            {{end}}
+                                        {{else if eq .Status "ADDIDOCDRAFT"}}
+                                            <a href="/dsa-additional-docs" class="text-petnetlightblue" href="javascript:;">Upload Additional Documents</a>
+                                        {{else if or (eq .Status "NOSTATUS") (eq .Status "REJECTED")}}
+                                            {{if eq .ServiceName "CASHINCASHOUT"}}
+                                                <a href="/dsa-select-provider" class="text-petnetlightblue" href="javascript:;">Request Service</a>
+                                            {{else if eq .ServiceName  "MICROINSURANCE"}}
+                                                <a href="/dsa-req-docs-micro-insurance" class="text-petnetlightblue" href="javascript:;">Request Service</a>
+                                            {{else if eq .ServiceName  "BILLSPAYMENT"}}
+                                                <a href="/dsa-req-docs-bills-payment" class="text-petnetlightblue" href="javascript:;">Request Service</a>
+                                            {{else}}
+                                                <a href="/dsa-select-partners" class="text-petnetlightblue" href="javascript:;">Request Service</a>
+                                            {{end}}
+                                        {{else if (eq .Status "ACCEPTED") }}
+                                            {{if eq .ServiceName "CASHINCASHOUT"}}
+                                                {{if .AllPartnersSelected}}
+                                                    <a href="javascript:;" disabled class="text-petnetheadertext">All Requested</a>
+                                                {{else}} 
+                                                    <a href="/dsa-select-provider" class="text-petnetlightblue">Request Service</a>
+                                                {{end}}
+                                            {{else if eq .ServiceName  "MICROINSURANCE"}}
+                                                    <a href="javascript:;" disabled class="text-petnetheadertext">All Requested</a>
+                                            {{else if eq .ServiceName  "BILLSPAYMENT"}}
+                                                {{if .AllPartnersSelected}}
+                                                    <a href="javascript:;" disabled class="text-petnetheadertext">All Requested</a>
+                                                {{else}} 
+                                                    <a href="/dsa-req-docs-bills-payment" class="text-petnetlightblue">Request Service</a>
+                                                {{end}}
+                                            {{else}}
+                                                {{if .AllPartnersSelected}}
+                                                    <a href="javascript:;" disabled class="text-petnetheadertext">All Requested</a>
+                                                {{else}} 
+                                                    <a href="/dsa-select-partners" class="text-petnetlightblue">Request Service</a>
+                                                {{end}}
+                                            {{end}}
+                                        {{else if or (eq .Status "PENDING") }}
+                                            <a class="text-petnetheadertext" disabled href="javascript:;">Requested Service</a>
+                                        {{else}}
+                                            {{if eq .ServiceName "CASHINCASHOUT"}}
+                                                <a href="/dsa-select-provider" class="text-petnetlightblue">Request Service</a>
+                                            {{else if eq .ServiceName  "MICROINSURANCE"}}
+                                                <a class="text-petnetlightblue" href="/dsa-req-docs-micro-insurance">Upload Documents</a>
+                                            {{else if eq .ServiceName  "BILLSPAYMENT"}}
+                                                <a class="text-petnetlightblue" href="#">Upload Documents</a>
+                                            {{else}}
+                                                <a class="text-petnetlightblue" href="/dsa-req-docs">Upload Documents</a>
+                                            {{end}}
+                                        {{end}}
+                                    </td>
+                                </tr>
+                            {{end}}
+                        </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <!-- main content-end -->
+                </div>
+            </div>
+        </div>
+</body>
+<script>
+    const params = new URLSearchParams(window.location.search);
+    function toggleTopButton(id) {
+        let getDropdownItem = document.getElementById(id)
+        let isHiddenClass = getDropdownItem.classList.contains('hidden');
+        if (!isHiddenClass) {
+            getDropdownItem.classList.add("hidden");
+        } else {
+            getDropdownItem.classList.remove("hidden");
+        }
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        let menus = document.querySelectorAll("a");
+        for (let i = 0; i < menus.length; i++) {
+            menus[i].addEventListener("click", function(e){
+                e.preventDefault();
+                let lnk = menus[i].href;
+                menus[i].href = "javascript:;"
+                window.location.href = lnk;
+            });
+        }
+    });
+</script>
+</html>

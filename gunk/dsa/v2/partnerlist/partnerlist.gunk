@@ -1,0 +1,419 @@
+package partnerlist // proto "petnet.v2.partnerlist"
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+type PartnerList struct {
+	ID               string    `pb:"1" json:"id"`
+	Stype            string    `pb:"2" json:"stype"`
+	Name             string    `pb:"3" json:"name"`
+	Created          time.Time `pb:"4" json:"created"`
+	Updated          time.Time `pb:"5" json:"updated"`
+	Status           string    `pb:"6" json:"status"`
+	ServiceName      string    `pb:"7" json:"service_name"`
+	UpdatedBy        string    `pb:"8" json:"updated_by"`
+	DisableReason    string    `pb:"9" json:"disable_reason"`
+	Platform         string    `pb:"10" json:"platform"`
+	IsProvider       bool      `pb:"11" json:"is_provider"`
+	PerahubPartnerID string    `pb:"12" json:"perahub_partner_id"`
+	RemcoID          string    `pb:"13" json:"remco_id"`
+}
+
+type CreatePartnerListRequest struct {
+	PartnerList PartnerList `pb:"1" json:"partnerlist"`
+}
+
+type CreatePartnerListResponse struct {
+	PartnerList PartnerList `pb:"1" json:"partnerlist"`
+}
+
+type UpdatePartnerListRequest struct {
+	PartnerList PartnerList `pb:"1" json:"partnerlist"`
+}
+
+type UpdatePartnerListResponse struct {
+	PartnerList PartnerList `pb:"1" json:"partnerlist"`
+}
+
+type GetPartnerListRequest struct {
+	ID          string `pb:"1" json:"id"`
+	Stype       string `pb:"2" json:"stype"`
+	Status      string `pb:"3" json:"status"`
+	Name        string `pb:"4" json:"name"`
+	ServiceName string `pb:"5" json:"service_name"`
+	Platform    string `pb:"6" json:"platform"`
+	IsProvider  bool   `pb:"7" json:"is_provider"`
+}
+
+type GetPartnerListResponse struct {
+	PartnerList []PartnerList `pb:"1" json:"partnerlist"`
+}
+
+type DSAPartnerList struct {
+	Partner         string `pb:"1" json:"partner"`
+	TransactionType string `pb:"2" json:"transaction_type"`
+}
+
+type DSAPartnerListRequest struct {
+	TransactionType string `pb:"1" json:"transaction_type"`
+}
+
+type GetDSAPartnerListResponse struct {
+	DSAPartnerList []DSAPartnerList `pb:"1" json:"dsapartnerList"`
+}
+
+type DeletePartnerListRequest struct {
+	Stype string `pb:"1" json:"stype"`
+}
+
+type DeletePartnerListResponse struct {
+	Stype string `pb:"1" json:"stype"`
+}
+
+type EnablePartnerListRequest struct {
+	Stype string `pb:"1" json:"stype"`
+}
+
+type EnablePartnerListResponse struct {
+	Stype string `pb:"1" json:"stype"`
+}
+
+type DisablePartnerListRequest struct {
+	Stype         string `pb:"1" json:"stype"`
+	DisableReason string `pb:"2" json:"disable_reason"`
+}
+
+type DisablePartnerListResponse struct {
+	Stype         string `pb:"1" json:"stype"`
+	DisableReason string `pb:"2" json:"disable_reason"`
+}
+
+type EnableMultiplePartnerListRequest struct {
+	Stypes    []string `pb:"1" json:"stypes"`
+	UpdatedBy string   `pb:"2" json:"updated_by"`
+}
+
+type EnableMultiplePartnerListResponse struct {
+	Stypes []string `pb:"1" json:"stypes"`
+}
+
+type DisableMultiplePartnerListRequest struct {
+	Stypes        []string `pb:"1" json:"stypes"`
+	DisableReason string   `pb:"2" json:"disable_reason"`
+	UpdatedBy     string   `pb:"3" json:"updated_by"`
+}
+
+type DisableMultiplePartnerListResponse struct {
+	Stypes        []string `pb:"1" json:"stypes"`
+	DisableReason string   `pb:"2" json:"disable_reason"`
+}
+
+type GetPartnerByStypeRequest struct {
+	Stype string `pb:"1" json:"stype"`
+}
+
+type GetPartnerByStypeResponse struct {
+	PartnerList PartnerList `pb:"1" json:"partnerlist"`
+}
+
+type PartnerListService interface {
+	// Create partnerList.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/partnerlist",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"partnerlist"},
+	//         Description: "Create one or more dsa partnerlist.",
+	//         Summary:     "Create partnerlist.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/partnerlistCreatePartnerListResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	CreatePartnerList(CreatePartnerListRequest) CreatePartnerListResponse
+
+	// Update partnerlist.
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v2/updatepartnerlist",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"partnerlist"},
+	//         Description: "Update one or more dsa partnerlist.",
+	//         Summary:     "Update partnerlist.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/partnerlistUpdatePartnerListResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	UpdatePartnerList(UpdatePartnerListRequest) UpdatePartnerListResponse
+
+	// Get partnerlist by org ID.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v2/getpartnerlist",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"partnerlist"},
+	//         Description: "Get created partnerlist by org ID.",
+	//         Summary:     "Get partnerlist.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/partnerlistGetPartnerListResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	GetPartnerList(GetPartnerListRequest) GetPartnerListResponse
+
+	// Get  dsa partnerlist .
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v2/getdsapartnerlist",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"partnerlist"},
+	//         Description: "Get dsa partnerlist",
+	//         Summary:     "Get dsa partnerlist.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/partnerlistGetDSAPartnerListResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	GetDSAPartnerList(DSAPartnerListRequest) GetDSAPartnerListResponse
+
+	// Delete partnerlist by ID.
+	//
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v2/deletepartnerlist",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"partnerlist"},
+	//         Description: "Delete partnerlist by ID.",
+	//         Summary:     "Delete partnerlist.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/partnerlistDeletePartnerListResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	DeletePartnerList(DeletePartnerListRequest) DeletePartnerListResponse
+
+	// Enable partnerlist.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/enablepartnerlist",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"partnerlist"},
+	//         Description: "Enable partnerlist.",
+	//         Summary:     "Enable partnerlist.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/partnerlistEnablePartnerListResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	EnablePartnerList(EnablePartnerListRequest) EnablePartnerListResponse
+
+	// Disable partnerlist.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/disablepartnerlist",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"partnerlist"},
+	//         Description: "Disable partnerlist.",
+	//         Summary:     "Disable partnerlist.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/partnerlistDisablePartnerListResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	DisablePartnerList(DisablePartnerListRequest) DisablePartnerListResponse
+
+	// Enable multiple partnerlist.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/enable-multiple-partnerlist",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"partnerlist"},
+	//         Description: "Enable multiple partnerlist.",
+	//         Summary:     "Enable multiple partnerlist.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/partnerlistEnableMultiplePartnerListResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	EnableMultiplePartnerList(EnableMultiplePartnerListRequest) EnableMultiplePartnerListResponse
+
+	// Disable multiple partnerlist.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/disable-multiple-partnerlist",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"partnerlist"},
+	//         Description: "Disable multiple partnerlist.",
+	//         Summary:     "Disable multiple partnerlist.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/partnerlistDisableMultiplePartnerListResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	DisableMultiplePartnerList(DisableMultiplePartnerListRequest) DisableMultiplePartnerListResponse
+
+	// Get partner by stype.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v2/getpartnerlist/{Stype}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"partner"},
+	//         Description: "Get created partner by stype.",
+	//         Summary:     "Get partner.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/partnerlistGetPartnerByStypeResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	GetPartnerByStype(GetPartnerByStypeRequest) GetPartnerByStypeResponse
+}

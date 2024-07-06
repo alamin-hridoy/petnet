@@ -1,0 +1,903 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>Manage Users</title>
+</head>
+
+<body class="font-sans">
+    <div>
+
+        <div class="flex">
+            <!-- sidebar-left-start -->
+            <div class="bg-petnetblue w-32 min-h-screen">
+                <div class="min-h-screen">
+                    <img src="{{ assetHash "/images/DRP-Vertical.svg" }}" class="mx-auto my-5">
+                    <!-- Sidebar menu start -->
+                    {{ template "admin-sidenav-menu.html" dict "Type" "manage-users" "Data" .}}
+                    <!-- Sidebar menu end -->
+                </div>
+            </div>
+            <!-- sidebarleft-end -->
+
+            <div class="min-h-screen w-full flex bg-petnetgray ">
+                <div class="w-full">
+                    <!-- top-header-start -->
+                    <div class="px-6 lg:px-8 py-10 relative z-10 bg-white">
+                        <div class="flex flex-wrap justify-between">
+                            <div>
+                                <ul class="flex justify-end items-center space-x-4 mb-16">
+                                    <li>
+                                        <a href="/dashboard/manage-users" class="text-petnetlightblue mr-6 border-b-4 py-1 border-petnetlightblue">Member List</a>
+                                    </li>
+                                    <li>
+                                        <a href="/dashboard/manage-role" class="text-gray-500 mx-6">User Roles</a>
+                                    </li>
+                                    <li>
+                                        <a href="/dashboard/providers-list" class="text-gray-500 mx-6">Providers List</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <ul class="flex justify-end items-center space-x-4 mb-16">
+                                    <li>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                        </svg>
+                                    </li>
+                                    <li>
+                                        {{ template "top-head-profile.html" dict "UserInfo" .LoginUserInfo "CompanyName" "" .}}
+                                    </li>
+                                    <li>
+                                        <div class="relative" id="topDropdownBox">
+                                            <a href="javascript:;" onclick="toggleTopButton('openTopDropdown')">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                </svg>
+                                            </a>
+                                            <div class="absolute right-0 top-12 hidden" id="openTopDropdown">
+                                                <div
+                                                    class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                                </div>
+                                                <div class="shadow-lg  absolute top-3 -right-5 rounded">
+                                                    <div class="relative z-20 p-3 w-36 bg-white rounded space-y-2">
+                                                        <a class="flex text-sm items-center" href="/profile">
+                                                            <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M16 8C16 10.21 14.21 12 12 12C9.79 12 8 10.21 8 8C8 5.79 9.79 4 12 4C14.21 4 16 5.79 16 8ZM4 18C4 15.34 9.33 14 12 14C14.67 14 20 15.34 20 18V19C20 19.55 19.55 20 19 20H5C4.45 20 4 19.55 4 19V18Z" fill="#333333"/>
+                                                            </svg>
+                                                            Profile
+                                                        </a>
+                                                        <a href="/logout" class="flex text-sm">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2"
+                                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                                            </svg>
+                                                            Logout
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <h2 class="text-4xl text-petnetblue font-bold">Manage Members</h2>
+                        </div>
+                        <div class="flex flex-wrap items-center justify-between">
+                            <div class="border w-1/3 flex rounded-l">
+                                <input type="text" value="{{.SearchTerm}}" id="search" placeholder="Search for user"
+                                    class="w-full h-12 p-4 bg-petnetgray focus:outline-none">
+                                <button class="bg-petnetblue text-white rounded-r p-3 searchbtn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="">
+                                <button
+                                    class="border-2 border-petnetblue rounded-md py-3 px-12 text-white font-bold bg-petnetblue show-modal2">
+                                    Invite Member
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- top-header-end -->
+                    {{if .InviteUsrErr}}
+                    <div class="flex justify-center bg-white">
+                        <div id="alert-show-error" role="alert" class="w-2/3">
+                            <!-- petnetpink text-white -->
+                            <div
+                                class="p-3 bg-petnetpink w-full text-black mb-4 bg-opacity-20 rounded-lg border border-petnetpink flex items-center ">
+                                <span class="p-2 rounded-lg bg-petnetpink flex justify-center items-center mr-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white rounded-full"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </span>
+                                <span>
+                                    {{.InviteUsrErr}}
+                                </span>
+                                <a href="javascript:;" class="mr-2 text-gray-400 inline-block w-3 ml-auto"
+                                    id="alert-remove-error" onclick="hidealertMessage()">
+                                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M11.25 0.757931C11.0943 0.601887 10.8829 0.514193 10.6625 0.514193C10.442 0.514193 10.2307 0.601887 10.075 0.757931L5.99998 4.8246L1.92498 0.749597C1.76928 0.593553 1.55791 0.505859 1.33748 0.505859C1.11704 0.505859 0.905668 0.593553 0.749976 0.749597C0.424976 1.0746 0.424976 1.5996 0.749976 1.9246L4.82498 5.9996L0.749976 10.0746C0.424976 10.3996 0.424976 10.9246 0.749976 11.2496C1.07498 11.5746 1.59998 11.5746 1.92498 11.2496L5.99998 7.1746L10.075 11.2496C10.4 11.5746 10.925 11.5746 11.25 11.2496C11.575 10.9246 11.575 10.3996 11.25 10.0746L7.17497 5.9996L11.25 1.9246C11.5666 1.60793 11.5666 1.0746 11.25 0.757931Z"
+                                            fill="#BCC3C8" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {{end}}
+                    <!-- table-start -->
+                    <div class="">
+                        <table class="min-w-full">
+                            <thead class="bg-white shadow-md relative z-10 w-full ">
+                                <tr>
+                                    <th class="text-left py-3 pl-8">
+                                        <div class="relative dropdown appearance-none">
+                                            <button class="dropdown-toggle flex items-center w-full justify-between focus:outline-none"
+                                                onclick="dropdownToggle(event)">
+                                                <p class="pr-4 font-semibold text-lg">Name</p>
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                </svg>
+                                            </button>
+                                            <div class="absolute right-0 top-12 hidden dropdown-item">
+                                                <div
+                                                    class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                                </div>
+                                                <div class="shadow  absolute top-3 -right-5 rounded">
+                                                    <div class="relative z-20 pt-3 w-40 bg-white rounded flex flex-col">
+                                                        <div class="text-sm pl-2 pb-2 flex-col flex">
+                                                            <ul>
+                                                                <li class="text-gray-500 w-full mb-2 ml-10 text-sm">
+                                                                    ORDER
+                                                                </li>
+                                                                <li class="flex items-center mb-2"
+                                                                    onclick="orderBy('UserName','asc')">
+                                                                    <input id="radio-asc" type="radio" value="asc"
+                                                                        class="hidden list-custom-input" />
+                                                                    <label for="radio-asc"
+                                                                        class="flex w-full items-center cursor-pointer ml-2 text-md">
+                                                                        <span
+                                                                            class="w-6 h-4 flex items-center inline-block mr-2 text-lg flex-no-shrink">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                class="h-4 w-4" fill="none"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke="currentColor">
+                                                                                <path stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                    stroke-width="2"
+                                                                                    d="M5 13l4 4L19 7" />
+                                                                            </svg>
+                                                                        </span>
+                                                                        A to Z
+                                                                    </label>
+                                                                </li>
+                                                                <li class="flex items-center"
+                                                                    onclick="orderBy('UserName','desc')">
+                                                                    <input id="radio-desc" type="radio" value="desc"
+                                                                        class="hidden list-custom-input" />
+                                                                    <label for="radio-desc"
+                                                                        class="flex w-full items-center cursor-pointer ml-2 text-md">
+                                                                        <span
+                                                                            class="w-6 h-4 flex items-center inline-block mr-2 text-lg flex-no-shrink">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                class="h-4 w-4" fill="none"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke="currentColor">
+                                                                                <path stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                    stroke-width="2"
+                                                                                    d="M5 13l4 4L19 7" />
+                                                                            </svg>
+                                                                        </span>
+                                                                        Z to A
+                                                                    </label>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th class="py-3 text-left p-20">
+                                        <p class="font-semibold text-lg">Role</p>
+                                    </th>
+                                    <th class="text-left py-3 pr-12">
+                                        <div class="flex text-lg justify-between relative">
+                                            Status
+                                            <a href="javascript:;" onclick="toggleTopButton('openStatusDropdown')">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-4" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                </svg>
+                                            </a>
+                                            <div id="openStatusDropdown" class="absolute -right-4 top-12 hidden">
+                                                <div
+                                                    class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-4 shadow bg-white z-10">
+                                                </div>
+                                                <div class="shadow  absolute top-3 -right-2 rounded">
+                                                    <div class="relative z-20 p-3 w-44 bg-white rounded">
+                                                        <ul class="pl-10">
+                                                            <li class="text-gray-500 text-sm">STATUS</li>
+                                                            {{range .InviteStatusList}}
+                                                            <li class="my-3 relative"
+                                                                onclick="filterStatus('{{.}}')">
+                                                                <input id="checkbox-{{.}}" type="checkbox" value="{{.}}"
+                                                                    class="absolute dsa-checkbox hidden top-0 -left-8">
+                                                                <label for="checkbox-{{.}}"
+                                                                    class="cursor-pointer text-md w-full">
+                                                                    <span
+                                                                        class="w-4 h-4 border-2 absolute -left-8 top-1.5 border-gray-400 rounded text-white">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                                            class="h-3 w-3" fill="none"
+                                                                            viewBox="0 0 24 24" stroke="currentColor">
+                                                                            <path stroke-linecap="round"
+                                                                                stroke-linejoin="round" stroke-width="2"
+                                                                                d="M5 13l4 4L19 7"></path>
+                                                                        </svg>
+                                                                    </span>
+                                                                    {{.}}
+                                                                </label>
+                                                            </li>
+                                                            {{end}}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th class="text-left py-3 pr-20">
+                                        <div class="relative dropdown appearance-none">
+                                            <button class="dropdown-toggle flex items-center w-full justify-between focus:outline-none"
+                                                onclick="dropdownToggle(event)">
+                                                <p class="pr-4 font-semibold text-lg">Date Created</p>
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                </svg>
+                                            </button>
+
+                                            <div class="absolute right-0 top-12 hidden dropdown-item">
+                                                <div
+                                                    class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                                </div>
+                                                <div class="shadow  absolute top-3 -right-5 rounded">
+                                                    <div class="relative z-20 pt-3 w-52 bg-white rounded flex flex-col">
+                                                        <div class="text-sm pl-2 pb-2 flex-col flex">
+                                                            <ul>
+                                                                <li class="text-gray-500 w-full mb-2 ml-10 text-sm">SORT
+                                                                    BY DATE
+                                                                </li>
+                                                                <li class="flex items-center mb-2"
+                                                                    onclick="orderBy('CreatedDate','asc')">
+                                                                    <input id="radio-sort-asc" type="radio"
+                                                                        value="asc" class="hidden list-custom-input" />
+                                                                    <label for="radio-sort-asc"
+                                                                        class="flex w-full items-center cursor-pointer ml-2 text-md">
+                                                                        <span
+                                                                            class="w-6 h-4 flex items-center inline-block mr-2 text-lg flex-no-shrink">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                class="h-4 w-4" fill="none"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke="currentColor">
+                                                                                <path stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                    stroke-width="2"
+                                                                                    d="M5 13l4 4L19 7" />
+                                                                            </svg>
+                                                                        </span>
+                                                                        Oldest to Newest
+                                                                    </label>
+                                                                </li>
+                                                                <li class="flex items-center"
+                                                                    onclick="orderBy('CreatedDate','desc')">
+                                                                    <input id="radio-sort-desc" type="radio" value="desc"
+                                                                        class="hidden list-custom-input" />
+                                                                    <label for="radio-sort-desc"
+                                                                        class="flex w-full items-center cursor-pointer ml-2 text-md">
+                                                                        <span
+                                                                            class="w-6 h-4 flex items-center inline-block mr-2 text-lg flex-no-shrink">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                class="h-4 w-4" fill="none"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke="currentColor">
+                                                                                <path stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                    stroke-width="2"
+                                                                                    d="M5 13l4 4L19 7" />
+                                                                            </svg>
+                                                                        </span>
+                                                                        Newest to Oldest
+                                                                    </label>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th class="pr-20 py-3 text-left text-lg">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200 ">
+                                {{range .Users}}
+                                <tr class="">
+                                    <td class="pl-8 py-4 whitespace-nowrap text-lg text-petnetblue font-extrabold leading-5">
+                                        <p>{{.FirstName}} {{.LastName}}</p>
+                                    </td>
+                                    <td class="p-20 py-4 whitespace-nowrap text-lg font-light leading-5 text-petnetlightgray">
+                                        <p>{{.UserRole}}</p>
+                                    </td>
+                                    <td class="pr-12 py-4 whitespace-nowrap ">
+                                        {{if .IsNotDeleted}}
+                                                <div class="bg-{{userStatusClass .InviteStatus}} rounded-xl text-center py-1 w-24 text-sm leading-4 font-normal">
+                                                {{.InviteStatus}}</div>
+                                        {{else}}
+                                            <div class="bg-petnetpink rounded-xl text-center py-1 w-24 leading-4 font-normal text-sm">
+                                            Revoked</div>
+                                        {{end}}
+                                    </td>
+                                    <td class="pr-20 py-4 whitespace-nowrap font-light text-lg leading-5 text-petnetlightgray">
+                                        <p>{{formatDate .Created "January 02, 2006"}}</p>
+                                    </td>
+                                    <td class="pr-32 whitespace-nowrap text-lg font-semibold leading-5">
+                                        {{if or (eq .InviteStatus "In Progress") (eq .InviteStatus "Invite Sent") (eq .InviteStatus "Expired") (eq .InviteStatus "Revoked") (.Resend)}}
+                                        <form id="sendform" action="/dashboard/manage-users" method="POST"
+                                            class="mb-0 inline-block">
+                                            {{ $.CSRFField }}
+                                            <input name="UserID" value="{{ .ID }}" type="hidden" />
+                                            <button type="submit"
+                                                class="text-petnetlightblue pr-6 mailsend text-lg font-semibold leading-5">Resend</button>
+                                        </form>
+                                        {{end}}
+                                        {{if .IsNotDeleted}}
+                                            <a href="/dashboard/disable-user/{{.ID}}" class="text-petnetpink disable-user text-lg font-semibold leading-5"
+                                            onclick="disableUser(event, this);">Delete</a>
+                                        {{else}}
+                                            {{if ne .InviteStatus "Revoked"}}
+                                                <a href="/dashboard/enable-user/{{.ID}}" class="text-petnetpink enable-user text-lg font-semibold leading-5" onclick="enableUser(event, this);">Enable</a>
+                                            {{end}}
+                                        {{end}}
+                                    </td>
+                                </tr>
+                                {{end}}
+                            </tbody>
+                        </table>
+                        <div class="text-gray-500 text-center bg-white py-8 flex justify-between px-20">
+                            <div></div>
+                            <p class="flex items-center pl-32"> Showing {{len .Users}} out of
+                                {{.PaginationData.Total}} Users</p>
+                            <div>
+                                <div class="flex flex-wrap justify-between items-center">
+                                    <div>
+                                        {{if ne .PaginationData.Total 0}}
+                                        <a {{if .PaginationData.Prev}}href="{{.PaginationData.Prev.URL}}" {{end}}>
+                                            <button {{if eq .PaginationData.CurrentPage 1}} disabled {{end}} {{if .PaginationData.Prev}}
+                                                class="relative inline-flex items-center px-4 py-2 rounded border border-gray-400 bg-white text-sm font-medium text-petnetblue hover:bg-gray-50"
+                                                {{else}}
+                                                class="relative inline-flex items-center px-4 py-2 rounded border border-gray-400 text-sm font-medium text-gray-500 bg-gray-50"
+                                                {{end}}>
+                                                Previous
+                                            </button>
+                                        </a>
+                                        {{end}}
+                                        <div class="inline-block px-6">
+                                            {{range .PaginationData.Pages}}
+                                            {{if .Order}}
+                                            <a href="{{.URL}}"
+                                                class="{{if .Current}}font-bold bg-petnetblue text-white {{else}}text-petnetblue{{end}} z-10 b relative inline-flex items-center px-4 py-2 text-sm font-medium hover:bg-petnetblue hover:text-white">{{.Order}}</a>
+                                            {{else}}
+                                            <a href="" class="inline-block mr-4 hover:text-blue-dark-5">...</a>
+                                            {{end}}
+                                            {{end}}
+                                        </div>
+                                        {{if ne .PaginationData.Total 0}}
+                                        <a {{if .PaginationData.Next}}href="{{.PaginationData.Next.URL}}" {{end}}>
+                                            <button {{if eq .PaginationData.CurrentPage (countPaginate .PaginationData.Total .PaginationData.PerPage)}}
+                                            disabled {{end}} {{if .PaginationData.Next}}
+                                                class="relative inline-flex items-center px-4 py-2 rounded border border-gray-400  bg-white text-sm font-medium text-petnetblue hover:bg-gray-50"
+                                                {{else}}
+                                                class="relative inline-flex items-center px-4 py-2 rounded border border-gray-400  bg-white text-sm font-medium text-gray-500 bg-gray-50"
+                                                {{end}}>Next
+                                            </button>
+                                        </a>
+                                        {{end}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- modal-create -->
+        <div
+            class="modal h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-black bg-opacity-50 z-30 hidden">
+            <!-- modal -->
+            <div class="py-3 sm:max-w-xl sm:mx-auto">
+                <div class="bg-white shadow-lg w-full z-50 rounded-md overflow-hidden">
+                    <div class="mx-20 my-12">
+                        <div>
+                            <span class="text-2xl text-black font-semibold">Create New Role</span>
+                        </div>
+                        <p class="text-petnettextgray mt-4 mb-2">Please fill up the following information.</p>
+                        <div class="w-full">
+                            <div class="mb-6">
+                                <label for="name" class="block text-black mb-2">Name of Role</label>
+                                <input type="name"
+                                    class="w-full px-3 py-2 border border-gray-300 bg-petnetgray rounded-md focus:outline-none" />
+                            </div>
+                            <p class="mb-1">Function</p>
+                            <p class="text-petnettextgray italic">*Function permissions can be changed and edited later
+                                on.</p>
+                            <div class="my-4 space-y-3">
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded">
+                                    </div>
+                                    <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">DSA List & Details</label>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded">
+                                    </div>
+                                    <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Transactions list &
+                                            Details</label>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded">
+                                    </div>
+                                    <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Document checklist</label>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded">
+                                    </div>
+                                    <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Risk Assessment</label>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded">
+                                    </div>
+                                    <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Currency</label>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded">
+                                    </div>
+                                    <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Fee & Commission</label>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded">
+                                    </div>
+                                    <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Location & Branches</label>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded">
+                                    </div>
+                                    <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Service Catalog</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between">
+                                <button
+                                    class="border-2 border-petnetblue rounded-md py-2 px-16 text-petnetblue font-bold mr-4 close-modal">
+                                    Cancel
+                                </button>
+                                <button
+                                    class="border-2 border-petnetyellow rounded-md py-2 px-16 text-petnetblue font-bold bg-petnetyellow">
+                                    Create Role
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- modal-invite -->
+        <div
+            class="modal2 h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-black bg-opacity-50 z-30 hidden">
+            <!-- modal -->
+            <div class="py-3 sm:max-w-xl sm:mx-auto">
+                <div class="bg-white shadow-lg w-full z-50 rounded-md overflow-hidden">
+                    <div class="mx-20 my-12">
+                        <div>
+                            <span class="text-2xl text-black font-semibold">Invite members to team</span>
+                        </div>
+                        <p class="text-petnettextgray mt-4 mb-2">Invite existing or new email address</p>
+                        <div class="w-full">
+                            <form action="/dashboard/invite-member" method="post">
+                                {{.CSRFField}}
+                                <div class="mb-6">
+                                    <input required
+                                        class="border-2 border-petnetheadertext w-full h-10 p-4 rounded-md focus:outline-none"
+                                        autocomplete="off" type="email" id="email" name="Email">
+                                </div>
+
+                                <div class="flex justify-between items-center mb-6">
+                                    <div>First Name</div>
+                                    <input type="text" name="FirstName" class="border-2 border-petnetheadertext h-10 p-4 rounded-md focus:outline-none">
+                                </div>
+                                <div class="flex justify-between items-center mb-6">
+                                    <div>Last Name</div>
+                                    <input type="text" name="LastName" class="border-2 border-petnetheadertext h-10 p-4 rounded-md focus:outline-none">
+                                </div>
+
+                                <div id="role_manage" class="role_manage flex flex-wrap justify-between w-full">
+                                    <div class="inline-flex items-center rounded-md" id="role_manage_email">
+                                        name@email.com</div>
+                                    <div class="roleLists" data-val="1" data-some="2"
+                                        class="bg-petnetgray px-4 rounded-md">
+                                        <p>Select Role</p>
+                                        <ul class="dropdown-item hidden">
+                                            {{range .RoleLists}}
+                                            <li data-val="{{.ID}}">{{.Name}}</li>
+                                            {{end}}
+                                        </ul>
+                                        <input type="hidden" name="Role" id="role" value="" required>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between mt-10">
+                                    <a href="javascript:;"
+                                        class="border-2 border-petnetblue rounded-md py-2 px-16 text-petnetblue font-bold mr-4 close-modal2 inline-block">
+                                        Cancel
+                                    </a>
+                                    <button type="submit"
+                                        class="border-2 border-petnetyellow rounded-md py-2 px-12 text-petnetblue font-bold bg-petnetyellow">
+                                        Invite Members
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{ template "otp-modal.html" dict "Email" .LoginUserInfo.Email "CSRFField" .CSRFField}}
+        <script>
+            if (typeof params === 'undefined') {
+            const params = new URLSearchParams(window.location.search)
+        }
+
+            // modal
+            const modal2 = document.querySelector('.modal2');
+            const emailid = document.querySelector('#email');
+            const role_manage = document.querySelector('#role_manage');
+            const role_manage_email = document.querySelector('#role_manage_email');
+            const showModal2 = document.querySelector('.show-modal2');
+            const closeModal2 = document.querySelectorAll('.close-modal2');
+            showModal2.addEventListener('click', function () {
+                modal2.classList.remove('hidden')
+            });
+            emailid.addEventListener('change', function () {
+                role_manage.classList.remove('hidden');
+                role_manage_email.innerHTML = emailid.value;
+            });
+
+            closeModal2.forEach(close => {
+                close.addEventListener('click', function () {
+                    modal2.classList.add('hidden')
+                });
+            });
+            // modal
+            function toggleTopButton(id) {
+                let getDropdownItem = document.getElementById(id)
+                let isHiddenClass = getDropdownItem.classList.contains('hidden');
+                if (!isHiddenClass) {
+                    getDropdownItem.classList.add("hidden");
+                } else {
+                    getDropdownItem.classList.remove("hidden");
+                }
+            }
+
+            function dropdownToggle(event) {
+                let targetItem = event.target;
+                while (!targetItem.classList.contains('dropdown-toggle')) {
+                    targetItem = targetItem.parentElement;
+                }
+                targetItem = targetItem.nextElementSibling;
+
+                if (targetItem.classList.contains('hidden')) {
+                    targetItem.classList.remove("hidden");
+                } else {
+                    targetItem.classList.add("hidden");
+                }
+                let x = document.getElementsByClassName("dropdown-item");
+                for (let i = 0; i < x.length; i++) {
+                    if (x[i] != targetItem) {
+                        x[i].classList.add("hidden")
+                    }
+                }
+            }
+            
+
+            function search() {
+                let searchTerm = document.getElementById("search").value;
+                if (params.has("search-term")) {
+                    params.delete("search-term");
+                }
+                params.append("search-term", searchTerm);
+                if (params.has("page")) {
+                    params.delete("page");
+                }
+                window.location.search = params.toString();
+            }
+
+            function filterStatus(type) {
+                let status = [];
+                if (params.has("status")) {
+                    status = params.get("status").split(",");
+                }
+
+                if (type === "Invited") {
+                    let Invited = document.getElementById("checkbox-Invited");
+                    if (Invited.checked === false) {
+                        status = status.filter(e => e !== 'Invited')
+                    } else {
+                        status.push("Invited")
+                    }
+                }
+                if (type === "InviteSent") {
+                    let accepted = document.getElementById("checkbox-InviteSent");
+                    if (accepted.checked === false) {
+                        status = status.filter(e => e !== 'InviteSent')
+                    } else {
+                        status.push("InviteSent")
+                    }
+                }
+                if (type === "Expired") {
+                    let accepted = document.getElementById("checkbox-Expired");
+                    if (accepted.checked === false) {
+                        status = status.filter(e => e !== 'Expired')
+                    } else {
+                        status.push("Expired")
+                    }
+                }
+                if (type === "InProgress") {
+                    let accepted = document.getElementById("checkbox-InProgress");
+                    if (accepted.checked === false) {
+                        status = status.filter(e => e !== 'InProgress')
+                    } else {
+                        status.push("InProgress")
+                    }
+                }
+                if (type === "Revoked") {
+                    let accepted = document.getElementById("checkbox-Revoked");
+                    if (accepted.checked === false) {
+                        status = status.filter(e => e !== 'Revoked')
+                    } else {
+                        status.push("Revoked")
+                    }
+                }
+                if (type === "Approved") {
+                    let accepted = document.getElementById("checkbox-Approved");
+                    if (accepted.checked === false) {
+                        status = status.filter(e => e !== 'Approved')
+                    } else {
+                        status.push("Approved")
+                    }
+                }
+
+                if (params.has("page")) {
+                    params.delete("page")
+                }
+
+                if (status.length > 0) {
+                    status = status.filter(function (item, pos) {
+                        return status.indexOf(item) == pos;
+                    })
+                    params.set("status", status.join(","))
+                } else {
+                    params.delete("status")
+                }
+                window.location.search = params.toString();
+            }
+            function orderBy(cloumn, type) {
+                params.set("sort", type);
+                params.set("sort_column", cloumn);
+                let getUncheckItem = 'asc';
+                if (type === "desc") {
+                    getUncheckItem = 'desc'
+                }
+                if(cloumn == "CreatedDate"){
+                    document.getElementById('radio-asc').checked = false
+                    document.getElementById('radio-desc').checked = false
+                    document.getElementById('radio-sort-' + getUncheckItem).checked = true
+                }else if(cloumn == "UserName"){
+                    document.getElementById('radio-sort-asc').checked = false
+                    document.getElementById('radio-sort-desc').checked = false
+                    document.getElementById('radio-' + getUncheckItem).checked = true
+                }else{
+                    document.getElementById('radio-sort-asc').checked = false
+                    document.getElementById('radio-sort-desc').checked = false
+                    document.getElementById('radio-' + getUncheckItem).checked = true
+                }
+                window.location.search = params.toString();
+            }
+            window.onload = function () {
+                if (params.has("sort_column")) {
+                    let column = params.get("sort_column");
+                    if (column === "CreatedDate") {
+                        document.getElementById('radio-asc').checked = false
+                        document.getElementById('radio-desc').checked = false
+                        document.getElementById('radio-sort-' + params.get("sort")).checked = true
+                    } else if (column === "UserName") {
+                        document.getElementById('radio-sort-asc').checked = false
+                        document.getElementById('radio-sort-desc').checked = false
+                        document.getElementById('radio-' + params.get("sort")).checked = true
+                    } else {
+                        document.getElementById('radio-asc').checked = true
+                    }
+                }else{
+                    document.getElementById('radio-asc').checked = true
+                }
+                if (params.has("status")) {
+                    let status = params.get("status").split(",");
+                    if (status.includes("Invited")) {
+                        document.getElementById('checkbox-Invited').checked = true
+                    }
+                    if (status.includes("InviteSent")) {
+                        document.getElementById('checkbox-InviteSent').checked = true
+                    }
+                    if (status.includes("Expired")) {
+                        document.getElementById('checkbox-Expired').checked = true
+                    }
+                    if (status.includes("InProgress")) {
+                        document.getElementById('checkbox-InProgress').checked = true
+                    }
+                    if (status.includes("Revoked")) {
+                        document.getElementById('checkbox-Revoked').checked = true
+                    }
+                    if (status.includes("Approved")) {
+                        document.getElementById('checkbox-Approved').checked = true
+                    }
+                }
+            }
+        </script>
+        <script>
+            let dropdown = {
+                hiddenClass: 'hidden',
+                dropdownOpen: function (item) {
+                    let $this = this;
+                    let nextItem = item.nextElementSibling;
+                    item.addEventListener("click", function (event) {
+                        if (nextItem.classList.contains($this.hiddenClass)) {
+                            nextItem.classList.remove($this.hiddenClass);
+                        } else {
+                            nextItem.classList.add($this.hiddenClass);
+                        }
+                    });
+                },
+                assignToDropdownOpen: function () {
+                    let items = document.getElementsByClassName('roleLists');
+                    for (let x = 0; x < items.length; x++) {
+                        this.dropdownOpen(items[x].children[0]);
+                        this.assignToDropdownItem(items[x].children[1]);
+                        this.hideOpenedItemClickingOutside(items[x]);
+                    }
+                },
+                dropdownItemClick: function (item, parentItem) {
+                    let $this = this;
+                    item.addEventListener("click", function (event) {
+                        let itemData = this.dataset["val"];
+                        if (itemData) {
+                            parentItem.nextElementSibling.value = itemData;
+                            parentItem.previousElementSibling.innerHTML = this.innerHTML;
+                            parentItem.classList.add($this.hiddenClass);
+                        }
+                    });
+                },
+                assignToDropdownItem: function (item) {
+                    let listItems = item.children;
+                    for (let x = 0; x < listItems.length; x++) {
+                        this.dropdownItemClick(listItems[x], item);
+                    }
+                },
+                hideOpenedItemClickingOutside: function (dropdownMain) {
+                    let $this = this;
+                    document.addEventListener("click", function (event) {
+                        if (event.target != dropdownMain && !$this.childOf(event.target,
+                                dropdownMain)) {
+                            dropdownMain.children[1].classList.add($this.hiddenClass)
+                        }
+                    })
+                },
+                childOf: function (c, p) { //returns boolean
+                    while ((c = c.parentNode) && c !== p);
+                    return !!c;
+                }
+            }
+            dropdown.assignToDropdownOpen();
+            function hidealertMessage() {
+                var ase = document.getElementById("alert-show-error");
+                value = document.getElementsByClassName("otpCode");
+                for (i = 0; i < value.length; i++) {
+                    value[i].removeAttribute('disabled');
+                }
+                ase.classList.add('hidden');
+                if(params.has("errorMsg")){
+                    params.delete("errorMsg")
+                }
+            }
+            function disableUser(e, param){
+                e.preventDefault();
+                var result = confirm("Are you sure you want to delete?");
+                if (result) {
+                    window.location.href = param.href;
+                }
+            }
+            function enableUser(e, param){
+                e.preventDefault();
+                var result = confirm("Are you sure you want to Enable this User?");
+                if (result) {
+                    window.location.href = param.href;
+                }
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+            let menus = document.querySelectorAll(".mailsend");
+            let form = document.getElementById("sendform")
+            for (let i = 0; i < menus.length; i++) {
+                menus[i].addEventListener("click", function(e){
+                    e.preventDefault();
+                    document.getElementById("sendform").submit();
+                    menus[i].disabled=true;
+                });
+            }
+            let searchbtn = document.querySelectorAll(".searchbtn");
+            for (let i = 0; i < searchbtn.length; i++) {
+                searchbtn[i].addEventListener("click", function (e) {
+                    e.preventDefault();
+                    searchbtn[i].disabled = true;
+                    search();
+                });
+            }
+        });
+        </script>
+</body>
+</html>

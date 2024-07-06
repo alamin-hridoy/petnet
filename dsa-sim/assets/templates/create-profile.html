@@ -1,0 +1,126 @@
+<form method="POST" action="/create-profile">
+    {{ .CSRFField }}
+    <input name="Types" value="{{.Types}}" type="hidden">
+    <div>
+        <button type="submit">Create Profile</button>
+    </div>
+    <br>
+    <input name="Partner" value="{{.Partner}}" type="hidden">
+    <input name="Type" value="{{.Type}}" type="hidden">
+    <br>
+    <div>
+        <label>Email Address</label>
+    </div>
+    <div>
+        <input name="CreateProfileReq.Email" {{if .CreateProfileReq.Email}}value="{{.CreateProfileReq.Email}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+    <br>
+    <div>
+        <label>Type</label>
+    </div>
+    <div>
+        <input name="CreateProfileReq.Type" {{if .CreateProfileReq.Type}}value="{{.CreateProfileReq.Type}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+    <br>
+    <div>
+        <label>First Name</label>
+    </div>
+    <div>
+        <input name="CreateProfileReq.FirstName" {{if .CreateProfileReq.FirstName}}value="{{.CreateProfileReq.FirstName}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+    <br>
+    <div>
+        <label>Last Name</label>
+    </div>
+    <div>
+        <input name="CreateProfileReq.LastName" {{if .CreateProfileReq.LastName}}value="{{.CreateProfileReq.LastName}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+    <br>
+    <div>
+        <label>Birth Date</label>
+    </div>
+    <div>
+        <input name="CreateProfileReq.BirthDate" {{if .CreateProfileReq.BirthDate}}value="{{.CreateProfileReq.BirthDate}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+    <br>
+    <div>
+        <label>Country Code</label>
+    </div>
+    <div>
+        <input name="CreateProfileReq.Phone.CountryCode" {{if .CreateProfileReq.Phone.CountryCode}}value="{{.CreateProfileReq.Phone.CountryCode}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+    <br>
+    <div>
+        <label>Phone Number</label>
+    </div>
+    <div>
+        <input name="CreateProfileReq.Phone.Number" {{if .CreateProfileReq.Phone.Number}}value="{{.CreateProfileReq.Phone.Number}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+    <br>
+    <div>
+        <label>Address1</label>
+    </div>
+    <div>
+        <input name="CreateProfileReq.Address.Address1" {{if .CreateProfileReq.Address.Address1}}value="{{.CreateProfileReq.Address.Address1}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+    <br>
+    <div>
+        <label>Address2</label>
+    </div>
+    <div>
+        <input name="CreateProfileReq.Address.Address2" {{if .CreateProfileReq.Address.Address2}}value="{{.CreateProfileReq.Address.Address2}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+    <br>
+    <div>
+        <label>City</label>
+    </div>
+    <div>
+        <input name="CreateProfileReq.Address.City" {{if .CreateProfileReq.Address.City}}value="{{.CreateProfileReq.Address.City}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+    <br>
+    <div>
+        <label>State</label>
+    </div>
+    <div>
+        <input name="CreateProfileReq.Address.State" {{if .CreateProfileReq.Address.State}}value="{{.CreateProfileReq.Address.State}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+    <br>
+    <div>
+        <label>Province</label>
+    </div>
+    <div>
+        <input name="CreateProfileReq.Address.Province" {{if .CreateProfileReq.Address.Province}}value="{{.CreateProfileReq.Address.Province}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+    <br>
+    <div>
+        <label>Zone</label>
+    </div>
+    <div>
+        <input name="CreateProfileReq.Address.Zone" {{if .CreateProfileReq.Address.Zone}}value="{{.CreateProfileReq.Address.Zone}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+    <br>
+    <div>
+        <label>PostalCode</label>
+    </div>
+    <div>
+        <input name="CreateProfileReq.Address.PostalCode" {{if .CreateProfileReq.Address.PostalCode}}value="{{.CreateProfileReq.Address.PostalCode}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+    <br>
+    <div>
+        <label>Country</label>
+    </div>
+    <div>
+        <input name="CreateProfileReq.Address.Country" {{if .CreateProfileReq.Address.Country}}value="{{.CreateProfileReq.Address.Country}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+    <br>
+    <div>
+        <label>Occupation</label>
+    </div>
+    <div>
+        <input name="CreateProfileReq.Occupation" {{if .CreateProfileReq.Occupation}}value="{{.CreateProfileReq.Occupation}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+</form>
+	
+	
+	
+

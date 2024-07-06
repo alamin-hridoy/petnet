@@ -1,0 +1,83 @@
+image:
+  repository: asia.gcr.io/petnet-brankas-prod-1/oryd/hydra
+  tag: v1.10.1-alpine
+
+hydra:
+  # The ORY Hydra configuration. For a full list of available settings, check:
+  #   https://github.com/ory/hydra/blob/master/docs/config.yaml
+  # Use a pre-existing secret (see hydra-secret.yaml for required fields)
+  existingSecret: hydra-helm
+  config:
+    log:
+      leak_sensitive_values: true 
+      format: json
+      level: debug 
+    ttl:
+      access_token: 5m
+    serve:
+      public:
+        port: 4444
+        cors:
+          allowed_origins:
+            - https://staging.petnet.dev
+        access_log:
+          disable_for_health: true
+      admin:
+        port: 4445
+        access_log:
+          disable_for_health: true
+      tls:
+        allow_termination_from:
+          - 10.200.32.0/20
+    urls:
+      login: https://auth.staging.petnet.dev/login
+      consent: https://auth.staging.petnet.dev/consent
+      logout: https://auth.staging.petnet.dev/logout
+      post_logout_redirect: https://staging.petnet.dev/login
+      self:
+        issuer: https://auth.staging.petnet.dev/
+  
+ingress:
+  # Configure ingress for the proxy port.
+  public:
+    # En-/Disable the proxy ingress.
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: traefik
+      cert-manager.io/cluster-issuer: letsencrypt-real
+    hosts:
+      - host: auth.staging.petnet.dev
+        paths: ["/oauth2", "/.well-known", "/userinfo"]
+    tls:
+      - hosts:
+        - auth.staging.petnet.dev
+        secretName: cert-autho
+
+# Configures the Kubernetes service
+service:
+  # Configures the Kubernetes service for the proxy port.
+  public:
+    # En-/disable the service
+    enabled: true
+    # The service type
+    type: ClusterIP
+    # The service port
+    port: 4444
+    # If you do want to specify annotations, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'annotations:'.
+    annotations: {}
+  # Configures the Kubernetes service for the api port.
+  admin:
+    # En-/disable the service
+    enabled: true
+    # The service type
+    type: ClusterIP
+    # The service port
+    port: 80
+    # If you do want to specify annotations, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'annotations:'.
+    annotations: {}
+
+maester:
+  enabled: false
+

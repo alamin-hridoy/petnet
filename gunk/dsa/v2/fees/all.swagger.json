@@ -1,0 +1,402 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/dsa/v2/fees/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "OrgFeesService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v2/orgfee": {
+      "get": {
+        "summary": "List org fees.",
+        "description": "List all created org fees.",
+        "operationId": "OrgFeesService_ListFees",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/orgFeeListFeesResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "Org Fees"
+        ]
+      }
+    },
+    "/v2/orgfee/{fee.id}": {
+      "put": {
+        "summary": "Upsert org fee.",
+        "description": "Create or update an org fee.",
+        "operationId": "OrgFeesService_UpsertFee",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/orgFeeUpsertFeeResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "fee.id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/feesUpsertFeeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Org Fee"
+        ]
+      }
+    },
+    "/v2/orgfee/{rate.fee_commission_id}": {
+      "put": {
+        "summary": "Upsert fee commission rate.",
+        "description": "Create or update fee commission rate.",
+        "operationId": "OrgFeesService_UpsertRate",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/feeUpsertRateResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "rate.fee_commission_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/feesUpsertRateRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Org Rate"
+        ]
+      }
+    },
+    "/v2/rate": {
+      "get": {
+        "summary": "List fees commission rate.",
+        "description": "List all created org fees and commision rate.",
+        "operationId": "OrgFeesService_ListRates",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/orgFeesListRatesResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "fee_commission_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Org Fees Rate"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "feesFee": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "fee_type": {
+          "$ref": "#/definitions/feesFeeType"
+        },
+        "rate": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/feesRate"
+          }
+        },
+        "schedule": {
+          "$ref": "#/definitions/feesSchedule"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deleted": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "feesFeeStatus": {
+      "type": "string",
+      "enum": [
+        "UnknownFeeStatus",
+        "Active",
+        "Disabled"
+      ],
+      "default": "UnknownFeeStatus"
+    },
+    "feesFeeType": {
+      "type": "string",
+      "enum": [
+        "UnknownFeeType",
+        "TypeFee",
+        "TypeCommission"
+      ],
+      "default": "UnknownFeeType"
+    },
+    "feesListFeesResponse": {
+      "type": "object",
+      "properties": {
+        "fees": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/feesFee"
+          }
+        },
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "feesListRatesResponse": {
+      "type": "object",
+      "properties": {
+        "rates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/feesRate"
+          }
+        }
+      }
+    },
+    "feesRate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "fee_commission_id": {
+          "type": "string"
+        },
+        "min_volume": {
+          "type": "string"
+        },
+        "max_volume": {
+          "type": "string"
+        },
+        "txn_rate": {
+          "type": "string"
+        }
+      }
+    },
+    "feesSchedule": {
+      "type": "object",
+      "properties": {
+        "fee_status": {
+          "$ref": "#/definitions/feesFeeStatus"
+        },
+        "start_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "feesUpsertFeeRequest": {
+      "type": "object",
+      "properties": {
+        "fee": {
+          "$ref": "#/definitions/feesFee"
+        }
+      }
+    },
+    "feesUpsertFeeResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "feesUpsertRateRequest": {
+      "type": "object",
+      "properties": {
+        "fee_com_id": {
+          "type": "string"
+        },
+        "rate": {
+          "$ref": "#/definitions/feesRate"
+        }
+      }
+    },
+    "feesUpsertRateResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cms-config
+data:
+  TZ: "Asia/Manila"
+  RUNTIME_ENVIRONMENT: "DEPLOY_ENV"
+  SERVER_HOST: "OVERLAY_ME"
+  CORS_ORIGINS: "https://OVERLAY_ME,*.OVERLAY_ME"
+  HYDRA_ADMINURL: http://hydra-admin
+  AUTH_OAUTHURL: https://auth.ENV.petnet.dev
+  AUTH_SOURCE: usermgm
+  AUTH_ISSUER: https://auth.ENV.petnet.dev
+  AUTH_TOKEN: https://auth.ENV.petnet.dev/oauth2/token
+  AUTH_COOKIESECURE: "true"
+  INFLUXDB_HOST: influxdb2.influxdb.svc.cluster.local
+  INFLUXDB_PORT: '8086'
+  INFLUXDB_BATCHSIZE: '100'
+  INFLUXDB_GRPCMEASURE: portal_grpc_latency
+  INFLUXDB_HTTPMEASURE: portal_http_latency
+  IDENTITY_INTERNAL: usermgm-admin:80
+  IDENTITY_EXTERNAL: usermgm:80
+  FEATURE_SERVICEREQUEST: true

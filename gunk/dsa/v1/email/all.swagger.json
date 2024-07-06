@@ -1,0 +1,202 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/dsa/v1/email/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "EmailService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/onboardingreminder/{email}": {
+      "post": {
+        "summary": "Onboarding reminder email.",
+        "description": "Send reminder email to finish onboarding.",
+        "operationId": "EmailService_SendOnboardingReminder",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/orgFeesUpsertFeesResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/emailSendOnboardingReminderRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Onboarding Reminder"
+        ]
+      }
+    },
+    "/v1/servicerequestreminder": {
+      "post": {
+        "summary": "service request status reminder email.",
+        "description": "Send reminder email to service request status.",
+        "operationId": "EmailService_SendDsaServiceRequestNotification",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/EmailSendDsaServiceRequestNotificationResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/emailSendDsaServiceRequestNotificationRequest"
+            }
+          }
+        ],
+        "tags": [
+          "service request status Reminder"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "emailSendDsaServiceRequestNotificationRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/emailServiceRequestStatus"
+        },
+        "remark": {
+          "type": "string"
+        },
+        "partner_names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "service_name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "email",
+        "status",
+        "remark",
+        "partner_names",
+        "service_name"
+      ]
+    },
+    "emailSendDsaServiceRequestNotificationResponse": {
+      "type": "object"
+    },
+    "emailSendOnboardingReminderRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "emailSendOnboardingReminderResponse": {
+      "type": "object"
+    },
+    "emailServiceRequestStatus": {
+      "type": "string",
+      "enum": [
+        "NOSTATUS",
+        "ACCEPTED",
+        "REJECTED"
+      ],
+      "default": "NOSTATUS",
+      "title": "- NOSTATUS: ServiceRequestStatus_NOSTATUS is set when a service is enabled without a service request from DSA"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

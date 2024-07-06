@@ -1,0 +1,630 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>DSA Services</title>
+    <style>
+        .hasError .border.border-gray-300{
+            --tw-border-opacity: 1 !important;
+            border-color: rgba(185, 28, 28, var(--tw-border-opacity)) !important;
+        }
+    </style>
+</head>
+
+<body class="font-sans">
+        <div class="flex">
+            <!-- sidebar-left-start -->
+            {{ template "dsa-sidenav-menu.html" dict "Type" "dsa-services" "Data" .}}
+            <!-- sidebarleft-end -->
+            
+            <!-- top-header-start -->
+            <div class="min-h-screen w-full flex bg-petnetgray ">
+                <div class="w-full">
+                  <div class="px-16 py-4 shadow-md bg-white">
+                    <ul class="flex justify-end items-center space-x-4 mb-16">
+                      <li class="mr-auto">
+                            <a href="/dsa-services" class="inline-flex text-petnetlightblue text-sm items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-4" fill="none"
+                                                                                                                 viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                                                          d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                                </svg>
+                                Back to List
+                            </a>
+                      </li>
+                      <li>
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" fill="none" viewBox="0 0 24 24"
+                              stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                          </svg>
+                      </li>
+                      <li>
+                        {{ template "top-head-profile.html" dict "UserInfo" .UserInfo "CompanyName" .CompanyName .}}
+                        </li>
+                      <li>
+                      <li>
+                          <div class="relative" id="topDropdownBox">
+                              <a href="javascript:;" onclick="toggleTopButton('openTopDropdown')">
+                                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                      viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M19 9l-7 7-7-7" />
+                                  </svg>
+                              </a>
+                              <div class="absolute right-0 top-12 hidden" id="openTopDropdown">
+                                  <div
+                                      class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                  </div>
+                                  <div class="shadow-lg  absolute top-3 -right-5 rounded">
+                                      <div class="relative z-20 p-3 w-36 bg-white rounded space-y-2">
+                                          <a class="flex text-sm items-center" href="/profile">
+                                              <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                  <path fill-rule="evenodd" clip-rule="evenodd" d="M16 8C16 10.21 14.21 12 12 12C9.79 12 8 10.21 8 8C8 5.79 9.79 4 12 4C14.21 4 16 5.79 16 8ZM4 18C4 15.34 9.33 14 12 14C14.67 14 20 15.34 20 18V19C20 19.55 19.55 20 19 20H5C4.45 20 4 19.55 4 19V18Z" fill="#333333"/>
+                                              </svg>
+                                              Profile
+                                          </a>
+                                          <a href="/logout" class="flex text-sm pl-1">
+                                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
+                                                  viewBox="0 0 24 24" stroke="currentColor">
+                                                  <path stroke-linecap="round" stroke-linejoin="round"
+                                                      stroke-width="2"
+                                                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                              </svg>
+                                              Logout
+                                          </a>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </li>
+                  </ul>
+                <div class="mb-4">
+                    <h2 class="sm:text-5xl text-petnetblue font-semibold">Request Service</h2>
+                </div>
+                  </div>
+                    <!-- top-header-end -->
+                    <!-- main content-start -->
+                    <div class="px-24 xl:px-40 2xl:px-56 py-20 w-full">
+                      <div class="shadow overflow-hidden bg-white">
+                        <div class="rounded">
+                          <!-- step area -->
+                          <div class="flex bg-petnetheader bg-opacity-60 rounded-t">
+                              <div class="flex items-center px-4 bg-petnetpink w-full py-2 pl-16 h-12">
+                                <span
+                                      class="text-white text-sm rounded-full border-white border h-8 w-8 inline-flex justify-center items-center mr-2">1</span>
+                                  <p class="text-white text-sm ">Required Documents</p>
+                              </div>
+                          </div>
+                          <!-- form area -->
+                          <form method="POST" action="" enctype="multipart/form-data" name="dsaReqDocsForm">
+                            {{ .CSRFField }}
+                                  <!-- header text -->
+                            <p class="pt-20 pb-3 pl-20 text-2xl font-bold">Upload Service Documents</p>
+                            <div class="px-20">
+                                <div class="w-full">
+                                    <p class="pt-4 pb-1 text-base">Membership Form <span class="text-red-700">*</span></p>
+                                    <p class="pb-1 text-xs font-normal">Please download the form through this link: <a href="/images/doc/Membership-Form-mi.pdf" class="text-petnetlightblue">bit.ly/form</a></p>
+                                    <div id="file-upload-MI_mbf" class="w-full bg-petnetgray {{with .Errors.MI_mbf}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-MI_mbf" id="err-MI_mbf"></p>
+                                    {{with .Errors.MI_mbf}}
+                                        <p class="text-red-700 mt-2 all-errs-MI_mbf">{{.}}</p>
+                                    {{end}}
+                                </div>
+
+                                <div class="w-full">
+                                    <p class="pt-4 pb-1 text-base">Non-Disclosure Agreement<span class="text-red-700">*</span></p>
+                                    <div id="file-upload-MI_nda" class="w-full bg-petnetgray {{with .Errors.MI_nda}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-MI_nda" id="err-MI_nda"></p>
+                                    {{with .Errors.MI_nda}}
+                                        <p class="text-red-700 mt-2 all-errs-MI_nda">{{.}}</p>
+                                    {{end}}
+                                </div>
+
+                                <div class="w-full">
+                                    <p class="pt-4 pb-1 text-base">SEC Certificate Regi­stration<span class="text-red-700">*</span></p>
+                                    <div id="file-upload-MI_sec" class="w-full bg-petnetgray {{with .Errors.MI_sec}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-MI_sec" id="err-MI_sec"></p>
+                                    {{with .Errors.MI_sec}}
+                                        <p class="text-red-700 mt-2 all-errs-MI_sec">{{.}}</p>
+                                    {{end}}
+                                </div>
+
+                                <div class="w-full">
+                                    <p class="pt-4 pb-1 text-base">General Information Sheet<span class="text-red-700">*</span></p>
+                                    <div id="file-upload-MI_gis" class="w-full bg-petnetgray {{with .Errors.MI_gis}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-MI_gis" id="err-MI_gis"></p>
+                                    {{with .Errors.MI_gis}}
+                                        <p class="text-red-700 mt-2 all-errs-MI_gis">{{.}}</p>
+                                    {{end}}
+                                </div>
+
+                                <div class="w-full">
+                                    <p class="pt-4 pb-1 text-base">Audited Financial Statement<span class="text-red-700">*</span></p>
+                                    <div id="file-upload-MI_afs" class="w-full bg-petnetgray {{with .Errors.MI_afs}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-MI_afs" id="err-MI_afs"></p>
+                                    {{with .Errors.MI_afs}}
+                                        <p class="text-red-700 mt-2 all-errs-MI_afs">{{.}}</p>
+                                    {{end}}
+                                </div>
+
+                                <div class="w-full">
+                                    <p class="pt-4 pb-1 text-base">BIR Registration Cert<span class="text-red-700">*</span></p>
+                                    <div id="file-upload-MI_bir" class="w-full bg-petnetgray {{with .Errors.MI_bir}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-MI_bir" id="err-MI_bir"></p>
+                                    {{with .Errors.MI_bir}}
+                                        <p class="text-red-700 mt-2 all-errs-MI_bir">{{.}}</p>
+                                    {{end}}
+                                </div>
+                                
+                                <div class="w-full">
+                                    <p class="pt-4 pb-1 text-base">Secretary Certificate / Board Resolution<span class="text-red-700">*</span></p>
+                                    <div id="file-upload-MI_scb" class="w-full bg-petnetgray {{with .Errors.MI_scb}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-MI_scb" id="err-MI_scb"></p>
+                                    {{with .Errors.MI_scb}}
+                                        <p class="text-red-700 mt-2 all-errs-MI_scb">{{.}}</p>
+                                    {{end}}
+                                </div>
+
+                                <div class="w-full">
+                                    <p class="pt-4 pb-1 text-base">Valid ID of Authoriz­ed representative<span class="text-red-700">*</span></p>
+                                    <div id="file-upload-MI_via" class="w-full bg-petnetgray {{with .Errors.MI_via}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-MI_via" id="err-MI_via"></p>
+                                    {{with .Errors.MI_via}}
+                                        <p class="text-red-700 mt-2 all-errs-MI_via">{{.}}</p>
+                                    {{end}}
+                                </div>
+                                
+                                <div class="w-full">
+                                    <p class="pt-4 pb-1 text-base">MOA<span class="text-red-700">*</span></p>
+                                    <div id="file-upload-MI_moa" class="w-full bg-petnetgray {{with .Errors.MI_moa}}hasError{{end}}"></div>
+                                    <p class="text-red-700 mt-2 all-errs-MI_moa" id="err-MI_moa"></p>
+                                    {{with .Errors.MI_moa}}
+                                        <p class="text-red-700 mt-2 all-errs-MI_moa">{{.}}</p>
+                                    {{end}}
+                                </div>
+                                <div class="flex flex-wrap pt-6 justify-between bg-white pb-20">
+                                    <div class="lg:w-auto w-full text-center">
+                                        <a href="/dsa-services" class="rounded-md font-normal text-sm text-petnetblue border border-petnetblue  py-3 my-3 text-center w-44 inline-block">
+                                            Back
+                                        </a>
+                                    </div>
+                                    <div class="lg:w-auto w-full lg:ml-auto text-center">
+                                        <button id="SaveDraft" name="SaveDraft" value="SaveDraft" type="submit" onclick="submitForm('SaveDraft')" class="bg-petnetlightblue border border-petnetlightblue text-sm text-white  py-3 rounded-md font-normal my-3 text-center w-44 ml-auto">
+                                            Save as Draft 
+                                        </button>
+                                    </div>
+                                    <div class="lg:w-auto w-full text-center">
+                                        <button id="SaveContinue" name="SaveContinue" value="SaveContinue" type="submit" onclick="submitForm('SaveContinue')" class="bg-petnetyellow border border-petnetyellow text-sm text-petnetblue  py-3 rounded-md font-normal my-3 text-center w-44 ml-0 lg:ml-4">
+                                            Request Service
+                                        </button>
+                                    </div>
+                                </div>
+                              </div>
+                              </form>
+                              
+                      </div>
+                      </div>
+                    </div>
+                    <!-- main content-end -->
+                </div>
+            </div>
+        </div>
+</body>
+<script src="{{ assetHash "/js/fileupload.js" }}"></script>
+<script>
+    let tags = document.querySelectorAll(".upin");
+    tags.forEach((item) => {
+        item.addEventListener('change', ()=>{
+            let hasValue = false;
+            for (var i = 0; i < tags.length; i++) {
+                if (tags[i].value !== "") {
+                    hasValue = true;
+                    break
+                }
+            }
+            if(hasValue) {
+                console.log("field has value");
+            }
+        })
+    })
+</script>
+<script>
+    var MI_mbfForms = "{{.MI_mbfForms}}"
+    var MI_mbfID = "{{.MI_mbfID}}"
+    var MI_ndaForms = "{{.MI_ndaForms}}"
+    var MI_ndaID = "{{.MI_ndaID}}"
+    var MI_secForms = "{{.MI_secForms}}"
+    var MI_secID = "{{.MI_secID}}"
+    var MI_gisForms = "{{.MI_gisForms}}"
+    var MI_gisID = "{{.MI_gisID}}"
+    var MI_afsForms = "{{.MI_afsForms}}"
+    var MI_afsID = "{{.MI_afsID}}"
+    var MI_birForms = "{{.MI_birForms}}"
+    var MI_birID = "{{.MI_birID}}"
+    var MI_scbForms = "{{.MI_scbForms}}"
+    var MI_scbID = "{{.MI_scbID}}"
+    var MI_viaForms = "{{.MI_viaForms}}"
+    var MI_viaID = "{{.MI_viaID}}"
+    var MI_moaForms = "{{.MI_moaForms}}"
+    var MI_moaID = "{{.MI_moaID}}"
+    var CSRFFieldValue = "{{.CSRFFieldValue}}"
+</script>
+<script>
+
+let isFormSubmit = false;
+    function isFileSelected(el) {
+        if (!el) {
+            console.log("file input not present");
+            return false;
+        }
+
+        // If files are uploaded previously, then that file is not requireds
+        if (document.getElementsByName("uploaded-" + el.name).length > 0) {
+            return true
+        }
+
+        // if not multiple
+        if (el.files && el.files.length > 0) {
+            return true;
+        }
+
+        // if multiple
+        for (let i = 0; i < el.length; i++) {
+            if (el[i].files.length > 0) {
+                return true;
+            }
+        }
+
+        return false
+    }
+
+    function addDocErrorMessage(field, msg) {
+        if (field == "") {
+            return;
+        }
+
+        let fieldContainer = document.getElementById("file-upload-" + field);
+        if (!fieldContainer) {
+            return;
+        }
+        let allContainer = document.getElementById("err-" + field);
+        let blankErrMsg = allContainer.nextElementSibling.innerHTML
+        if (blankErrMsg == "" && allContainer.previousElementSibling.classList.contains("hasError")){
+            allContainer.previousElementSibling.classList.remove('hasError')
+        }
+        // remove errors if no error msg
+        if (msg == "") {
+            fieldContainer.classList.remove("border-red-500", "border");
+            let allDocErrs = document.querySelector(".all-errs-" + field);
+            if (allDocErrs) {
+                allDocErrs.innerHTML = "";
+            }
+
+            return;
+        }
+
+        // for error
+        fieldContainer.classList.add("border-red-500", "border");
+        document.getElementById("err-" + field).innerHTML = msg
+    }
+        const mi_mbf = [];
+		var MI_mbfFormsL = MI_mbfForms.split(",");
+		if(MI_mbfFormsL.length > 0){
+			MI_mbfFormsL.forEach(function(item){
+				if(item != ""){
+					mi_mbf.push({
+						'name':item,
+						'url':"/u/files/"+item,
+						'input':MI_mbfID,
+						'video':false
+					});
+				}
+			});
+		}
+        
+        new FileUpload("MI_mbf", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+            "", "Choose file/s to upload", mi_mbf, '', {
+                'previewImages': true,
+                'multiple': true,
+                'uploadCallback': function () {
+                return addDocErrorMessage("MI_mbf", "")
+            }
+            });
+        const mi_nda = [];
+		var MI_ndaFormsL = MI_ndaForms.split(",");
+		if(MI_ndaFormsL.length > 0){
+			MI_ndaFormsL.forEach(function(item){
+				if(item != ""){
+					mi_nda.push({
+						'name':item,
+						'url':"/u/files/"+item,
+						'input':MI_ndaID,
+						'video':false
+					});
+				}
+			});
+		}
+        new FileUpload("MI_nda", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+            "", "Choose file/s to upload", mi_nda, '', {
+                'previewImages': true,
+                'multiple': true,
+                'uploadCallback': function () {
+                return addDocErrorMessage("MI_nda", "")
+            }
+            });
+        const mi_sec = [];
+		var MI_secFormsL = MI_secForms.split(",");
+		if(MI_secFormsL.length > 0){
+			MI_secFormsL.forEach(function(item){
+				if(item != ""){
+					mi_sec.push({
+						'name':item,
+						'url':"/u/files/"+item,
+						'input':MI_secID,
+						'video':false
+					});
+				}
+			});
+		}
+        new FileUpload("MI_sec", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+            "", "Choose file/s to upload", mi_sec, '', {
+                'previewImages': true,
+                'multiple': true,
+                'uploadCallback': function () {
+                return addDocErrorMessage("MI_sec", "")
+            }
+            });
+        const mi_gis = [];
+		var MI_gisFormsL = MI_gisForms.split(",");
+		if(MI_gisFormsL.length > 0){
+			MI_gisFormsL.forEach(function(item){
+				if(item != ""){
+					mi_gis.push({
+						'name':item,
+						'url':"/u/files/"+item,
+						'input':MI_gisID,
+						'video':false
+					});
+				}
+			});
+		}
+        new FileUpload("MI_gis", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+            "", "Choose file/s to upload", mi_gis, '', {
+                'previewImages': true,
+                'multiple': true,
+                'uploadCallback': function () {
+                return addDocErrorMessage("MI_gis", "")
+            }
+            });
+        const mi_afs = [];
+		var MI_afsFormsL = MI_afsForms.split(",");
+		if(MI_afsFormsL.length > 0){
+			MI_afsFormsL.forEach(function(item){
+				if(item != ""){
+					mi_afs.push({
+						'name':item,
+						'url':"/u/files/"+item,
+						'input':MI_afsID,
+						'video':false
+					});
+				}
+			});
+		}
+        new FileUpload("MI_afs", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+            "", "Choose file/s to upload", mi_afs, '', {
+                'previewImages': true,
+                'multiple': true,
+                'uploadCallback': function () {
+                return addDocErrorMessage("MI_afs", "")
+            }
+            });
+        const mi_bir = [];
+		var MI_birFormsL = MI_birForms.split(",");
+		if(MI_birFormsL.length > 0){
+			MI_birFormsL.forEach(function(item){
+				if(item != ""){
+					mi_bir.push({
+						'name':item,
+						'url':"/u/files/"+item,
+						'input':MI_birID,
+						'video':false
+					});
+				}
+			});
+		}
+        new FileUpload("MI_bir", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+            "", "Choose file/s to upload", mi_bir, '', {
+                'previewImages': true,
+                'multiple': true,
+                'uploadCallback': function () {
+                return addDocErrorMessage("MI_bir", "")
+            }
+            });
+        const mi_scb = [];
+		var MI_scbFormsL = MI_scbForms.split(",");
+		if(MI_scbFormsL.length > 0){
+			MI_scbFormsL.forEach(function(item){
+				if(item != ""){
+					mi_scb.push({
+						'name':item,
+						'url':"/u/files/"+item,
+						'input':MI_scbID,
+						'video':false
+					});
+				}
+			});
+		}
+        new FileUpload("MI_scb", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+            "", "Choose file/s to upload", mi_scb, '', {
+                'previewImages': true,
+                'multiple': true,
+                'uploadCallback': function () {
+                return addDocErrorMessage("MI_scb", "")
+            }
+            });
+        const mi_via = [];
+		var MI_viaFormsL = MI_viaForms.split(",");
+		if(MI_viaFormsL.length > 0){
+			MI_viaFormsL.forEach(function(item){
+				if(item != ""){
+					mi_via.push({
+						'name':item,
+						'url':"/u/files/"+item,
+						'input':MI_viaID,
+						'video':false
+					});
+				}
+			});
+		}
+        new FileUpload("MI_via", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+            "", "Choose file/s to upload", mi_via, '', {
+                'previewImages': true,
+                'multiple': true,
+                'uploadCallback': function () {
+                return addDocErrorMessage("MI_via", "")
+            }
+            });
+        const mi_moa = [];
+		var MI_moaFormsL = MI_moaForms.split(",");
+		if(MI_moaFormsL.length > 0){
+			MI_moaFormsL.forEach(function(item){
+				if(item != ""){
+					mi_moa.push({
+						'name':item,
+						'url':"/u/files/"+item,
+						'input':MI_moaID,
+						'video':false
+					});
+				}
+			});
+		}
+        new FileUpload("MI_moa", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+            "", "Choose file/s to upload", mi_moa, '', {
+                'previewImages': true,
+                'multiple': true,
+                'uploadCallback': function () {
+                return addDocErrorMessage("MI_moa", "")
+            }
+            });
+            
+        function loadAjax(url, method, nameV) {
+            var xhttp = new XMLHttpRequest();
+            var data = new FormData();
+            data.append("name", nameV);
+            data.append("gorilla.csrf.Token", CSRFFieldValue);
+            xhttp.open(method, url, true);
+            xhttp.send(data);
+        }
+
+        function removedUploadedFile() {
+			const removefile = document.getElementsByClassName("remove_file");
+			for (var i = 0; i < removefile.length; i++) {
+				removefile[i].addEventListener("click", function (e) {
+                    e.preventDefault();
+					let file = this.getAttribute("data-file")
+					let fileid = this.getAttribute("data-fileid")
+                    console.log("file", file)
+                    console.log("fileid", fileid)
+					if (typeof file !== 'undefined') {
+						if (file != null) {
+							loadAjax("/u/files/" + fileid, "DELETE", file)
+						}
+					}
+					this.closest(".remove_file_wrap").remove();
+				});
+			}
+		}
+
+		document.addEventListener('DOMContentLoaded', function (event) {
+			removedUploadedFile()
+		});
+
+		document.body.addEventListener('DOMSubtreeModified', function (event) {
+			removedUploadedFile()
+		});
+
+        function submitForm(param) {
+        if (param != "SaveDraft") {
+            isFormSubmit = true
+        }
+    }
+
+    function validateFormFields(reqDocField, formField) {
+        let IsValid = true;
+        const errMsg = "This is a required document, please upload a file";
+
+        if (!isFileSelected(reqDocField)) {
+            IsValid = false;
+            addDocErrorMessage(formField, errMsg);
+            reqDocField.focus();
+        }
+        return IsValid;
+    }
+
+    function validateForm() {
+        if (!isFormSubmit) {
+            return true;
+        }
+
+        let checkedIsValid = [];
+
+        let MI_mbfDoc = document.dsaCiCoDocsForm.MI_mbf;
+            checkedIsValid.push(validateFormFields(MI_mbfDoc, "MI_mbf"));
+
+        let MI_ndaDoc = document.dsaCiCoDocsForm.MI_nda;
+            checkedIsValid.push(validateFormFields(MI_ndaDoc, "MI_nda"));
+            
+        let MI_secDoc = document.dsaCiCoDocsForm.MI_sec;
+            checkedIsValid.push(validateFormFields(MI_secDoc, "MI_sec"));
+            
+        let MI_gisDoc = document.dsaCiCoDocsForm.MI_gis;
+            checkedIsValid.push(validateFormFields(MI_gisDoc, "MI_gis"));
+        
+        let MI_afsDoc = document.dsaCiCoDocsForm.MI_afs;
+            checkedIsValid.push(validateFormFields(MI_afsDoc, "MI_afs"));
+        
+        let MI_birDoc = document.dsaCiCoDocsForm.MI_bir;
+            checkedIsValid.push(validateFormFields(MI_birDoc, "MI_bir"));
+        
+        let MI_scbDoc = document.dsaCiCoDocsForm.MI_scb;
+            checkedIsValid.push(validateFormFields(MI_scbDoc, "MI_scb"));
+        
+        let MI_viaDoc = document.dsaCiCoDocsForm.MI_via;
+            checkedIsValid.push(validateFormFields(MI_viaDoc, "MI_via"));
+        
+        let MI_moaDoc = document.dsaCiCoDocsForm.MI_moa;
+            checkedIsValid.push(validateFormFields(MI_moaDoc, "MI_moa"));
+        
+        let checker = arr => arr.every(v => v === true);
+        return checker(checkedIsValid) ? true : false;
+    }
+
+</script>
+<script>
+    const params = new URLSearchParams(window.location.search);
+    function toggleTopButton(id) {
+        let getDropdownItem = document.getElementById(id)
+        let isHiddenClass = getDropdownItem.classList.contains('hidden');
+        if (!isHiddenClass) {
+            getDropdownItem.classList.add("hidden");
+        } else {
+            getDropdownItem.classList.remove("hidden");
+        }
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        let menus = document.querySelectorAll("a");
+        for (let i = 0; i < menus.length; i++) {
+            menus[i].addEventListener("click", function(e){
+                e.preventDefault();
+                let lnk = menus[i].href;
+                menus[i].href = "javascript:;"
+                window.location.href = lnk;
+            });
+        }
+    });
+</script>
+</html>

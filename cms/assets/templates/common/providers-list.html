@@ -1,0 +1,1018 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>Manage Users</title>
+    <style>
+        .datecolor{
+            color:#353535;
+        }
+        .dropDwnImp{
+            border: none !important;
+            background-color: #F6F7FF !important;
+            border: 1px solid #F6F7FF !important;
+            border-radius: 4px !important;
+        }
+        .label-color{
+            color: #2E2E2F;
+        }
+        .provider-color{
+            color: #9A9A9A;
+        }
+        
+        [type=checkbox] {
+        width: 1.5rem;
+        height: 1.5rem;
+        color: #1A2791;
+        vertical-align: middle;
+        -webkit-appearance: none;
+        background: none;
+        border: 0;
+        outline: 0;
+        flex-grow: 0;
+        border-radius: 10%;
+        background-color: #FFFFFF;
+        transition: background 300ms;
+        cursor: pointer;
+        }
+
+        [type=checkbox]::before {
+        content: "";
+        color: transparent;
+        display: block;
+        width: inherit;
+        height: inherit;
+        border-radius: inherit;
+        border: 0;
+        background-color: transparent;
+        background-size: contain;
+        box-shadow: inset 0 0 0 1px #CCD3D8;
+        }
+
+        [type=checkbox]:checked {
+        background-color: currentcolor;
+        }
+
+        [type=checkbox]:checked::before {
+        box-shadow: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E %3Cpath d='M15.88 8.29L10 14.17l-1.88-1.88a.996.996 0 1 0-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 0 0 0-1.41c-.39-.39-1.03-.39-1.42 0z' fill='%23fff'/%3E %3C/svg%3E");
+        }
+    </style>
+</head>
+
+<body class="font-sans">
+    <div>
+
+        <div class="flex">
+            <!-- sidebar-left-start -->
+            <div class="bg-petnetblue w-32 min-h-screen">
+                <div class="min-h-screen">
+                    <img src="{{ assetHash "/images/DRP-Vertical.svg" }}" class="mx-auto my-5">
+                    <!-- Sidebar menu start -->
+                    {{ template "admin-sidenav-menu.html" dict "Type" "manage-users" "Data" .}}
+                    <!-- Sidebar menu end -->       
+                </div>
+            </div>
+            <!-- sidebarleft-end -->
+
+            <div class="min-h-screen w-full flex bg-white ">
+                <div class="w-full">
+                    <!-- top-header-start -->
+                    <div class="px-6 lg:px-8 py-10 relative z-10 bg-white">
+                        <div class="flex flex-wrap justify-between">
+                            <div>
+                                <ul class="flex justify-end items-center space-x-4 mb-16">
+                                    <li>
+                                        <a href="/dashboard/manage-users" class="text-gray-500 mr-6">Member List</a>
+                                    </li>
+                                    <li>
+                                        <a href="/dashboard/manage-role" class="text-gray-500 mx-6 ">User Roles</a>
+                                    </li>
+                                    <li>
+                                        <a href="/dashboard/providers-list" class="text-petnetlightblue mx-6 border-b-4 py-1 border-petnetlightblue">Providers List</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <ul class="flex justify-end items-center space-x-4 mb-16">
+                                    <li>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                        </svg>
+                                    </li>
+                                    <li>
+                                        {{ template "top-head-profile.html" dict "UserInfo" .LoginUserInfo "CompanyName" "" .}}
+                                    </li>
+                                    <li>
+                                        <div class="relative" id="topDropdownBox">
+                                            <a href="javascript:;" onclick="toggleTopButton('openTopDropdown')">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                </svg>
+                                            </a>
+                                            <div class="absolute right-0 top-12 hidden" id="openTopDropdown">
+                                                <div
+                                                    class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                                </div>
+                                                <div class="shadow-lg  absolute top-3 -right-5 rounded">
+                                                    <div class="relative z-20 p-3 w-36 bg-white rounded space-y-2">
+                                                        <a class="flex text-sm items-center" href="/profile">
+                                                            <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M16 8C16 10.21 14.21 12 12 12C9.79 12 8 10.21 8 8C8 5.79 9.79 4 12 4C14.21 4 16 5.79 16 8ZM4 18C4 15.34 9.33 14 12 14C14.67 14 20 15.34 20 18V19C20 19.55 19.55 20 19 20H5C4.45 20 4 19.55 4 19V18Z" fill="#333333"/>
+                                                            </svg>
+                                                            Profile
+                                                        </a>
+                                                        <a href="/logout" class="flex text-sm">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2"
+                                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                                            </svg>
+                                                            Logout
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <h2 class="text-5xl text-petnetblue font-bold">Manage Providers</h2>
+                        </div>
+                        <div class="flex flex-wrap items-center justify-between">
+                            <div class="border w-1/3 flex rounded-l">
+                                <input type="text" value="{{.SearchTerm}}" id="search" placeholder="Search for user"
+                                    class="w-full h-12 p-4 bg-petnetgray focus:outline-none">
+                                <button class="bg-petnetblue text-white rounded-r p-3 searchbtn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="">
+                                <button
+                                    class="border-2 border-petnetblue rounded-md py-3 px-12 text-white text-sm bg-petnetblue show-modal2">
+                                    Invite Providers
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- top-header-end -->
+                    {{if .InviteProviderErr}}
+                    <div class="flex justify-center bg-white">
+                        <div id="alert-show-error" role="alert" class="w-2/3">
+                            <!-- petnetpink text-white -->
+                            <div
+                                class="p-3 bg-petnetpink w-full text-black mb-4 bg-opacity-20 rounded-lg border border-petnetpink flex items-center ">
+                                <span class="p-2 rounded-lg bg-petnetpink flex justify-center items-center mr-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white rounded-full"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </span>
+                                <span>
+                                    {{.InviteProviderErr}}
+                                </span>
+                                <a href="javascript:;" class="mr-2 text-gray-400 inline-block w-3 ml-auto"
+                                    id="alert-remove-error" onclick="hidealertMessage()">
+                                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M11.25 0.757931C11.0943 0.601887 10.8829 0.514193 10.6625 0.514193C10.442 0.514193 10.2307 0.601887 10.075 0.757931L5.99998 4.8246L1.92498 0.749597C1.76928 0.593553 1.55791 0.505859 1.33748 0.505859C1.11704 0.505859 0.905668 0.593553 0.749976 0.749597C0.424976 1.0746 0.424976 1.5996 0.749976 1.9246L4.82498 5.9996L0.749976 10.0746C0.424976 10.3996 0.424976 10.9246 0.749976 11.2496C1.07498 11.5746 1.59998 11.5746 1.92498 11.2496L5.99998 7.1746L10.075 11.2496C10.4 11.5746 10.925 11.5746 11.25 11.2496C11.575 10.9246 11.575 10.3996 11.25 10.0746L7.17497 5.9996L11.25 1.9246C11.5666 1.60793 11.5666 1.0746 11.25 0.757931Z"
+                                            fill="#BCC3C8" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {{end}}
+                    <!-- table-start -->
+                    <div class="min-h-screen overflow-x-auto">
+                        <table class="min-w-full">
+                            <thead class="bg-white shadow-md relative z-10 w-full ">
+                                <tr>
+                                    <th
+                                    class="sm:pl-8 sm:py-5 text-left font-semibold sm:text-lg text-xs leading-4">
+                                    <div class="sm:w-44 w-28 flex justify-between relative">
+                                        Name
+                                        <a href="javascript:;" onclick="toggleTopButton('openComDropdown')">
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                class="h-6 w-6 ml-4 hidden sm:block" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    stroke-width="2" d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </a>
+
+                                        <div id="openComDropdown" class="absolute -right-5 top-12 hidden">
+                                            <div
+                                                class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-4 shadow bg-white z-10">
+                                            </div>
+                                            <div class="shadow absolute top-3 -right-2 rounded">
+                                                <div class="relative z-20 px-3 py-4 w-36 bg-white rounded">
+                                                    <ul>
+                                                        <li
+                                                            class="text-gray-500 w-full mb-2 text-center text-sm">
+                                                            ORDER
+                                                        </li>
+                                                        <li class="flex items-center mb-2"
+                                                            onclick="orderBy('company','asc')">
+                                                            <input id="radio-asc" type="radio" value="asc"
+                                                                class="hidden list-custom-input" />
+                                                            <label for="radio-asc"
+                                                                class="flex w-full items-center cursor-pointer text-base ml-3 font-normal">
+                                                                <span
+                                                                    class="w-4 h-4 flex items-center inline-block mr-2 text-lg flex-no-shrink">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                        class="h-4 w-4" fill="none"
+                                                                        viewBox="0 0 24 24"
+                                                                        stroke="currentColor">
+                                                                        <path stroke-linecap="round"
+                                                                            stroke-linejoin="round"
+                                                                            stroke-width="2"
+                                                                            d="M5 13l4 4L19 7" />
+                                                                    </svg>
+                                                                </span>
+                                                                A to Z
+                                                            </label>
+                                                        </li>
+                                                        <li class="flex items-center"
+                                                            onclick="orderBy('company','desc')">
+                                                            <input id="radio-desc" type="radio" value="desc"
+                                                                class="hidden list-custom-input" />
+                                                            <label for="radio-desc"
+                                                                class="flex w-full items-center cursor-pointer text-base ml-3 font-normal">
+                                                                <span
+                                                                    class="w-4 h-4 flex items-center inline-block mr-2 text-lg flex-no-shrink">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                        class="h-4 w-4" fill="none"
+                                                                        viewBox="0 0 24 24"
+                                                                        stroke="currentColor">
+                                                                        <path stroke-linecap="round"
+                                                                            stroke-linejoin="round"
+                                                                            stroke-width="2"
+                                                                            d="M5 13l4 4L19 7" />
+                                                                    </svg>
+                                                                </span>
+                                                                Z to A
+                                                            </label>
+                                                        </li>
+                                                    </ul>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </th>
+                                    <th class="w-1/5 px-8 text-left py-3 ">
+                                        <p class="font-semibold text-lg">Partner</p>
+                                    </th>
+                                    <th
+                                            class="font-semibold sm:text-lg text-xs leading-4 sm:py-5 text-left sm:px-6">
+                                            <div class="flex text-md justify-between relative">
+                                                Status
+                                                <a href="javascript:;" onclick="toggleTopButton('openStatusDropdown')">
+                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                        class="h-6 w-6 ml-4 hidden sm:block" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                    </svg>
+                                                </a>
+                                                <div id="openStatusDropdown" class="absolute -right-5 top-12 hidden">
+                                                    <div
+                                                        class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-4 shadow bg-white z-10">
+                                                    </div>
+                                                    <div class="shadow  absolute top-3 -right-2 rounded">
+                                                        <div class="relative z-20 p-3 w-44 bg-white rounded">
+                                                            <ul class="pl-10">
+                                                                <li class="text-gray-500 text-sm">STATUS</li>
+                                                                <li class="my-3 relative"
+                                                                    onclick="filterStatus('accepted')">
+                                                                    <input id="checkbox-accepted" type="checkbox"
+                                                                        value="accepted"
+                                                                        class="absolute dsa-checkbox hidden top-0 -left-8">
+                                                                    <label for="checkbox-accepted"
+                                                                        class="cursor-pointer text-base font-normal w-full">
+                                                                        <span
+                                                                            class="w-4 h-4 border-2 absolute -left-8 top-1.5 border-gray-400 rounded text-white">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                class="h-3 w-3" fill="none"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke="currentColor">
+                                                                                <path stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                    stroke-width="2" d="M5 13l4 4L19 7">
+                                                                                </path>
+                                                                            </svg>
+                                                                        </span>
+                                                                        Accepted
+                                                                    </label>
+                                                                </li>
+                                                                <li class="my-3 relative"
+                                                                    onclick="filterStatus('completed')">
+                                                                    <input id="checkbox-completed" value="completed"
+                                                                        type="checkbox"
+                                                                        class="absolute dsa-checkbox hidden top-0 -left-8">
+                                                                    <label for="checkbox-completed"
+                                                                        class="cursor-pointer text-base font-normal w-full">
+                                                                        <span
+                                                                            class="w-4 h-4 border-2 absolute -left-8 top-1.5 border-gray-400 rounded text-white">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                class="h-3 w-3" fill="none"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke="currentColor">
+                                                                                <path stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                    stroke-width="2" d="M5 13l4 4L19 7">
+                                                                                </path>
+                                                                            </svg>
+                                                                        </span>
+                                                                        Completed
+                                                                    </label>
+                                                                </li>
+                                                                <li class="my-3 relative"
+                                                                    onclick="filterStatus('pending')">
+                                                                    <input id="checkbox-pending" value="pending"
+                                                                        type="checkbox"
+                                                                        class="absolute dsa-checkbox hidden top-0 -left-8">
+                                                                    <label for="checkbox-pending"
+                                                                        class="cursor-pointer text-base font-normal w-full">
+                                                                        <span
+                                                                            class="w-4 h-4 border-2 absolute -left-8 top-1.5 border-gray-400 rounded text-white">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                class="h-3 w-3" fill="none"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke="currentColor">
+                                                                                <path stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                    stroke-width="2" d="M5 13l4 4L19 7">
+                                                                                </path>
+                                                                            </svg>
+                                                                        </span>
+                                                                        Pending
+                                                                    </label>
+                                                                </li>
+                                                                <li class="my-3 relative"
+                                                                    onclick="filterStatus('rejected')">
+                                                                    <input id="checkbox-rejected" value="rejected"
+                                                                        type="checkbox"
+                                                                        class="absolute dsa-checkbox hidden top-0 -left-8">
+                                                                    <label for="checkbox-rejected"
+                                                                        class="cursor-pointer text-base font-normal w-full">
+                                                                        <span
+                                                                            class="w-4 h-4 border-2 absolute -left-8 top-1.5 border-gray-400 rounded text-white">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                class="h-3 w-3" fill="none"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke="currentColor">
+                                                                                <path stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                    stroke-width="2" d="M5 13l4 4L19 7">
+                                                                                </path>
+                                                                            </svg>
+                                                                        </span>
+                                                                        Rejected
+                                                                    </label>
+                                                                </li>
+                                                                <li class="my-3 relative"
+                                                                    onclick="filterStatus('incomplete')">
+                                                                    <input id="checkbox-incomplete" value="incomplete"
+                                                                        type="checkbox"
+                                                                        class="absolute dsa-checkbox hidden top-0 -left-8">
+                                                                    <label for="checkbox-incomplete"
+                                                                        class="cursor-pointer text-base font-normal w-full">
+                                                                        <span
+                                                                            class="w-4 h-4 border-2 absolute -left-8 top-1.5 border-gray-400 rounded text-white">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                class="h-3 w-3" fill="none"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke="currentColor">
+                                                                                <path stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                    stroke-width="2" d="M5 13l4 4L19 7">
+                                                                                </path>
+                                                                            </svg>
+                                                                        </span>
+                                                                        Incomplete
+                                                                    </label>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    </th>
+                                    <th
+                                        class="font-semibold text-lg leading-4 py-5 px-6 text-left hidden sm:table-cell">
+                                        <div class="flex text-md justify-between relative items-center">
+                                            Date Invited
+                                            <a href="javascript:;" onclick="toggleTopButton('openDADropdown')">
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                    class="h-6 w-6 ml-4 hidden sm:block" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                </svg>
+                                            </a>
+                                            <div id="openDADropdown" class="absolute -right-5 top-12 hidden">
+                                                <div
+                                                    class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-4 shadow bg-white z-10">
+                                                </div>
+                                                <div class="shadow absolute top-3 -right-2 rounded">
+                                                    <div class="relative z-20 px-3 py-4 w-56 bg-white rounded">
+                                                        <ul>
+                                                            <li class="text-gray-500 w-full mb-2 ml-10 text-sm">SORT
+                                                                BY DATE
+                                                            </li>
+                                                            <li class="flex items-center mb-2"
+                                                                onclick="orderBy('date','desc')">
+                                                                <input id="radio-sort-desc" type="radio"
+                                                                    value="desc" class="hidden list-custom-input" />
+                                                                <label for="radio-sort-desc"
+                                                                    class="flex w-full items-center cursor-pointer font-normal text-base ml-3">
+                                                                    <span
+                                                                        class="w-4 h-4 flex items-center inline-block mr-2 text-lg flex-no-shrink">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                                            class="h-4 w-4" fill="none"
+                                                                            viewBox="0 0 24 24"
+                                                                            stroke="currentColor">
+                                                                            <path stroke-linecap="round"
+                                                                                stroke-linejoin="round"
+                                                                                stroke-width="2"
+                                                                                d="M5 13l4 4L19 7" />
+                                                                        </svg>
+                                                                    </span>
+                                                                    Oldest to Newest
+                                                                </label>
+                                                            </li>
+                                                            <li class="flex items-center"
+                                                                onclick="orderBy('date','asc')">
+                                                                <input id="radio-sort-asc" type="radio" value="asc"
+                                                                    class="hidden list-custom-input" />
+                                                                <label for="radio-sort-asc"
+                                                                    class="flex w-full items-center cursor-pointer font-normal text-base ml-3">
+                                                                    <span
+                                                                        class="w-4 h-4 flex items-center inline-block mr-2 text-lg flex-no-shrink">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                                            class="h-4 w-4" fill="none"
+                                                                            viewBox="0 0 24 24"
+                                                                            stroke="currentColor">
+                                                                            <path stroke-linecap="round"
+                                                                                stroke-linejoin="round"
+                                                                                stroke-width="2"
+                                                                                d="M5 13l4 4L19 7" />
+                                                                        </svg>
+                                                                    </span>
+                                                                    Newst to Oldest
+                                                                </label>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th class="w-1/5 px-8 text-left py-3  text-lg">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200 ">
+                                {{range .DSAApplicants}}
+                                <tr class="">
+                                    <td class="w-1/5 px-8  py-4 whitespace-nowrap text-lg text-petnetblue font-extrabold">
+                                        <p>{{.CompanyName}}</p>
+                                    </td>
+                                    <td class="w-1/5 px-8  py-4 whitespace-nowrap text-lg">
+                                        <p>{{.Partner}}</p>
+                                    </td>
+                                    <td class="w-1/5 px-8  py-4 whitespace-nowrap ">
+                                        <div class="bg-{{statusClass .Status}} rounded-lg text-center py-1 w-24">
+                                            {{.Status}}
+                                        </div>
+                                    </td>
+                                    <td class="w-1/5 px-8  py-4 whitespace-nowrap datecolor font-light">
+                                        <p>{{formatDate .DateApplied "January 02, 2006"}}</p>
+                                    </td>
+                                    <td class="w-1/5 px-8  whitespace-nowrap text-base font-medium">
+                                        {{if eq .Status "Pending"}}
+                                        <form id="sendform" action="" method="POST"
+                                            class="mb-0 inline-block">
+                                            {{ $.CSRFField }}
+                                            <input type="hidden" name="OrgID" value="{{.User.OrgID}}">
+                                            <input type="hidden" name="Email" value="{{.User.Email}}">
+                                            <input type="hidden" name="CurrentPage"
+                                                value="{{$.PaginationData.CurrentPage}}">
+                                            <button type="submit"
+                                                class="text-petnetlightblue pr-6 mailsend font-semibold mailsend">Resend</button>
+                                        </form>
+                                        {{end}}
+                                            <a href="javascript:;" class="text-petnetpink font-semibold disable-user"
+                                            onclick="disableUser(event, this);">Delete</a>
+                                    </td>
+                                </tr>
+                                {{end}}
+                            </tbody>
+                        </table>
+                        <div class="text-gray-500 text-center bg-white py-8 flex justify-between sm:px-8">
+                            <div class="sm:block hidden pl-16"></div>
+                            <p class="flex items-center pl-80 hidden sm:block"> Showing
+                                {{.PaginationData.TotalShowing}} out of
+                                {{.PaginationData.Total}} providers</p>
+                            <div class="flex justify-between sm:justify-end items-center w-full sm:w-1/2 space-x-3">
+                                {{if ne .PaginationData.Total 0}}
+                                <a {{if .PaginationData.Prev}}href="{{.PaginationData.Prev.URL}}" {{end}}>
+                                    <button {{if eq .PaginationData.CurrentPage 1}} disabled {{end}}
+                                        {{if .PaginationData.Prev}}
+                                        class="relative inline-flex items-center px-4 py-2 rounded border border-gray-400 bg-white text-sm font-medium text-petnetblue hover:bg-gray-50"
+                                        {{else}}
+                                        class="relative inline-flex items-center px-4 py-2 rounded border border-gray-400 text-sm font-medium text-gray-500 bg-gray-50"
+                                        {{end}}>
+                                        Previous
+                                    </button>
+                                </a>
+                                {{end}}
+                                <div class="hidden sm:inline-block">
+                                    {{range .PaginationData.Pages}}
+                                    {{if .Order}}
+                                    <a href="{{.URL}}"
+                                        class="{{if .Current}}font-bold bg-petnetblue text-white {{else}}text-petnetblue{{end}} b relative inline-flex items-center px-4 py-2 text-sm font-medium hover:bg-petnetblue hover:text-white">{{.Order}}</a>
+                                    {{else}}
+                                    <a href="" class="inline-block mr-4 hover:text-blue-dark-5">...</a>
+                                    {{end}}
+                                    {{end}}
+                                </div>
+                                <div class="sm:hidden block">
+                                    Page {{.PaginationData.CurrentPage}} of
+                                    {{countPaginate .PaginationData.Total .PaginationData.PerPage}}
+                                </div>
+                                {{if ne .PaginationData.Total 0}}
+                                <a {{if .PaginationData.Next}}href="{{.PaginationData.Next.URL}}" {{end}}>
+                                    <button
+                                        {{if eq .PaginationData.CurrentPage (countPaginate .PaginationData.Total .PaginationData.PerPage)}}
+                                        disabled {{end}} {{if .PaginationData.Next}}
+                                        class="relative inline-flex items-center px-4 py-2 rounded border border-gray-400  bg-white text-sm font-medium text-petnetblue hover:bg-gray-50"
+                                        {{else}}
+                                        class="relative inline-flex items-center px-4 py-2 rounded border border-gray-400  bg-white text-sm font-medium text-gray-500 bg-gray-50"
+                                        {{end}}>Next
+                                    </button>
+                                </a>
+                                {{end}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div
+            class="modalPro h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-black bg-opacity-50 z-30 {{if not .HasProviderFrmError}}hidden{{end}}">
+            <!-- modal -->
+            <div class="py-3 w-full lg:w-1/2 px-4 mx-auto">
+                <div class="bg-white shadow-lg w-full z-50 rounded-md overflow-hidden">
+                    <div class="mx-20 my-16">
+                        <div class="px-4">
+                            <span class="text-2xl text-black font-semibold">Invite Providers</span>
+                            <p class="text-petnettextgray mt-4 mb-2">Invite partners to have access on DRP.</p>
+                        </div>
+                        <div class="w-full">
+                            <form name="invite_provider_frm" id="invite_provider_frm" action="/dashboard/invite-provider" method="post" onsubmit="validateform(event);">
+                                {{.CSRFField}}
+                                <div class="flex">
+                                    <div class="w-full md:w-1/2 px-4 py-2">
+                                            <label class="block py-1 text-sm label-color font-semibold" for="">First Name<span class="text-petnetpink">*</span></label>
+                                            <input type="text" id="FirstName" name="FirstName" class="prvdr_inp tags-input bg-petnetgray px-4  py-2 w-full rounded-md focus:outline-none" value="{{ .FirstName }}" required>
+                                            <p class="text-red-700 mt-2 errMsg" id="FirstNameErr">{{with .Errors.FirstName}}{{.}}{{end}}</p>
+                                    </div>
+                                    <div class="w-full md:w-1/2 px-4 py-2">
+                                            <label class="block py-1 text-sm label-color font-semibold" for="">Last Name<span class="text-petnetpink">*</span></label>
+                                            <input type="text"  id="LastName" name="LastName" class="prvdr_inp tags-input bg-petnetgray px-4  w-full py-2 rounded-md focus:outline-none" value="{{ .LastName }}" required>
+                                            <p class="text-red-700 mt-2 errMsg" id="LastNameErr">{{with .Errors.LastName}}{{.}}{{end}}</p>
+                                    </div>
+                                </div>
+                                <div class="px-4 py-2">
+                                        <label class="block py-1 text-sm label-color font-semibold" for="">Email Address<span class="text-petnetpink">*</span></label>
+                                        <input required
+                                        class="prvdr_inp tags-input bg-petnetgray px-4  w-full py-2 rounded-md focus:outline-none"
+                                        autocomplete="off" type="email" id="Email" name="Email" value="{{ .Email }}">
+                                        <p class="text-red-700 mt-2 errMsg" id="EmailErr">{{with .Errors.Email}}{{.}}{{end}}</p>
+                                </div>
+                            </div>
+                            <div class="flex">
+                                <div class="w-full md:w-1/2 px-4 pb-4">
+                                    <div id="partner_manage" class="partner_manage flex flex-wrap justify-between w-full">
+                                    <span class="block w-full py-1 text-sm label-color font-semibold">Associated Provider<span class="text-petnetpink">*</span></span>
+                                        <div class="roleLists dropDwnImp" data-val="{{ .Provider }}" data-some="2"
+                                            class="bg-petnetgray px-4 rounded-md">
+                                            {{if ne .Provider ""}}
+                                                {{range .PartnerList}}
+                                                    {{if eq $.Provider .Stype}}<p class="provider-color">{{.Name}}</p>{{end}}
+                                                {{end}}
+                                            {{else}}
+                                            <p class="provider-color">Select Provider</p>
+                                            {{end}}
+                                            <ul class="dropdown-item hidden">
+                                                {{range .PartnerList}}
+                                                    <li data-val="{{.Stype}}">{{.Name}}</li>
+                                                {{end}}
+                                            </ul>
+                                            <input type="hidden" class="prvdr_inp" name="Provider" id="Provider" value="{{ .Provider }}" required>
+                                        </div>
+                                    </div>
+                                    <p class="text-red-700 mt-2 errMsg" id="ProviderErr">{{with .Errors.Provider}}{{.}}{{end}}</p>
+                                </div>
+                                <div class="w-full md:w-1/2 px-4 pb-4">
+                                    <div class="">
+                                        <label class="block py-1 text-sm label-color font-semibold" for="">Type of Service<span class="text-petnetpink">*</span></label>
+                                        <div class="flex py-2">
+                                            <div class="form-check flex items-center">
+                                                <input name="TransactionTypes" value="DIGITAL" type="checkbox" id="isDigital" class="prvdr_inp mr-3" {{if selectedCheck "DIGITAL" .TransactionTypes}}checked{{end}}>
+                                                <label class="form-check-label inline-block text-gray-800 mr-4" for="isDigital">
+                                                    Digital
+                                                </label>
+                                            </div>
+                                            <div class="form-check flex items-center">
+                                                <input name="TransactionTypes" value="OTC" type="checkbox" id="isOvertheCounter" class="prvdr_inp mr-3" {{if selectedCheck "OTC" .TransactionTypes}}checked{{end}}>
+                                                <label class="form-check-label inline-block text-gray-800 mr-3" for="isOvertheCounter">
+                                                    Over the Counter
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <p class="text-red-700 mt-2 errMsg" id="TransactionTypesErr">{{with .Errors.TransactionTypes}}{{.}}{{end}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between">
+                                <div class="w-full md:w-1/2 px-4 py-4">
+                                    <a href="javascript:;"
+                                        class="border border-petnetblue text-sm rounded-md text-center w-full py-3 text-petnetblue font-bold mr-4 close-modal2 inline-block">
+                                        Cancel
+                                    </a>
+                                </div>
+                                <div class="w-full md:w-1/2 px-4 py-4">
+                                    <button type="submit"
+                                        class="border border-petnetyellow text-sm rounded-md text-center w-full py-3 text-petnetblue font-bold bg-petnetyellow">
+                                        Invite Members
+                                    </button>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{ template "otp-modal.html" dict "Email" .LoginUserInfo.Email "CSRFField" .CSRFField}}
+        <script>
+            if (typeof params === 'undefined') {
+                const params = new URLSearchParams(window.location.search)
+            }
+
+            // modal
+            const modalPro = document.querySelector('.modalPro');
+            const emailid = document.querySelector('#email');
+
+            const showModal2 = document.querySelector('.show-modal2');
+            const closeModal2 = document.querySelectorAll('.close-modal2');
+            showModal2.addEventListener('click', function () {
+                modalPro.classList.remove('hidden')
+            });
+            // emailid.addEventListener('change', function () {
+            //     role_manage.classList.remove('hidden');
+            //     role_manage_email.innerHTML = emailid.value;
+            // });
+
+            closeModal2.forEach(close => {
+                close.addEventListener('click', function () {
+                    modalPro.classList.add('hidden')
+                });
+            });
+            // modal
+            function toggleTopButton(id) {
+                let getDropdownItem = document.getElementById(id)
+                let isHiddenClass = getDropdownItem.classList.contains('hidden');
+                if (!isHiddenClass) {
+                    getDropdownItem.classList.add("hidden");
+                } else {
+                    getDropdownItem.classList.remove("hidden");
+                }
+            }
+
+            function dropdownToggle(event) {
+                let targetItem = event.target;
+                while (!targetItem.classList.contains('dropdown-toggle')) {
+                    targetItem = targetItem.parentElement;
+                }
+                targetItem = targetItem.nextElementSibling;
+
+                if (targetItem.classList.contains('hidden')) {
+                    targetItem.classList.remove("hidden");
+                } else {
+                    targetItem.classList.add("hidden");
+                }
+                let x = document.getElementsByClassName("dropdown-item");
+                for (let i = 0; i < x.length; i++) {
+                    if (x[i] != targetItem) {
+                        x[i].classList.add("hidden")
+                    }
+                }
+            }
+            
+
+            function search() {
+                let searchTerm = document.getElementById("search").value;
+                if (params.has("search-term")) {
+                    params.delete("search-term");
+                }
+                params.append("search-term", searchTerm);
+                if (params.has("page")) {
+                    params.delete("page");
+                }
+                window.location.search = params.toString();
+            }
+
+            function filterStatus(type) {
+                let status = [];
+                if (params.has("status")) {
+                    status = params.get("status").split(",");
+                }
+
+                if (type === "accepted") {
+                    let accepted = document.getElementById("checkbox-accepted");
+                    if (accepted.checked === false) {
+                        status = status.filter(e => e !== 'accepted')
+                    } else {
+                        status.push("accepted")
+                    }
+                }
+                if (type === "completed") {
+                    let accepted = document.getElementById("checkbox-completed");
+                    if (accepted.checked === false) {
+                        status = status.filter(e => e !== 'completed')
+                    } else {
+                        status.push("completed")
+                    }
+                }
+                if (type === "pending") {
+                    let accepted = document.getElementById("checkbox-pending");
+                    if (accepted.checked === false) {
+                        status = status.filter(e => e !== 'pending')
+                    } else {
+                        status.push("pending")
+                    }
+                }
+                if (type === "rejected") {
+                    let accepted = document.getElementById("checkbox-rejected");
+                    if (accepted.checked === false) {
+                        status = status.filter(e => e !== 'rejected')
+                    } else {
+                        status.push("rejected")
+                    }
+                }
+                if (type === "incomplete") {
+                    let accepted = document.getElementById("checkbox-incomplete");
+                    if (accepted.checked === false) {
+                        status = status.filter(e => e !== 'incomplete')
+                    } else {
+                        status.push("incomplete")
+                    }
+                }
+
+                if (params.has("page")) {
+                    params.delete("page")
+                }
+
+                if (status.length > 0) {
+                    status = status.filter(function (item, pos) {
+                        return status.indexOf(item) == pos;
+                    })
+                    params.set("status", status.join(","))
+                } else {
+                    params.delete("status")
+                }
+                window.location.search = params.toString();
+            }
+
+            function orderBy(cloumn, type) {
+                params.set("sort", type);
+                params.set("sort_column", cloumn);
+                let getUncheckItem = 'asc';
+                if (type === "desc") {
+                    getUncheckItem = 'desc'
+                }
+                if(cloumn == "CreatedDate"){
+                    document.getElementById('radio-asc').checked = false
+                    document.getElementById('radio-desc').checked = false
+                    document.getElementById('radio-sort-' + getUncheckItem).checked = true
+                }else if(cloumn == "UserName"){
+                    document.getElementById('radio-sort-asc').checked = false
+                    document.getElementById('radio-sort-desc').checked = false
+                    document.getElementById('radio-' + getUncheckItem).checked = true
+                }else{
+                    document.getElementById('radio-sort-asc').checked = false
+                    document.getElementById('radio-sort-desc').checked = false
+                    document.getElementById('radio-' + getUncheckItem).checked = true
+                }
+                window.location.search = params.toString();
+            }
+            window.onload = function () {
+                if (params.has("sort_column")) {
+                    let column = params.get("sort_column");
+                    if (column === "CreatedDate") {
+                        document.getElementById('radio-asc').checked = false
+                        document.getElementById('radio-desc').checked = false
+                        document.getElementById('radio-sort-' + params.get("sort")).checked = true
+                    } else if (column === "UserName") {
+                        document.getElementById('radio-sort-asc').checked = false
+                        document.getElementById('radio-sort-desc').checked = false
+                        document.getElementById('radio-' + params.get("sort")).checked = true
+                    } else {
+                        document.getElementById('radio-asc').checked = true
+                    }
+                }else{
+                    document.getElementById('radio-asc').checked = true
+                }
+                if (params.has("status")) {
+                    let status = params.get("status").split(",");
+                    if (status.includes("accepted")) {
+                        document.getElementById('checkbox-accepted').checked = true
+                    }
+                    if (status.includes("completed")) {
+                        document.getElementById('checkbox-completed').checked = true
+                    }
+                    if (status.includes("pending")) {
+                        document.getElementById('checkbox-pending').checked = true
+                    }
+                    if (status.includes("rejected")) {
+                        document.getElementById('checkbox-rejected').checked = true
+                    }
+                    if (status.includes("incomplete")) {
+                        document.getElementById('checkbox-incomplete').checked = true
+                    }
+                }
+            }
+        </script>
+        <script>
+            let dropdown = {
+                hiddenClass: 'hidden',
+                dropdownOpen: function (item) {
+                    let $this = this;
+                    let nextItem = item.nextElementSibling;
+                    item.addEventListener("click", function (event) {
+                        if (nextItem.classList.contains($this.hiddenClass)) {
+                            nextItem.classList.remove($this.hiddenClass);
+                        } else {
+                            nextItem.classList.add($this.hiddenClass);
+                        }
+                    });
+                },
+                assignToDropdownOpen: function () {
+                    let items = document.getElementsByClassName('roleLists');
+                    for (let x = 0; x < items.length; x++) {
+                        this.dropdownOpen(items[x].children[0]);
+                        this.assignToDropdownItem(items[x].children[1]);
+                        this.hideOpenedItemClickingOutside(items[x]);
+                    }
+                },
+                dropdownItemClick: function (item, parentItem) {
+                    let $this = this;
+                    item.addEventListener("click", function (event) {
+                        let itemData = this.dataset["val"];
+                        if (itemData) {
+                            parentItem.nextElementSibling.value = itemData;
+                            parentItem.previousElementSibling.innerHTML = this.innerHTML;
+                            parentItem.classList.add($this.hiddenClass);
+                        }
+                    });
+                },
+                assignToDropdownItem: function (item) {
+                    let listItems = item.children;
+                    for (let x = 0; x < listItems.length; x++) {
+                        this.dropdownItemClick(listItems[x], item);
+                    }
+                },
+                hideOpenedItemClickingOutside: function (dropdownMain) {
+                    let $this = this;
+                    document.addEventListener("click", function (event) {
+                        if (event.target != dropdownMain && !$this.childOf(event.target,
+                                dropdownMain)) {
+                            dropdownMain.children[1].classList.add($this.hiddenClass)
+                        }
+                    })
+                },
+                childOf: function (c, p) { //returns boolean
+                    while ((c = c.parentNode) && c !== p);
+                    return !!c;
+                }
+            }
+            dropdown.assignToDropdownOpen();
+            function hidealertMessage() {
+                var ase = document.getElementById("alert-show-error");
+                value = document.getElementsByClassName("otpCode");
+                for (i = 0; i < value.length; i++) {
+                    value[i].removeAttribute('disabled');
+                }
+                ase.classList.add('hidden');
+                if(params.has("errorMsg")){
+                    params.delete("errorMsg")
+                }
+            }
+            function disableUser(e, param){
+                e.preventDefault();
+                var result = confirm("Are you sure you want to delete?");
+                if (result) {
+                    window.location.href = param.href;
+                }
+            }
+            function enableUser(e, param){
+                e.preventDefault();
+                var result = confirm("Are you sure you want to Enable this User?");
+                if (result) {
+                    window.location.href = param.href;
+                }
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+            let menus = document.querySelectorAll(".mailsend");
+            let form = document.getElementById("sendform")
+            for (let i = 0; i < menus.length; i++) {
+                menus[i].addEventListener("click", function(e){
+                    e.preventDefault();
+                    document.getElementById("sendform").submit();
+                    menus[i].disabled=true;
+                });
+            }
+            let searchbtn = document.querySelectorAll(".searchbtn");
+            for (let i = 0; i < searchbtn.length; i++) {
+                searchbtn[i].addEventListener("click", function (e) {
+                    e.preventDefault();
+                    searchbtn[i].disabled = true;
+                    search();
+                });
+            }
+        });
+        function InputChangeErrorMsg(event){
+            let inps = document.querySelectorAll(".prvdr_inp");
+            for (let i = 0; i < inps.length; i++) {
+                inps[i].addEventListener("change", function(){
+                    let elmName = inps[i].getAttribute("name");
+                    let erMsg = ".errMsg";
+                    if (elmName != "") {
+                        erMsg = "#"+elmName+"Err";
+                    }
+                    document.querySelector(erMsg).innerHTML = "";
+                });
+            }
+        }
+        InputChangeErrorMsg();
+        function validateform(event){  
+            event.preventDefault();
+            let FirstName = document.invite_provider_frm.FirstName.value;  
+            let LastName = document.invite_provider_frm.LastName.value;  
+            let Email = document.invite_provider_frm.Email.value;  
+            let Provider = document.invite_provider_frm.Provider.value;  
+            let TransactionTypes = document.invite_provider_frm.TransactionTypes.value;  
+            let TsDigital = document.getElementById("isDigital").checked;
+            let isOvertheCounter = document.getElementById("isOvertheCounter").checked;
+            let isValid = true; 
+            if (FirstName == "") {
+                isValid = false;
+                document.getElementById("FirstNameErr").innerHTML = "FirstName is required."
+            }
+            if (LastName == "") {
+                isValid = false;
+                document.getElementById("LastNameErr").innerHTML = "LastName is required."
+            }
+            if (Email == "") {
+                isValid = false;
+                document.getElementById("EmailErr").innerHTML = "Email is required."
+            }
+            if (Provider == "") {
+                isValid = false;
+                document.getElementById("ProviderErr").innerHTML = "Provider is required."
+            }
+            if (!TsDigital && !isOvertheCounter) {
+                isValid = false;
+                document.getElementById("TransactionTypesErr").innerHTML = "Transaction Type is required."
+            }
+            if(isValid) {
+                event.target.submit();
+            }
+        }
+        </script>
+</body>
+</html>

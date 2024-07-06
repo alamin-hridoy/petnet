@@ -1,0 +1,752 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>DSA Services</title>
+    <style>
+        .hasError .border.border-gray-300{
+            --tw-border-opacity: 1 !important;
+            border-color: rgba(185, 28, 28, var(--tw-border-opacity)) !important;
+        }
+    </style>
+</head>
+
+<body class="font-sans">
+        <div class="flex">
+            <!-- sidebar-left-start -->
+            {{ template "dsa-sidenav-menu.html" dict "Type" "dsa-services" "Data" .}}
+            <!-- sidebarleft-end -->
+            
+            <!-- top-header-start -->
+            <div class="min-h-screen w-full flex bg-petnetgray ">
+                <div class="w-full">
+                  <div class="px-16 py-4 shadow-md bg-white">
+                    <ul class="flex justify-end items-center space-x-4 mb-16">
+                      <li class="mr-auto">
+                            <a href="/dsa-services" class="inline-flex text-petnetlightblue text-sm items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-4" fill="none"
+                                                                                                                 viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                                                          d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                                </svg>
+                                Back to List
+                            </a>
+                      </li>
+                      <li>
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" fill="none" viewBox="0 0 24 24"
+                              stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                          </svg>
+                      </li>
+                      <li>
+                        {{ template "top-head-profile.html" dict "UserInfo" .UserInfo "CompanyName" .CompanyName .}}
+                      </li>
+                      <li>
+                          <div class="relative" id="topDropdownBox">
+                              <a href="javascript:;" onclick="toggleTopButton('openTopDropdown')">
+                                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                      viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M19 9l-7 7-7-7" />
+                                  </svg>
+                              </a>
+                              <div class="absolute right-0 top-12 hidden" id="openTopDropdown">
+                                  <div
+                                      class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                  </div>
+                                  <div class="shadow-lg  absolute top-3 -right-5 rounded">
+                                      <div class="relative z-20 p-3 w-36 bg-white rounded space-y-2">
+                                          <a class="flex text-sm items-center" href="/profile">
+                                              <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                  <path fill-rule="evenodd" clip-rule="evenodd" d="M16 8C16 10.21 14.21 12 12 12C9.79 12 8 10.21 8 8C8 5.79 9.79 4 12 4C14.21 4 16 5.79 16 8ZM4 18C4 15.34 9.33 14 12 14C14.67 14 20 15.34 20 18V19C20 19.55 19.55 20 19 20H5C4.45 20 4 19.55 4 19V18Z" fill="#333333"/>
+                                              </svg>
+                                              Profile
+                                          </a>
+                                          <a href="/logout" class="flex text-sm pl-1">
+                                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
+                                                  viewBox="0 0 24 24" stroke="currentColor">
+                                                  <path stroke-linecap="round" stroke-linejoin="round"
+                                                      stroke-width="2"
+                                                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                              </svg>
+                                              Logout
+                                          </a>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </li>
+                  </ul>
+                <div class="mb-4">
+                    <h2 class="sm:text-5xl text-petnetblue font-semibold">Request Service</h2>
+                </div>
+                  </div>
+                    <!-- top-header-end -->
+                    <!-- main content-start -->
+                    <div class="px-24 xl:px-40 2xl:px-56 py-20 w-full">
+                      <div class="shadow overflow-hidden bg-white">
+                        <div class="rounded">
+                          <!-- step area -->
+                          <div class="flex bg-petnetheader bg-opacity-60 rounded-t">
+                              <div class="flex px-2 bg-petnetpink justify-center items-center rounded-tl {{if .HasAddi}}w-1/3{{else}}w-1/2{{end}} h-12">
+                                  <span
+                                      class="text-white text-sm rounded-full border-white border h-8 w-8 inline-flex justify-center items-center mr-2">1</span>
+                                  <p class="text-white text-sm font-normal">Choose Partners</p>
+                              </div>
+                              <div class="flex px-2 justify-center items-center bg-petnetorange {{if .HasAddi}}w-1/3{{else}}w-1/2{{end}} h-12">
+                                  <span
+                                      class="text-white text-sm rounded-full border-white border h-8 w-8 inline-flex justify-center items-center mr-2">2</span>
+                                  <p class="text-white text-sm ">Required Documents</p>
+                              </div>
+                                {{if .HasAddi}}
+                                    <div class="flex px-2 justify-center items-center bg-petnetheader rounded-tr w-1/3 h-12">
+                                        <span
+                                        class="text-petnetblue text-sm rounded-full border-petnetblue border h-8 w-8 inline-flex justify-center items-center mr-2">3</span>
+                                        <p class="text-petnetblue text-sm ">Additional Documents</p>
+                                    </div>
+                                {{end}}
+                          </div>
+                          <!-- form area -->
+                          <form id="dsaDocForm" method="POST" action="/dsa-req-docs" enctype="multipart/form-data" name="dsaReqDocsForm">
+                            {{ .CSRFField }}
+                                  <!-- header text -->
+                            <p class="pt-20 pb-3 pl-20 text-2xl font-bold">Required Documents</p>
+                            <div class="px-20">
+                                <p class="pt-4 pb-1 text-base font-normal">SEC Registration<span class="text-red-700 font-bold">*</span></p>
+								<div id="file-upload-Sec" class="w-full bg-petnetgray {{with .Errors.Sec}}hasError{{end}}"></div>
+                                <p class="text-red-700 mt-2 all-errs-Sec" id="err-Sec"></p>
+                                {{with .Errors.Sec}}
+                                    <p class="text-red-700 mt-2 all-errs-Sec">{{.}}</p>
+                                {{end}}
+                                <p class="pt-4 pb-1 text-base font-normal">Latest General Information Sheet (GIS)<span class="text-red-700 font-bold">*</span></p>
+								<div id="file-upload-Gis" class="w-full bg-petnetgray {{with .Errors.Gis}}hasError{{end}}"></div>
+                                <p class="text-red-700 mt-2 all-errs-Gis" id="err-Gis"></p>
+                                {{with .Errors.Gis}}
+                                    <p class="text-red-700 mt-2 all-errs-Gis">{{.}}</p>
+                                {{end}}
+                                <p class="pt-4 pb-1 text-base font-normal">BIR Registration<span class="text-red-700 font-bold">*</span></p>
+								<div id="file-upload-Brs" class="w-full bg-petnetgray {{with .Errors.Brs}}hasError{{end}}"></div>
+                                <p class="text-red-700 mt-2 all-errs-Brs" id="err-Brs"></p>
+                                {{with .Errors.Brs}}
+                                    <p class="text-red-700 mt-2 all-errs-Brs">{{.}}</p>
+                                {{end}}
+                                <p class="pt-4 pb-1 text-base font-normal">BSP Registration</p>
+								<div id="file-upload-Bspr" class="w-full bg-petnetgray {{with .Errors.Bspr}}hasError{{end}}"></div>
+                                <!-- <p class="text-red-700 mt-2 all-errs-Bspr" id="err-bspr"></p> -->
+                                
+                                <p class="pt-4 pb-1 text-base font-normal">Anti-Money Laundering (AML) Registration</p>
+								<div id="file-upload-Aml" class="w-full bg-petnetgray {{with .Errors.Aml}}hasError{{end}}"></div>
+                                <!-- <p class="text-red-700 mt-2 all-errs-Aml" id="err-aml"></p> -->
+
+                                <p class="pt-4 pb-1 text-base font-normal">Secretary's Certificate for Company's Authorized Signatory<span class="text-red-700 font-bold">*</span></p>
+								<div id="file-upload-Scbr" class="w-full bg-petnetgray {{with .Errors.Scbr}}hasError{{end}}"></div>
+                                <p class="text-red-700 mt-2 all-errs-Scbr" id="err-Scbr"></p>
+                                {{with .Errors.Scbr}}
+                                    <p class="text-red-700 mt-2 all-errs-Scbr">{{.}}</p>
+                                {{end}}
+                                <p class="pt-4 pb-1 text-base font-normal">Valid government-issued ID of Authorized Signatory<span class="text-red-700 font-bold">*</span></p>
+								<div id="file-upload-Via" class="w-full bg-petnetgray {{with .Errors.Via}}hasError{{end}}"></div>
+                                <p class="text-red-700 mt-2 all-errs-Via" id="err-Via"></p>
+                                {{with .Errors.Via}}
+                                    <p class="text-red-700 mt-2 all-errs-Via">{{.}}</p>
+                                {{end}}
+                                
+                                <p class="pt-4 pb-1 text-base font-normal">Company Profile<span class="text-red-700 font-bold">*</span></p>
+								<div id="file-upload-Cp" class="w-full bg-petnetgray {{with .Errors.Cp}}hasError{{end}}"></div>
+                                <p class="text-red-700 mt-2 all-errs-Cp" id="err-Cp"></p>
+                                {{with .Errors.Cp}}
+                                    <p class="text-red-700 mt-2 all-errs-Cp">{{.}}</p>
+                                {{end}}
+                               
+                                <p class="pt-4 pb-1 text-base">Non-Disclosure Agreement (NDA)<span class="text-red-700 font-bold">*</span></p>
+								<div id="file-upload-Nnda" class="w-full bg-petnetgray {{with .Errors.Nnda}}hasError{{end}}"></div>
+                                <p class="text-red-700 mt-2 all-errs-Nnda" id="err-Nnda"></p>
+                                {{with .Errors.Nnda}}
+                                    <p class="text-red-700 mt-2 all-errs-Nnda">{{.}}</p>
+                                {{end}}
+                                <p class="pt-4 pb-1 text-base">Partner Scoping Form<span class="text-red-700 font-bold">*</span></p>
+								<div id="file-upload-Psf" class="w-full bg-petnetgray {{with .Errors.Psf}}hasError{{end}}"></div>
+                                <p class="text-red-700 mt-2 all-errs-Psf" id="err-Psf"></p>
+                                {{with .Errors.Psf}}
+                                    <p class="text-red-700 mt-2 all-errs-Psf">{{.}}</p>
+                                {{end}}
+                                <p class="pt-4 pb-1 text-base">Product or Service Procedure/Process Flow<span class="text-red-700 font-bold">*</span></p>
+								<div id="file-upload-Psp" class="w-full bg-petnetgray {{with .Errors.Psp}}hasError{{end}}"></div>
+                                <p class="text-red-700 mt-2 all-errs-Psp" id="err-Psp"></p>
+                                {{with .Errors.Psp}}
+                                    <p class="text-red-700 mt-2 all-errs-Psp">{{.}}</p>
+                                {{end}}
+                                <p class="pt-4 pb-1 text-base">KYP Due Diligence Questionnaire<span class="text-red-700 font-bold">*</span></p>
+								<div id="file-upload-Kddq" class="w-full bg-petnetgray {{with .Errors.Kddq}}hasError{{end}}"></div>
+                                <p class="text-red-700 mt-2 all-errs-Kddq" id="err-Kddq"></p>
+                                {{with .Errors.Kddq}}
+                                    <p class="text-red-700 mt-2 all-errs-Kddq">{{.}}</p>
+                                {{end}}
+                                <p class="pt-4 pb-1 text-base">Supplier Information Sheet<span class="text-red-700 font-bold">*</span></p>
+								<div id="file-upload-Sis" class="w-full bg-petnetgray {{with .Errors.Sis}}hasError{{end}}"></div>
+                                <p class="text-red-700 mt-2 all-errs-Sis" id="err-Sis"></p>
+                                {{with .Errors.Sis}}
+                                    <p class="text-red-700 mt-2 all-errs-Sis">{{.}}</p>
+                                {{end}}
+                                <div class="flex flex-wrap pt-6 justify-between bg-white pb-20">
+                                    <div class="lg:w-auto w-full text-center">
+                                        <a href="/dsa-select-partners" class="rounded-md font-normal text-sm text-petnetblue border border-petnetblue  py-3 my-3 text-center w-44 inline-block">
+                                        Back
+                                        </a>
+                                    </div>
+                                       <div class="lg:w-auto w-full lg:ml-auto text-center">
+                                        <button id="SaveDraft" name="SaveDraft" value="SaveDraft" type="submit" class="bg-petnetlightblue border border-petnetlightblue text-sm text-white  py-3 rounded-md font-normal my-3 text-center w-44 ml-auto">
+                                        Save as Draft 
+                                        </button>
+                                      </div>
+                                      <div class="lg:w-auto w-full text-center">
+                                        <button id="SaveContinue" name="SaveContinue" value="SaveContinue" type="submit" class="bg-petnetyellow border border-petnetyellow text-sm text-petnetblue  py-3 rounded-md font-normal my-3 text-center w-44 ml-0 lg:ml-4">                                
+                                            {{if .HasAddi}}
+                                            Save and Continue
+                                        {{else}}
+                                            Submit
+                                        {{end}}
+                                        </button>
+                                    </div>
+                                </div>
+                              </div>
+                              </form>
+                      </div>
+                      </div>
+                    </div>
+                    <!-- main content-end -->
+                </div>
+            </div>
+        </div>
+</body>
+<script src="{{ assetHash "/js/fileupload.js" }}"></script>
+<script>
+    let tags = document.querySelectorAll(".upin");
+    tags.forEach((item) => {
+        item.addEventListener('change', ()=>{
+            let hasValue = false;
+            for (var i = 0; i < tags.length; i++) {
+                if (tags[i].value !== "") {
+                    hasValue = true;
+                    break
+                }
+            }
+            if(hasValue) {
+                console.log("field has value");
+            }
+        })
+    })
+</script>
+<script>
+    var SecForm = "{{.SecForms}}"
+    var SecID = "{{.SecID}}"
+    var GisForm = "{{.GisForms}}"
+    var GisID = "{{.GisID}}"
+    var BrsForm = "{{.BrsForms}}"
+    var BrsID = "{{.BrsID}}"
+    var ScbrForm = "{{.ScbrForms}}"
+    var ScbrID = "{{.ScbrID}}"
+    var ViaForm = "{{.ViaForms}}"
+    var ViaID = "{{.ViaID}}"
+    var BsprForm = "{{.BsprForms}}"
+    var BsprID = "{{.BsprID}}"
+    var CpForm = "{{.CpForms}}"
+    var CpID = "{{.CpID}}"
+    var AmlForm = "{{.AmlForms}}"
+    var AmlID = "{{.AmlID}}"
+    var NndaForm = "{{.NndaForms}}"
+    var NndaID = "{{.NndaID}}"
+    var PsfForm = "{{.PsfForms}}"
+    var PsfID = "{{.PsfID}}"
+    var PspForm = "{{.PspForms}}"
+    var PspID = "{{.PspID}}"
+    var KddqForm = "{{.KddqForms}}"
+    var KddqID = "{{.KddqID}}"
+    var SisForm = "{{.SisForms}}"
+    var SisID = "{{.SisID}}"
+ 
+    var CSRFFieldValue = "{{.CSRFFieldValue}}"
+</script>
+<script>
+    function isFileSelected(el) {
+        if (!el) {
+            console.log("file input not present");
+            return false;
+        }
+
+        // If files are uploaded previously, then that file is not requireds
+        if (document.getElementsByName("uploaded-" + el.name).length > 0) {
+            return true
+        }
+
+        // if not multiple
+        if (el.files && el.files.length > 0) {
+            return true;
+        }
+
+        // if multiple
+        for (let i = 0; i < el.length; i++) {
+            if (el[i].files.length > 0) {
+                return true;
+            }
+        }
+
+        return false
+    }
+
+    function addDocErrorMessage(field, msg) {
+        if (field == "") {
+            return;
+        }
+        let fieldContainer = document.getElementById("file-upload-" + field);
+        if (!fieldContainer) {
+            return;
+        }
+        // remove errors if no error msg
+        let allContainer = document.getElementById("err-" + field);
+        let blankErrMsg = allContainer.nextElementSibling.innerHTML
+        if (blankErrMsg == "" && allContainer.previousElementSibling.classList.contains("hasError")){
+            allContainer.previousElementSibling.classList.remove('hasError')
+        }
+        if (msg == "") {
+            fieldContainer.classList.remove("border-red-500", "border");
+            let allDocErrs = document.querySelector(".all-errs-" + field);
+            if (allDocErrs) {
+                allDocErrs.innerHTML = "";
+            }
+
+            return;
+        }
+
+        // for error
+        fieldContainer.classList.add("border-red-500", "border");
+        document.getElementById("err-" + field).innerHTML = msg
+        
+    }
+		
+    const bspr = [];
+    var BsprForm = BsprForm.split(",");
+    if(BsprForm.length > 0){
+        BsprForm.forEach(function(item){
+            if(item != ""){
+                bspr.push({
+                    'name':item,
+                    'url':"/u/files/"+item,
+                    'input':BsprID,
+                    'video':false
+                });
+            }
+        });
+    }
+    new FileUpload("Bspr", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", bspr, '', {
+            'previewImages': true,
+            'multiple': true
+        });
+    const cp = [];
+    var CpForm = CpForm.split(",");
+    if(CpForm.length > 0){
+        CpForm.forEach(function(item){
+            if(item != ""){
+                cp.push({
+                    'name':item,
+                    'url':"/u/files/"+item,
+                    'input':CpID,
+                    'video':false
+                });
+            }
+        });
+    }
+    
+    new FileUpload("Cp", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", cp, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("Cp", "")
+            }
+        });
+    const aml = [];
+    var AmlForm = AmlForm.split(",");
+    if(AmlForm.length > 0){
+        AmlForm.forEach(function(item){
+            if(item != ""){
+                aml.push({
+                    'name':item,
+                    'url':"/u/files/"+item,
+                    'input':AmlID,
+                    'video':false
+                });
+            }
+        });
+    }
+    new FileUpload("Aml", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", aml, '', {
+            'previewImages': true,
+            'multiple': true
+        });
+    const nnda = [];
+    var NndaForm = NndaForm.split(",");
+    if(NndaForm.length > 0){
+        NndaForm.forEach(function(item){
+            if(item != ""){
+                nnda.push({
+                    'name':item,
+                    'url':"/u/files/"+item,
+                    'input':NndaID,
+                    'video':false
+                });
+            }
+        });
+    }
+    
+    new FileUpload("Nnda", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", nnda, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("Nnda", "")
+            }
+        });
+    const psf = [];
+    var PsfForm = PsfForm.split(",");
+    if(PsfForm.length > 0){
+        PsfForm.forEach(function(item){
+            if(item != ""){
+                psf.push({
+                    'name':item,
+                    'url':"/u/files/"+item,
+                    'input':PsfID,
+                    'video':false
+                });
+            }
+        });
+    }
+    new FileUpload("Psf", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", psf, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("Psf", "")
+            }
+        });
+    const psp = [];
+    var PspForm = PspForm.split(",");
+    if(PspForm.length > 0){
+        PspForm.forEach(function(item){
+            if(item != ""){
+                psp.push({
+                    'name':item,
+                    'url':"/u/files/"+item,
+                    'input':PspID,
+                    'video':false
+                });
+            }
+        });
+    }
+    new FileUpload("Psp", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", psp, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("Psp", "")
+            }
+        });
+    const kddq = [];
+    var KddqForm = KddqForm.split(",");
+    if(KddqForm.length > 0){
+        KddqForm.forEach(function(item){
+            if(item != ""){
+                kddq.push({
+                    'name':item,
+                    'url':"/u/files/"+item,
+                    'input':KddqID,
+                    'video':false
+                });
+            }
+        });
+    }
+   
+    new FileUpload("Kddq", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", kddq, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("Kddq", "")
+            }
+        });
+    const sis = [];
+    var SisForm = SisForm.split(",");
+    if(SisForm.length > 0){
+        SisForm.forEach(function(item){
+            if(item != ""){
+                sis.push({
+                    'name':item,
+                    'url':"/u/files/"+item,
+                    'input':KddqID,
+                    'video':false
+                });
+            }
+        });
+    }
+    new FileUpload("Sis", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", sis, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("Sis", "")
+            }
+        });
+
+    const sec = [];
+    var SecForms = SecForm.split(",");
+    if(SecForms.length > 0){
+        SecForms.forEach(function(item){
+            if(item != ""){
+                sec.push({
+                    'name':item,
+                    'url':"/u/files/"+item,
+                    'input':SecID,
+                    'video':false
+                });
+            }
+        });
+    }
+    new FileUpload("Sec", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", sec, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("Sec", "")
+            }
+        });
+    const gis = [];
+    var GisForms = GisForm.split(",");
+    if(GisForms.length > 0){
+        GisForms.forEach(function(item){
+            if(item != ""){
+                gis.push({
+                    'name':item,
+                    'url':"/u/files/"+item,
+                    'input':GisID,
+                    'video':false
+                });
+            }
+        });
+    }
+    new FileUpload("Gis", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", gis, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("Gis", "")
+            }
+        });
+    const brs = [];
+    var BrsForms = BrsForm.split(",");
+    if(BrsForms.length > 0){
+        BrsForms.forEach(function(item){
+            if(item != ""){
+                brs.push({
+                    'name':item,
+                    'url':"/u/files/"+item,
+                    'input':BrsID,
+                    'video':false
+                });
+            }
+        });
+    }
+    new FileUpload("Brs", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", brs, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("Brs", "")
+            }
+        });
+    const scbr = [];
+    var ScbrForms = ScbrForm.split(",");
+    if(ScbrForms.length > 0){
+        ScbrForms.forEach(function(item){
+            if(item != ""){
+                scbr.push({
+                    'name':item,
+                    'url':"/u/files/"+item,
+                    'input':ScbrID,
+                    'video':false
+                });
+            }
+        });
+    }
+    new FileUpload("Scbr", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", scbr, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("Scbr", "")
+            }
+        });
+    const via = [];
+    var ViaForms = ViaForm.split(",");
+    if(ViaForms.length > 0){
+        ViaForms.forEach(function(item){
+            if(item != ""){
+                via.push({
+                    'name':item,
+                    'url':"/u/files/"+item,
+                    'input':ViaID,
+                    'video':false
+                });
+            }
+        });
+    }
+    new FileUpload("Via", 3, ["Doc", "docx", "pdf", "png", "jpg", "jpeg"],
+        "", "Choose file/s to upload", via, '', {
+            'previewImages': true,
+            'multiple': true,
+            'uploadCallback': function () {
+                return addDocErrorMessage("Via", "")
+            }
+        });
+        
+    function loadAjax(url, method, nameV) {
+        var xhttp = new XMLHttpRequest();
+        var data = new FormData();
+        data.append("name", nameV);
+        data.append("gorilla.csrf.Token", CSRFFieldValue);
+        xhttp.open(method, url, true);
+        xhttp.send(data);
+    }
+
+    function removedUploadedFile() {
+        const removefile = document.getElementsByClassName("remove_file");
+        for (var i = 0; i < removefile.length; i++) {
+            removefile[i].addEventListener("click", function (e) {
+                e.preventDefault();
+                let file = this.getAttribute("data-file")
+                let fileid = this.getAttribute("data-fileid")
+                console.log("file", file)
+                console.log("fileid", fileid)
+                if (typeof file !== 'undefined') {
+                    if (file != null) {
+                        loadAjax("/u/files/" + fileid, "DELETE", file)
+                    }
+                }
+                this.closest(".remove_file_wrap").remove();
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function (event) {
+        removedUploadedFile()
+    });
+
+    document.body.addEventListener('DOMSubtreeModified', function (event) {
+        removedUploadedFile()
+    });
+
+    function validateForm() {
+        let IsValid = true;
+        const errMsg = "This is a required document, please upload a file";
+        
+        let secDoc = document.dsaReqDocsForm.Sec;
+        if (!isFileSelected(secDoc)) {
+            IsValid = false;
+            addDocErrorMessage("Sec", errMsg);
+            secDoc.focus();
+        }
+        let gisDoc = document.dsaReqDocsForm.Gis;
+        if (!isFileSelected(gisDoc)) {
+            IsValid = false;
+            addDocErrorMessage("Gis", errMsg);
+            gisDoc.focus();
+        }
+        let brsDoc = document.dsaReqDocsForm.Brs;
+        if (!isFileSelected(brsDoc)) {
+            IsValid = false;
+            addDocErrorMessage("Brs", errMsg);
+            brsDoc.focus();
+        }
+        let scbrDoc = document.dsaReqDocsForm.Scbr;
+        if (!isFileSelected(scbrDoc)) {
+            IsValid = false;
+            addDocErrorMessage("Scbr", errMsg);
+            scbrDoc.focus();
+        }
+        let viaDoc = document.dsaReqDocsForm.Via;
+        if (!isFileSelected(viaDoc)) {
+            IsValid = false;
+            addDocErrorMessage("Via", errMsg);
+            viaDoc.focus();
+        }
+        let cpDoc = document.dsaReqDocsForm.Cp;
+        if (!isFileSelected(cpDoc)) {
+            IsValid = false;
+            addDocErrorMessage("Cp", errMsg);
+            cpDoc.focus();
+        }
+        let nndaDoc = document.dsaReqDocsForm.Nnda;
+        if (!isFileSelected(nndaDoc)) {
+            IsValid = false;
+            addDocErrorMessage("Nnda", errMsg);
+            nndaDoc.focus();
+        }
+        
+        let psfDoc = document.dsaReqDocsForm.Psf;
+        if (!isFileSelected(psfDoc)) {
+            IsValid = false;
+            addDocErrorMessage("Psf", errMsg);
+            psfDoc.focus();
+        }
+
+        let pspDoc = document.dsaReqDocsForm.Psp;
+        if (!isFileSelected(pspDoc)) {
+            IsValid = false;
+            addDocErrorMessage("Psp", errMsg);
+            pspDoc.focus();
+        }
+
+        let kddqDoc = document.dsaReqDocsForm.Kddq;
+        if (!isFileSelected(kddqDoc)) {
+            IsValid = false;
+            addDocErrorMessage("Kddq", errMsg);
+            kddqDoc.focus();
+        }
+
+        let sisDoc = document.dsaReqDocsForm.Sis;
+        if (!isFileSelected(sisDoc)) {
+            IsValid = false;
+            addDocErrorMessage("Sis", errMsg);
+            sisDoc.focus();
+        }
+       return IsValid;
+    }
+</script>
+<script>
+    const params = new URLSearchParams(window.location.search);
+    function toggleTopButton(id) {
+        let getDropdownItem = document.getElementById(id)
+        let isHiddenClass = getDropdownItem.classList.contains('hidden');
+        if (!isHiddenClass) {
+            getDropdownItem.classList.add("hidden");
+        } else {
+            getDropdownItem.classList.remove("hidden");
+        }
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        let menus = document.querySelectorAll("a");
+        for (let i = 0; i < menus.length; i++) {
+            menus[i].addEventListener("click", function(e){
+                e.preventDefault();
+                let lnk = menus[i].href;
+                menus[i].href = "javascript:;"
+                window.location.href = lnk;
+            });
+        }
+    });
+</script>
+</html>

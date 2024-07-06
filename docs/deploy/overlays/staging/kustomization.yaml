@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../../base
+
+namespace: petnet-dev
+
+patchesStrategicMerge:
+- config.yaml
+
+patchesJson6902:
+- path: ingress.yaml
+  target:
+    group: networking.k8s.io
+    kind: Ingress
+    name: drp-doc
+    version: v1beta1

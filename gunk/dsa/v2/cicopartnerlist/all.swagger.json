@@ -1,0 +1,426 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/dsa/v2/cicopartnerlist/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "CICOPartnerListService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v2/cico-partnerlist": {
+      "post": {
+        "summary": "Create cicopartnerlist.",
+        "description": "Create one or more dsa cicopartnerlist.",
+        "operationId": "CICOPartnerListService_CreateCICOPartnerList",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/cicopartnerlistCreateCICOPartnerListResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cicopartnerlistCreateCICOPartnerListRequest"
+            }
+          }
+        ],
+        "tags": [
+          "cicoPartnerlist"
+        ]
+      }
+    },
+    "/v2/delete-cicopartnerlist": {
+      "delete": {
+        "summary": "Delete cicopartnerlist.",
+        "description": "Delete cicopartnerlist by ID.",
+        "operationId": "CICOPartnerListService_DeleteCICOPartnerList",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/cicopartnerlistDeleteCICOPartnerListResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "stype",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "cicopartnerlist"
+        ]
+      }
+    },
+    "/v2/disable-cicopartnerlist": {
+      "post": {
+        "summary": "Disable cicopartnerlist.",
+        "description": "Disable cicopartnerlist.",
+        "operationId": "CICOPartnerListService_DisableCICOPartnerList",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/cicopartnerlistDisableCICOPartnerListResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cicopartnerlistDisableCICOPartnerListRequest"
+            }
+          }
+        ],
+        "tags": [
+          "cicopartnerlist"
+        ]
+      }
+    },
+    "/v2/enable-cicopartnerlist": {
+      "post": {
+        "summary": "Enable cicopartnerlist.",
+        "description": "Enable cicopartnerlist.",
+        "operationId": "CICOPartnerListService_EnableCICOPartnerList",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/cicopartnerlistEnableCICOPartnerListResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cicopartnerlistEnableCICOPartnerListRequest"
+            }
+          }
+        ],
+        "tags": [
+          "cicopartnerlist"
+        ]
+      }
+    },
+    "/v2/get-cicopartnerlist": {
+      "get": {
+        "summary": "Get cicopartnerlist.",
+        "description": "Get created cicopartnerlist by org ID.",
+        "operationId": "CICOPartnerListService_GetCICOPartnerList",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/cicopartnerlistGetCICOPartnerListResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "stype",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "cicopartnerlist"
+        ]
+      }
+    },
+    "/v2/update-cicopartnerlist": {
+      "put": {
+        "summary": "Update cicopartnerlist.",
+        "description": "Update one or more dsa cicopartnerlist.",
+        "operationId": "CICOPartnerListService_UpdateCICOPartnerList",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/cicopartnerlistUpdateCICOPartnerListResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cicopartnerlistUpdateCICOPartnerListRequest"
+            }
+          }
+        ],
+        "tags": [
+          "cicopartnerlist"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "cicopartnerlistCICOPartnerList": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "stype": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "cicopartnerlistCreateCICOPartnerListRequest": {
+      "type": "object",
+      "properties": {
+        "cicopartnerlist": {
+          "$ref": "#/definitions/cicopartnerlistCICOPartnerList"
+        }
+      }
+    },
+    "cicopartnerlistCreateCICOPartnerListResponse": {
+      "type": "object",
+      "properties": {
+        "cicopartnerlist": {
+          "$ref": "#/definitions/cicopartnerlistCICOPartnerList"
+        }
+      }
+    },
+    "cicopartnerlistDeleteCICOPartnerListResponse": {
+      "type": "object",
+      "properties": {
+        "stype": {
+          "type": "string"
+        }
+      }
+    },
+    "cicopartnerlistDisableCICOPartnerListRequest": {
+      "type": "object",
+      "properties": {
+        "stype": {
+          "type": "string"
+        }
+      }
+    },
+    "cicopartnerlistDisableCICOPartnerListResponse": {
+      "type": "object",
+      "properties": {
+        "stype": {
+          "type": "string"
+        }
+      }
+    },
+    "cicopartnerlistEnableCICOPartnerListRequest": {
+      "type": "object",
+      "properties": {
+        "stype": {
+          "type": "string"
+        }
+      }
+    },
+    "cicopartnerlistEnableCICOPartnerListResponse": {
+      "type": "object",
+      "properties": {
+        "stype": {
+          "type": "string"
+        }
+      }
+    },
+    "cicopartnerlistGetCICOPartnerListResponse": {
+      "type": "object",
+      "properties": {
+        "cicopartnerlist": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/cicopartnerlistCICOPartnerList"
+          }
+        }
+      }
+    },
+    "cicopartnerlistUpdateCICOPartnerListRequest": {
+      "type": "object",
+      "properties": {
+        "cicopartnerlist": {
+          "$ref": "#/definitions/cicopartnerlistCICOPartnerList"
+        }
+      }
+    },
+    "cicopartnerlistUpdateCICOPartnerListResponse": {
+      "type": "object",
+      "properties": {
+        "cicopartnerlist": {
+          "$ref": "#/definitions/cicopartnerlistCICOPartnerList"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

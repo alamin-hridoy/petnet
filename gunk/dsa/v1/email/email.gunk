@@ -1,0 +1,106 @@
+package email // proto "petnet.v1.email"
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+type ServiceRequestStatus int
+
+const (
+	// NOSTATUS is set when a service is enabled without a service request from DSA
+	NOSTATUS ServiceRequestStatus = iota
+	ACCEPTED
+	REJECTED
+)
+
+type SendOnboardingReminderRequest struct {
+	Email  string `pb:"1" json:"email"`
+	OrgID  string `pb:"2" json:"org_id"`
+	UserID string `pb:"3" json:"user_id"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "email",
+//                 "status",
+//                 "remark",
+//                 "partner_names",
+//                 "service_name",
+//         },
+// }}
+type SendDsaServiceRequestNotificationRequest struct {
+	Email        string               `pb:"1" json:"email"`
+	Status       ServiceRequestStatus `pb:"2" json:"status"`
+	Remark       string               `pb:"3" json:"remark"`
+	PartnerNames []string             `pb:"4" json:"partner_names"`
+	ServiceName  string               `pb:"5" json:"service_name"`
+}
+
+type SendOnboardingReminderResponse struct{}
+
+type SendDsaServiceRequestNotificationResponse struct{}
+
+type EmailService interface {
+	// Send onboarding reminder email.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/onboardingreminder/{Email}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Onboarding Reminder"},
+	//         Description: "Send reminder email to finish onboarding.",
+	//         Summary:     "Onboarding reminder email.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/orgFeesUpsertFeesResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	SendOnboardingReminder(SendOnboardingReminderRequest) SendOnboardingReminderResponse
+
+	// Send service request status reminder email.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/servicerequestreminder",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"service request status Reminder"},
+	//         Description: "Send reminder email to service request status.",
+	//         Summary:     "service request status reminder email.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/EmailSendDsaServiceRequestNotificationResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	SendDsaServiceRequestNotification(SendDsaServiceRequestNotificationRequest) SendDsaServiceRequestNotificationResponse
+}

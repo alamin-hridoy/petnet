@@ -1,0 +1,269 @@
+package remittoaccount
+
+import (
+	"encoding/json"
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+type RTAInquireRequest struct {
+	Partner         string `pb:"1" json:"partner"`
+	ReferenceNumber string `pb:"2" json:"reference_number"`
+	LocationID      string `pb:"3" json:"location_id"`
+}
+
+type RTAInquireResponse struct {
+	Message  string           `pb:"1" json:"message"`
+	Result   RTAInquireResult `pb:"2" json:"result"`
+	BankCode string           `pb:"3" json:"bank_code"`
+}
+
+type RTAInquireResult struct {
+	BeneAmount                     string    `pb:"1" json:"bene_amount"`
+	BeneficiaryAddress             string    `pb:"2" json:"beneficiary_address"`
+	BeneficiaryBankAccountno       string    `pb:"3" json:"beneficiary_bankAccountno"`
+	BeneficiaryCity                string    `pb:"4" json:"beneficiary_city"`
+	BeneficiaryCountry             string    `pb:"5" json:"beneficiary_country"`
+	BeneficiaryFirstName           string    `pb:"6" json:"beneficiary_firstname"`
+	BeneficiaryLastName            string    `pb:"7" json:"beneficiary_lastname"`
+	BeneficiaryMiddleName          string    `pb:"8" json:"beneficiary_middlename"`
+	BeneficiaryStateOrProvince     string    `pb:"9" json:"beneficiary_state_or_province"`
+	BpiBranchCode                  string    `pb:"10" json:"bpi_branch_code"`
+	CurrencyCodeOfFundingAmount    string    `pb:"11" json:"currency_code_of_funding_amount"`
+	CurrencyCodeOfSettlementAmount string    `pb:"12" json:"currency_code_of_settlement_amount"`
+	TxnDistributionDate            string    `pb:"13" json:"txn_distribution_date"`
+	FundingAmount                  string    `pb:"14" json:"funding_amount"`
+	Reason                         string    `pb:"15" json:"reason"`
+	RemitterCity                   string    `pb:"16" json:"remitter_city"`
+	RemitterCountry                string    `pb:"17" json:"remitter_country"`
+	RemitterFirstName              string    `pb:"18" json:"remitter_firstname"`
+	RemitterLastName               string    `pb:"19" json:"remitter_lastname"`
+	RemitterMiddleName             string    `pb:"20" json:"remitter_middlename"`
+	RemitterStateOrProvince        string    `pb:"21" json:"remitter_state_or_province"`
+	SettlementMode                 string    `pb:"22" json:"settlement_mode"`
+	StatusCode                     string    `pb:"23" json:"status_code"`
+	TransactionDate                string    `pb:"24" json:"transaction_date"`
+	TransactionReferenceNo         string    `pb:"25" json:"transaction_reference_no"`
+	Code                           string    `pb:"26" json:"code"`
+	SenderRefID                    string    `pb:"27" json:"sender_ref_id"`
+	State                          string    `pb:"28" json:"state"`
+	UUID                           string    `pb:"29" json:"uuid"`
+	Description                    string    `pb:"30" json:"description"`
+	Type                           string    `pb:"31" json:"type"`
+	Amount                         string    `pb:"32" json:"amount"`
+	UbpTranID                      string    `pb:"33" json:"ubp_tran_id"`
+	TranRequestDate                string    `pb:"34" json:"tranRequest_date"`
+	TranFinacleDate                string    `pb:"35" json:"tranFinacle_date"`
+	CreatedAt                      time.Time `pb:"36" json:"created"`
+	UpdatedAt                      time.Time `pb:"37" json:"updated"`
+}
+
+type RTAPaymentRequest struct {
+	Partner                     string `pb:"1" json:"partner"`
+	ReferenceNumber             string `pb:"2" json:"reference_number"`
+	TrxDate                     string `pb:"3" json:"trx_date"`
+	AccountNumber               string `pb:"4" json:"account_number"`
+	Currency                    string `pb:"5" json:"currency"`
+	ServiceCharge               string `pb:"6" json:"service_charge"`
+	Remarks                     string `pb:"7" json:"remarks"`
+	Particulars                 string `pb:"8" json:"particulars"`
+	MerchantName                string `pb:"9" json:"merchant_name"`
+	BankID                      string `pb:"10" json:"bank_id"`
+	LocationID                  int    `pb:"11" json:"location_id"`
+	UserID                      int    `pb:"12" json:"user_id"`
+	CurrencyID                  string `pb:"13" json:"currency_id"`
+	CustomerID                  string `pb:"14" json:"customer_id"`
+	FormType                    string `pb:"15" json:"form_type"`
+	FormNumber                  string `pb:"16" json:"form_number"`
+	TrxType                     string `pb:"17" json:"trx_type"`
+	RemoteLocationID            int    `pb:"18" json:"remote_location_id"`
+	RemoteUserID                int    `pb:"19" json:"remote_user_id"`
+	BillerName                  string `pb:"20" json:"biller_name"`
+	TrxTime                     string `pb:"21" json:"trx_time"`
+	TotalAmount                 string `pb:"22" json:"total_amount"`
+	AccountName                 string `pb:"23" json:"account_name"`
+	BeneficiaryAddress          string `pb:"24" json:"beneficiary_address"`
+	BeneficiaryBirthdate        string `pb:"25" json:"beneficiary_birthdate"`
+	BeneficiaryCity             string `pb:"26" json:"beneficiary_city"`
+	BeneficiaryCivil            string `pb:"27" json:"beneficiary_civil"`
+	BeneficiaryCountry          string `pb:"28" json:"beneficiary_country"`
+	BeneficiaryCustomertype     string `pb:"29" json:"beneficiary_customertype"`
+	BeneficiaryFirstname        string `pb:"30" json:"beneficiary_firstname"`
+	BeneficiaryLastname         string `pb:"31" json:"beneficiary_lastname"`
+	BeneficiaryMiddlename       string `pb:"32" json:"beneficiary_middlename"`
+	BeneficiaryTin              string `pb:"33" json:"beneficiary_tin"`
+	BeneficiarySex              string `pb:"34" json:"beneficiary_sex"`
+	BeneficiaryState            string `pb:"35" json:"beneficiary_state"`
+	CurrencyCodePrincipalAmount string `pb:"36" json:"currency_code_principal_amount"`
+	PrincipalAmount             string `pb:"37" json:"principal_amount"`
+	RecordType                  string `pb:"38" json:"record_type"`
+	RemitterAddress             string `pb:"39" json:"remitter_address"`
+	RemitterBirthdate           string `pb:"40" json:"remitter_birthdate"`
+	RemitterCity                string `pb:"41" json:"remitter_city"`
+	RemitterCivil               string `pb:"42" json:"remitter_civil"`
+	RemitterCountry             string `pb:"43" json:"remitter_country"`
+	RemitterCustomerType        string `pb:"44" json:"remitter_customer_type"`
+	RemitterFirstname           string `pb:"45" json:"remitter_firstname"`
+	RemitterGender              string `pb:"46" json:"remitter_gender"`
+	RemitterID                  int    `pb:"47" json:"remitter_id"`
+	RemitterLastname            string `pb:"48" json:"remitter_lastname"`
+	RemitterMiddlename          string `pb:"49" json:"remitter_middlename"`
+	RemitterState               string `pb:"50" json:"remitter_state"`
+	SettlementMode              string `pb:"51" json:"settlement_mode"`
+	Notification                string `pb:"52" json:"notification"`
+	BeneZipCode                 string `pb:"53" json:"bene_zip_code"`
+}
+
+type RTAPaymentResult struct {
+	BeneAmount                     string    `pb:"1" json:"bene_amount"`
+	BeneficiaryAddress             string    `pb:"2" json:"beneficiary_address"`
+	BeneficiaryBankAccountno       string    `pb:"3" json:"beneficiary_bank_accountno"`
+	BeneficiaryCity                string    `pb:"4" json:"beneficiary_city"`
+	BeneficiaryCountry             string    `pb:"5" json:"beneficiary_country"`
+	BeneficiaryFirstName           string    `pb:"6" json:"beneficiary_firstname"`
+	BeneficiaryLastName            string    `pb:"7" json:"beneficiary_lastname"`
+	BeneficiaryMiddleName          string    `pb:"8" json:"beneficiary_middlename"`
+	BeneficiaryStateOrProvince     string    `pb:"9" json:"beneficiary_state_or_province"`
+	BpiBranchCode                  string    `pb:"10" json:"bpi_branch_code"`
+	CurrencyCodeOfFundingAmount    string    `pb:"11" json:"currency_code_of_funding_amount"`
+	CurrencyCodeOfSettlementAmount string    `pb:"12" json:"currency_code_of_settlement_amount"`
+	TxnDistributionDate            string    `pb:"13" json:"txn_distribution_date"`
+	FundingAmount                  string    `pb:"14" json:"funding_amount"`
+	Reason                         string    `pb:"15" json:"reason"`
+	RemitterCity                   string    `pb:"16" json:"remitter_city"`
+	RemitterCountry                string    `pb:"17" json:"remitter_country"`
+	RemitterFirstName              string    `pb:"18" json:"remitter_firstname"`
+	RemitterLastName               string    `pb:"19" json:"remitter_lastname"`
+	RemitterMessageToBeneficiary   string    `pb:"20" json:"remitter_message_to_beneficiary"`
+	RemitterMiddleName             string    `pb:"21" json:"remitter_middlename"`
+	RemitterStateOrProvince        string    `pb:"22" json:"remitter_state_or_province"`
+	SettlementMode                 string    `pb:"23" json:"settlement_mode"`
+	StatusCode                     string    `pb:"24" json:"status_code"`
+	TransactionDate                string    `pb:"25" json:"transaction_date"`
+	TransactionReferenceNo         string    `pb:"26" json:"transaction_reference_no"`
+	Message                        string    `pb:"27" json:"message"`
+	Code                           string    `pb:"28" json:"code"`
+	SenderRefID                    string    `pb:"29" json:"sender_ref_id"`
+	State                          string    `pb:"30" json:"state"`
+	UUID                           string    `pb:"31" json:"uuid"`
+	Description                    string    `pb:"32" json:"description"`
+	Type                           string    `pb:"33" json:"type"`
+	Amount                         string    `pb:"34" json:"amount"`
+	UbpTranID                      string    `pb:"35" json:"ubp_tran_id"`
+	TranRequestDate                string    `pb:"36" json:"tran_request_date"`
+	TranFinacleDate                string    `pb:"37" json:"tran_finacle_date"`
+	Created                        time.Time `pb:"38" json:"created"`
+	Updated                        time.Time `pb:"39" json:"updated"`
+}
+
+type RTAPaymentResponse struct {
+	Message  string           `pb:"1" json:"message"`
+	Result   RTAPaymentResult `pb:"2" json:"result"`
+	BankCode string           `pb:"3" json:"bank_code"`
+}
+
+type RTARetryRequest struct {
+	Partner         string `pb:"1" json:"partner"`
+	ReferenceNumber string `pb:"2" json:"reference_number"`
+	ID              string `pb:"3" json:"id"`
+	LocationID      int    `pb:"4" json:"location_id"`
+	PrincipalAmount string `pb:"5" json:"principal_amount"`
+	FormNumber      string `pb:"6" json:"form_number"`
+}
+
+type RTARetryResponse struct {
+	Message  string           `pb:"1" json:"message"`
+	Result   RTAPaymentResult `pb:"2" json:"result"`
+	BankCode string           `pb:"3" json:"bank_code"`
+}
+
+type RemitToAccountService interface {
+	// RTA Inquire.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/rta/inquire",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"RemitToAccount"},
+	//         Description: "Remit to Account Inquire",
+	//         Summary:     "Remit to Account Inquire",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittoaccountRTAInquireResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when not found.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 400, \"message\": \"RTA Inquire Error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	RTAInquire(RTAInquireRequest) RTAInquireResponse
+
+	// RTA Payment.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/rta/payment",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"RemitToAccount"},
+	//         Description: "Remit to Account Payment",
+	//         Summary:     "Remit to Account Payment",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittoaccountRTAPaymentResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when not found.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 400, \"message\": \"RTA Payment Error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	RTAPayment(RTAPaymentRequest) RTAPaymentResponse
+
+	// RTA Retry.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/rta/retry",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"RemitToAccount"},
+	//         Description: "Remit to Account Retry",
+	//         Summary:     "Remit to Account Retry",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/remittoaccountRTARetryResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when not found.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 400, \"message\": \"RTA Retry Error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	RTARetry(RTARetryRequest) RTARetryResponse
+}

@@ -1,0 +1,10 @@
+{
+  "name": "gunk",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "swagger-combine": "^1.2.0",
+    "swagger2openapi": "^7.0.5"
+  }
+}

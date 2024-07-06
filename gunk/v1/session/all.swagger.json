@@ -1,0 +1,201 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/v1/session/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "SessionService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/session/{id}": {
+      "get": {
+        "summary": "Get session.",
+        "description": "Get session by email or user ID.",
+        "operationId": "SessionService_GetSession",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/sessionGetSessionResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id_type",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EMAIL",
+              "USERID"
+            ],
+            "default": "EMAIL"
+          }
+        ],
+        "tags": [
+          "Session"
+        ]
+      },
+      "put": {
+        "summary": "Expire session.",
+        "description": "Expires the user's logged in session.",
+        "operationId": "SessionService_ExpireSession",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/expireSessionResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/sessionExpireSessionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Session"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "sessionExpireSessionRequest": {
+      "type": "object",
+      "properties": {
+        "id_type": {
+          "$ref": "#/definitions/sessionIDType"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "sessionExpireSessionResponse": {
+      "type": "object"
+    },
+    "sessionGetSessionResponse": {
+      "type": "object",
+      "properties": {
+        "expired": {
+          "type": "boolean"
+        },
+        "expiry": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "sessionIDType": {
+      "type": "string",
+      "enum": [
+        "EMAIL",
+        "USERID"
+      ],
+      "default": "EMAIL"
+    },
+    "sessionSetSessionExpiryRequest": {
+      "type": "object",
+      "properties": {
+        "id_type": {
+          "$ref": "#/definitions/sessionIDType"
+        },
+        "id": {
+          "type": "string"
+        },
+        "expiry": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "sessionSetSessionExpiryResponse": {
+      "type": "object"
+    }
+  }
+}

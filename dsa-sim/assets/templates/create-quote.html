@@ -1,0 +1,38 @@
+<form method="POST" action="/create-quote">
+    {{ .CSRFField }}
+    <input name="Types" value="{{.Types}}" type="hidden">
+    <div>
+        <button type="submit">Create Quote</button>
+    </div>
+    <br>
+    <input name="Partner" value="{{.Partner}}" type="hidden">
+    <input name="Type" value="{{.Type}}" type="hidden">
+    <br>
+    <div>
+        <label>Email Address</label>
+    </div>
+    <div>
+        <input name="CreateQuoteReq.Email" {{if .CreateQuoteReq.Email}}value="{{.CreateQuoteReq.Email}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+    <br>
+    <div>
+        <label>Source Amount</label>
+    </div>
+    <div>
+        <input name="CreateQuoteReq.Amount.SourceAmount" {{if .CreateQuoteReq.Amount.SourceAmount}}value="{{.CreateQuoteReq.Amount.SourceAmount}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+    <br>
+    <div>
+        <label>Source Currency</label>
+    </div>
+    <div>
+        <input name="CreateQuoteReq.Amount.SourceCurrency" {{if .CreateQuoteReq.Amount.SourceCurrency}}value="{{.CreateQuoteReq.Amount.SourceCurrency}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+    <br>
+    <div>
+        <label>Destination Currency</label>
+    </div>
+    <div>
+        <input name="CreateQuoteReq.Amount.DestinationCurrency" {{if .CreateQuoteReq.Amount.DestinationCurrency}}value="{{.CreateQuoteReq.Amount.DestinationCurrency}}"{{else}}disabled="disabled"{{end}}>
+    </div>
+</form>

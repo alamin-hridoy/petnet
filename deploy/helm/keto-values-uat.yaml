@@ -1,0 +1,7 @@
+image:
+  repository: asia.gcr.io/petnet-brankas-prod-1/oryd/keto
+  tag: v0.5.7
+secret:
+  nameOverride: keto-helm
+keto:
+  autoMigrate: true

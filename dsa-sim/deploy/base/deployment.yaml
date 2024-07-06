@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dsa-sim
+  labels:
+    app.kubernetes.io/instance: dsa-sim
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: dsa-sim
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: dsa-sim
+    spec:
+      containers:
+      - name: dsa-sim
+        image: dsa-sim:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+        envFrom:
+        - configMapRef:
+            name: dsa-sim-config
+        - secretRef:
+            name: dsa-sim-secret
+        resources:
+          requests:
+            cpu: 30m
+            memory: 50Mi

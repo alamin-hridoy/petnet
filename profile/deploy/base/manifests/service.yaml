@@ -1,0 +1,27 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: profile
+spec:
+  ports:
+  - name: profile
+    port: 80
+    targetPort: 3000
+  selector:
+    app.kubernetes.io/instance: profile
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: profile-admin
+spec:
+  ports:
+  - name: profile
+    port: 80
+    targetPort: 3030
+  selector:
+    app.kubernetes.io/instance: profile
+
+...

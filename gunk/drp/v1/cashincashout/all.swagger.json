@@ -1,0 +1,1018 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/drp/v1/cashincashout/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "CashInCashOutService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/cashincashout/execute": {
+      "post": {
+        "summary": "Execute Transaction",
+        "description": "Execute Transaction",
+        "operationId": "CashInCashOutService_CiCoExecute",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/cashincashoutCiCoExecuteResponse"
+            }
+          },
+          "422": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "CICO - EXECUTE ERROR"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "CICO - EXECUTE ERROR - GCASH"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cashincashoutCiCoExecuteRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CashInCashOut"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/cashincashout/inquire": {
+      "post": {
+        "summary": "Inquire Transaction",
+        "description": "Inquire Transaction",
+        "operationId": "CashInCashOutService_CiCoInquire",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/cashincashoutCiCoInquireResponse"
+            }
+          },
+          "404": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 404,
+                "message": "Transaction can’t be found"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cashincashoutCiCoInquireRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CashInCashOut"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/cashincashout/otp": {
+      "post": {
+        "summary": "OTP Confirm Transaction",
+        "description": "OTP Confirm Transaction",
+        "operationId": "CashInCashOutService_CiCoOTPConfirm",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/cashincashoutCiCoOTPConfirmResponse"
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "CICO - OTP ERROR"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cashincashoutCiCoOTPConfirmRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CashInCashOut"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/cashincashout/retry": {
+      "post": {
+        "summary": "Retry Transaction",
+        "description": "Retry Transaction",
+        "operationId": "CashInCashOutService_CiCoRetry",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/cashincashoutCiCoRetryResponse"
+            }
+          },
+          "422": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "CICO - EXECUTE ERROR"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "CICO - EXECUTE ERROR - GCASH"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cashincashoutCiCoRetryRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CashInCashOut"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/cashincashout/validate": {
+      "post": {
+        "summary": "Validate Transaction",
+        "description": "Validate Transaction",
+        "operationId": "CashInCashOutService_CiCoValidate",
+        "responses": {
+          "200": {
+            "description": "Request Validate successfully.",
+            "schema": {
+              "$ref": "#/definitions/cashincashoutCiCoValidateResponse"
+            }
+          },
+          "422": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "The given data was invalid."
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "CICO - VALIDATE ERROR - GCASH"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cashincashoutCiCoValidateRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CashInCashOut"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/ci-co/billerlist": {
+      "get": {
+        "summary": "Get Transaction history for CI/CO.",
+        "description": "Get Transaction List for CI/CO.",
+        "operationId": "CashInCashOutService_CICOTransactList",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/cashincashoutCICOTransactListResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when not found.",
+            "schema": {
+              "example": {
+                "code": 400,
+                "message": "CICO transact List Error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "until",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "DESC",
+              "ASC"
+            ],
+            "default": "DESC"
+          },
+          {
+            "name": "sort_by_column",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "OmitSortByColumn",
+              "ReferenceNumber",
+              "TotalAmount",
+              "TransactionCompletedTime",
+              "Provider",
+              "Fee",
+              "Commission"
+            ],
+            "default": "OmitSortByColumn"
+          },
+          {
+            "name": "reference_number",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "exclude_provider",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "org_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Transaction List for CI/CO"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "cashincashoutAmount": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string",
+          "description": "Monetary amount in the smallest currency denomination.  Example: USD $10.25 =\u003e \"1025\"."
+        },
+        "currency": {
+          "type": "string",
+          "description": "Currency code using ISO-4217 3-letter codes."
+        }
+      },
+      "required": [
+        "amount",
+        "currency"
+      ]
+    },
+    "cashincashoutCICOTransact": {
+      "type": "object",
+      "properties": {
+        "reference_number": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "total_amount": {
+          "$ref": "#/definitions/cashincashoutAmount"
+        },
+        "transact_fee": {
+          "$ref": "#/definitions/cashincashoutAmount"
+        },
+        "transact_commission": {
+          "$ref": "#/definitions/cashincashoutAmount"
+        },
+        "transaction_completed_time": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "cashincashoutCICOTransactListResponse": {
+      "type": "object",
+      "properties": {
+        "next": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "cico_transact": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/cashincashoutCICOTransact"
+          }
+        },
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "cashincashoutCiCoExecuteRequest": {
+      "type": "object",
+      "properties": {
+        "partner_code": {
+          "type": "string"
+        },
+        "petnet_trackingno": {
+          "type": "string"
+        },
+        "trx_date": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "partner_code",
+        "petnet_trackingno",
+        "trx_date",
+        "provider"
+      ]
+    },
+    "cashincashoutCiCoExecuteResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/cashincashoutCicoExecuteResult"
+        }
+      }
+    },
+    "cashincashoutCiCoInquireRequest": {
+      "type": "object",
+      "properties": {
+        "partner_code": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "trx_type": {
+          "type": "string"
+        },
+        "reference_number": {
+          "type": "string"
+        },
+        "petnet_trackingno": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "provider_trackingno": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "partner_code",
+        "provider",
+        "trx_type",
+        "reference_number",
+        "petnet_trackingno",
+        "message",
+        "provider_trackingno"
+      ]
+    },
+    "cashincashoutCiCoInquireResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/cashincashoutCicoInquireResult"
+        }
+      }
+    },
+    "cashincashoutCiCoOTPConfirmRequest": {
+      "type": "object",
+      "properties": {
+        "partner_code": {
+          "type": "string"
+        },
+        "petnet_trackingno": {
+          "type": "string"
+        },
+        "trx_date": {
+          "type": "string"
+        },
+        "otp": {
+          "type": "string"
+        },
+        "otp_payload": {
+          "$ref": "#/definitions/cashincashoutOTPPayload"
+        },
+        "provider": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "partner_code",
+        "petnet_trackingno",
+        "trx_date",
+        "otp",
+        "otp_payload",
+        "provider"
+      ]
+    },
+    "cashincashoutCiCoOTPConfirmResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/cashincashoutCicoOTPConfirmResult"
+        }
+      }
+    },
+    "cashincashoutCiCoRetryRequest": {
+      "type": "object",
+      "properties": {
+        "partner_code": {
+          "type": "string"
+        },
+        "petnet_trackingno": {
+          "type": "string"
+        },
+        "trx_date": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "partner_code",
+        "petnet_trackingno",
+        "trx_date",
+        "provider"
+      ]
+    },
+    "cashincashoutCiCoRetryResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/cashincashoutCicoRetryResult"
+        }
+      }
+    },
+    "cashincashoutCiCoValidateRequest": {
+      "type": "object",
+      "properties": {
+        "partner_code": {
+          "type": "string"
+        },
+        "trx": {
+          "$ref": "#/definitions/cashincashoutCicoValidateTrx"
+        },
+        "customer": {
+          "$ref": "#/definitions/cashincashoutCicoValidateCustomer"
+        }
+      },
+      "required": [
+        "partner_code",
+        "trx",
+        "customer"
+      ]
+    },
+    "cashincashoutCiCoValidateResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/cashincashoutCicoValidateResult"
+        }
+      }
+    },
+    "cashincashoutCicoExecuteResult": {
+      "type": "object",
+      "properties": {
+        "partner_code": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "petnet_trackingno": {
+          "type": "string"
+        },
+        "trx_date": {
+          "type": "string"
+        },
+        "trx_type": {
+          "type": "string"
+        },
+        "provider_trackingno": {
+          "type": "string"
+        },
+        "reference_number": {
+          "type": "string"
+        },
+        "principal_amount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "charges": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "total_amount": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "cashincashoutCicoInquireResult": {
+      "type": "object",
+      "properties": {
+        "status_message": {
+          "type": "string"
+        },
+        "petnet_trackingno": {
+          "type": "string"
+        },
+        "trx_type": {
+          "type": "string"
+        },
+        "reference_number": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "provider_trackingno": {
+          "type": "string"
+        },
+        "expiry": {
+          "type": "string"
+        },
+        "customer_name": {
+          "type": "string"
+        },
+        "customer_firstname": {
+          "type": "string"
+        },
+        "customer_lastname": {
+          "type": "string"
+        },
+        "MerchantId": {
+          "type": "string"
+        },
+        "partner_code": {
+          "type": "string"
+        },
+        "account_number": {
+          "type": "string"
+        },
+        "service_charge": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "created_at": {
+          "type": "string"
+        }
+      }
+    },
+    "cashincashoutCicoOTPConfirmResult": {
+      "type": "object",
+      "properties": {
+        "partner_code": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "petnet_trackingno": {
+          "type": "string"
+        },
+        "trx_date": {
+          "type": "string"
+        },
+        "trx_type": {
+          "type": "string"
+        },
+        "provider_trackingno": {
+          "type": "string"
+        },
+        "reference_number": {
+          "type": "string"
+        },
+        "principal_amount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "charges": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "total_amount": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "cashincashoutCicoRetryResult": {
+      "type": "object",
+      "properties": {
+        "partner_code": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "petnet_trackingno": {
+          "type": "string"
+        },
+        "trx_date": {
+          "type": "string"
+        },
+        "trx_type": {
+          "type": "string"
+        },
+        "provider_trackingno": {
+          "type": "string"
+        },
+        "reference_number": {
+          "type": "string"
+        },
+        "principal_amount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "charges": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "total_amount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "otp_payload": {
+          "$ref": "#/definitions/cashincashoutOTPPayload"
+        }
+      }
+    },
+    "cashincashoutCicoValidateCustomer": {
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "type": "string"
+        },
+        "customer_firstname": {
+          "type": "string"
+        },
+        "customer_lastname": {
+          "type": "string"
+        },
+        "curr_address": {
+          "type": "string"
+        },
+        "curr_barangay": {
+          "type": "string"
+        },
+        "curr_city": {
+          "type": "string"
+        },
+        "curr_province": {
+          "type": "string"
+        },
+        "curr_country": {
+          "type": "string"
+        },
+        "birth_date": {
+          "type": "string"
+        },
+        "birth_place": {
+          "type": "string"
+        },
+        "birth_country": {
+          "type": "string"
+        },
+        "contact_no": {
+          "type": "string"
+        },
+        "id_type": {
+          "type": "string"
+        },
+        "id_number": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "customer_id",
+        "customer_firstname",
+        "customer_lastname",
+        "curr_address",
+        "curr_barangay",
+        "curr_city",
+        "curr_province",
+        "curr_country",
+        "birth_date",
+        "birth_place",
+        "birth_country",
+        "contact_no",
+        "id_type",
+        "id_number"
+      ]
+    },
+    "cashincashoutCicoValidateResult": {
+      "type": "object",
+      "properties": {
+        "petnet_trackingno": {
+          "type": "string"
+        },
+        "trx_date": {
+          "type": "string"
+        },
+        "trx_type": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "provider_trackingno": {
+          "type": "string"
+        },
+        "reference_number": {
+          "type": "string"
+        },
+        "principal_amount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "charges": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "total_amount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "cashincashoutCicoValidateTrx": {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "type": "string"
+        },
+        "reference_number": {
+          "type": "string"
+        },
+        "trx_type": {
+          "type": "string"
+        },
+        "principal_amount": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "required": [
+        "provider",
+        "reference_number",
+        "trx_type",
+        "principal_amount"
+      ]
+    },
+    "cashincashoutOTPPayload": {
+      "type": "object",
+      "properties": {
+        "commandId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "payload": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "commandId",
+        "payload"
+      ]
+    },
+    "cashincashoutSortByColumn": {
+      "type": "string",
+      "enum": [
+        "OmitSortByColumn",
+        "ReferenceNumber",
+        "TotalAmount",
+        "TransactionCompletedTime",
+        "Provider",
+        "Fee",
+        "Commission"
+      ],
+      "default": "OmitSortByColumn"
+    },
+    "cashincashoutSortOrder": {
+      "type": "string",
+      "enum": [
+        "DESC",
+        "ASC"
+      ],
+      "default": "DESC"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

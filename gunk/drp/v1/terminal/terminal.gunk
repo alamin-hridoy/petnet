@@ -1,0 +1,731 @@
+package terminal
+
+import (
+	"encoding/json"
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+
+	"brank.as/petnet/gunk/drp/v1/profile"
+)
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "remit_partner",
+//                 "remit_type",
+//                 "sender",
+//                 "amount",
+//                 "order_id",
+//                 "agent",
+//         },
+// }}
+type CreateRemitRequest struct {
+	RemitPartner string  `pb:"1" json:"remit_partner"`
+	RemitType    string  `pb:"2" json:"remit_type"`
+	Remitter     UserKYC `pb:"3" json:"sender"`
+	// Required for all remittances to individuals.  Details the person to receive the money.
+	Receiver Receiver `pb:"4" json:"receiver"`
+	// Required for all transfers to businesses.  Details the biller or business.
+	Buiness Business `pb:"5" json:"business"`
+	// Bank account destination, for sending money directly to an account.
+	Account BankAccount `pb:"6" json:"account"`
+	Amount  SendAmount  `pb:"7" json:"amount"`
+	Promo   string      `pb:"8" json:"promo"`
+	Message string      `pb:"9" json:"message"`
+	// Unique Order ID from the DSA system.
+	OrderID string `pb:"10" json:"order_id"`
+	Agent   Agent  `pb:"11" json:"agent"`
+}
+
+type CreateRemitResponse struct {
+	PrincipalAmount  Amount            `pb:"1" json:"principal_amount"`
+	RemitAmount      Amount            `pb:"2" json:"remit_amount"`
+	Taxes            map[string]Amount `pb:"3" json:"taxes"`
+	Tax              Amount            `pb:"4" json:"total_tax"`
+	Charges          map[string]Amount `pb:"5" json:"charges"`
+	TotalCharges     Amount            `pb:"6" json:"total_charges"`
+	GrossTotal       Amount            `pb:"7" json:"gross_total"`
+	PromoDescription string            `pb:"8" json:"promo_description"`
+	PromoMessage     string            `pb:"9" json:"promo_message"`
+	TransactionID    string            `pb:"10" json:"transaction_id"`
+}
+
+type Gender int32
+
+const (
+	_ Gender = iota
+	Male
+	Female
+)
+
+type SortOrder int
+
+const (
+	DESC SortOrder = iota
+	ASC
+)
+
+type SortByColumn int
+
+const (
+	OmitSortByColumn SortByColumn = iota
+	ControlNumber
+	RemittedTo
+	TotalRemittedAmount
+	TransactionCompletedTime
+	Partner
+)
+
+type Bool int32
+
+const (
+	Invalid Bool = iota
+	True
+	False
+)
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "contact_info",
+//                 "identification",
+//                 "employment",
+//                 "birthdate",
+//                 "birth_country",
+//                 "gender",
+//                 "nationality",
+//                 "source_funds",
+//                 "transaction_purpose",
+//                 "sender_reason",
+//                 "receiver_relation",
+//                 "email",
+//                 "current_address",
+//                 "permanent_address",
+//                 "partner_member_id",
+//         },
+// }}
+type UserKYC struct {
+	ContactInfo        Contact                  `pb:"1" json:"contact_info"`
+	PartnerMemberID    string                   `pb:"2" json:"partner_member_id"`
+	Employment         Employment               `pb:"3" json:"employment"`
+	Birthdate          profile.Date             `pb:"4" json:"birthdate"`
+	BirthCountry       string                   `pb:"5" json:"birth_country"`
+	BirthPlace         string                   `pb:"6" json:"birth_place"`
+	Gender             Gender                   `pb:"7" json:"gender"`
+	Nationality        string                   `pb:"8" json:"nationality"`
+	SourceFunds        string                   `pb:"9" json:"source_funds"`
+	TransactionPurpose string                   `pb:"10" json:"transaction_purpose"`
+	SendingReasonID    string                   `pb:"11" json:"sending_reason_id"`
+	SendingReason      string                   `pb:"12" json:"sending_reason"`
+	ReceiverRelation   string                   `pb:"13" json:"relationship"`
+	Identification     profile.Identification   `pb:"14" json:"identification"`
+	AlternateID        []profile.Identification `pb:"15" json:"alternate_id"`
+	Email              string                   `pb:"16" json:"email"`
+	KYCVerified        Bool                     `pb:"17" json:"kyc_verified"`
+	ProofOfAddress     Bool                     `pb:"18" json:"proof_of_address"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "amount",
+//                 "currency",
+//         },
+// }}
+type Amount struct {
+	// Monetary amount in the smallest currency denomination.  Example: USD $10.25 => "1025".
+	Amount string `pb:"1" json:"amount"`
+	// Currency code using ISO-4217 3-letter codes.
+	Currency string `pb:"2" json:"currency"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "amount",
+//                 "source_currency",
+//                 "destination_currency",
+//                 "destination_country",
+//         },
+// }}
+type SendAmount struct {
+	// Monetary amount in the smallest currency denomination.  Example: USD $10.25 => "1025".
+	Amount string `pb:"1" json:"amount"`
+	// Source country code using ISO-3166 2-letter codes.
+	SourceCountry string `pb:"2" json:"source_country"`
+	// Source currency code using ISO-4217 3-letter codes.
+	SourceCurrency string `pb:"3" json:"source_currency"`
+	// Destination country code using ISO-3166 2-letter codes.
+	DestinationCountry string `pb:"4" json:"destination_country"`
+	// Destination currency code using ISO-4217 3-letter codes.
+	DestinationCurrency string `pb:"5" json:"destination_currency"`
+	// Use destination currency to calculate the remittance principal.
+	// Pricipal amount will be adjusted for exchange rate.
+	DestinationAmount bool `pb:"6" json:"destination_amount"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "employer",
+//                 "occupation",
+//                 "position_level",
+//         },
+// }}
+type Employment struct {
+	Employer      string `pb:"1" json:"employer"`
+	OccupationID  string `pb:"2" json:"occupation_id"`
+	Occupation    string `pb:"3" json:"occupation"`
+	PositionLevel string `pb:"4" json:"position_level"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "bic",
+//                 "account_number",
+//                 "account_suffix",
+//         },
+// }}
+type BankAccount struct {
+	// Bank Identification Code assigned by SWIFT.
+	BIC           string `pb:"1" json:"bic"`
+	AccountNumber string `pb:"2" json:"account_number"`
+	AccountSuffix string `pb:"3" json:"account_suffix"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "company_name",
+//                 "account_code",
+//                 "reference_number",
+//                 "country",
+//         },
+// }}
+type Business struct {
+	CompanyName   string `pb:"1" json:"company_name"`
+	AccountCode   string `pb:"2" json:"account_code"`
+	ControlNumber string `pb:"3" json:"control_number"`
+	Country       string `pb:"4" json:"country"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "first_name",
+//                 "middle_name",
+//                 "last_name",
+//                 "phone",
+//                 "mobile",
+//         },
+// }}
+type Contact struct {
+	FirstName  string              `pb:"1" json:"first_name"`
+	MiddleName string              `pb:"2" json:"middle_name"`
+	LastName   string              `pb:"3" json:"last_name"`
+	Email      string              `pb:"4" json:"email"`
+	Address    Address             `pb:"5" json:"address"`
+	Phone      profile.PhoneNumber `pb:"6" json:"phone"`
+	Mobile     profile.PhoneNumber `pb:"7" json:"mobile"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "address1",
+//                 "city",
+//                 "state",
+//                 "postal_code",
+//                 "country",
+//                 "province",
+//         },
+// }}
+type Address struct {
+	Address1   string `pb:"1" json:"address1"`
+	Address2   string `pb:"2" json:"address2"`
+	City       string `pb:"3" json:"city"`
+	State      string `pb:"4" json:"state"`
+	PostalCode string `pb:"5" json:"postal_code"`
+	Country    string `pb:"6" json:"country"`
+	// Also known as Barangay in Philippines
+	Zone     string `pb:"7" json:"zone"`
+	Province string `pb:"8" json:"province"`
+}
+
+type Taxes struct {
+	Currency  string `pb:"1" json:"currency"`
+	State     string `pb:"2" json:"state"`
+	County    string `pb:"3" json:"county"`
+	Municipal string `pb:"4" json:"municipal"`
+	Total     string `pb:"5" json:"total"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "contact_info",
+//         },
+// }}
+type Receiver struct {
+	ContactInfo Contact `pb:"1" json:"contact_info"`
+	// Destination state is required for sending money to USA or Mexico.
+	DestinationState string `pb:"2" json:"destination_state"`
+	// Destination city is required for sending money to USA or Mexico.
+	DestinationCity string `pb:"3" json:"destination_city"`
+	// RecipientID Identifier for the selected recipient account will be used in the transfer.
+	RecipientID string `pb:"4" json:"recipient_id"`
+	// AccountHolderName registered under the bank/transfer account.
+	AccountHolderName string `pb:"5" json:"account_holder_name"`
+	// SourceAccountNumber Identifier for the bank/transfer account of the recipient.
+	SourceAccountNumber string `pb:"6" json:"source_account_number"`
+	// Identification is used to identify a Receiver using f.e passport or id card.
+	Identification profile.Identification `pb:"7" json:"identification"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "transaction_id",
+//                 "auth_source",
+//                 "auth_code",
+//         },
+// }}
+type ConfirmRemitRequest struct {
+	TransactionID string `pb:"1" json:"transaction_id"`
+	AuthSource    string `pb:"2" json:"auth_source"`
+	AuthCode      string `pb:"3" json:"auth_code"`
+}
+
+type ConfirmRemitResponse struct {
+	ControlNumber string `pb:"1" json:"control_number"`
+}
+
+type ListRemitRequest struct {
+	From           string       `pb:"1" json:"from"`
+	Until          string       `pb:"2" json:"until"`
+	Limit          int32        `pb:"3" json:"limit"`
+	Offset         int32        `pb:"4" json:"offset"`
+	SortOrder      SortOrder    `pb:"5" json:"sort_order"`
+	SortByColumn   SortByColumn `pb:"6" json:"sort_by_column"`
+	ControlNumbers []string     `pb:"7" json:"control_numbers"`
+	ExcludePartner string       `pb:"8" json:"exclude_partner"`
+	ExcludeType    string       `pb:"9" json:"exclude_type"`
+}
+
+type ListRemitResponse struct {
+	Next        int32        `pb:"1" json:"next"`
+	Remittances []Remittance `pb:"2" json:"remittances"`
+	Total       int32        `pb:"3" json:"total"`
+}
+
+type Remittance struct {
+	ControlNumber            string    `pb:"1" json:"control_number"`
+	RemitPartner             string    `pb:"2" json:"remit_partner"`
+	RemitType                string    `pb:"3" json:"remit_type"`
+	GrossAmount              Amount    `pb:"4" json:"gross_amount"`
+	RemitAmount              Amount    `pb:"5" json:"remit_amount"`
+	Remitter                 Contact   `pb:"6" json:"sender"`
+	Receiver                 Contact   `pb:"7" json:"receiver"`
+	ReceiverRelation         string    `pb:"8" json:"receiver_relation"`
+	SenderReason             string    `pb:"9" json:"sender_reason"`
+	TransactionStagedTime    time.Time `pb:"10" json:"transaction_staged_time"`
+	TransactionCompletedTime time.Time `pb:"11" json:"transaction_completed_time"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "remit_partner",
+//                 "control_number",
+//                 "payout_currency",
+//         },
+// }}
+type LookupRemitRequest struct {
+	RemitPartner   string `pb:"1" json:"remit_partner"`
+	ControlNumber  string `pb:"2" json:"control_number"`
+	PayoutCurrency string `pb:"3" json:"payout_currency"`
+	UserID         string `pb:"4" json:"user_id"`
+	DeviceID       string `pb:"5" json:"device_id"`
+}
+
+type LookupRemitResponse struct {
+	ControlNumber            string            `pb:"1" json:"control_number"`
+	Remitter                 Contact           `pb:"2" json:"sender"`
+	Receiver                 Contact           `pb:"3" json:"receiver"`
+	SourceCountry            string            `pb:"4" json:"source_country"`
+	DestinationCity          string            `pb:"5" json:"destination_city"`
+	DestinationState         string            `pb:"6" json:"destination_state"`
+	Status                   string            `pb:"7" json:"status"`
+	RemitAmount              Amount            `pb:"8" json:"remit_amount"`
+	Taxes                    map[string]Amount `pb:"9" json:"taxes"`
+	TotalTax                 Amount            `pb:"10" json:"total_tax"`
+	Charges                  map[string]Amount `pb:"11" json:"charges"`
+	TotalCharges             Amount            `pb:"12" json:"total_charges"`
+	DisburseAmount           Amount            `pb:"13" json:"disburse_amount"`
+	TransactionStagedTime    time.Time         `pb:"14" json:"transaction_staged_time"`
+	TransactionCompletedTime time.Time         `pb:"15" json:"transaction_completed_time"`
+	OtherInfo                json.RawMessage   `pb:"16" json:"other_info"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "remit_partner",
+//                 "control_number",
+//                 "disburse_currency",
+//                 "receiver",
+//                 "agent",
+//         },
+// }}
+type DisburseRemitRequest struct {
+	RemitPartner     string      `pb:"1" json:"remit_partner"`
+	RemitType        string      `pb:"2" json:"remit_type"`
+	ControlNumber    string      `pb:"3" json:"control_number"`
+	DisburseCurrency string      `pb:"4" json:"disburse_currency"`
+	OrderID          string      `pb:"5" json:"order_id"`
+	Receiver         UserKYC     `pb:"6" json:"receiver"`
+	Agent            Agent       `pb:"7" json:"agent"`
+	Transaction      Transaction `pb:"8" json:"transaction"`
+	Remitter         Contact     `pb:"9" json:"sender"`
+}
+
+type Transaction struct {
+	SourceCountry      string `pb:"1" json:"source_country"`
+	DestinationCountry string `pb:"2" json:"destination_country"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "user_id",
+//         },
+// }}
+type Agent struct {
+	UserID    int32  `pb:"1" json:"user_id"`
+	IPAddress string `pb:"2" json:"ip_address"`
+	DeviceID  string `pb:"3" json:"device_id"`
+}
+
+type DisburseRemitResponse struct {
+	TransactionID string `pb:"1" json:"transaction_id"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "transaction_id",
+//         },
+// }}
+type GetPartnerByTxnIDRequest struct {
+	TransactionID string `pb:"1" json:"transaction_id"`
+}
+
+type GetPartnerByTxnIDResponse struct {
+	Partner string `pb:"1" json:"partner"`
+}
+
+type TerminalService interface {
+	// Create Remittance transaction.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/terminal/remit",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Terminal"},
+	//         Description: "Create a remittance transaction for processing.",
+	//         Summary:     "Create Remittance.",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/terminalCreateRemitResponse",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when not found.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"control number not found\" }",
+	//                         }},
+	//                 },
+	//                 "409": openapiv2.Response{
+	//                         Description: "Returned when already exists",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 409, \"message\": \"identifier already exists\" }",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"database error\" }",
+	//                         }},
+	//                 },
+	//                 "503": openapiv2.Response{
+	//                         Description: "Returned when service is unavailable.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 503, \"message\": \"connection error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	CreateRemit(CreateRemitRequest) CreateRemitResponse
+
+	// Confirm and process Remittance transaction.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/terminal/remit/{TransactionID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Terminal"},
+	//         Description: "Confirm remittance transaction for processing.",
+	//         Summary:     "Confirm Remittance.",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/terminalConfirmRemitResponse",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when not found.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"control number not found\" }",
+	//                         }},
+	//                 },
+	//                 "409": openapiv2.Response{
+	//                         Description: "Returned when already exists",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 409, \"message\": \"identifier already exists\" }",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"database error\" }",
+	//                         }},
+	//                 },
+	//                 "503": openapiv2.Response{
+	//                         Description: "Returned when service is unavailable.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 503, \"message\": \"connection error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	ConfirmRemit(ConfirmRemitRequest) ConfirmRemitResponse
+
+	// Get user profile by ID.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/terminal/remit",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Terminal"},
+	//         Description: "Get user remittance history and statuses.",
+	//         Summary:     "Get remittance history.",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/terminalListRemitResponse",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when not found.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"control number not found\" }",
+	//                         }},
+	//                 },
+	//                 "409": openapiv2.Response{
+	//                         Description: "Returned when already exists",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 409, \"message\": \"identifier already exists\" }",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"database error\" }",
+	//                         }},
+	//                 },
+	//                 "503": openapiv2.Response{
+	//                         Description: "Returned when service is unavailable.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 503, \"message\": \"connection error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	ListRemit(ListRemitRequest) ListRemitResponse
+
+	// Search remittance.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/terminal/remit/{RemitPartner}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:   []string{"Terminal"},
+	//         Description: `Search remittance record status. Validate record by control number
+	//             number before initiating disbursement.`,
+	//         Summary:  "Search remittance.",
+	//         Produces: []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/terminalLookupRemitResponse",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when not found.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"control number not found\" }",
+	//                         }},
+	//                 },
+	//                 "409": openapiv2.Response{
+	//                         Description: "Returned when already exists",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 409, \"message\": \"identifier already exists\" }",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"database error\" }",
+	//                         }},
+	//                 },
+	//                 "503": openapiv2.Response{
+	//                         Description: "Returned when service is unavailable.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 503, \"message\": \"connection error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	LookupRemit(LookupRemitRequest) LookupRemitResponse
+
+	// Disburse remittance.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/terminal/remit/{RemitPartner}/disburse",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Terminal"},
+	//         Summary:     "Disburse remittance.",
+	//         Description: "Disburse remittance to receiver.",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/terminalDisburseRemitResponse",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when not found.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"control number not found\" }",
+	//                         }},
+	//                 },
+	//                 "409": openapiv2.Response{
+	//                         Description: "Returned when already exists",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 409, \"message\": \"identifier already exists\" }",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"database error\" }",
+	//                         }},
+	//                 },
+	//                 "503": openapiv2.Response{
+	//                         Description: "Returned when service is unavailable.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 503, \"message\": \"connection error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	DisburseRemit(DisburseRemitRequest) DisburseRemitResponse
+
+	// Search partner by transaction id.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/terminal/partner/{TransactionID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Terminal"},
+	//         Description: `Search Partner by transaction id.`,
+	//         Summary:     "Search Partner.",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/terminalGetPartnerByTxnIDResponse",
+	//                         }},
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when not found.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 404, \"message\": \"control number not found\" }",
+	//                         }},
+	//                 },
+	//                 "409": openapiv2.Response{
+	//                         Description: "Returned when already exists",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 409, \"message\": \"identifier already exists\" }",
+	//                         }},
+	//                 },
+	//                 "422": openapiv2.Response{
+	//                         Description: "Returned when unprocessable entity.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 422, \"message\": \"invalid input for parameters\" }",
+	//                         }},
+	//                 },
+	//                 "500": openapiv2.Response{
+	//                         Description: "Returned when internal server error.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 500, \"message\": \"database error\" }",
+	//                         }},
+	//                 },
+	//                 "503": openapiv2.Response{
+	//                         Description: "Returned when service is unavailable.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Example: "{ \"code\": 503, \"message\": \"connection error\" }",
+	//                         }},
+	//                 },
+	//         },
+	// }
+	GetPartnerByTxnID(GetPartnerByTxnIDRequest) GetPartnerByTxnIDResponse
+}

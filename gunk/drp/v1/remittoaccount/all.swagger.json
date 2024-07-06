@@ -1,0 +1,681 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/drp/v1/remittoaccount/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "RemitToAccountService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/rta/inquire": {
+      "post": {
+        "summary": "Remit to Account Inquire",
+        "description": "Remit to Account Inquire",
+        "operationId": "RemitToAccountService_RTAInquire",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/remittoaccountRTAInquireResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when not found.",
+            "schema": {
+              "example": {
+                "code": 400,
+                "message": "RTA Inquire Error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/remittoaccountRTAInquireRequest"
+            }
+          }
+        ],
+        "tags": [
+          "RemitToAccount"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/rta/payment": {
+      "post": {
+        "summary": "Remit to Account Payment",
+        "description": "Remit to Account Payment",
+        "operationId": "RemitToAccountService_RTAPayment",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/remittoaccountRTAPaymentResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when not found.",
+            "schema": {
+              "example": {
+                "code": 400,
+                "message": "RTA Payment Error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/remittoaccountRTAPaymentRequest"
+            }
+          }
+        ],
+        "tags": [
+          "RemitToAccount"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/rta/retry": {
+      "post": {
+        "summary": "Remit to Account Retry",
+        "description": "Remit to Account Retry",
+        "operationId": "RemitToAccountService_RTARetry",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/remittoaccountRTARetryResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when not found.",
+            "schema": {
+              "example": {
+                "code": 400,
+                "message": "RTA Retry Error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/remittoaccountRTARetryRequest"
+            }
+          }
+        ],
+        "tags": [
+          "RemitToAccount"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "remittoaccountRTAInquireRequest": {
+      "type": "object",
+      "properties": {
+        "partner": {
+          "type": "string"
+        },
+        "reference_number": {
+          "type": "string"
+        },
+        "location_id": {
+          "type": "string"
+        }
+      }
+    },
+    "remittoaccountRTAInquireResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/remittoaccountRTAInquireResult"
+        },
+        "bank_code": {
+          "type": "string"
+        }
+      }
+    },
+    "remittoaccountRTAInquireResult": {
+      "type": "object",
+      "properties": {
+        "bene_amount": {
+          "type": "string"
+        },
+        "beneficiary_address": {
+          "type": "string"
+        },
+        "beneficiary_bankAccountno": {
+          "type": "string"
+        },
+        "beneficiary_city": {
+          "type": "string"
+        },
+        "beneficiary_country": {
+          "type": "string"
+        },
+        "beneficiary_firstname": {
+          "type": "string"
+        },
+        "beneficiary_lastname": {
+          "type": "string"
+        },
+        "beneficiary_middlename": {
+          "type": "string"
+        },
+        "beneficiary_state_or_province": {
+          "type": "string"
+        },
+        "bpi_branch_code": {
+          "type": "string"
+        },
+        "currency_code_of_funding_amount": {
+          "type": "string"
+        },
+        "currency_code_of_settlement_amount": {
+          "type": "string"
+        },
+        "txn_distribution_date": {
+          "type": "string"
+        },
+        "funding_amount": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "remitter_city": {
+          "type": "string"
+        },
+        "remitter_country": {
+          "type": "string"
+        },
+        "remitter_firstname": {
+          "type": "string"
+        },
+        "remitter_lastname": {
+          "type": "string"
+        },
+        "remitter_middlename": {
+          "type": "string"
+        },
+        "remitter_state_or_province": {
+          "type": "string"
+        },
+        "settlement_mode": {
+          "type": "string"
+        },
+        "status_code": {
+          "type": "string"
+        },
+        "transaction_date": {
+          "type": "string"
+        },
+        "transaction_reference_no": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "sender_ref_id": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "uuid": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "ubp_tran_id": {
+          "type": "string"
+        },
+        "tranRequest_date": {
+          "type": "string"
+        },
+        "tranFinacle_date": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "remittoaccountRTAPaymentRequest": {
+      "type": "object",
+      "properties": {
+        "partner": {
+          "type": "string"
+        },
+        "reference_number": {
+          "type": "string"
+        },
+        "trx_date": {
+          "type": "string"
+        },
+        "account_number": {
+          "type": "string"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "service_charge": {
+          "type": "string"
+        },
+        "remarks": {
+          "type": "string"
+        },
+        "particulars": {
+          "type": "string"
+        },
+        "merchant_name": {
+          "type": "string"
+        },
+        "bank_id": {
+          "type": "string"
+        },
+        "location_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "user_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "currency_id": {
+          "type": "string"
+        },
+        "customer_id": {
+          "type": "string"
+        },
+        "form_type": {
+          "type": "string"
+        },
+        "form_number": {
+          "type": "string"
+        },
+        "trx_type": {
+          "type": "string"
+        },
+        "remote_location_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "remote_user_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "biller_name": {
+          "type": "string"
+        },
+        "trx_time": {
+          "type": "string"
+        },
+        "total_amount": {
+          "type": "string"
+        },
+        "account_name": {
+          "type": "string"
+        },
+        "beneficiary_address": {
+          "type": "string"
+        },
+        "beneficiary_birthdate": {
+          "type": "string"
+        },
+        "beneficiary_city": {
+          "type": "string"
+        },
+        "beneficiary_civil": {
+          "type": "string"
+        },
+        "beneficiary_country": {
+          "type": "string"
+        },
+        "beneficiary_customertype": {
+          "type": "string"
+        },
+        "beneficiary_firstname": {
+          "type": "string"
+        },
+        "beneficiary_lastname": {
+          "type": "string"
+        },
+        "beneficiary_middlename": {
+          "type": "string"
+        },
+        "beneficiary_tin": {
+          "type": "string"
+        },
+        "beneficiary_sex": {
+          "type": "string"
+        },
+        "beneficiary_state": {
+          "type": "string"
+        },
+        "currency_code_principal_amount": {
+          "type": "string"
+        },
+        "principal_amount": {
+          "type": "string"
+        },
+        "record_type": {
+          "type": "string"
+        },
+        "remitter_address": {
+          "type": "string"
+        },
+        "remitter_birthdate": {
+          "type": "string"
+        },
+        "remitter_city": {
+          "type": "string"
+        },
+        "remitter_civil": {
+          "type": "string"
+        },
+        "remitter_country": {
+          "type": "string"
+        },
+        "remitter_customer_type": {
+          "type": "string"
+        },
+        "remitter_firstname": {
+          "type": "string"
+        },
+        "remitter_gender": {
+          "type": "string"
+        },
+        "remitter_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "remitter_lastname": {
+          "type": "string"
+        },
+        "remitter_middlename": {
+          "type": "string"
+        },
+        "remitter_state": {
+          "type": "string"
+        },
+        "settlement_mode": {
+          "type": "string"
+        },
+        "notification": {
+          "type": "string"
+        },
+        "bene_zip_code": {
+          "type": "string"
+        }
+      }
+    },
+    "remittoaccountRTAPaymentResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/remittoaccountRTAPaymentResult"
+        },
+        "bank_code": {
+          "type": "string"
+        }
+      }
+    },
+    "remittoaccountRTAPaymentResult": {
+      "type": "object",
+      "properties": {
+        "bene_amount": {
+          "type": "string"
+        },
+        "beneficiary_address": {
+          "type": "string"
+        },
+        "beneficiary_bank_accountno": {
+          "type": "string"
+        },
+        "beneficiary_city": {
+          "type": "string"
+        },
+        "beneficiary_country": {
+          "type": "string"
+        },
+        "beneficiary_firstname": {
+          "type": "string"
+        },
+        "beneficiary_lastname": {
+          "type": "string"
+        },
+        "beneficiary_middlename": {
+          "type": "string"
+        },
+        "beneficiary_state_or_province": {
+          "type": "string"
+        },
+        "bpi_branch_code": {
+          "type": "string"
+        },
+        "currency_code_of_funding_amount": {
+          "type": "string"
+        },
+        "currency_code_of_settlement_amount": {
+          "type": "string"
+        },
+        "txn_distribution_date": {
+          "type": "string"
+        },
+        "funding_amount": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "remitter_city": {
+          "type": "string"
+        },
+        "remitter_country": {
+          "type": "string"
+        },
+        "remitter_firstname": {
+          "type": "string"
+        },
+        "remitter_lastname": {
+          "type": "string"
+        },
+        "remitter_message_to_beneficiary": {
+          "type": "string"
+        },
+        "remitter_middlename": {
+          "type": "string"
+        },
+        "remitter_state_or_province": {
+          "type": "string"
+        },
+        "settlement_mode": {
+          "type": "string"
+        },
+        "status_code": {
+          "type": "string"
+        },
+        "transaction_date": {
+          "type": "string"
+        },
+        "transaction_reference_no": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "sender_ref_id": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "uuid": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "ubp_tran_id": {
+          "type": "string"
+        },
+        "tran_request_date": {
+          "type": "string"
+        },
+        "tran_finacle_date": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "remittoaccountRTARetryRequest": {
+      "type": "object",
+      "properties": {
+        "partner": {
+          "type": "string"
+        },
+        "reference_number": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "location_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "principal_amount": {
+          "type": "string"
+        },
+        "form_number": {
+          "type": "string"
+        }
+      }
+    },
+    "remittoaccountRTARetryResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/remittoaccountRTAPaymentResult"
+        },
+        "bank_code": {
+          "type": "string"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

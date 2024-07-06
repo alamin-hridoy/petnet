@@ -1,0 +1,11 @@
+deployment:
+    kind: DaemonSet
+ingressClass:
+    enabled: true
+logs:
+    general:
+        format: json
+service:
+  spec:
+    loadBalancerIP: 35.198.208.26
+    externalTrafficPolicy: Local

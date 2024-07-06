@@ -1,0 +1,32 @@
+#!/bin/bash
+branches=$1
+
+git fetch origin +refs/heads/master
+git fetch origin +refs/heads/uat
+git fetch origin +refs/heads/production
+
+tags=($(echo $(git log "${branches}") | grep --null -Po '(?<=\[)DRP\-.+?(?=\])'))
+authors=($(git log "${branches}" --format='%ae'))
+
+len=${#tags[@]}
+if	[ $len == 0 ]; then
+	echo "no commits added to branch"
+	exit 0
+fi
+
+tickets="[[${tags[0]}](https://perahub-drp.atlassian.net/browse/${tags[0]}):${authors[0]}] "
+changelog+="https://perahub-drp.atlassian.net/browse/${tags[0]}?jql=project%%20%%3D%%20DRP%%20and%%20key%%20in%%20(%%22${tags[0]}"
+if	[ $len != 1 ]; then
+	i=0
+	for tag in "${tags[@]}"
+	do
+		if	[ $i != 0 ]; then
+			changelog+="%%22%%2C%%22${tag}"
+			tickets+="[[${tag}](https://perahub-drp.atlassian.net/browse/${tag}):${authors[i]}] "
+		fi
+		i=$((i+1))
+	done
+fi
+changelog+="%%22)%%20ORDER%%20BY%%20key%%20ASC"
+output="${changelog}\n${tickets}"
+echo $output

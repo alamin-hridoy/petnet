@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: leader-config
+data:
+  RUNTIME_ENVIRONMENT: development
+  SERVER_PATH: /var/lib/leader/elector.sock

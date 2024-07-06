@@ -1,0 +1,658 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/dsa/v2/profile/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "OrgProfileService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v2/orgprofile": {
+      "get": {
+        "summary": "List org profiles.",
+        "description": "List all created org profiles.",
+        "operationId": "OrgProfileService_ListProfiles",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/orgProfileGetProfileResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "company_name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "DESC",
+              "ASC"
+            ],
+            "default": "DESC"
+          },
+          {
+            "name": "sort_by_column",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "DateApplied",
+              "CompanyName"
+            ],
+            "default": "DateApplied"
+          },
+          {
+            "name": "risk_score",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "UnknownRiskScore",
+                "Low",
+                "Medium",
+                "High"
+              ]
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "UnknownStatus",
+                "Accepted",
+                "Completed",
+                "Pending",
+                "Rejected",
+                "PendingDocuments",
+                "Incomplete"
+              ]
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "submitted_document",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "UnknownSubmittedDocument",
+              "Submitted",
+              "NotSubmitted"
+            ],
+            "default": "UnknownSubmittedDocument"
+          },
+          {
+            "name": "orgtype",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "UnknownOrgType",
+              "PetNet",
+              "DSA"
+            ],
+            "default": "UnknownOrgType"
+          },
+          {
+            "name": "is_provider",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "Org Profile"
+        ]
+      }
+    },
+    "/v2/orgprofile/{dsa_code}": {
+      "get": {
+        "summary": "Get org profile.",
+        "description": "Get created org profile from DsaCode.",
+        "operationId": "OrgProfileService_GetProfileByDsaCode",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/orgProfileGetProfileByDsaCodeResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "dsa_code",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Org Profile"
+        ]
+      }
+    },
+    "/v2/orgprofile/{id}": {
+      "get": {
+        "summary": "Get org profile.",
+        "description": "Get created org profile from org ID.",
+        "operationId": "OrgProfileService_GetProfile",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/orgProfileGetProfileResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Org Profile"
+        ]
+      }
+    },
+    "/v2/orgprofile/{oldOrgID}": {
+      "put": {
+        "summary": "Upsert org profile.",
+        "description": "Create or update an org profile.",
+        "operationId": "OrgProfileService_UpdateOrgProfileUserID",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/orgProfileUpdateOrgProfileUserIDResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "oldOrgID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/profileUpdateOrgProfileUserIDRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Org Profile"
+        ]
+      }
+    },
+    "/v2/orgprofile/{profile.org_id}": {
+      "put": {
+        "summary": "Upsert org profile.",
+        "description": "Create or update an org profile.",
+        "operationId": "OrgProfileService_UpsertProfile",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/orgProfileUpsertProfileResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "profile.org_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/profileUpsertProfileRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Org Profile"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "googlerpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "profileAccountInfo": {
+      "type": "object",
+      "properties": {
+        "bank": {
+          "type": "string"
+        },
+        "bank_account_number": {
+          "type": "string"
+        },
+        "bank_account_holder": {
+          "type": "string"
+        },
+        "agree_terms_conditions": {
+          "$ref": "#/definitions/profileBoolean"
+        },
+        "agree_online_supplier_form": {
+          "$ref": "#/definitions/profileBoolean"
+        },
+        "currency": {
+          "$ref": "#/definitions/profileCurrency"
+        }
+      }
+    },
+    "profileAddress": {
+      "type": "object",
+      "properties": {
+        "address1": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "postal_code": {
+          "type": "string"
+        }
+      }
+    },
+    "profileBoolean": {
+      "type": "string",
+      "enum": [
+        "UnknownBoolean",
+        "True",
+        "False"
+      ],
+      "default": "UnknownBoolean",
+      "title": "To avoid overrides of boolean on upsert"
+    },
+    "profileBusinessInfo": {
+      "type": "object",
+      "properties": {
+        "company_name": {
+          "type": "string"
+        },
+        "store_name": {
+          "type": "string"
+        },
+        "phone_number": {
+          "type": "string"
+        },
+        "fax_number": {
+          "type": "string"
+        },
+        "website": {
+          "type": "string"
+        },
+        "company_email": {
+          "type": "string"
+        },
+        "contact_person": {
+          "type": "string"
+        },
+        "position": {
+          "type": "string"
+        },
+        "address": {
+          "$ref": "#/definitions/profileAddress"
+        }
+      }
+    },
+    "profileCurrency": {
+      "type": "string",
+      "enum": [
+        "UnknownCurrency",
+        "PHP",
+        "USD",
+        "EURO",
+        "SGD"
+      ],
+      "default": "UnknownCurrency"
+    },
+    "profileGetProfileByDsaCodeResponse": {
+      "type": "object",
+      "properties": {
+        "profile": {
+          "$ref": "#/definitions/profileOrgProfile"
+        }
+      }
+    },
+    "profileGetProfileResponse": {
+      "type": "object",
+      "properties": {
+        "profile": {
+          "$ref": "#/definitions/profileOrgProfile"
+        }
+      }
+    },
+    "profileListProfilesResponse": {
+      "type": "object",
+      "properties": {
+        "profiles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/profileOrgProfile"
+          }
+        },
+        "next": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "profileOrgProfile": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "org_type": {
+          "$ref": "#/definitions/profileOrgType"
+        },
+        "status": {
+          "$ref": "#/definitions/v2profileStatus"
+        },
+        "business_info": {
+          "$ref": "#/definitions/profileBusinessInfo"
+        },
+        "account_info": {
+          "$ref": "#/definitions/profileAccountInfo"
+        },
+        "date_applied": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "risk_score": {
+          "$ref": "#/definitions/profileRiskScore"
+        },
+        "reminder_sent": {
+          "$ref": "#/definitions/profileBoolean"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deleted": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "transaction_types": {
+          "type": "string"
+        },
+        "dsa_code": {
+          "type": "string"
+        },
+        "terminal_id_otc": {
+          "type": "string"
+        },
+        "terminal_id_digital": {
+          "type": "string"
+        },
+        "is_provider": {
+          "type": "boolean"
+        },
+        "partner": {
+          "type": "string"
+        }
+      }
+    },
+    "profileOrgType": {
+      "type": "string",
+      "enum": [
+        "UnknownOrgType",
+        "PetNet",
+        "DSA"
+      ],
+      "default": "UnknownOrgType"
+    },
+    "profileRiskScore": {
+      "type": "string",
+      "enum": [
+        "UnknownRiskScore",
+        "Low",
+        "Medium",
+        "High"
+      ],
+      "default": "UnknownRiskScore"
+    },
+    "profileSortBy": {
+      "type": "string",
+      "enum": [
+        "DESC",
+        "ASC"
+      ],
+      "default": "DESC"
+    },
+    "profileSortByColumn": {
+      "type": "string",
+      "enum": [
+        "DateApplied",
+        "CompanyName"
+      ],
+      "default": "DateApplied"
+    },
+    "profileSubmittedDocument": {
+      "type": "string",
+      "enum": [
+        "UnknownSubmittedDocument",
+        "Submitted",
+        "NotSubmitted"
+      ],
+      "default": "UnknownSubmittedDocument"
+    },
+    "profileUpdateOrgProfileUserIDRequest": {
+      "type": "object",
+      "properties": {
+        "oldOrgID": {
+          "type": "string"
+        },
+        "newOrgID": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "profileUpdateOrgProfileUserIDResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "profileUpsertProfileRequest": {
+      "type": "object",
+      "properties": {
+        "profile": {
+          "$ref": "#/definitions/profileOrgProfile"
+        }
+      }
+    },
+    "profileUpsertProfileResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "v2profileStatus": {
+      "type": "string",
+      "enum": [
+        "UnknownStatus",
+        "Accepted",
+        "Completed",
+        "Pending",
+        "Rejected",
+        "PendingDocuments",
+        "Incomplete"
+      ],
+      "default": "UnknownStatus"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+- op: add
+  path: /metadata/annotations/cert-manager.io~1cluster-issuer
+  value: letsencrypt-real
+
+- op: replace
+  path: /spec/tls/0/hosts
+  value:
+    - dsa-sim.uat.petnet.dev
+
+- op: replace
+  path: /spec/rules/0/host
+  value: dsa-sim.uat.petnet.dev
+
+- op: add
+  path: /metadata/annotations/traefik.ingress.kubernetes.io~1router.middlewares
+  value: petnet-dev-staging-auth@kubernetescrd,ingress-security-headers@kubernetescrd,ingress-https@kubernetescrd

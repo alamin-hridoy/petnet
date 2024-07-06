@@ -1,0 +1,15 @@
+- op: replace
+  path: /spec/tls/0/hosts
+  value:
+    - uat.proxtera.app
+    - api.uat.proxtera.app
+    - sso.uat.proxtera.app
+    - usermgm.uat.proxtera.app
+
+- op: replace
+  path: /spec/rules/0/host
+  value: sso.uat.proxtera.app
+
+- op: add
+  path: /metadata/annotations/cert-manager.io~1cluster-issuer
+  value:  letsencrypt-production

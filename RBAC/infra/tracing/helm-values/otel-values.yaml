@@ -1,0 +1,29 @@
+standaloneCollector:
+  enabled: true
+
+agentCollector:
+  enabled: false
+
+ports:
+  zipkin:
+    enabled: false
+
+config:
+  exporters:
+    jaeger:
+      endpoint: jaeger-collector:14250
+      tls:
+        insecure: true
+  receivers:
+    prometheus: null
+    zipkin: null
+  service:
+    pipelines:
+      metrics: null
+      traces:
+        receivers:
+          - otlp
+        processors:
+          - batch
+        exporters:
+          - jaeger

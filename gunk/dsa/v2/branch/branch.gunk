@@ -1,0 +1,103 @@
+package branch // proto "petnet.v2.branch"
+
+import (
+	"time"
+
+	"brank.as/petnet/gunk/dsa/v2/profile"
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+type UpsertBranchRequest struct {
+	Branch Branch `pb:"1" json:"branch"`
+}
+
+type UpsertBranchResponse struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type ListBranchesRequest struct {
+	OrgID  string `pb:"1" json:"org_id"`
+	Limit  int32  `pb:"2" json:"limit"`
+	Offset int32  `pb:"3" json:"offset"`
+	Title  string `pb:"4" json:"title"`
+}
+
+type ListBranchesResponse struct {
+	Branches []Branch `pb:"1" json:"branches"`
+	Total    int32    `pb:"2" json:"total"`
+}
+
+type Branch struct {
+	ID            string          `pb:"1" json:"id"`
+	OrgID         string          `pb:"2" json:"org_id"`
+	Title         string          `pb:"3" json:"title"`
+	Address       profile.Address `pb:"4" json:"address"`
+	PhoneNumber   string          `pb:"5" json:"phone_number"`
+	FaxNumber     string          `pb:"6" json:"fax_number"`
+	ContactPerson string          `pb:"7" json:"contact_person"`
+	Created       time.Time       `pb:"8" json:"created"`
+	Updated       time.Time       `pb:"9" json:"updated"`
+	Deleted       time.Time       `pb:"10" json:"deleted"`
+}
+
+type BranchService interface {
+	// Upsert branch.
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v2/branch/{Branch.ID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Branch"},
+	//         Description: "Create or update a branch.",
+	//         Summary:     "Upsert branch.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/branchUpsertBranchResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	UpsertBranch(UpsertBranchRequest) UpsertBranchResponse
+
+	// List branches.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v2/branch",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Branch"},
+	//         Description: "List all created branches.",
+	//         Summary:     "List branches.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/branchListBranchResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	ListBranches(ListBranchesRequest) ListBranchesResponse
+}

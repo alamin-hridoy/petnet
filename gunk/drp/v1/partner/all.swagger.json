@@ -1,0 +1,381 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/drp/v1/partner/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "RemitPartnerService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/partner": {
+      "get": {
+        "summary": "List Partners.",
+        "description": "List available remittance partners.",
+        "operationId": "RemitPartnerService_RemitPartners",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/partnerRemitPartnersResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "country",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Remittance Partners"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      },
+      "post": {
+        "summary": "Partner Input Guide.",
+        "description": "List valid input for remittance partner.\n          Fields with guide inputs can be displayed as a dropdown for user selection.",
+        "operationId": "RemitPartnerService_InputGuide",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/partnerInputGuideResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/partnerInputGuideRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Remittance Partners"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/partners-remco": {
+      "get": {
+        "summary": "List Partners Remco Id.",
+        "description": "List Partners Remco Id.",
+        "operationId": "RemitPartnerService_GetPartnersRemco",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/partnerGetPartnersRemcoResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Partners Remco Id"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "partnerCurrencyGuide": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "currency_name": {
+          "type": "string"
+        }
+      }
+    },
+    "partnerGetPartnersRemcoResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/partnerPerahubGetRemcoIDResult"
+          }
+        }
+      }
+    },
+    "partnerGuide": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "type": "string"
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/partnerInput"
+          }
+        },
+        "other_info": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/partnerInput"
+          }
+        }
+      }
+    },
+    "partnerInput": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "has_issue_date": {
+          "type": "string"
+        },
+        "has_expiration": {
+          "type": "string"
+        },
+        "country_name": {
+          "type": "string"
+        },
+        "state_name": {
+          "type": "string"
+        },
+        "country_code": {
+          "type": "string"
+        },
+        "currency_code": {
+          "type": "string"
+        },
+        "currencies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/partnerCurrencyGuide"
+          }
+        }
+      }
+    },
+    "partnerInputGuideRequest": {
+      "type": "object",
+      "properties": {
+        "remit_partner": {
+          "type": "string"
+        },
+        "source_country": {
+          "type": "string"
+        },
+        "source_currency": {
+          "type": "string"
+        },
+        "agent_code": {
+          "type": "string"
+        },
+        "country_code": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "partnerInputGuideResponse": {
+      "type": "object",
+      "properties": {
+        "input_guide": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/partnerGuide"
+          }
+        }
+      }
+    },
+    "partnerPerahubGetRemcoIDResult": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "non_ex_name": {
+          "type": "string"
+        }
+      }
+    },
+    "partnerRemitPartner": {
+      "type": "object",
+      "properties": {
+        "partner_code": {
+          "type": "string"
+        },
+        "partner_name": {
+          "type": "string"
+        },
+        "supported_send_types": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/partnerRemitType"
+          }
+        },
+        "supported_disburse_types": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/partnerRemitType"
+          }
+        }
+      }
+    },
+    "partnerRemitPartnersResponse": {
+      "type": "object",
+      "example": {
+        "partners": {
+          "WU": {
+            "partner_code": "WU",
+            "partner_name": "Western Union",
+            "supported_types": [
+              {
+                "code": "Send",
+                "description": "Send money for pickup at Western Union location."
+              },
+              {
+                "code": "Mobile",
+                "description": "Send money to mobile number."
+              }
+            ]
+          },
+          "PT2": {
+            "partner_code": "PT2",
+            "partner_name": "Partner 2",
+            "supported_types": [
+              {
+                "code": "Bank",
+                "description": "Send money directly to receiver's bank account"
+              }
+            ]
+          }
+        }
+      },
+      "properties": {
+        "partners": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/partnerRemitPartner"
+          }
+        }
+      }
+    },
+    "partnerRemitType": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

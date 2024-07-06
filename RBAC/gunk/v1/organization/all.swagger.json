@@ -1,0 +1,327 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/rbac/gunk/v1/organization/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "OrganizationService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/organization": {
+      "get": {
+        "summary": "Get organization profile record.",
+        "description": "Get organization.",
+        "operationId": "OrganizationService_GetOrganization",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/organizationGetOrganizationResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Organization"
+        ]
+      }
+    },
+    "/v1/organization/{mfa_event_id}": {
+      "put": {
+        "summary": "Confirm identity to apply the submitted changes.",
+        "description": "Confirm Update.",
+        "operationId": "OrganizationService_ConfirmUpdate",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/organizationConfirmUpdateResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "mfa_event_id",
+            "description": "MFA event identifier for confirming organization identity.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/organizationConfirmUpdateRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Organization"
+        ]
+      }
+    },
+    "/v1/organization/{organization_id}": {
+      "post": {
+        "summary": "Change the organization's record.",
+        "description": "Update Organization.",
+        "operationId": "OrganizationService_UpdateOrganization",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/organizationUpdateOrganizationResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "organization_id",
+            "description": "Organization unique identifier.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/organizationUpdateOrganizationRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Organization"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "mfaMFA": {
+      "type": "string",
+      "enum": [
+        "PASS",
+        "TOTP",
+        "CODE",
+        "SMS",
+        "RECOVERY",
+        "EMAIL"
+      ],
+      "default": "PASS"
+    },
+    "organizationConfirmUpdateRequest": {
+      "type": "object",
+      "properties": {
+        "organization_id": {
+          "type": "string",
+          "description": "Organization unique identifier."
+        },
+        "mfa_event_id": {
+          "type": "string",
+          "description": "MFA event identifier for confirming organization identity."
+        },
+        "mfa_type": {
+          "$ref": "#/definitions/mfaMFA",
+          "description": "Expected type of MFA."
+        },
+        "mfa_token": {
+          "type": "string",
+          "description": "MFA Token for authentication."
+        }
+      }
+    },
+    "organizationConfirmUpdateResponse": {
+      "type": "object",
+      "properties": {
+        "": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Uptate confirmation timestamp."
+        }
+      }
+    },
+    "organizationEnableOpt": {
+      "type": "string",
+      "enum": [
+        "NoChange",
+        "Enable",
+        "Disable"
+      ],
+      "default": "NoChange"
+    },
+    "organizationGetOrganizationResponse": {
+      "type": "object",
+      "properties": {
+        "organization": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/organizationOrganization"
+          }
+        }
+      }
+    },
+    "organizationOrganization": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "login_mfa": {
+          "type": "boolean"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "organizationUpdateOrganizationRequest": {
+      "type": "object",
+      "properties": {
+        "organization_id": {
+          "type": "string",
+          "description": "Organization unique identifier."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the organization."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address that will be used for contacting the organization,\nincluding service alerts, billing, and updates."
+        },
+        "phone": {
+          "type": "string",
+          "description": "Contact phone number for the organization."
+        },
+        "login_mfa": {
+          "$ref": "#/definitions/organizationEnableOpt",
+          "description": "Require MFA challenge on login.\nAll users in the organization will be\nrequired to enable and use MFA for login authentication."
+        }
+      }
+    },
+    "organizationUpdateOrganizationResponse": {
+      "type": "object",
+      "properties": {
+        "mfa_event_id": {
+          "type": "string",
+          "description": "Returned when MFA confirmation is required before the change is applied."
+        },
+        "mfa_type": {
+          "$ref": "#/definitions/mfaMFA",
+          "description": "Expected type of MFA."
+        },
+        "": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Update confirmation timestamp."
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

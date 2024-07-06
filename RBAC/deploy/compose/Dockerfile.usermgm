@@ -1,0 +1,35 @@
+FROM golang:1.16-alpine as normal
+
+WORKDIR /src
+
+ENV VERSION=localdev
+
+COPY . .
+
+WORKDIR usermgm
+
+RUN go build -mod=vendor -ldflags="-w -s -X main.version=$VERSION" -o usermgm && \
+	if [ ! -f env/config ]; then cp env/sample.config env/config ; fi
+
+CMD ["sh", "-c", "./usermgm"]
+
+FROM golang:1.16-alpine as debug
+
+RUN apk update && apk upgrade && \
+	 apk add --no-cache \
+	 dpkg \
+	 gcc \
+	 git \
+	 musl-dev
+
+WORKDIR /src
+
+ENV VERSION=localdev
+
+COPY . .
+
+WORKDIR usermgm
+
+RUN go install github.com/go-delve/delve/cmd/dlv@latest
+
+CMD ["sh", "-c", "dlv debug --headless --log -l 0.0.0.0:1111 --api-version=2"]

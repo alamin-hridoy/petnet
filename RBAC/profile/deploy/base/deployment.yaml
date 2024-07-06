@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: profile 
+  labels:
+    app.kubernetes.io/instance: profile 
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: profile 
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: profile 
+    spec:
+      containers:
+      - name: profile 
+        image: IMAGE_TAG 
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3005
+        envFrom:
+        - configMapRef:
+            name: profile-config
+        - secretRef:
+            name: profile-secret
+        resources:
+          requests:
+            cpu: 30m
+            memory: 50Mi

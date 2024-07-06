@@ -1,0 +1,392 @@
+package user
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+
+	"brank.as/rbac/gunk/v1/mfa"
+)
+
+type SortBy int
+
+const (
+	DESC SortBy = iota
+	ASC
+)
+
+type SortByColumn int
+
+const (
+	CreatedDate SortByColumn = iota
+	UserName
+)
+
+type Status int
+
+const (
+	Invited Status = iota
+	InviteSent
+	Expired
+	InProgress
+	Revoked
+	Approved
+)
+
+type GetUserRequest struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type GetUserResponse struct {
+	User User `pb:"1" json:"user"`
+}
+
+type User struct {
+	ID           string    `pb:"1" json:"id"`
+	OrgID        string    `pb:"2" json:"org_id"`
+	OrgName      string    `pb:"3" json:"org_name"`
+	FirstName    string    `pb:"4" json:"first_name"`
+	LastName     string    `pb:"5" json:"last_name"`
+	Email        string    `pb:"6" json:"email"`
+	InviteStatus string    `pb:"7" json:"invite_status"`
+	CountryCode  string    `pb:"8" json:"country_code"`
+	Phone        string    `pb:"9" json:"phone"`
+	Created      time.Time `pb:"10" json:"created"`
+	Updated      time.Time `pb:"11" json:"updated"`
+	Deleted      time.Time `pb:"12" json:"deleted"`
+}
+
+type ListUsersRequest struct {
+	OrgID        string       `pb:"1" json:"org_id"`
+	Name         string       `pb:"2" json:"name"`
+	SortBy       SortBy       `pb:"3" json:"sort_by"`
+	SortByColumn SortByColumn `pb:"4" json:"sort_by_column"`
+	Status       []Status     `pb:"5" json:"status"`
+	Limit        int32        `pb:"6" json:"limit"`
+	Offset       int32        `pb:"7" json:"offset"`
+	// List of User IDs.
+	ID []string `pb:"8" json:"id"`
+}
+
+type ListUsersResponse struct {
+	Users []User `pb:"1" json:"users"`
+	Total int32  `pb:"2" json:"total"`
+	// User list mapped by User ID.
+	User map[string]User `pb:"3" json:"user"`
+}
+
+type ChangePasswordRequest struct {
+	UserID      string `pb:"1" json:"user_id"`
+	EventID     string `pb:"2" json:"event_id"`
+	OldPassword string `pb:"3" json:"old_password"`
+	NewPassword string `pb:"4" json:"new_password"`
+}
+
+type ChangePasswordResponse struct {
+	// Returned when MFA confirmation is required before the password change is applied.
+	MFAEventID string `pb:"1" json:"mfa_event_id"`
+	// Expected type of MFA.
+	MFAType mfa.MFA `pb:"2" json:"mfa_type"`
+	// Uptate confirmation timestamp.
+	Updated time.Time `pb:"3"`
+}
+
+type ConfirmUpdateRequest struct {
+	// User unique identifier.
+	UserID string `pb:"1" json:"user_id"`
+	// MFA event identifier for confirming user identity.
+	MFAEventID string `pb:"2" json:"mfa_event_id"`
+	// Expected type of MFA.
+	MFAType mfa.MFA `pb:"3" json:"mfa_type"`
+	// MFA Token for authentication.
+	MFAToken string `pb:"4" json:"mfa_token"`
+}
+
+type ConfirmUpdateResponse struct {
+	// Uptate confirmation timestamp.
+	Updated time.Time `pb:"1"`
+}
+
+type DisableUserRequest struct {
+	UserID          string            `pb:"1" json:"user_id"`
+	CustomEmailData map[string]string `pb:"2" json:"template_data"`
+}
+
+type DisableUserResponse struct {
+	Updated time.Time `pb:"1"`
+}
+
+type EnableUserRequest struct {
+	UserID          string            `pb:"1" json:"user_id"`
+	CustomEmailData map[string]string `pb:"2" json:"template_data"`
+}
+
+type EnableUserResponse struct {
+	Updated time.Time `pb:"1"`
+}
+
+type EnableOpt int32
+
+const (
+	NoChange EnableOpt = iota
+	Enable
+	Disable
+)
+
+type UpdateUserRequest struct {
+	// User unique identifier.
+	UserID string `pb:"1" json:"user_id"`
+	// First Name of the user.
+	FirstName string `pb:"2" json:"first_name"`
+	// Last Name of the user.
+	LastName string `pb:"3" json:"last_name"`
+	// Email is the email that will be used for subsequent logins
+	// and will also be used to contact the user in future.
+	// Must be confirmed using MFA via the email given.
+	Email string `pb:"4" json:"email"`
+	// Preferred MFA method.
+	MFAType mfa.MFA `pb:"5" json:"mfa_type"`
+	// Require MFA challenge on login.
+	LoginMFA EnableOpt `pb:"6" json:"login_mfa"`
+}
+
+type UpdateUserResponse struct {
+	// Returned when MFA confirmation is required before the password change is applied.
+	MFAEventID string `pb:"1" json:"mfa_event_id"`
+	// Expected type of MFA.
+	MFAType mfa.MFA `pb:"2" json:"mfa_type"`
+	// Update confirmation timestamp.
+	Updated time.Time `pb:"3"`
+}
+
+type UserService interface {
+	// Get user by ID.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/user/{ID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"User"},
+	//         Description: "Get all created user user from user ID.",
+	//         Summary:     "Get user.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/userGetUserResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	GetUser(GetUserRequest) GetUserResponse
+
+	// Get users associated with the org.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/user",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"User"},
+	//         Description: "Get all created user user from user ID.",
+	//         Summary:     "List users.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/userListUsersResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	ListUsers(ListUsersRequest) ListUsersResponse
+
+	// Change a user password.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/user/{UserID}/password",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"User"},
+	//         Description: "Change Password.",
+	//         Summary:     "Change the user's password.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/userChangePasswordResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	ChangePassword(ChangePasswordRequest) ChangePasswordResponse
+
+	// Confirmation of password change using MFA validation.
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v1/user/{UserID}/password/{MFAEventID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"User"},
+	//         Description: "Confirm Password.",
+	//         Summary:     "Confirm identity to apply the submitted password change.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/userConfirmUpdateResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	ConfirmUpdate(ConfirmUpdateRequest) ConfirmUpdateResponse
+
+	// Update a user record.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/user/{UserID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"User"},
+	//         Description: "Update User.",
+	//         Summary:     "Change the user's record.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/userUpdateUserResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	UpdateUser(UpdateUserRequest) UpdateUserResponse
+
+	// DisableUser user by UserID.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/disableuser/{UserID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"User"},
+	//         Description: "Disable User from user UserID.",
+	//         Summary:     "Disable User.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/userDisableUserResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	DisableUser(DisableUserRequest) DisableUserResponse
+
+	// EnableUser user by UserID.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/enableuser/{UserID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"User"},
+	//         Description: "Enable User from user UserID.",
+	//         Summary:     "Enable User.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/userEnableUserResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	EnableUser(EnableUserRequest) EnableUserResponse
+}
+
+type AuthenticateUserRequest struct {
+	Username string `pb:"1" json:"username"`
+	Password string `pb:"2" json:"password"`
+}
+
+type AuthenticateUserResponse struct {
+	UserID string `pb:"1" json:"user_id"`
+	OrgID  string `pb:"2" json:"org_id"`
+}
+
+type UserAuthService interface {
+	// Get user user by ID.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/user",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Authenticate User"},
+	//         Description: "Authenticate user.",
+	//         Summary:     "Authenticate user with username(or email) and password.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/userAuthenticateUserResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//         },
+	// }
+	AuthenticateUser(AuthenticateUserRequest) AuthenticateUserResponse
+}

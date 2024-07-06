@@ -1,0 +1,490 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/drp/v1/quote/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "QuoteService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/quote/{remit_partner}/create": {
+      "post": {
+        "summary": "Create Remit Quote.",
+        "description": "Create remit quote for choosen remit partner.",
+        "operationId": "QuoteService_CreateQuote",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/quoteCreateQuoteResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "remit_partner",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/quoteCreateQuoteRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Quote"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/quote/{remit_partner}/inquiry": {
+      "post": {
+        "summary": "Remit Quote Inquiry.",
+        "description": "Get a quote for choosen remit partner, currency and amount.",
+        "operationId": "QuoteService_QuoteInquiry",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/quoteQuoteInquiryResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "remit_partner",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/quoteQuoteInquiryRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Quote"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/quote/{remit_partner}/requirements": {
+      "post": {
+        "summary": "Remit Quote Requirements.",
+        "description": "Get quote requirements for choosen remit partner.",
+        "operationId": "QuoteService_QuoteRequirements",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/quoteQuoteRequirementsResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "remit_partner",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/quoteQuoteRequirementsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Quote"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "quoteCreateQuoteRequest": {
+      "type": "object",
+      "properties": {
+        "remit_partner": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "amount": {
+          "$ref": "#/definitions/quoteQuoteAmount"
+        }
+      },
+      "required": [
+        "remit_partner",
+        "email",
+        "amount"
+      ]
+    },
+    "quoteCreateQuoteResponse": {
+      "type": "object",
+      "properties": {
+        "requirements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/quoteRequirement"
+          }
+        },
+        "quote_summary": {
+          "$ref": "#/definitions/quoteQuoteSummary"
+        }
+      }
+    },
+    "quoteField": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "group": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/quoteGroup"
+          }
+        }
+      }
+    },
+    "quoteGroup": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "refresh_requirements_on_change": {
+          "type": "boolean"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "example": {
+          "type": "string"
+        },
+        "display_format": {
+          "type": "string"
+        },
+        "min_length": {
+          "type": "string"
+        },
+        "max_length": {
+          "type": "string"
+        },
+        "validation_regexp": {
+          "type": "string"
+        },
+        "validation_async": {
+          "$ref": "#/definitions/quoteValidationAsync"
+        },
+        "values_allowed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/quoteValueAllowed"
+          }
+        }
+      }
+    },
+    "quoteParam": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "parameter_name": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "quoteQuote": {
+      "type": "object",
+      "properties": {
+        "source_currency": {
+          "type": "string"
+        },
+        "destination_currency": {
+          "type": "string"
+        },
+        "source_amount": {
+          "type": "string"
+        }
+      }
+    },
+    "quoteQuoteAmount": {
+      "type": "object",
+      "properties": {
+        "source_amount": {
+          "type": "string",
+          "description": "Monetary amount in the smallest currency denomination.  Example: USD $10.25 =\u003e \"1025\"."
+        },
+        "source_currency": {
+          "type": "string",
+          "description": "Source currency code using ISO-4217 3-letter codes."
+        },
+        "destination_currency": {
+          "type": "string",
+          "description": "Destination currency code using ISO-4217 3-letter codes."
+        }
+      },
+      "required": [
+        "source_amount",
+        "source_currency",
+        "destination_currency"
+      ]
+    },
+    "quoteQuoteInquiryRequest": {
+      "type": "object",
+      "properties": {
+        "remit_partner": {
+          "type": "string"
+        },
+        "amount": {
+          "$ref": "#/definitions/quoteQuoteAmount"
+        }
+      },
+      "required": [
+        "remit_partner",
+        "amount"
+      ]
+    },
+    "quoteQuoteInquiryResponse": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "$ref": "#/definitions/quoteQuoteAmount"
+        },
+        "fee_breakdown": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "total_fee": {
+          "type": "string"
+        },
+        "transfer_amount": {
+          "type": "string"
+        }
+      }
+    },
+    "quoteQuoteRequirementsRequest": {
+      "type": "object",
+      "properties": {
+        "remit_partner": {
+          "type": "string"
+        },
+        "amount": {
+          "$ref": "#/definitions/quoteQuoteAmount"
+        }
+      },
+      "required": [
+        "remit_partner",
+        "amount"
+      ]
+    },
+    "quoteQuoteRequirementsResponse": {
+      "type": "object",
+      "properties": {
+        "requirements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/quoteRequirement"
+          }
+        },
+        "quote": {
+          "$ref": "#/definitions/quoteQuote"
+        }
+      }
+    },
+    "quoteQuoteSummary": {
+      "type": "object",
+      "properties": {
+        "source_currency": {
+          "type": "string"
+        },
+        "destination_currency": {
+          "type": "string"
+        },
+        "source_amount": {
+          "type": "string"
+        },
+        "destination_amount": {
+          "type": "string"
+        },
+        "fee_breakdown": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "total_fee": {
+          "type": "string"
+        },
+        "transfer_amount": {
+          "type": "string"
+        },
+        "payout": {
+          "type": "string"
+        },
+        "rate": {
+          "type": "string"
+        }
+      }
+    },
+    "quoteRequirement": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "usage_info": {
+          "type": "string"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/quoteField"
+          }
+        }
+      }
+    },
+    "quoteValidationAsync": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "params": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/quoteParam"
+          }
+        }
+      }
+    },
+    "quoteValueAllowed": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

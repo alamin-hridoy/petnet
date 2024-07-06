@@ -1,0 +1,175 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/drp/v1/teller/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "TellerService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/teller": {
+      "post": {
+        "summary": "Register teller.",
+        "description": "Register a remittance teller to use the perahub conex platform.",
+        "operationId": "TellerService_RegisterTeller",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/tellerRegisterTellerResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/tellerRegisterTellerRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Teller"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "profileDate": {
+      "type": "object",
+      "properties": {
+        "year": {
+          "type": "string"
+        },
+        "month": {
+          "type": "string"
+        },
+        "day": {
+          "type": "string"
+        }
+      }
+    },
+    "profilePhoneNumber": {
+      "type": "object",
+      "properties": {
+        "country_code": {
+          "type": "string"
+        },
+        "number": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "country_code",
+        "number"
+      ]
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "tellerRegisterTellerRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "middle_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "$ref": "#/definitions/profilePhoneNumber"
+        },
+        "birthdate": {
+          "$ref": "#/definitions/profileDate"
+        },
+        "": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "username",
+        "password",
+        "first_name",
+        "last_name",
+        "email",
+        "phone_number",
+        "birthdate"
+      ]
+    },
+    "tellerRegisterTellerResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

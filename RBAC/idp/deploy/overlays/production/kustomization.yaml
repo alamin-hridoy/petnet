@@ -1,0 +1,56 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../../base
+
+namespace: proxtera-production
+
+patchesStrategicMerge:
+- config_patch.yaml
+
+patchesJson6902:
+- path: auth_ingress_patch.yaml
+  target:
+    group: extensions
+    kind: Ingress
+    name: sso-auth
+    version: v1beta1
+
+images:
+- name: proxtera-production/idp
+  newName: 461111061869.dkr.ecr.ap-southeast-1.amazonaws.com/proxtera-production/idp
+  newTag: v0.11.5.10-412e
+
+# generatorOptions:
+#   disableNameSuffixHash: true
+# secretGenerator:
+# - behavior: create
+#   name: idp
+#   type: Opaque
+#   literals:
+#     # DO NOT SET AND COMMIT.  NO SECRETS IN GIT!
+#     - CSRF_AUTH_KEY=
+#     - GOOGLE_OAUTH2_CLIENT_ID=
+#     - GOOGLE_OAUTH2_CLIENT_SECRET=
+# - behavior: create
+#   name: sso-postgresql
+#   type: Opaque
+#   literals:
+#     # DO NOT SET AND COMMIT.  NO SECRETS IN GIT!
+#     - DATABASE_HOST=
+#     - DATABASE_PORT=
+#     - DATABASE_USER=
+#     - DATABASE_PASSWORD=
+#     - DATABASE_NAME=
+# - behavior: create
+#   name: sso-postgresql
+#   type: Opaque
+#   literals:
+#     # DO NOT SET AND COMMIT.  NO SECRETS IN GIT!
+#     - DSN=
+#     - SECRETS_SYSTEM=
+#     - POSTGRES_HOST=
+#     - POSTGRES_PORT=
+#     - CREATE_USER=
+#     - CREATE_DB=
+#     - CREATE_PASS=

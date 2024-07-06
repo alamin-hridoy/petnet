@@ -1,0 +1,1286 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>Fees</title>
+    <style>
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+<body class="font-sans relative z-10">
+    <div class="flex">
+        <!-- sidebar-start -->
+        <div class="bg-petnetblue w-32 min-h-screen">
+            <div class="min-h-screen">
+                <img src="{{ assetHash "/images/DRP-Vertical.svg" }}" class="mx-auto my-5">
+                <!-- Sidebar menu start -->
+                {{ template "admin-sidenav-menu.html" dict "Type" "dsa-list" "Data" .}}
+                <!-- Sidebar menu end -->
+            </div>
+        </div>
+        <!-- sidebar-end -->
+        <!-- right-top-header-start -->
+        <div class="min-h-screen w-full flex bg-petnetgray">
+            <div class="w-full">
+                {{ template "admin-head.html" .}}
+                <!-- right-top-header-end -->
+                <!-- first-section-start -->
+                <div class="px-6 lg:px-32 py-10 flex flex-wrap">
+                    <div class="w-1/4 pr-2 flex flex-col">
+                        {{ template "application-sidenav.html" .}}
+                    </div>
+                    <div class="w-3/4 pl-2 flex flex-col">
+                        {{if .PresetPermission.fees.read}}
+                        <div class="mb-8">
+                            <div class="bg-white rounded flex justify-between border-b">
+                                <h4 class="text-xl font-semibold text-petnetblue pt-7 px-6 pb-2">Fee Tier Management
+                                </h4>
+                                {{if .PresetPermission.fees.create}}
+                                <button
+                                    class="pt-7 px-6 pb-2 flex items-center text-petnetlightblue text-xl font-semibold modal-show focus:outline-none"
+                                    onclick="modalShow('addBranchPopUp', 'fee')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 pointer-events-none" viewBox="0 0 20 20"
+                                        fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    Add Fee
+                                </button>
+                                {{end}}
+                            </div>
+                            <div class="bg-white rounded  pt-2 ">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th class="font-semibold text-lg pl-6 pt-4 pb-4 w-72 text-left">
+                                                Effective Date Range
+                                            </th>
+                                            <th class="font-semibold text-lg pl-6 pt-4 pb-4 w-48">
+                                                Status
+                                            </th>
+                                            <th>
+                                            </th>
+                                            <th>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="feewrap">
+                                        {{range .Fees}}
+                                            {{if eq .Schedule.Status 1 }}
+                                                <tr class="fee_active_list" data-startdate="{{formatTimestamp .Schedule.StartDate "2006-01-02"}}" data-enddate="{{formatTimestamp .Schedule.EndDate "2006-01-02"}}">
+                                            {{else}}
+                                                <tr>
+                                            {{end}}
+                                            <td class="pl-6 w-72 text-lg font-normal">
+                                                {{formatTimestamp .Schedule.StartDate "January 02, 2006"}} -
+                                                {{formatTimestamp .Schedule.EndDate "January 02, 2006"}}
+                                            </td>
+                                            <td
+                                                class="py-4 flex items-center text-lg font-normal w-48 pl-6 justify-center">
+                                                {{if eq .Schedule.Status 1 }}
+                                                <span
+                                                    class="w-2 h-2 rounded-full bg-petnetgreen ml-4 mr-3 inline-block"></span>
+                                                Active
+                                                {{else}}
+                                                <span
+                                                    class="w-2 h-2 rounded-full bg-petnetpink ml-4 mr-3 inline-block"></span>
+                                                Inactive
+                                                {{end}}
+                                            </td>
+                                            <td class="text-lg font-semibold {{if .Rates}} text-petnetlightblue{{else}}text-gray-600{{end}} w-96 text-right ml-10">
+                                                <button onclick="FeeTableModalShow(event, '{{.ID}}', 'view')" class="modal-show" {{if not .Rates}}disabled{{end}}>
+                                                    View Table
+                                                </button>
+                                            </td>
+                                            <td class="py-4 pl-6">
+                                                <div class="flex w-full items-center justify-end">
+                                                    <div class="pr-6">
+                                                        <div class="relative dropdown">
+                                                            <button class="dropdown-toggle focus:outline-none"
+                                                                onclick="dropdownToggle(event)">
+                                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                                    class="text-petnetblue h-6 w-6" fill="none"
+                                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                                        stroke-width="2"
+                                                                        d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                                                                </svg>
+                                                            </button>
+                                                            <div class="absolute right-0 top-12 hidden dropdown-item outside-cancle-modal">
+                                                                <div
+                                                                    class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                                                </div>
+                                                                <div class="shadow  absolute top-3 -right-5 rounded">
+                                                                    <div
+                                                                        class="relative z-20 pt-3 w-28 bg-white rounded flex flex-col">
+                                                                        <span
+                                                                            class="text-gray-300 text-xs mb-2 px-6">ACTIONS</span>
+                                                                            {{if $.PresetPermission.fees.update}}
+                                                                            <a onclick="FeeTableModalShow(event, '{{.ID}}', 'edit')" 
+                                                                            href="javascript:;"
+                                                                            class="modal-show px-6 hover:bg-petnetblue hover:bg-opacity-20 py-2 hiddenDataToggle">Edit</a>
+                                                                            {{end}}
+                                                                            {{if $.PresetPermission.fees.delete}}
+                                                                            <a onclick="deleteModalShow('{{.ID}}')"
+                                                                            href="javascript:;"
+                                                                            class="px-6 hover:bg-petnetblue hover:bg-opacity-20 py-2 modal-show">Delete</a>
+                                                                            {{end}}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {{end}}
+                                    </tbody>
+                                </table>
+                                <div class="h-10 w-full bg-petnetgray">
+                                </div>
+                                <div>
+                                    <div class="bg-white rounded flex justify-between border-b">
+                                        <h4 class="text-xl font-semibold text-petnetblue pt-7 px-6 pb-2">Commission Tier
+                                            Management
+                                        </h4>
+                                        {{if .PresetPermission.fees.create}}
+                                        <button
+                                            class="focus:outline-none pt-7 px-6 pb-2 flex items-center text-petnetlightblue text-xl font-semibold modal-show"
+                                            onclick="modalShow('addBranchPopUp', 'commission')">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 pointer-events-none" viewBox="0 0 20 20"
+                                                fill="currentColor">
+                                                <path fill-rule="evenodd"
+                                                    d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                            Add Commission
+                                        </button>
+                                        {{end}}
+                                    </div>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th class="font-semibold text-lg pl-6 pt-4 pb-4 w-72 text-left">
+                                                    Effective Date Range
+                                                </th>
+                                                <th class="font-semibold text-lg pl-6 pt-4 pb-4 w-48">
+                                                    Status
+                                                </th>
+                                                <th>
+                                                </th>
+                                                <th>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="comwrap">
+                                        {{range .Commissions}}
+                                            {{if eq .Schedule.Status 1 }}
+                                            <tr class="com_active_list" data-startdate="{{formatTimestamp .Schedule.StartDate "2006-01-02"}}" data-enddate="{{formatTimestamp .Schedule.EndDate "2006-01-02"}}">
+                                            {{else}}
+                                            <tr>
+                                            {{end}}
+                                                <td class="pl-6 w-72 text-lg font-normal">
+                                                    {{formatTimestamp .Schedule.StartDate "January 02, 2006"}} -
+                                                    {{formatTimestamp .Schedule.EndDate "January 02, 2006"}}
+                                                </td>
+                                                <td
+                                                    class="py-4 flex items-center text-lg font-normal w-48 pl-6 justify-center">
+                                                    {{if eq .Schedule.Status 1 }}
+                                                    <span
+                                                        class="w-2 h-2 rounded-full bg-petnetgreen ml-4 mr-3 inline-block"></span>
+                                                    Active
+                                                    {{else}}
+                                                    <span
+                                                        class="w-2 h-2 rounded-full bg-petnetpink ml-4 mr-3 inline-block"></span>
+                                                    Inactive
+                                                    {{end}}
+                                                </td>
+                                                <td
+                                                    class="text-lg font-semibold {{if .Rates}} text-petnetlightblue{{else}}text-gray-600{{end}} w-96 text-right ml-10">
+                                                    <button onclick="CommissionTableModalShow(event, '{{.ID}}', 'view')" class="modal-show">
+                                                        View Table
+                                                    </button>
+                                                </td>
+                                                <td class="py-4 pl-6">
+                                                    <div class="flex w-full items-center justify-end">
+                                                        <div class="pr-6">
+                                                            <div class="relative dropdown">
+                                                                <button class="dropdown-toggle focus:outline-none"
+                                                                    onclick="dropdownToggle(event)">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                        class="text-petnetblue h-6 w-6" fill="none"
+                                                                        viewBox="0 0 24 24" stroke="currentColor">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                                            stroke-width="2"
+                                                                            d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                                                                    </svg>
+                                                                </button>
+                                                                <div class="absolute right-0 top-12 hidden dropdown-item outside-cancle-modal">
+                                                                    <div
+                                                                        class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                                                    </div>
+                                                                    <div class="shadow  absolute top-3 -right-5 rounded">
+                                                                        <div
+                                                                            class="relative z-20 pt-3 w-28 bg-white rounded flex flex-col">
+                                                                            <span
+                                                                                class="text-gray-300 text-xs mb-2 px-6">ACTIONS</span>
+                                                                            {{if $.PresetPermission.fees.update}}
+                                                                            <a onclick="CommissionTableModalShow(event, '{{.ID}}','edit')" 
+                                                                                href="javascript:;"
+                                                                                class="modal-show px-6 hover:bg-petnetblue hover:bg-opacity-20 py-2 hiddenDataToggle">Edit</a>
+                                                                            {{end}}
+                                                                            {{if $.PresetPermission.fees.delete}}
+                                                                            <a onclick="deleteModalShow('{{.ID}}')"
+                                                                                href="javascript:;"
+                                                                                class="px-6 hover:bg-petnetblue hover:bg-opacity-20 py-2 modal-show">Delete</a>
+                                                                            {{end}}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {{end}}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{if .PresetPermission.fees.create}}
+    <div id="addBranchPopUp" class="hidden outside-cancle-modal">
+        <div
+            class="fixed top-0 left-0 z-50 w-screen min-h-screen bg-black bg-opacity-50 py-6 flex flex-col justify-center sm:py-12">
+            <div class="py-3 sm:max-w-full sm:mx-auto">
+                <div class="w-full modal-container">
+                    <div class="bg-white flex flex-col shadow-lg w-full z-50 rounded-lg overflow-hidden">
+                        <div class="flex flex-col items-center">
+                            <form id="feecomformsubmitfrm" action="/dashboard/fee-management/{{.OrgID}}" method="POST"
+                                class="w-full flex flex-col px-20">
+                                {{ .CSRFField }}
+                                <div class="mb-2 w-full">
+                                    <div class="mt-16">
+                                        <h1 class="mt-8 text-3xl font-bold px-8" id="feecomtitle">Fee Tier Table</h1>
+                                        <p class="mt-4 px-8 text-gray-600">Please fill up the following information.</p>
+                                        <p class="mt-4 px-8 text-red-600 italic validMsg"></p>
+                                        <div class="mx-8 mt-6">
+                                            <table id="myTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="w-60 text-left pb-6">
+                                                            DSA Share ( in % )
+                                                        </th>
+                                                        <th class="w-60 text-left pb-6">
+                                                            Minimum Transactions
+                                                        </th>
+                                                        <th class="w-60 text-left pb-6">
+                                                            Maximum Transactions
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="feetierwrap">
+                                                    <tr class="text-lg font-normal border-2 border-petnetgray">
+                                                        <td class="border-r-2 pl-4 py-1">
+                                                            <input name="DSAShare1" min="1" max="100" value="" class="DSAShareV focus:outline-none px-2 w-full" type="number" required>
+                                                        </td>
+                                                        <td class="border-r-2 pl-4 py-1">
+                                                            <input name="MinTran1" onkeyup='checkAllField(this)' min="1" value="" class="minvalcal focus:outline-none px-2 w-full" type="number" required>
+                                                        </td>
+                                                        <td class="pl-4 py-1">
+                                                            <input name="MaxTran1" onkeyup='checkAllField(this)' min="1" value="" class="maxvalcal focus:outline-none px-2 w-full" type="number" required>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="mx-8 mt-2 mb-3">
+                                            <input type="hidden" class="feeTypecls" id="feeType" name="Type" value="1">
+                                            <input type="hidden" name="Feetierlen" id="feetierlen" value="1">
+                                            {{if .PresetPermission.fees.create}}
+                                            <a href="javascript:;" onclick="addRow()" class="font-semibold text-petnetlightblue"> Add row</a>
+                                            {{end}}
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-6 gap-6 mb-2 px-8 pt-3">
+                                        <div class="col-span-6 sm:col-span-3">
+                                            <label for="" class="block  font-medium ">Start Date
+                                            </label>
+                                            <div class="relative mt-2">
+                                                <span class="absolute top-2 left-4 font-bold text-sm text-gray-400">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                    </svg>
+                                                </span>
+                                                <input type="date" name="StartDate" initdate="" value="" 
+                                                    onchange="dateRangeRefresh('StartDate','EndDate')" placeholder=""
+                                                    required
+                                                    class="StartDate w-full py-2 pr-3 pl-12 focus:border-petnetblue focus:outline-none border rounded bg-petnetgray">
+                                            </div>
+                                        </div>
+                                        <div class="col-span-6 sm:col-span-3">
+                                            <label for="" class="block  font-medium ">End Date
+                                            </label>
+                                            <div class="relative mt-2">
+                                                <span class="absolute top-2 left-4 font-bold text-sm text-gray-400">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                    </svg>
+                                                </span>
+                                                <input type="date" name="EndDate" initdate="" value="" placeholder=""
+                                                    required
+                                                    class="EndDate w-full py-2 pr-3 pl-12 focus:border-petnetblue focus:outline-none border rounded bg-petnetgray">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between pb-12 px-8 ">
+                                    <button onclick="modalCancel()"
+                                        class=" py-3 px-4 mr-2 w-1/2 text-lg font-bold rounded-md text-petnetblue focus:outline-none border border-petnetblue">Cancel</button>
+                                    <button onclick="formSubmit(this, event);" type="submit" data-id="feecomformsubmitfrm"
+                                        class="feecomformsubmit py-3 px-4 ml-4 w-1/2 text-lg font-bold rounded-md text-petnetblue bg-petnetyellow focus:outline-none">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{end}}
+    {{if .PresetPermission.fees.delete}}
+    <div id="deleteAddFeePopUp" class="hidden outside-cancle-modal">
+        <div
+            class="fixed top-0 left-0 z-50 w-screen min-h-screen bg-black bg-opacity-50 py-6 flex flex-col justify-center sm:py-12">
+            <div class="py-3 sm:max-w-full sm:mx-auto">
+                <div class="w-full modal-container">
+                    <div class="bg-white flex flex-col shadow-lg w-full z-50 rounded-lg overflow-hidden">
+                        <div class="flex flex-col items-center">
+                            <form method="POST" action="" class="w-full flex flex-col px-20" id="deleteRow">
+                                {{ .CSRFField }}
+                                <div class="mt-16 text-center">
+                                    <h1 class="mt-8 text-4xl font-semibold px-8 mb-4">Are you sure you want to delete
+                                        this?</h1>
+                                    <p class="mt-4 px-8 text-gray-600 mb-8">This action cannot be revoked.</p>
+                                </div>
+                                <div class="flex justify-between pb-12 px-8 ">
+                                    <a href="javascript:;" onclick="deleteModalNotNow()"
+                                        class="py-3 px-4 mr-2 w-1/2 text-lg font-bold rounded-md text-petnetblue focus:outline-none border border-petnetblue inline-block text-center">Not
+                                        now</a>
+                                    <button type="submit"
+                                        class=" py-3 px-4 ml-4 w-1/2 text-lg font-bold rounded-md text-petnetblue bg-petnetyellow focus:outline-none">Yes
+                                        I’m sure.</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{end}}
+    <!-- this one is fee rates modal -->
+    {{if or (.PresetPermission.fees.update) (.PresetPermission.fees.read)}}
+        {{range .Fees}}
+            <div id="{{.ID}}" class="hidden outside-cancle-modal">
+                <div
+                    class="fixed top-0 left-0 z-50 w-screen min-h-screen bg-black bg-opacity-50 py-6 flex flex-col justify-center sm:py-12">
+                    <div class="py-3 sm:max-w-full sm:mx-auto">
+                        <div class="w-full modal-container">
+                            <div class="bg-white flex flex-col shadow-lg w-full z-50 rounded-lg overflow-hidden">
+                                    <div onclick="FeeModalCancel(event, '{{.ID}}')" class=" cursor-pointer flex justify-end pt-2 pr-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </div>
+                                    <div class="mx-10 my-12">
+                                        <div>
+                                            <span class="text-2xl text-black font-semibold ml-20">Fee Tier Table</span>
+                                            <p class="mt-4 px-20 text-red-600 italic validMsg"></p>
+                                        </div>
+                                        <div class="pt-8" id="dataReset">
+                                            <form id="frm{{.ID}}" action="/dashboard/fee-management/{{$.OrgID}}/update/{{.ID}}" method="POST"
+                                    class="w-full flex flex-col px-20">
+                                    {{ $.CSRFField }}
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th class="w-60 text-left pb-6">
+                                                            DSA Share ( in % )
+                                                        </th>
+                                                        <th class="w-60 text-left pb-6">
+                                                            Minimum Transactions
+                                                        </th>
+                                                        <th class="w-60 text-left pb-6">
+                                                            Maximum Transactions
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="feeContent{{.ID}}" class="feeeditcontentwrap">
+                                                    {{if .Rates}}
+                                                        {{range $key, $value := .Rates}}
+                                                        <tr class="text-lg font-normal border-2 border-petnetgray">
+                                                            <td class="border-r-2 pl-4 py-1" id="dsa-{{.FeeComID}}-{{$key}}">-</td>
+                                                            <td class="border-r-2 pl-4 py-1" id="minValue-{{.FeeComID}}-{{$key}}"></td>
+                                                            <td class="pl-4 py-1" id="maxValue-{{.FeeComID}}-{{$key}}"></td>
+                                                        </tr>
+                                                        {{end}}
+                                                    {{end}}
+                                                </tbody>
+                                            </table>
+                                            <div class="editonlydisplay mt-2 mb-3">
+                                                {{if $.PresetPermission.fees.update}}
+                                                <a href="javascript:;" onclick="addEditRow('{{.ID}}')" class="font-semibold text-petnetlightblue"> Add row</a>
+                                                {{end}}
+                                            </div>
+                                            <div class="editonlydisplay grid grid-cols-6 gap-6 mb-6 pt-3">
+                                                <div class="col-span-6 sm:col-span-3">
+                                                    <label for="" class="block  font-medium ">Start Date
+                                                    </label>
+                                                    <div class="relative mt-2">
+                                                        <span class="absolute top-2 left-4 font-bold text-sm text-gray-400">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                            </svg>
+                                                        </span>
+                                                        <input type="date" name="StartDate" initdate="{{formatTimestamp .Schedule.StartDate "2006-01-02"}}" value="{{formatTimestamp .Schedule.StartDate "2006-01-02"}}"
+                                                            onchange="dateRangeRefresh('StartDate','EndDate')" placeholder=""
+                                                            class="StartDate w-full py-2 pr-3 pl-12 focus:border-petnetblue focus:outline-none border rounded bg-petnetgray">
+                                                    </div>
+                                                </div>
+                                                <div class="col-span-6 sm:col-span-3">
+                                                    <label for="" class="block  font-medium ">End Date
+                                                    </label>
+                                                    <div class="relative mt-2">
+                                                        <span class="absolute top-2 left-4 font-bold text-sm text-gray-400">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                            </svg>
+                                                        </span>
+                                                        <input type="date" name="EndDate" initdate="{{formatTimestamp .Schedule.EndDate "2006-01-02"}}" value="{{formatTimestamp .Schedule.EndDate "2006-01-02"}}" placeholder=""
+                                                            class="EndDate w-full py-2 pr-3 pl-12 focus:border-petnetblue focus:outline-none border rounded bg-petnetgray">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="editonlydisplay flex justify-between pb-12">
+                                                <input type="hidden" name="Feetierlen" id="editfeetierlen{{.ID}}" value="1">
+                                                <input class="feeTypecls" type="hidden" id="feeType" name="Type" value="1">
+                                                <button onclick="FeeModalCancel(event, '{{.ID}}')"
+                                                    class=" py-3 px-4 mr-2 w-1/2 text-lg font-bold rounded-md text-petnetblue focus:outline-none border border-petnetblue">Cancel</button>
+                                                <button type="submit" data-id="frm{{.ID}}" onclick="formSubmit(this, event);"
+                                                    class="feeeditformsubmit py-3 px-4 ml-4 w-1/2 text-lg font-bold rounded-md text-petnetblue bg-petnetyellow focus:outline-none">Update</button>
+                                            </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {{end}}
+    {{end}}
+    <!-- this one is commission rates modal -->
+    {{if or (.PresetPermission.fees.update) (.PresetPermission.fees.read)}}
+        {{range .Commissions}}
+            <div id="{{.ID}}" class="hidden outside-cancle-modal">
+                <div
+                    class="fixed top-0 left-0 z-50 w-screen min-h-screen bg-black bg-opacity-50 py-6 flex flex-col justify-center sm:py-12">
+                    <div class="py-3 sm:max-w-full sm:mx-auto">
+                        <div class="w-full modal-container">
+                            <div class="bg-white flex flex-col shadow-lg w-full z-50 rounded-lg overflow-hidden">
+                                    <div onclick="FeeModalCancel(event, '{{.ID}}')" class=" cursor-pointer flex justify-end pt-2 pr-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </div>
+                                    <div class="mx-10 my-12">
+                                        <div>
+                                            <span class="text-2xl text-black font-semibold ml-20">Commission Tier Table</span>
+                                            <p class="mt-4 px-20 text-red-600 italic validMsg"></p>
+                                        </div>
+                                        <div class="pt-8" id="dataReset">
+                                            <form id="frm{{.ID}}" action="/dashboard/fee-management/{{$.OrgID}}/update/{{.ID}}" method="POST"
+                                    class="w-full flex flex-col px-20">
+                                    {{ $.CSRFField }}
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th class="w-60 text-left pb-6">
+                                                            DSA Share ( in % )
+                                                        </th>
+                                                        <th class="w-60 text-left pb-6">
+                                                            Minimum Transactions
+                                                        </th>
+                                                        <th class="w-60 text-left pb-6">
+                                                            Maximum Transactions
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="CommissionContent{{.ID}}" class="comeditcontentwrap">
+                                                    {{if .Rates}}
+                                                        {{range $key, $value := .Rates}}
+                                                        <tr class="text-lg font-normal border-2 border-petnetgray">
+                                                            <td class="border-r-2 pl-4 py-1" id="dsa-{{.FeeComID}}-{{$key}}">-</td>
+                                                            <td class="border-r-2 pl-4 py-1" id="minValue-{{.FeeComID}}-{{$key}}"></td>
+                                                            <td class="pl-4 py-1" id="maxValue-{{.FeeComID}}-{{$key}}"></td>
+                                                        </tr>
+                                                        {{end}}
+                                                    {{end}}
+                                                </tbody>
+                                            </table>
+                                            <div class="editonlydisplay mt-2 mb-3">
+                                                {{if $.PresetPermission.fees.update}}
+                                                <a href="javascript:;" onclick="addEditRowCom('{{.ID}}')" class="font-semibold text-petnetlightblue"> Add row</a>
+                                                {{end}}
+                                            </div>
+                                            <div class="editonlydisplay grid grid-cols-6 gap-6 mb-2 pt-3">
+                                                <div class="col-span-6 sm:col-span-3">
+                                                    <label for="" class="block  font-medium ">Start Date
+                                                    </label>
+                                                    <div class="relative mt-2">
+                                                        <span class="absolute top-2 left-4 font-bold text-sm text-gray-400">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                            </svg>
+                                                        </span>
+                                                        <input type="date" name="StartDate" initdate="{{formatTimestamp .Schedule.StartDate "2006-01-02"}}" value="{{formatTimestamp .Schedule.StartDate "2006-01-02"}}"
+                                                            onchange="dateRangeRefresh('StartDate','EndDate')" placeholder=""
+                                                            required
+                                                            class="StartDate w-full py-2 pr-3 pl-12 focus:border-petnetblue focus:outline-none border rounded bg-petnetgray">
+                                                    </div>
+                                                </div>
+                                                <div class="col-span-6 sm:col-span-3">
+                                                    <label for="" class="block  font-medium ">End Date
+                                                    </label>
+                                                    <div class="relative mt-2">
+                                                        <span class="absolute top-2 left-4 font-bold text-sm text-gray-400">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                            </svg>
+                                                        </span>
+                                                        <input type="date" name="EndDate" value="{{formatTimestamp .Schedule.EndDate "2006-01-02"}}" initdate="{{formatTimestamp .Schedule.EndDate "2006-01-02"}}" placeholder=""
+                                                            required
+                                                            class="EndDate w-full py-2 pr-3 pl-12 focus:border-petnetblue focus:outline-none border rounded bg-petnetgray">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="editonlydisplay flex justify-between pb-12">
+                                                <input type="hidden" name="Feetierlen" id="editcomtierlen{{.ID}}" value="1">
+                                                <input class="feeTypecls" type="hidden" id="feeType" name="Type" value="2">
+                                                <button onclick="FeeModalCancel(event, '{{.ID}}')"
+                                                    class=" py-3 px-4 mr-2 w-1/2 text-lg font-bold rounded-md text-petnetblue focus:outline-none border border-petnetblue">Cancel</button>
+                                                <button type="submit" data-id="frm{{.ID}}" onclick="formSubmit(this, event);"
+                                                    class="comeditformsubmit py-3 px-4 ml-4 w-1/2 text-lg font-bold rounded-md text-petnetblue bg-petnetyellow focus:outline-none">Update</button>
+                                            </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {{end}}
+    {{end}}
+    {{if .PresetPermission.fees.read}}
+    <!-- this one is commission modal -->
+    <div id="tablePopUp" class="hidden outside-cancle-modal">
+        <div
+            class="fixed top-0 left-0 z-50 w-screen min-h-screen bg-black bg-opacity-50 py-6 flex flex-col justify-center sm:py-12">
+            <div class="py-3 sm:max-w-full sm:mx-auto">
+                <div class="w-full modal-container">
+                    <div class="bg-white flex flex-col shadow-lg w-full z-50 rounded-lg overflow-hidden">
+                        <div onclick="tableModalCancel()" class=" cursor-pointer flex justify-end pt-2 pr-2 focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </div>
+                        <div class="mx-10 my-12">
+                            <div>
+                                <span class="text-2xl text-black font-semibold ml-20">Fee Tier Table</span>
+                            </div>
+                            <div class="pt-8">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th class="w-60 text-left pb-6">
+                                                DSA Share ( in % )
+                                            </th>
+                                            <th class="w-60 text-left pb-6">
+                                                Minimum Transactions
+                                            </th>
+                                            <th class="w-60 text-left pb-6">
+                                                Maximum Transactions
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="text-lg font-normal border-2 border-petnetgray">
+                                            <td class="border-r-2 pl-4 py-1">
+                                                45%
+                                            </td>
+                                            <td class="border-r-2 pl-4 py-1">
+                                                1
+                                            </td>
+                                            <td class="pl-4 py-1">
+                                                5000
+                                            </td>
+                                        </tr>
+                                        <tr class="text-lg font-normal border-2 border-petnetgray">
+                                            <td class="border-r-2 pl-4 py-1">
+                                                45%
+                                            </td>
+                                            <td class="border-r-2 pl-4 py-1">
+                                                1
+                                            </td>
+                                            <td class="pl-4 py-1">
+                                                5000
+                                            </td>
+                                        </tr>
+                                        <tr class="text-lg font-normal border-2 border-petnetgray">
+                                            <td class="border-r-2 pl-4 py-1">
+                                                45%
+                                            </td>
+                                            <td class="border-r-2 pl-4 py-1">
+                                                1
+                                            </td>
+                                            <td class="pl-4 py-1">
+                                                5000
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{end}}
+    <div class="hidden">
+        <table>
+            <tbody id="feetirehdn">
+                <tr class="text-lg font-normal border-2 border-petnetgray">
+                    <td class="border-r-2 pl-4 py-1">
+                        <input name="DSAShare##id##" min="1" max="100" class="DSAShareV focus:outline-none px-2 w-full" type="number" required>
+                    </td>
+                    <td class="border-r-2 pl-4 py-1">
+                        <input name="MinTran##id##" onkeyup="checkAllField(this)" min="1" class="min##### focus:outline-none px-2 w-full" type="number" required>
+                    </td>
+                    <td class="pl-4 py-1">
+                        <input name="MaxTran##id##" onkeyup="checkAllField(this)" min="1" class="max##### focus:outline-none px-2 w-full" type="number" required>
+                        <input name="rateid##id##" type="hidden" value="">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+<script>
+    const availableDates = [];
+    const availableDatesCom = [];
+    const errMsg = "*Inputted value interferes with another field";
+    const errMsgInvalidDate = "*The start/end date should not overlapped with existing data";
+    const emptyMsg = "*Please fill out all the fields"
+    const fees = JSON.parse('{{jsonStringify .Fees}}');
+    const commissions = JSON.parse('{{jsonStringify .Commissions}}');
+
+    function setAvailableDate() {
+        let dateItems = document.querySelector('#feewrap').querySelectorAll('.fee_active_list');
+        for (let i = 0; i < dateItems.length; i++) {
+            availableDates.push([convertTime(dateItems[i].dataset.startdate), convertTime(dateItems[i].dataset.enddate,
+                true)]);
+        }
+
+        let dateItemsCom = document.querySelector('#comwrap').querySelectorAll('.com_active_list');
+        for (let i = 0; i < dateItemsCom.length; i++) {
+            availableDatesCom.push([convertTime(dateItemsCom[i].dataset.startdate), convertTime(dateItemsCom[i].dataset
+                .enddate, true)]);
+        }
+    }
+
+    function convertTime(dateString, isEnd) {
+        let splitedDate = dateString.split('-');
+        if (isEnd) {
+            splitedDate.push(23);
+            splitedDate.push(59);
+            splitedDate.push(59);
+            splitedDate.push(999);
+        } else {
+            splitedDate.push(0);
+            splitedDate.push(0);
+            splitedDate.push(0);
+            splitedDate.push(0);
+        }
+        let strTime = new Date(splitedDate[0], splitedDate[1], splitedDate[2], splitedDate[3], splitedDate[4],
+            splitedDate[5], splitedDate[6]);
+        return strTime.getTime();
+    }
+
+    function compareDate(sd, ed, type, ucd = [], icd = []) {
+        if ((typeof icd[0] !== undefined) &&
+            (typeof icd[1] !== undefined) &&
+            (typeof ucd[0] !== undefined) &&
+            (typeof ucd[1] !== undefined) &&
+            (icd[0] == ucd[0]) &&
+            (icd[1] == ucd[1]) &&
+            (icd[0] != "") &&
+            (icd[1] != "")) {
+            return [icd[0], icd[1]];
+        }
+        let aDates = [];
+        if ((typeof icd[0] !== undefined) &&
+            (typeof icd[1] !== undefined) &&
+            (icd[0] != "") &&
+            (icd[1] != "")) {
+            let idl = availableDates
+            if (type == 2) {
+                idl = availableDatesCom
+            }
+            for (let i = 0; i < idl.length; i++) {
+                if (idl[i][0] != icd[0] && idl[i][1] != icd[1]){
+                    aDates.push([idl[i][0], idl[i][1]]);
+                }
+            }
+        }else{
+            aDates = availableDates
+            if (type == 2) {
+                aDates = availableDatesCom
+            }
+        }
+        let isValidDate = true;
+        let startDate = convertTime(sd);
+        let endDate = convertTime(ed, true);
+        for (let i = 0; i < aDates.length; i++) {
+            if (
+                (startDate <= aDates[i][0] && endDate >= aDates[i][1]) ||
+                (startDate >= aDates[i][0] && endDate <= aDates[i][1]) ||
+                (startDate >= aDates[i][0] && startDate <= aDates[i][1]) ||
+                (endDate >= aDates[i][0] && endDate <= aDates[i][1])
+            ) {
+                isValidDate = false;
+                break;
+            }
+        }
+        if (isValidDate) {
+            return [startDate, endDate];
+        }
+        return false;
+    }
+
+    function dateCancel() {
+        let StartDate = document.querySelectorAll(".StartDate");
+        let EndDate = document.querySelectorAll(".EndDate");
+        for (let index = 0; index < StartDate.length; index++) {
+            const element = StartDate[index];
+            let dat = element.getAttribute("initdate");
+            element.value = dat;
+        }
+        for (let j = 0; j < EndDate.length; j++) {
+            const elm = EndDate[j];
+            let dat = elm.getAttribute("initdate");
+            elm.value = dat;
+        }
+    }
+
+    function modalShow(id, type) {
+        setErrMsg("");
+        var feetierwrap = document.getElementById("feetierwrap")
+        var feeType = document.getElementById("feeType")
+        feetierwrap.classList.add("feewparp");
+        feetierwrap.classList.remove("commissionwparp");
+        feeType.value = 1
+        document.getElementById("feecomtitle").innerHTML = "Fee Tier Table";
+        if (type == "commission") {
+            feeType.value = 2
+            feetierwrap.classList.remove("feewparp");
+            feetierwrap.classList.add("commissionwparp");
+            document.getElementById("feecomtitle").innerHTML = "Commission Tier Table";
+        }
+        var getPopUp = document.getElementById(id)
+        var getPopUpClass = getPopUp.className
+        getPopUp.classList.remove("hidden");
+    }
+
+    function FeeTableModalShow(e, id, type) {
+        e.preventDefault();
+        setErrMsg("");
+        if (id) {
+            let editonly = document.getElementsByClassName("editonlydisplay");
+            if (type == 'view') {
+                for (i = 0; i < editonly.length; i++) {
+                    editonly[i].classList.add("hidden");
+                }
+                setFormValueFees(id);
+            } else {
+                for (i = 0; i < editonly.length; i++) {
+                    editonly[i].classList.remove("hidden");
+                }
+                editFormValueFees(id);
+            }
+        }
+        var getPopUp = document.getElementById(id)
+        var getPopUpClass = getPopUp.className
+        getPopUp.classList.remove("hidden");
+    }
+
+    function CommissionTableModalShow(e, id, type) {
+        e.preventDefault();
+        setErrMsg("");
+        if (id != "") {
+            let editonly = document.getElementsByClassName("editonlydisplay");
+            if (type == 'view') {
+                for (i = 0; i < editonly.length; i++) {
+                    editonly[i].classList.add("hidden");
+                }
+                setFormValueCommissions(id);
+            } else {
+                for (i = 0; i < editonly.length; i++) {
+                    editonly[i].classList.remove("hidden");
+                }
+                editFormValueCommission(id);
+            }
+            var getPopUp = document.getElementById(id);
+            var getPopUpClass = getPopUp.className;
+            getPopUp.classList.remove("hidden");
+        }
+    }
+
+    function setFormValueFees(id) {
+        const row = fees.find(function (data) {
+            return data.id == id;
+        });
+        if (Object.keys(row).length > 0) {
+            for (i = 0; i < row.rate.length; i++) {
+                var singleRate = row.rate[i]
+                if (singleRate.txn_rate != null) {
+                    document.getElementById('dsa-' + id + '-' + i).innerHTML = singleRate.txn_rate + "%"
+                }
+                document.getElementById('minValue-' + id + '-' + i).innerHTML = singleRate.min_volume
+                document.getElementById('maxValue-' + id + '-' + i).innerHTML = singleRate.max_volume
+            }
+        }
+    }
+
+    function editFormValueFees(id) {
+        const row = fees.find(function (data) {
+            return data.id == id;
+        });
+        if (Object.keys(row).length > 0) {
+            for (i = 0; i < row.rate.length; i++) {
+                var singleRate = row.rate[i]
+                if (singleRate.txn_rate != null) {
+                    document.getElementById('dsa-' + id + '-' + i).innerHTML = "<input name='DSAShare" + i +
+                        "' min='1' max='100' value='" + singleRate.txn_rate +
+                        "' class='DSAShareV focus:outline-none px-2 w-full' type='number' required>"
+                } else {
+                    document.getElementById('dsa-' + id + '-' + i).innerHTML = "<input name='DSAShare" + i +
+                        "' min='1' max='100' value='0' class='DSAShareV focus:outline-none px-2 w-full' type='number' required>"
+                }
+                document.getElementById('minValue-' + id + '-' + i).innerHTML =
+                    "<input onkeyup='checkAllField(this)' name='MinTran" + i + "' min='1' value='" + singleRate
+                    .min_volume + "' class='minvalcal focus:outline-none px-2 w-full' type='number' required>"
+                document.getElementById('maxValue-' + id + '-' + i).innerHTML =
+                    "<input onkeyup='checkAllField(this)' name='MaxTran" + i + "' min='1' value='" + singleRate
+                    .max_volume +
+                    "' class='maxvalcal focus:outline-none px-2 w-full' type='number' required><input type='hidden' name='rateid" +
+                    i + "' value='" + singleRate.id + "'>"
+            }
+        }
+        var feetierwrap = document.getElementById("feeContent" + id);
+        var editfeetierlen = document.getElementById("editfeetierlen" + id);
+        var tlen = feetierwrap.children.length
+        editfeetierlen.value = tlen
+        checkAllField(id, true);
+    }
+
+    function editFormValueCommission(id) {
+        if(id != ""){
+            const row = commissions.find(function (data) {
+                return data.id == id;
+            });
+            if (Object.keys(row).length > 0) {
+                for (i = 0; i < row.rate.length; i++) {
+                    var singleRate = row.rate[i]
+                    if (singleRate.txn_rate != null) {
+                        document.getElementById('dsa-'+id+'-'+i).innerHTML = "<input name='DSAShare"+i+"' min='1' max='100' value='"+singleRate.txn_rate+"' class='DSAShareV focus:outline-none px-2 w-full' type='number' required>"
+                    }else{
+                        document.getElementById('dsa-'+id+'-'+i).innerHTML = "<input name='DSAShare"+i+"' min='1' max='100' value='0' class='DSAShareV focus:outline-none px-2 w-full' type='number' required>"
+                    }
+                    document.getElementById('minValue-'+id+'-'+i).innerHTML = "<input name='MinTran"+i+"' onkeyup='checkAllField(this)' min='1' value='"+singleRate.min_volume+"' class='minvalcal focus:outline-none px-2 w-full' type='number' required>"
+                    document.getElementById('maxValue-'+id+'-'+i).innerHTML = "<input name='MaxTran"+i+"' onkeyup='checkAllField(this)' min='1' value='"+singleRate.max_volume+"' class='maxvalcal focus:outline-none px-2 w-full' type='number' required><input type='hidden' name='rateid"+i+"' value='"+singleRate.id+"'>"
+                }
+            }
+            var feetierwrap = document.getElementById("CommissionContent"+id);
+            var editfeetierlen = document.getElementById("editcomtierlen"+id);
+            var tlen = feetierwrap.children.length
+            editfeetierlen.value = tlen
+            checkAllField(id,true);
+        }
+    }
+
+    function checkAllField(item, isId) {
+        let allInputs;
+        if (isId) {
+            allInputs = document.getElementById(item).querySelectorAll('input');
+        } else {
+            allInputs = item.closest('tbody').querySelectorAll('input')
+        }
+        for (let i = 0; i < allInputs.length; i++) {
+            let currentItem = allInputs[i];
+            if (allInputs[i].classList.contains('minvalcal')) {
+                if (currentItem.closest('tr').previousElementSibling && currentItem.closest('tr').previousElementSibling
+                    .querySelectorAll('maxvalcal')) {
+                    let prevMax = currentItem.closest('tr').previousElementSibling.getElementsByClassName('maxvalcal');
+                    currentItem.setAttribute('min', (+prevMax[0].value + 1));
+                    if (+prevMax[0].value < 0) {
+                        currentItem.setAttribute('min', 1);
+                    }
+                } else {
+                    currentItem.setAttribute('min', 1);
+                }
+            } else if (allInputs[i].classList.contains('maxvalcal')) {
+                let prevMin = currentItem.closest('td').previousElementSibling.getElementsByClassName('minvalcal');
+                currentItem.setAttribute('min', prevMin[0].value);
+                prevMin[0].setAttribute('max', currentItem.value);
+                if (+prevMin[0].value < 0) {
+                    currentItem.setAttribute('min', 1);
+                }
+                if (+currentItem.value < 0) {
+                    prevMin[0].setAttribute('max', 1);
+                }
+            }
+        }
+    }
+
+    function addEditRow(id) {
+        var feetirehdn = document.getElementById("feetirehdn").innerHTML;
+        var feetierwrap = document.getElementById("feeContent" + id);
+        var feetierlen = document.getElementById("editfeetierlen" + id);
+        var tlen = feetierwrap.children.length
+        feetierlen.value = tlen + 1
+        var htm = feetirehdn.replaceAll("##id##", tlen);
+        var htm = htm.replaceAll("#####", "valcal");
+        document.getElementById("feeContent" + id).insertAdjacentHTML('beforeend', htm);
+    }
+
+    function addEditRowCom(id) {
+        var feetirehdn = document.getElementById("feetirehdn").innerHTML
+        var feetierwrap = document.getElementById("CommissionContent" + id);
+        var feetierlen = document.getElementById("editcomtierlen" + id);
+        var tlen = feetierwrap.children.length
+        feetierlen.value = tlen + 1
+        var htm = feetirehdn.replaceAll("##id##", tlen);
+        var htm = htm.replaceAll("#####", "valcal");
+        document.getElementById("CommissionContent" + id).insertAdjacentHTML('beforeend', htm);
+    }
+
+    function setFormValueCommissions(id) {
+        const row = commissions.find(function (data) {
+            return data.id == id;
+        });
+        if (Object.keys(row).length > 0) {
+            for (i = 0; i < row.rate.length; i++) {
+                var singleRate = row.rate[i]
+                if (singleRate.txn_rate != null) {
+                    document.getElementById('dsa-' + id + '-' + i).innerHTML = singleRate.txn_rate + "%"
+                }
+                document.getElementById('minValue-' + id + '-' + i).innerHTML = singleRate.min_volume
+                document.getElementById('maxValue-' + id + '-' + i).innerHTML = singleRate.max_volume
+            }
+        }
+    }
+
+    function tableModalShow() {
+        setErrMsg("");
+        var getPopUp = document.getElementById("tablePopUp")
+        var getPopUpClass = getPopUp.className
+        getPopUp.classList.remove("hidden");
+        dateCancel();
+    }
+
+    function modalCancel() {
+        setErrMsg("");
+        var getPopUp = document.getElementById("addBranchPopUp")
+        var getPopUpClass = getPopUp.className
+        var feetierwrap = document.getElementById("feetierwrap");
+        feetierwrap.innerHTML = "";
+        addRow();
+        getPopUp.classList.add("hidden");
+        dateCancel();
+    }
+
+    function FeeModalCancel(e, id) {
+        e.preventDefault();
+        setErrMsg("");
+        var getPopUp = document.getElementById(id)
+        var elementChildren = getPopUp.querySelectorAll('.minvalcal');
+        for (let index = 0; index < elementChildren.length; index++) {
+            const ec = elementChildren[index];
+            if (ec.value == "") {
+                if (typeof ec.parentNode !== 'undefined') {
+                    Pec = ec.parentNode;
+                    if (typeof Pec.parentNode !== 'undefined') {
+                        Pec.parentNode.remove();
+                    }
+                }
+            }
+        }
+        var getPopUpClass = getPopUp.className
+        getPopUp.classList.add("hidden");
+        dateCancel();
+    }
+
+    function tableModalCancel() {
+        var getPopUp = document.getElementById("tablePopUp")
+        var getPopUpClass = getPopUp.className
+        getPopUp.classList.add("hidden");
+        dateCancel();
+    }
+    document.addEventListener("click", function (event) {
+        var getModalContainer = event.target.closest('.modal-container');
+        var dropdownToggle = event.target.closest('.dropdown-toggle');
+        var modalButton = event.target.classList.contains('modal-show');
+        var getPopUps = document.querySelectorAll(".outside-cancle-modal")
+        getPopUps.forEach(function (item) {
+            var itemClass = item.className
+            if (!getModalContainer && !modalButton && !dropdownToggle) {
+                item.classList.add("hidden");
+            }
+        })
+    });
+
+    function dropdownToggle(event) {
+        let targetItem = event.target;
+        while (!targetItem.classList.contains('dropdown-toggle')) {
+            targetItem = targetItem.parentElement;
+        }
+        targetItem = targetItem.nextElementSibling;
+
+        if (targetItem.classList.contains('hidden')) {
+            targetItem.classList.remove("hidden");
+        } else {
+            targetItem.classList.add("hidden");
+        }
+        let x = document.getElementsByClassName("dropdown-item");
+        for (let i = 0; i < x.length; i++) {
+            if (x[i] != targetItem) {
+                x[i].classList.add("hidden")
+            }
+        }
+        var prnt = event.target.parentNode.parentNode
+        const melm = prnt.childNodes
+        for (let jj = 0; jj < melm.length; jj++) {
+            const melmelement = melm[jj];
+            if ((" " + melmelement.className + " ").replace(/[\n\t]/g, " ").indexOf(" outside-cancle-modal ") > -1) {
+                melmelement.classList.remove("hidden")
+            }
+        }
+    }
+
+    function deleteModalShow(id) {
+        var getPopUp = document.getElementById("deleteAddFeePopUp")
+        document.getElementById("deleteRow").action = "/dashboard/fee-management/{{.OrgID}}/delete/" + id
+        var getPopUpClass = getPopUp.className
+        getPopUp.classList.remove("hidden");
+    }
+
+    function deleteModalNotNow() {
+        var getPopUp = document.getElementById("deleteAddFeePopUp")
+        var getPopUpClass = getPopUp.className
+        getPopUp.classList.add("hidden");
+    }
+
+    function formatDateAsText(date, pd = false) {
+        if (pd) {
+            date.setDate(date.getDate() + parseInt(1));
+        }
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        if (month < 10) {
+            month = "0" + month;
+        }
+        if (day < 10) {
+            day = "0" + day;
+        }
+        return date.getFullYear() + "-" + month + "-" + day;
+    }
+
+    function dateRangeRefresh(feestartdate, feeenddate) {
+        var sdelm = document.getElementsByClassName(feestartdate)
+        var edelm = document.getElementsByClassName(feeenddate);
+        for (i = 0; i < sdelm.length; i++) {
+            var sd = sdelm[i].value;
+            var date = new Date(sd);
+            var tdate = new Date();
+            if (formatDateAsText(tdate) == formatDateAsText(date)) {
+                fullDate = formatDateAsText(tdate, true);
+                edelm[i].min = fullDate;
+                edelm[i].value = fullDate;
+            } else if (tdate > date) {
+                fullDate = formatDateAsText(tdate);
+                edelm[i].min = fullDate;
+                edelm[i].value = fullDate;
+            } else if (tdate < date) {
+                fullDate = formatDateAsText(date, true);
+                edelm[i].min = fullDate;
+                edelm[i].value = fullDate;
+            }
+        }
+    }
+
+    function addRow() {
+        var feetirehdn = document.getElementById("feetirehdn").innerHTML;
+        var feetierwrap = document.getElementById("feetierwrap");
+        var feetierlen = document.getElementById("feetierlen");
+        var tlen = feetierwrap.children.length
+        feetierlen.value = tlen + 1
+        var htm = feetirehdn.replaceAll("##id##", tlen + 1);
+        var htm = htm.replaceAll("#####", "valcal");
+        document.getElementById("feetierwrap").insertAdjacentHTML('beforeend', htm);
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        dateRangeRefresh('StartDate', 'EndDate');
+        setAvailableDate();
+    });
+
+    function setErrMsg(msg) {
+        let vm = document.getElementsByClassName("validMsg");
+        for (let index = 0; index < vm.length; index++) {
+            vm[index].innerHTML = msg;
+        }
+    }
+
+    function formSubmit(item, e) {
+        e.preventDefault();
+        setErrMsg("");
+        let frmid = item.getAttribute("data-id");
+        let frmelm = document.getElementById(frmid);
+        let sdelm = frmelm.querySelector(".StartDate").value;
+        let edelm = frmelm.querySelector(".EndDate").value;
+        let feeType = frmelm.querySelector(".feeTypecls").value;
+        let minvalcal = frmelm.querySelectorAll(".minvalcal");
+        let maxvalcal = frmelm.querySelectorAll(".maxvalcal");
+        let DSAShareV = frmelm.querySelectorAll(".DSAShareV");
+        let isFrmEmpty = true;
+        if (minvalcal.length > 0) {
+            for (i = 0; i < minvalcal.length; i++) {
+                if (minvalcal[i].value == "") {
+                    isFrmEmpty = false;
+                    setErrMsg(emptyMsg);
+                    break
+                }
+            }
+            for (i = 0; i < maxvalcal.length; i++) {
+                if (maxvalcal[i].value == "") {
+                    isFrmEmpty = false;
+                    setErrMsg(emptyMsg);
+                    break
+                }
+            }
+            for (i = 0; i < DSAShareV.length; i++) {
+                if (DSAShareV[i].value == "") {
+                    isFrmEmpty = false;
+                    setErrMsg(emptyMsg);
+                    break
+                }
+            }
+            if (!isFrmEmpty) {
+                return false;
+            }
+        }
+        let isValid = true;
+        let isValidDate = true;
+        if (sdelm == "" || edelm == "") {
+            isValidDate = false;
+            setErrMsg(errMsgInvalidDate);
+        }
+        let ucd = [convertTime(sdelm), convertTime(edelm, true)]
+        let icd = [];
+        if (frmid != "feecomformsubmitfrm") {
+            let initsd = frmelm.querySelector(".StartDate").getAttribute("initdate");
+            let inited = frmelm.querySelector(".EndDate").getAttribute("initdate");
+            icd = [convertTime(initsd), convertTime(inited, true)]
+        }
+        if (!compareDate(sdelm, edelm, feeType, ucd, icd)) {
+            isValidDate = false;
+            setErrMsg(errMsgInvalidDate)
+        }
+        if (minvalcal.length > 0) {
+            for (i = 0; i < minvalcal.length; i++) {
+                if (!minvalcal[i].checkValidity()) {
+                    isValid = false;
+                    setErrMsg(errMsg);
+                    break
+                }
+            }
+            for (i = 0; i < maxvalcal.length; i++) {
+                if (!maxvalcal[i].checkValidity()) {
+                    isValid = false;
+                    setErrMsg(errMsg);
+                    break
+                }
+            }
+            for (i = 0; i < DSAShareV.length; i++) {
+                if (!DSAShareV[i].checkValidity()) {
+                    isValid = false;
+                    setErrMsg(errMsg);
+                    break
+                }
+            }
+        }
+        if (!isValid) {
+            setErrMsg(errMsg);
+        }
+        if (!isValidDate) {
+            setErrMsg(errMsgInvalidDate);
+        }
+        if (isValid && isValidDate && isFrmEmpty) {
+            frmelm.submit();
+        }
+    }
+</script>
+</html>

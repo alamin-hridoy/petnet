@@ -1,0 +1,505 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>Manage Role</title>
+</head>
+
+<body class="font-sans">
+    <div>
+        <div class="flex">
+            <!-- sidebar-left-start -->
+            <div class="bg-petnetblue w-32 min-h-screen">
+                <div class="min-h-screen">
+                    <img src="{{ assetHash "/images/DRP-Vertical.svg" }}" class="mx-auto my-5">
+                    <ul class="">
+                        <li class="w-full px-2 py-4  p-2 flex items-center justify-center">
+                            <a href="javascript:;" class="text-center text-white">
+                                <img src="{{ assetHash "/images/dsa-list-white.png" }}" width="28" class="mx-auto mb-3">
+                                <span class="leading-5 font-bold">DSA List</span>
+                            </a>
+                        </li>
+                        <li class="w-full px-2 py-4  p-2 flex items-center justify-center">
+                            <a href="javascript:;" class="text-center text-white">
+                                <img src="{{ assetHash "/images/transaction-white.png" }}" width="28"
+                                    class="mx-auto mb-3">
+                                <span class="leading-5 font-bold">Transactions</span>
+                            </a>
+                        </li>
+                        <li class="w-full px-2 py-4 flex items-center justify-center">
+                            <a href="javascript:;" class="text-center text-white">
+                                <img src="{{ assetHash "/images/partner.png" }}" width="28" class="mx-auto mb-3">
+                                <span class="leading-5 font-bold">Partner</span>
+                            </a>
+                        </li>
+                        <li class="w-full px-2 py-4 bg-white bg-opacity-30 flex items-center justify-center">
+                            <a href="javascript:;" class="text-center text-petnetyellow">
+                                <img src="{{ assetHash "/images/settings-yellow.svg" }}" width="28"
+                                    class="mx-auto mb-3">
+                                <span class="leading-5 font-bold">Manage Roles</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- sidebarleft-end -->
+
+            <div class="min-h-screen w-full flex bg-petnetgray ">
+                <div class="w-full">
+                    <!-- top-header-start -->
+                    <div class="px-6 lg:px-32 py-10 relative z-10 bg-white">
+                        <ul class="flex justify-end items-center space-x-4">
+                            <li>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                </svg>
+                            </li>
+                            <li>
+                                <span
+                                    class="inline-flex items-center justify-center bg-pink-500 uppercase w-9 h-9 rounded-full text-white">
+                                    AC
+                                </span>
+                            </li>
+                            <li>
+                                <div class="relative" id="topDropdownBox">
+                                    <a href="javascript:;" onclick="toggleTopButton('openTopDropdown')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </a>
+                                    <div class="absolute right-0 top-12 hidden" id="openTopDropdown">
+                                        <div
+                                            class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                        </div>
+                                        <div class="shadow-lg  absolute top-3 -right-5 rounded">
+                                            <div class="relative z-20 p-3 w-36 bg-white rounded space-y-2">
+                                                <a class="flex text-sm items-center" href="/profile">
+                                                    <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M16 8C16 10.21 14.21 12 12 12C9.79 12 8 10.21 8 8C8 5.79 9.79 4 12 4C14.21 4 16 5.79 16 8ZM4 18C4 15.34 9.33 14 12 14C14.67 14 20 15.34 20 18V19C20 19.55 19.55 20 19 20H5C4.45 20 4 19.55 4 19V18Z" fill="#333333"/>
+                                                    </svg>
+                                                    Profile
+                                                </a>
+                                                <a href="/logout" class="flex text-sm">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2"
+                                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                                    </svg>
+                                                    Logout
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div>
+                            <a href="javascript:;" class="text-xl font-normal text-petnetheadertext pr-14">Member List</a>
+                            <a href="javascript:;" class="text-xl font-normal text-petnetlightblue border-b-4 border-petnetlightblue">User Roles</a>
+                        </div>
+                        
+                        <div class="flex flex-wrap items-center justify-between pt-24">
+                            <div class="">
+                                <h2 class="text-4xl text-petnetblue">Manage Roles</h2>
+                            </div>
+                            <div class="">
+                                <button
+                                    class="border-2 border-petnetblue rounded-md py-3 px-12 text-white font-bold bg-petnetblue show-modal2">
+                                    Invite Member
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- top-header-end -->
+                    <!-- table-start -->
+                    <div class="">
+                        <table class="min-w-full">
+                            <thead class="bg-white shadow-md relative z-10 w-full">
+                                <tr class="">
+                                    <th class="text-left w-1/6 pl-16 py-3 pr-10">
+                                        <div class="relative dropdown appearance-none">
+                                            <button class="dropdown-toggle flex items-center w-full justify-between"
+                                                onclick="dropdownToggle(event)">
+                                                <p class="pr-4 font-semibold">Role Name</p>
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                </svg>
+                                            </button>
+                                            <div class="absolute right-0 top-12 hidden dropdown-item">
+                                                <div
+                                                    class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                                </div>
+                                                <div class="shadow  absolute top-3 -right-5 rounded">
+                                                    <div class="relative z-20 pt-3 w-40 bg-white rounded flex flex-col">
+                                                        <div class="text-sm pl-2 pb-2 flex-col flex">
+                                                            <ul>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th class="w-1/6 text-left">
+                                        Role Description
+                                    </th>
+                                    <th class="w-1/6 text-center">
+                                        Created by
+                                    </th>
+                                    <th class="w-1/6 text-center">
+                                        Updated by
+                                    </th>
+                                    <th class="w-1/6 py-3 text-left">
+                                        Date Updated
+                                    </th>
+                                    <th class="w-1/6 py-3 text-left">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200 ">
+                                
+                                <tr class="">
+                                    <td class="pl-16 py-4 whitespace-nowrap text-xl text-petnetblue font-semibold w-1/6">
+                                        <p>Admin</p>
+                                    </td>
+                                    <td class=" py-4 whitespace-nowrap w-1/6 font-normal text-xl ">
+                                        Lorem ipsum dolor sit amet. <br>
+                                        Lorem ipsum dolor sit amet. <br>
+                                        Lorem ipsum dolor sit amet. <br>
+                                        
+                                       
+                                    </td>
+                                    <td class=" py-4 whitespace-nowrap text-center w-1/6 text-xl ">
+                                        <p>Jane Doe</p>
+                                    </td>
+                                    <td class=" py-4 whitespace-nowrap text-center w-1/6 text-xl">
+                                        <p>Jane Doe</p>
+                                    </td>
+                                    <td class=" py-4 whitespace-nowrap w-1/6 text-xl">
+                                        <p>July 15, 2021</p>
+                                    </td>
+                                    <td class=" whitespace-nowrap text-xl font-medium w-1/6">
+                                       
+                                            <a href="" class="text-petnetlightblue pr-14">Edit</a>
+                                            <a href="javascript:;" class="text-petnetpink">Delete</a>
+                                    </td>
+                                </tr>
+                               
+                            </tbody>
+                            <tbody class="bg-white divide-y divide-gray-200 ">
+                                
+                                <tr class="">
+                                    <td class="pl-16 py-4 whitespace-nowrap text-xl text-petnetblue font-semibold">
+                                        <p>Checker</p>
+                                    </td>
+                                    <td class=" py-4 whitespace-nowrap font-normal text-xl">
+                                        Lorem ipsum dolor sit amet.
+                                    </td>
+                                    <td class=" py-4 whitespace-nowrap text-center text-xl ">
+                                        <p>Jane Doe</p>
+                                    </td>
+                                    <td class=" py-4 whitespace-nowrap text-center text-xl">
+                                        <p>Jane Doe</p>
+                                    </td>
+                                    <td class=" py-4 whitespace-nowrap text-xl">
+                                        <p>July 15, 2021</p>
+                                    </td>
+                                    <td class=" whitespace-nowrap text-xl font-medium">
+                                       
+                                            <a href="" class="text-petnetlightblue pr-14">Edit</a>
+                                            <a href="javascript:;" class="text-petnetpink">Delete</a>
+                                    </td>
+                                </tr>
+                               
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- modal-create -->
+        <div
+            class="modal h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-black bg-opacity-50 z-30 hidden">
+            <!-- modal -->
+            <div class="py-3 sm:max-w-xl sm:mx-auto">
+                <div class="bg-white shadow-lg w-full z-50 rounded-md overflow-hidden">
+                    <div class="mx-20 my-12">
+                        <div>
+                            <span class="text-2xl text-black font-semibold">Create New Role</span>
+                        </div>
+                        <p class="text-petnettextgray mt-4 mb-2">Please fill up the following information.</p>
+                        <div class="w-full">
+                            <div class="mb-6">
+                                <label for="name" class="block text-black mb-2">Name of Role</label>
+                                <input type="name"
+                                    class="w-full px-3 py-2 border border-gray-300 bg-petnetgray rounded-md focus:outline-none" />
+                            </div>
+                            <p class="mb-1">Function</p>
+                            <p class="text-petnettextgray italic">*Function permissions can be changed and edited later
+                                on.</p>
+                            <div class="my-4 space-y-3">
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded">
+                                    </div>
+                                    <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">DSA List & Details</label>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded">
+                                    </div>
+                                    <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Transactions list &
+                                            Details</label>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded">
+                                    </div>
+                                    <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Document checklist</label>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded">
+                                    </div>
+                                    <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Risk Assessment</label>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded">
+                                    </div>
+                                    <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Currency</label>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded">
+                                    </div>
+                                    <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Fee & Commission</label>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded">
+                                    </div>
+                                    <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Location & Branches</label>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-6">
+                                        <input type="checkbox" class="h-6 w-6 text-petnetblue border-gray-300 rounded">
+                                    </div>
+                                    <div class="ml-3">
+                                        <label class="text-black text-lg font-normal">Service Catalog</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between">
+                                <button
+                                    class="border-2 border-petnetblue rounded-md py-2 px-16 text-petnetblue font-bold mr-4 close-modal">
+                                    Cancel
+                                </button>
+                                <button
+                                    class="border-2 border-petnetyellow rounded-md py-2 px-16 text-petnetblue font-bold bg-petnetyellow">
+                                    Create Role
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- modal-invite -->
+
+        <div
+
+            class="modal2 h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-black bg-opacity-50 z-30 hidden">
+            <!-- modal -->
+            <div class="py-3 sm:max-w-xl sm:mx-auto">
+                <div class="bg-white shadow-lg w-full z-50 rounded-md overflow-hidden">
+                    <div class="mx-20 my-12">
+                        <div>
+                            <span class="text-2xl text-black font-semibold">Invite members to team</span>
+                        </div>
+                        <p class="text-petnettextgray mt-4 mb-2">Invite existing accounts or add new ones.</p>
+                        <div class="w-full">
+                            <form action="" method="post">
+                            <div class="mb-6">
+                                <input class="border-2 border-petnetheadertext w-full h-10 p-4 rounded-md focus:outline-none" type="email" id="email" name="email">
+                            </div>
+                            </form>
+                            <div class="flex flex-wrap justify-between w-full">
+                                <div class="inline-flex items-center rounded-md">name@email.com</div>
+                                <div class="bg-petnetgray px-4 rounded-md">
+                                    <div class="relative dropdown appearance-none">
+                                        <button class="dropdown-toggle flex items-center w-full justify-between"
+                                            onclick="dropdownToggle(event)">
+                                            <p class="pr-8 py-3">Select a role</p>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </button>
+                                        <div class="absolute right-0 top-12 hidden dropdown-item">
+                                            <div
+                                                class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                            </div>
+                                            <div class="shadow  absolute top-3 -right-5 rounded">
+                                                <div class="relative z-20 pt-3 w-40 bg-white rounded flex flex-col">
+                                                    <div class="text-sm pl-2 pb-2 flex-col flex">
+                                                        <ul>
+                                                            <li>1</li>
+                                                            <li>2</li>
+                                                            <li>3</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap justify-between w-full mt-8">
+                                <div class="inline-flex items-center">name@email.com</div>
+                                <div class="bg-petnetgray px-4 rounded-md">
+                                    <div class="relative dropdown appearance-none">
+                                        <button class="dropdown-toggle flex items-center w-full justify-between"
+                                            onclick="dropdownToggle(event)">
+                                            <p class="pr-8 py-3">Select a role</p>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </button>
+                                        <div class="absolute right-0 top-12 hidden dropdown-item">
+                                            <div
+                                                class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                            </div>
+                                            <div class="shadow  absolute top-3 -right-5 rounded">
+                                                <div class="relative z-20 pt-3 w-40 bg-white rounded flex flex-col">
+                                                    <div class="text-sm pl-2 pb-2 flex-col flex">
+                                                        <ul>
+                                                            <li>1</li>
+                                                            <li>2</li>
+                                                            <li>3</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between mt-10">
+                                <button
+                                    class="border-2 border-petnetblue rounded-md py-2 px-16 text-petnetblue font-bold mr-4 close-modal2 ">
+                                    Cancel
+                                </button>
+                                <button
+                                    class="border-2 border-petnetyellow rounded-md py-2 px-12 text-petnetblue font-bold bg-petnetyellow">
+                                    Invite Members
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script>
+            // modal
+            const modal = document.querySelector('.modal');
+
+            const showModal = document.querySelector('.show-modal');
+            const closeModal = document.querySelectorAll('.close-modal');
+
+            showModal.addEventListener('click', function () {
+                modal.classList.remove('hidden')
+            });
+
+            closeModal.forEach(close => {
+                close.addEventListener('click', function () {
+                    modal.classList.add('hidden')
+                });
+            });
+
+            const modal2 = document.querySelector('.modal2');
+
+            const showModal2 = document.querySelector('.show-modal2');
+            const closeModal2 = document.querySelectorAll('.close-modal2');
+
+            showModal2.addEventListener('click', function () {
+                modal2.classList.remove('hidden')
+            });
+
+            closeModal2.forEach(close => {
+                close.addEventListener('click', function () {
+                    modal2.classList.add('hidden')
+                });
+            });
+            // modal
+
+            function toggleTopButton(id) {
+                let getDropdownItem = document.getElementById(id)
+                let isHiddenClass = getDropdownItem.classList.contains('hidden');
+                if (!isHiddenClass) {
+                    getDropdownItem.classList.add("hidden");
+                } else {
+                    getDropdownItem.classList.remove("hidden");
+                }
+            }
+
+            function dropdownToggle(event) {
+                let targetItem = event.target;
+                while (!targetItem.classList.contains('dropdown-toggle')) {
+                    targetItem = targetItem.parentElement;
+                }
+                targetItem = targetItem.nextElementSibling;
+
+                if (targetItem.classList.contains('hidden')) {
+                    targetItem.classList.remove("hidden");
+                } else {
+                    targetItem.classList.add("hidden");
+                }
+                let x = document.getElementsByClassName("dropdown-item");
+                for (let i = 0; i < x.length; i++) {
+                    if (x[i] != targetItem) {
+                        x[i].classList.add("hidden")
+                    }
+                }
+            }
+        </script>
+</body>
+
+</html>

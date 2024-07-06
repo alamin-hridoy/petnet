@@ -1,0 +1,35 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: doc-prefix
+spec:
+  stripPrefix:
+    prefixes:
+      - "/docs"
+    forceSlash: false
+
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: drp-doc
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+    traefik.ingress.kubernetes.io/router.middlewares: doc-prefix@kubernetescrd
+    traefik.ingress.kubernetes.io/router.tls: "true"
+spec:
+  tls:
+  - hosts:
+    - ENV.petnet.dev
+    secretName: cert-dev
+  rules:
+  - host: ENV.petnet.dev
+    http:
+      paths: 
+      - path: /docs
+        backend:
+          serviceName: drp-doc
+          servicePort: 3000
+
+...

@@ -1,0 +1,609 @@
+package profile
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "remit_partner",
+//                 "email",
+//         },
+// }}
+type RegisterUserRequest struct {
+	RemitPartner    string `pb:"1" json:"remit_partner"`
+	Email           string `pb:"2" json:"email"`
+	FirstName       string `pb:"3" json:"first_name"`
+	LastName        string `pb:"4" json:"last_name"`
+	BirthDate       string `pb:"5" json:"birth_date"`
+	MobileCountryID string `pb:"6" json:"mobile_country_id"`
+	ContactNo       string `pb:"7" json:"contact_number"`
+	PhoneCountryID  string `pb:"8" json:"phone_country_id"`
+	PhoneArCode     string `pb:"9" json:"phone_area_code"`
+	CountryAddID    string `pb:"10" json:"country_address_id"`
+	ProvinceAdd     string `pb:"11" json:"province_address"`
+	CurrentAdd      string `pb:"12" json:"current_address"`
+	UserID          string `pb:"13" json:"user_id"`
+	SourceOfID      string `pb:"14" json:"source_of_fund_id"`
+	Tin             string `pb:"15" json:"tin"`
+	PhoneNo         string `pb:"16" json:"phone_number"`
+	AgentCode       string `pb:"17" json:"agent_code"`
+}
+
+type RegisterUserResponse struct {
+	Code    int      `pb:"1" json:"code"`
+	Message string   `pb:"2" json:"message"`
+	Result  RUResult `pb:"3" json:"result"`
+	RemcoID int      `pb:"4" json:"remco_id"`
+}
+
+type RUResult struct {
+	ResultStatus string `pb:"1" json:"result_status"`
+	MessageID    int    `pb:"2" json:"message_id"`
+	LogID        int    `pb:"3" json:"log_id"`
+	UserID       int    `pb:"4" json:"user_id"`
+	UserNumber   string `pb:"5" json:"user_number"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "remit_partner",
+//                 "email",
+//                 "type",
+//                 "first_name",
+//                 "last_name",
+//                 "birth_date",
+//                 "phone",
+//                 "address",
+//                 "occupation",
+//         },
+// }}
+type CreateProfileRequest struct {
+	RemitPartner string      `pb:"1" json:"remit_partner"`
+	Email        string      `pb:"2" json:"email"`
+	Type         string      `pb:"3" json:"type"`
+	FirstName    string      `pb:"4" json:"first_name"`
+	LastName     string      `pb:"5" json:"last_name"`
+	BirthDate    string      `pb:"6" json:"birth_date"`
+	Phone        PhoneNumber `pb:"7" json:"phone"`
+	Address      Address     `pb:"8" json:"address"`
+	Occupation   string      `pb:"9" json:"occupation"`
+}
+
+type CreateProfileResponse struct{}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "remit_partner",
+//                 "email",
+//         },
+// }}
+type GetProfileRequest struct {
+	RemitPartner string `pb:"1" json:"remit_partner"`
+	Email        string `pb:"2" json:"email"`
+}
+
+type GetProfileResponse struct {
+	Profile Profile `pb:"1" json:"profile"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "remit_partner",
+//                 "email",
+//                 "currency",
+//                 "type",
+//                 "owned_by_customer",
+//                 "account_holder_name",
+//                 "requirements",
+//         },
+// }}
+type CreateRecipientRequest struct {
+	RemitPartner      string        `pb:"1" json:"remit_partner"`
+	Email             string        `pb:"2" json:"email"`
+	Currency          string        `pb:"3" json:"currency"`
+	Type              string        `pb:"4" json:"type"`
+	OwnedByCustomer   bool          `pb:"5" json:"owned_by_customer"`
+	AccountHolderName string        `pb:"6" json:"account_holder_name"`
+	Requirements      []Requirement `pb:"7" json:"requirements"`
+	FirstName         string        `pb:"8" json:"first_name"`
+	MiddleName        string        `pb:"9" json:"middle_name"`
+	LastName          string        `pb:"10" json:"last_name"`
+	SenderUserID      int           `pb:"11" json:"sender_user_id"`
+	BirthDate         string        `pb:"12" json:"birth_date"`
+	MobileCountryID   string        `pb:"13" json:"mobile_country_id"`
+	ContactNumber     string        `pb:"14" json:"contact_number"`
+	PhoneCountryID    string        `pb:"15" json:"phone_country_id"`
+	PhoneAreaCode     string        `pb:"16" json:"phone_area_code"`
+	PhoneNumber       string        `pb:"17" json:"phone_number"`
+	CountryAddressID  string        `pb:"18" json:"country_address_id"`
+	BirthCountryID    string        `pb:"19" json:"birth_country_id"`
+	ProvinceAddress   string        `pb:"20" json:"province_address"`
+	Address           string        `pb:"21" json:"address"`
+	UserID            int           `pb:"22" json:"user_id"`
+	Occupation        string        `pb:"23" json:"occupation"`
+	PostalCode        string        `pb:"24" json:"postal_code"`
+	StateIDAddress    string        `pb:"25" json:"state_id_address"`
+	Tin               string        `pb:"26" json:"tin"`
+}
+
+type CreateRecipientResponse struct {
+	RecipientID string `pb:"1" json:"recipient_id"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "remit_partner",
+//                 "email",
+//         },
+// }}
+type GetRecipientsRequest struct {
+	RemitPartner    string `pb:"1" json:"remit_partner"`
+	SenderUserEmail string `pb:"2" json:"sender_user_email"`
+	Currency        string `pb:"3" json:"currency"`
+	SenderUserID    string `pb:"4" json:"sender_user_id"`
+}
+
+type GetRecipientsResponse struct {
+	Recipients []Recipient `pb:"1" json:"recipients"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "remit_partner",
+//                 "email",
+//         },
+// }}
+type DeleteRecipientRequest struct {
+	RemitPartner string `pb:"1" json:"remit_partner"`
+	Email        string `pb:"2" json:"email"`
+	RecipientID  string `pb:"3" json:"recipient_id"`
+}
+
+type DeleteRecipientResponse struct{}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "remit_partner",
+//                 "email",
+//                 "currency",
+//                 "type",
+//                 "owned_by_customer",
+//                 "account_holder_name",
+//                 "requirements",
+//         },
+// }}
+type UpdateRecipientRequest struct {
+	RemitPartner      string        `pb:"1" json:"remit_partner"`
+	Email             string        `pb:"2" json:"email"`
+	Currency          string        `pb:"3" json:"currency"`
+	Type              string        `pb:"4" json:"type"`
+	OwnedByCustomer   bool          `pb:"5" json:"owned_by_customer"`
+	AccountHolderName string        `pb:"6" json:"account_holder_name"`
+	Requirements      []Requirement `pb:"7" json:"requirements"`
+}
+
+type UpdateRecipientResponse struct{}
+
+type Recipient struct {
+	RecipientID        string         `pb:"1" json:"recipient_id"`
+	Details            Details        `pb:"2" json:"details"`
+	AccountSummary     string         `pb:"3" json:"account_summary"`
+	LongAccountSummary string         `pb:"4" json:"long_account_summary"`
+	DisplayFields      []DisplayField `pb:"5" json:"display_fields"`
+	FullName           string         `pb:"6" json:"full_name"`
+	Currency           string         `pb:"7" json:"currency"`
+	Country            string         `pb:"8" json:"country"`
+	FirstName          string         `pb:"9" json:"first_name"`
+	MiddleName         string         `pb:"10" json:"middle_name"`
+	LastName           string         `pb:"11" json:"last_name"`
+	BirthDate          string         `pb:"12" json:"birth_date"`
+	StateIDAddress     string         `pb:"13" json:"state_id_address"`
+	MobileCountry      int            `pb:"14" json:"mobile_country"`
+	PhoneCountry       int            `pb:"15" json:"phone_country"`
+	CountryAddress     int            `pb:"16" json:"country_address"`
+	BirthCountry       int            `pb:"17" json:"birth_country"`
+}
+
+type DisplayField struct {
+	Label string `pb:"1" json:"label"`
+	Value string `pb:"2" json:"value"`
+}
+
+type Details struct {
+	AccountNumber        string `pb:"1" json:"account_number"`
+	SortCode             string `pb:"2" json:"sort_code"`
+	HashByLooseAlgorithm string `pb:"3" json:"hash_by_loose_algorithm"`
+}
+
+type Requirement struct {
+	Name string `pb:"1" json:"name"`
+	// Value is used when requirement is a single value
+	Value string `pb:"2" json:"value"`
+	// Values is used when requirement has multiple values
+	Values map[string]string `pb:"3" json:"values"`
+}
+
+type Date struct {
+	Year  string `pb:"1" json:"year"`
+	Month string `pb:"2" json:"month"`
+	Day   string `pb:"3" json:"day"`
+}
+
+type Profile struct {
+	ID         string  `pb:"1" json:"id"`
+	Type       string  `pb:"2" json:"type"`
+	FirstName  string  `pb:"3" json:"first_name"`
+	LastName   string  `pb:"4" json:"last_name"`
+	BirthDate  string  `pb:"5" json:"birth_date"`
+	Phone      string  `pb:"6" json:"phone"`
+	Occupation string  `pb:"7" json:"occupation"`
+	Address    Address `pb:"8" json:"address"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "employer",
+//                 "occupation",
+//                 "position_level",
+//         },
+// }}
+type Employment struct {
+	Employer      string `pb:"1" json:"employer"`
+	Occupation    string `pb:"2" json:"occupation"`
+	PositionLevel string `pb:"3" json:"position_level"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "address1",
+//                 "city",
+//                 "state",
+//                 "province",
+//                 "postal_code",
+//                 "country",
+//         },
+// }}
+type Address struct {
+	Address1   string `pb:"1" json:"address1"`
+	Address2   string `pb:"2" json:"address2"`
+	City       string `pb:"3" json:"city"`
+	State      string `pb:"4" json:"state"`
+	Province   string `pb:"5" json:"province"`
+	Zone       string `pb:"6" json:"zone"`
+	PostalCode string `pb:"7" json:"postal_code"`
+	Country    string `pb:"8" json:"country"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "country_code",
+//                 "number",
+//         },
+// }}
+type PhoneNumber struct {
+	CountryCode string `pb:"1" json:"country_code"`
+	Number      string `pb:"2" json:"number"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "type",
+//                 "number",
+//                 "country",
+//         },
+// }}
+type Identification struct {
+	Type       string `pb:"1" json:"type"`
+	Number     string `pb:"2" json:"number"`
+	Country    string `pb:"3" json:"country"`
+	Issued     Date   `pb:"4" json:"issued"`
+	Expiration Date   `pb:"5" json:"expiration"`
+	City       string `pb:"6" json:"issued_city"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "question",
+//                 "answer",
+//         },
+// }}
+type SecurityQuestion struct {
+	Question string `pb:"1" json:"question"`
+	Answer   string `pb:"2" json:"answer"`
+}
+
+type UpdateIdentificationRequest struct {
+	ValidID Identification `pb:"1" json:"valid_id"`
+	IDPhoto []byte         `pb:"2" json:"id_photo"`
+}
+
+type UpdateIdentificationResponse struct {
+	Profile Profile `pb:"1" json:"profile"`
+}
+
+type GetUserRequest struct {
+	RemitPartner string `pb:"1" json:"remit_partner"`
+	FirstName    string `pb:"2" json:"first_name"`
+	LastName     string `pb:"3" json:"last_name"`
+	BirthDate    string `pb:"4" json:"birth_date"`
+	UserNumber   string `pb:"5" json:"user_number"`
+}
+
+type GetUserResponse struct {
+	Code    int      `pb:"1" json:"code"`
+	Message string   `pb:"2" json:"message"`
+	Result  GUResult `pb:"3" json:"result"`
+	RemcoID int      `pb:"4" json:"remco_id"`
+}
+
+type GUResult struct {
+	User User `pb:"1" json:"user"`
+}
+
+type User struct {
+	UserID         int    `pb:"1" json:"user_id"`
+	UserNumber     string `pb:"2" json:"user_number"`
+	FirstName      string `pb:"3" json:"first_name"`
+	MiddleName     string `pb:"4" json:"middle_name"`
+	LastName       string `pb:"5" json:"last_name"`
+	BirthDate      string `pb:"6" json:"birth_date"`
+	MobileCountry  int    `pb:"7" json:"mobile_country"`
+	PhoneCountry   int    `pb:"8" json:"phone_country"`
+	CountryAddress int    `pb:"9" json:"country_address"`
+	SourceOfFund   int    `pb:"10" json:"source_fund_id"`
+}
+
+type ProfileService interface {
+	// Register a remittance user to the perahub DRP platform.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/user/{RemitPartner}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"User"},
+	//         Summary:     "Register user.",
+	//         Description: "Register a remittance user to the perahub DRP platform.",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/profileRegisterUserResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	RegisterUser(RegisterUserRequest) RegisterUserResponse
+
+	// Create user profile.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/profile/{RemitPartner}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"User"},
+	//         Summary:     "Create user KYC profile.",
+	//         Description: "Create user KYC profile details.",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/profileCreateProfileResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when user account does not exist.",
+	//                 },
+	//         },
+	// }
+	CreateProfile(CreateProfileRequest) CreateProfileResponse
+
+	// Get user profile by email.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/profile/{RemitPartner}/{Email}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"User"},
+	//         Summary:     "Get user KYC profile.",
+	//         Description: "Get registered user KYC profile details.",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/profileGetProfileResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when profile does not exist.",
+	//                 },
+	//         },
+	// }
+	GetProfile(GetProfileRequest) GetProfileResponse
+
+	// Create recipient.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v1/recipient/{RemitPartner}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"User"},
+	//         Summary:     "Create recipient.",
+	//         Description: "Creates a recipient for a user which is used and a receiver of a transaction.",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/profileCreateRecipientResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when user account does not exist.",
+	//                 },
+	//         },
+	// }
+	CreateRecipient(CreateRecipientRequest) CreateRecipientResponse
+
+	// Get user's recipients.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/recipient/{RemitPartner}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"User"},
+	//         Summary:     "Get user's recipients.",
+	//         Description: "Get the user's registered recipients which are used as the receivers of a transaction.",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/profileGetRecipientsResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when recipient does not exist.",
+	//                 },
+	//         },
+	// }
+	GetRecipients(GetRecipientsRequest) GetRecipientsResponse
+
+	// Delete recipient.
+	//
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v1/recipient/{RemitPartner}/{Email}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"User"},
+	//         Summary:     "Delete recipient.",
+	//         Description: "Deletes a recipient which is used as a receiver of a transaction.",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/profileDeleteRecipientResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when recipient account does not exist.",
+	//                 },
+	//         },
+	// }
+	DeleteRecipient(DeleteRecipientRequest) DeleteRecipientResponse
+
+	// Update recipient.
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v1/recipient/{RemitPartner}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"User"},
+	//         Summary:     "Update recipient.",
+	//         Description: "Updates an existing recipient which is used as a receiver of a transaction.",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/profileUpdateRecipientResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when recipient account does not exist.",
+	//                 },
+	//         },
+	// }
+	UpdateRecipient(UpdateRecipientRequest) UpdateRecipientResponse
+
+	// Get user.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/getuser/{RemitPartner}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"User"},
+	//         Summary:     "Get user.",
+	//         Description: "Gets an existing user which is added before",
+	//         Produces:    []string{"application/json"},
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+	//                                 Ref: "#/definitions/profileGetUserResponse",
+	//                         }},
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//                 "404": openapiv2.Response{
+	//                         Description: "Returned when user account does not exist.",
+	//                 },
+	//         },
+	// }
+	GetUser(GetUserRequest) GetUserResponse
+}

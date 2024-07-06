@@ -1,0 +1,543 @@
+package partner // proto "petnet.v2.partner"
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+type PartnerType int
+
+const (
+	WU PartnerType = iota
+	IR
+	TF
+	RM
+	RIA
+	MB
+	BPI
+	USSC
+	JPR
+	IC
+	UNT
+	CEB
+	WISE
+	CEBI
+	AYA
+	IE
+)
+
+type PartnerStatusType int
+
+const (
+	DISABLED PartnerStatusType = iota
+	PENDING
+	ENABLED
+)
+
+type CreatePartnersRequest struct {
+	Partners Partners `pb:"1" json:"partners"`
+}
+
+type CreatePartnersResponse struct {
+	Partners Partners `pb:"1" json:"partners"`
+}
+
+type UpdatePartnersRequest struct {
+	Partners Partners `pb:"1" json:"partners"`
+}
+
+type UpdatePartnersResponse struct {
+	Partners Partners `pb:"1" json:"partners"`
+}
+
+type GetPartnersRequest struct {
+	OrgID string `pb:"1" json:"org_id"`
+	Type  string `pb:"2" json:"type"`
+}
+
+type Partner struct {
+	ID        string    `pb:"1" json:"id"`
+	OrgID     string    `pb:"2" json:"org_id"`
+	Type      string    `pb:"3" json:"type"`
+	Partner   string    `pb:"4" json:"partner"`
+	Created   time.Time `pb:"5" json:"created"`
+	Updated   time.Time `pb:"6" json:"updated"`
+	UpdatedBy string    `pb:"7" json:"updated_by"`
+	Status    string    `pb:"8" json:"status"`
+}
+
+type GetPartnersResponse struct {
+	Partners Partners `pb:"1" json:"partners"`
+}
+
+type GetPartnerResponse struct {
+	Partner Partner `pb:"1" json:"partner"`
+}
+
+type DeletePartnerRequest struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type DeletePartnerResponse struct{}
+
+type ValidatePartnerAccessRequest struct {
+	OrgID   string      `pb:"1" json:"org_id"`
+	Partner PartnerType `pb:"2" json:"partner"`
+}
+
+type ValidatePartnerAccessResponse struct{}
+
+type EnablePartnerRequest struct {
+	OrgID   string      `pb:"1" json:"org_id"`
+	Partner PartnerType `pb:"2" json:"partner"`
+}
+
+type EnablePartnerResponse struct{}
+
+type DisablePartnerRequest struct {
+	OrgID   string      `pb:"1" json:"org_id"`
+	Partner PartnerType `pb:"2" json:"partner"`
+}
+
+type DisablePartnerResponse struct{}
+
+type Partners struct {
+	OrgID               string              `pb:"1" json:"id"`
+	WesternUnionPartner WesternUnionPartner `pb:"2" json:"wu_partner"`
+	IRemitPartner       IRemitPartner       `pb:"3" json:"ir_partner"`
+	TransfastPartner    TransfastPartner    `pb:"4" json:"tf_partner"`
+	RemitlyPartner      RemitlyPartner      `pb:"5" json:"rm_partner"`
+	RiaPartner          RiaPartner          `pb:"6" json:"ria_partner"`
+	MetroBankPartner    MetroBankPartner    `pb:"7" json:"mb_partner"`
+	BPIPartner          BPIPartner          `pb:"8" json:"bpi_partner"`
+	USSCPartner         USSCPartner         `pb:"9" json:"ussc_partner"`
+	JapanRemitPartner   JapanRemitPartner   `pb:"10" json:"jpr_partner"`
+	InstantCashPartner  InstantCashPartner  `pb:"11" json:"ic_partner"`
+	UnitellerPartner    UnitellerPartner    `pb:"12" json:"unt_partner"`
+	TransferWisePartner TransferWisePartner `pb:"13" json:"wise_partner"`
+	CebuanaIntlPartner  CebuanaIntlPartner  `pb:"14" json:"cebi_partner"`
+	CebuanaPartner      CebuanaPartner      `pb:"15" json:"ceb_partner"`
+	AyannahPartner      AyannahPartner      `pb:"16" json:"aya_partner"`
+	IntelExpressPartner IntelExpressPartner `pb:"17" json:"ie_partner"`
+	UpdatedBy           string              `pb:"18" json:"updated_by"`
+	// for easy access to all enabled partners
+	PartnerStatuses map[string]string `pb:"19" json:"partner_statuses"`
+}
+
+type WesternUnionPartner struct {
+	ID         string            `pb:"1" json:"id"`
+	Coy        string            `pb:"2" json:"coy"`
+	OperatorID string            `pb:"3" json:"operator_id"`
+	TerminalID string            `pb:"4" json:"terminal_id"`
+	Status     PartnerStatusType `pb:"5" json:"enabled"`
+	Created    time.Time         `pb:"6" json:"created"`
+	Updated    time.Time         `pb:"7" json:"updated"`
+	StartDate  time.Time         `pb:"8" json:"startdate"`
+	EndDate    time.Time         `pb:"9" json:"enddate"`
+}
+
+type JapanRemitPartner struct {
+	ID        string            `pb:"1" json:"id"`
+	Param1    string            `pb:"2" json:"param1"`
+	Param2    string            `pb:"3" json:"param2"`
+	Status    PartnerStatusType `pb:"4" json:"enabled"`
+	Created   time.Time         `pb:"5" json:"created"`
+	Updated   time.Time         `pb:"6" json:"updated"`
+	StartDate time.Time         `pb:"7" json:"startdate"`
+	EndDate   time.Time         `pb:"8" json:"enddate"`
+}
+
+type InstantCashPartner struct {
+	ID        string            `pb:"1" json:"id"`
+	Param1    string            `pb:"2" json:"param1"`
+	Param2    string            `pb:"3" json:"param2"`
+	Status    PartnerStatusType `pb:"4" json:"enabled"`
+	Created   time.Time         `pb:"5" json:"created"`
+	Updated   time.Time         `pb:"6" json:"updated"`
+	StartDate time.Time         `pb:"7" json:"startdate"`
+	EndDate   time.Time         `pb:"8" json:"enddate"`
+}
+
+type IRemitPartner struct {
+	ID        string            `pb:"1" json:"id"`
+	Param1    string            `pb:"2" json:"param1"`
+	Param2    string            `pb:"3" json:"param2"`
+	Status    PartnerStatusType `pb:"4" json:"enabled"`
+	Created   time.Time         `pb:"5" json:"created"`
+	Updated   time.Time         `pb:"6" json:"updated"`
+	StartDate time.Time         `pb:"7" json:"startdate"`
+	EndDate   time.Time         `pb:"8" json:"enddate"`
+}
+
+type TransfastPartner struct {
+	ID        string            `pb:"1" json:"id"`
+	Param1    string            `pb:"2" json:"param1"`
+	Param2    string            `pb:"3" json:"param2"`
+	Status    PartnerStatusType `pb:"4" json:"enabled"`
+	Created   time.Time         `pb:"5" json:"created"`
+	Updated   time.Time         `pb:"6" json:"updated"`
+	StartDate time.Time         `pb:"7" json:"startdate"`
+	EndDate   time.Time         `pb:"8" json:"enddate"`
+}
+
+type RemitlyPartner struct {
+	ID        string            `pb:"1" json:"id"`
+	Param1    string            `pb:"2" json:"param1"`
+	Param2    string            `pb:"3" json:"param2"`
+	Status    PartnerStatusType `pb:"4" json:"enabled"`
+	Created   time.Time         `pb:"5" json:"created"`
+	Updated   time.Time         `pb:"6" json:"updated"`
+	StartDate time.Time         `pb:"7" json:"startdate"`
+	EndDate   time.Time         `pb:"8" json:"enddate"`
+}
+
+type RiaPartner struct {
+	ID        string            `pb:"1" json:"id"`
+	Param1    string            `pb:"2" json:"param1"`
+	Param2    string            `pb:"3" json:"param2"`
+	Status    PartnerStatusType `pb:"4" json:"enabled"`
+	Created   time.Time         `pb:"5" json:"created"`
+	Updated   time.Time         `pb:"6" json:"updated"`
+	StartDate time.Time         `pb:"7" json:"startdate"`
+	EndDate   time.Time         `pb:"8" json:"enddate"`
+}
+
+type MetroBankPartner struct {
+	ID        string            `pb:"1" json:"id"`
+	Param1    string            `pb:"2" json:"param1"`
+	Param2    string            `pb:"3" json:"param2"`
+	Status    PartnerStatusType `pb:"4" json:"enabled"`
+	Created   time.Time         `pb:"5" json:"created"`
+	Updated   time.Time         `pb:"6" json:"updated"`
+	StartDate time.Time         `pb:"7" json:"startdate"`
+	EndDate   time.Time         `pb:"8" json:"enddate"`
+}
+
+type BPIPartner struct {
+	ID        string            `pb:"1" json:"id"`
+	Param1    string            `pb:"2" json:"param1"`
+	Param2    string            `pb:"3" json:"param2"`
+	Status    PartnerStatusType `pb:"4" json:"enabled"`
+	Created   time.Time         `pb:"5" json:"created"`
+	Updated   time.Time         `pb:"6" json:"updated"`
+	StartDate time.Time         `pb:"7" json:"startdate"`
+	EndDate   time.Time         `pb:"8" json:"enddate"`
+}
+
+type USSCPartner struct {
+	ID        string            `pb:"1" json:"id"`
+	Param1    string            `pb:"2" json:"param1"`
+	Param2    string            `pb:"3" json:"param2"`
+	Status    PartnerStatusType `pb:"4" json:"enabled"`
+	Created   time.Time         `pb:"5" json:"created"`
+	Updated   time.Time         `pb:"6" json:"updated"`
+	StartDate time.Time         `pb:"7" json:"startdate"`
+	EndDate   time.Time         `pb:"8" json:"enddate"`
+}
+
+type UnitellerPartner struct {
+	ID        string            `pb:"1" json:"id"`
+	Param1    string            `pb:"2" json:"param1"`
+	Param2    string            `pb:"3" json:"param2"`
+	Status    PartnerStatusType `pb:"4" json:"enabled"`
+	Created   time.Time         `pb:"5" json:"created"`
+	Updated   time.Time         `pb:"6" json:"updated"`
+	StartDate time.Time         `pb:"7" json:"startdate"`
+	EndDate   time.Time         `pb:"8" json:"enddate"`
+}
+
+type CebuanaPartner struct {
+	ID        string            `pb:"1" json:"id"`
+	Param1    string            `pb:"2" json:"param1"`
+	Param2    string            `pb:"3" json:"param2"`
+	Status    PartnerStatusType `pb:"4" json:"enabled"`
+	Created   time.Time         `pb:"5" json:"created"`
+	Updated   time.Time         `pb:"6" json:"updated"`
+	StartDate time.Time         `pb:"7" json:"startdate"`
+	EndDate   time.Time         `pb:"8" json:"enddate"`
+}
+
+type TransferWisePartner struct {
+	ID        string            `pb:"1" json:"id"`
+	Param1    string            `pb:"2" json:"param1"`
+	Param2    string            `pb:"3" json:"param2"`
+	Status    PartnerStatusType `pb:"4" json:"enabled"`
+	Created   time.Time         `pb:"5" json:"created"`
+	Updated   time.Time         `pb:"6" json:"updated"`
+	StartDate time.Time         `pb:"7" json:"startdate"`
+	EndDate   time.Time         `pb:"8" json:"enddate"`
+}
+
+type CebuanaIntlPartner struct {
+	ID        string            `pb:"1" json:"id"`
+	Param1    string            `pb:"2" json:"param1"`
+	Param2    string            `pb:"3" json:"param2"`
+	Status    PartnerStatusType `pb:"4" json:"enabled"`
+	Created   time.Time         `pb:"5" json:"created"`
+	Updated   time.Time         `pb:"6" json:"updated"`
+	StartDate time.Time         `pb:"7" json:"startdate"`
+	EndDate   time.Time         `pb:"8" json:"enddate"`
+}
+
+type AyannahPartner struct {
+	ID        string            `pb:"1" json:"id"`
+	Param1    string            `pb:"2" json:"param1"`
+	Param2    string            `pb:"3" json:"param2"`
+	Status    PartnerStatusType `pb:"4" json:"enabled"`
+	Created   time.Time         `pb:"5" json:"created"`
+	Updated   time.Time         `pb:"6" json:"updated"`
+	StartDate time.Time         `pb:"7" json:"startdate"`
+	EndDate   time.Time         `pb:"8" json:"enddate"`
+}
+
+type IntelExpressPartner struct {
+	ID        string            `pb:"1" json:"id"`
+	Param1    string            `pb:"2" json:"param1"`
+	Param2    string            `pb:"3" json:"param2"`
+	Status    PartnerStatusType `pb:"4" json:"enabled"`
+	Created   time.Time         `pb:"5" json:"created"`
+	Updated   time.Time         `pb:"6" json:"updated"`
+	StartDate time.Time         `pb:"7" json:"startdate"`
+	EndDate   time.Time         `pb:"8" json:"enddate"`
+}
+
+type PartnerService interface {
+	// Create partners.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/partners/{Partners.OrgID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Partners"},
+	//         Description: "Create one or more dsa partners.",
+	//         Summary:     "Create partners.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/partnersCreatePartnersResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	CreatePartners(CreatePartnersRequest) CreatePartnersResponse
+
+	// Update partners.
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v2/partners/{Partners.OrgID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Partners"},
+	//         Description: "Update one or more dsa partners.",
+	//         Summary:     "Update partners.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/partnersUpdatePartnersResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	UpdatePartners(UpdatePartnersRequest) UpdatePartnersResponse
+
+	// Get partners by org ID.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v2/partners/{OrgID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Partners"},
+	//         Description: "Get created partners by org ID.",
+	//         Summary:     "Get partners.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/partnersGetPartnersResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	GetPartners(GetPartnersRequest) GetPartnersResponse
+
+	// Get partner by org ID.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v2/partner/{OrgID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Partners"},
+	//         Description: "Get created partner by org ID.",
+	//         Summary:     "Get partner.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/partnersGetPartnerResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	GetPartner(GetPartnersRequest) GetPartnerResponse
+
+	// Delete partner by ID.
+	//
+	// +gunk http.Match{
+	//         Method: "DELETE",
+	//         Path:   "/v2/partners/{ID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Partner"},
+	//         Description: "Delete partner by ID.",
+	//         Summary:     "Delete partner.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/partnersDeletePartnerResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	DeletePartner(DeletePartnerRequest) DeletePartnerResponse
+
+	// Validate partner access.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/partners/validate",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Partners"},
+	//         Description: "Validate user access to partner.",
+	//         Summary:     "Validate partner.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/partnersValidatePartnerAccessResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	ValidatePartnerAccess(ValidatePartnerAccessRequest) ValidatePartnerAccessResponse
+
+	// Enable partner for DSA.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/partners/enable",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Partners"},
+	//         Description: "Enable partner for DSA.",
+	//         Summary:     "Enable partner.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/partnersEnablePartnerResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	EnablePartner(EnablePartnerRequest) EnablePartnerResponse
+
+	// Disable partner for DSA.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/partners/disable",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Partners"},
+	//         Description: "Disable partner for DSA.",
+	//         Summary:     "Disable partner.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/partnersDisablePartnerResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	DisablePartner(DisablePartnerRequest) DisablePartnerResponse
+}

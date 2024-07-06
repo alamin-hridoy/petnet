@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dsa-sim-config
+data:
+  RUNTIME_ENVIRONMENT: 'uat'
+  SERVER_HOST: ""
+  SERVER_PORT: '3000'
+
+  API_EXTERNAL: drp-api-sandbox:80
+  HYDRA_ADMINURL: http://hydra-admin
+  AUTH_ISSUER: https://auth.uat.petnet.dev
+  AUTH_TOKEN: https://auth.uat.petnet.dev
+  AUTH_REDIRECTURL: https://dsa-sim.uat.petnet.dev/oauth2/callback
+  AUTH_URL: https://auth.uat.petnet.dev
+  AUTH_OAUTHURL: https://uat.petnet.dev/oauth2

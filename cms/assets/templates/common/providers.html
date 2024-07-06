@@ -1,0 +1,758 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>Commission Management</title>
+    <style>
+		.checkBoxColor { filter: hue-rotate(220deg) }
+        .w-41 {width: 40.5rem;}
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        .endBtnColor {
+            color: #05ACE5;
+        }
+        .dsbBtnColor {
+            color: #BCC3C8;
+        }
+
+        input:checked ~ .dot {
+            transform: translateX(100%);
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            @apply: bg-green-400;
+            background-color: #1A2791;
+        }
+        .hide {
+            display: none;
+        }
+    
+        .infoImg:hover + .hide {
+            display: block;
+        }
+        .top-08 {
+            top: 0.8rem;
+        }
+        .resizeArea {
+            resize: none;
+        }
+        .CircleColor {
+            color: #F7653B;
+        }
+        .tabletextcolor{
+            color: #353535;
+        }
+        .sd{
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.25)
+        }
+        .searchBorder{
+            border-color: #9C9C9C;
+        }
+        .editColor{
+            background-color: #D1D4E9;
+        }
+        .dropDwnImp{
+            border: none !important;
+            background-color: #F6F7FF !important;
+            border: 1px solid #F6F7FF !important;
+            width: 100% !important;
+            border-radius: 4px !important;
+        }
+        @media (min-width: 768px) {
+            .md\:px-24 {
+                padding-left: 6rem/* 96px */;
+                padding-right: 6rem/* 96px */;
+            }
+        }
+
+        @media only screen and (min-width: 640px) {
+            .modal-w {
+                width: 38rem;
+            }
+        }
+        @media only screen and (min-width: 1024px) {
+            .modal-w {
+                width: 43rem;
+            }
+        }
+
+	</style>
+</head>
+<body class="font-sans">
+    <div>
+        <div class="flex mainWarper">
+            <!-- sidebar-left-start -->
+            <div class="bg-petnetblue w-32 min-h-screen">
+                <div class="min-h-screen">
+                    <img src="{{ assetHash "/images/DRP-Vertical.svg" }}" class="mx-auto my-5">
+                    <!-- Sidebar menu start -->
+                    {{ template "admin-sidenav-menu.html" dict "Type" "partner-list" "Data" .}}
+                    <!-- Sidebar menu end -->
+                </div>
+            </div>
+            <!-- sidebarleft-end -->
+            <!-- top-header-start -->
+            <div class="min-h-screen w-full flex bg-petnetgray ">
+                <div class="w-full">
+                    <div class="px-6 lg:px-28 py-10 shadow-md relative z-10 bg-white">
+                        <ul class="flex justify-end items-center space-x-4 mb-10">
+                            <li>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                </svg>
+                            </li>
+                            <li>
+                                {{ template "top-head-profile.html" dict "UserInfo" .UserInfo "CompanyName" "" .}}
+                            </li>
+                            <li>
+                                <div class="relative" id="topDropdownBox">
+                                    <a href="javascript:;" onclick="toggleTopButton('openTopDropdown')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </a>
+                                    <div class="absolute right-0 top-12 hidden" id="openTopDropdown">
+                                        <div class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                        </div>
+                                        <div class="shadow-lg  absolute top-3 -right-5 rounded">
+                                            <div class="relative z-20 p-3 w-36 bg-white rounded space-y-2">
+                                                <a class="flex text-sm items-center" href="/profile">
+                                                    <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M16 8C16 10.21 14.21 12 12 12C9.79 12 8 10.21 8 8C8 5.79 9.79 4 12 4C14.21 4 16 5.79 16 8ZM4 18C4 15.34 9.33 14 12 14C14.67 14 20 15.34 20 18V19C20 19.55 19.55 20 19 20H5C4.45 20 4 19.55 4 19V18Z" fill="#333333"/>
+                                                    </svg>
+                                                    Profile
+                                                </a>
+                                                <a href="/logout" class="flex text-sm">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                                    </svg>
+                                                    Logout
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="">
+                            <h2 class="text-5xl text-petnetblue mr-4 font-semibold">Providers</h2>
+                        </div>
+                    </div>
+                    <div class="px-6 lg:px-24 py-10 bg-petnetgray flex flex-wrap">
+                        <div class="w-1/4 pr-4">
+                            <div class="mb-8">
+                                <!-- Admin partner sidebar menu start -->
+                                {{ template "admin-partner-sideBar-menu.html"  dict "Tab" "providers"}}
+                                <!-- Admin partner sidebar menu end -->
+                            </div>
+                        </div>
+                        <div class="w-3/4">
+                            <div class="bg-white rounded">
+                                <div class="flex justify-between pt-7 px-8 pb-4 border-b ">
+                                    <h4 class="text-xl font-semibold text-petnetblue ">Providers List</h4>
+                                    {{if ne .MessageDetails ""}}
+                                    <div class="flex justify-center bg-white">
+                                        <div id="alert-show-error" role="alert" class="w-full">
+                                            <!-- petnetpink text-white -->
+                                            <div
+                                                class="p-3 {{if eq .MsgType "error"}} bg-petnetpink {{end}} {{if eq .MsgType "success"}} bg-petnetgreen {{end}} w-full text-black mb-4 bg-opacity-20 rounded-lg border {{if eq .MsgType "error"}} border-petnetpink {{end}} {{if eq .MsgType "success"}} border-petnetgreen {{end}} flex items-center ">
+                                                <span class="p-2 rounded-lg {{if eq .MsgType "error"}} bg-petnetpink {{end}} {{if eq .MsgType "success"}} bg-petnetgreen {{end}} flex justify-center items-center mr-3">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white rounded-full"
+                                                        viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fill-rule="evenodd"
+                                                            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                                            clip-rule="evenodd" />
+                                                    </svg>
+                                                </span>
+                                                <span>
+                                                    {{.MessageDetails}}
+                                                </span>
+                                                <a href="javascript:;" class="mx-2 text-gray-400 inline-block w-3"
+                                                    id="alert-remove-error" onclick="hidealertMessage()">
+                                                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg">
+                                                        <path
+                                                            d="M11.25 0.757931C11.0943 0.601887 10.8829 0.514193 10.6625 0.514193C10.442 0.514193 10.2307 0.601887 10.075 0.757931L5.99998 4.8246L1.92498 0.749597C1.76928 0.593553 1.55791 0.505859 1.33748 0.505859C1.11704 0.505859 0.905668 0.593553 0.749976 0.749597C0.424976 1.0746 0.424976 1.5996 0.749976 1.9246L4.82498 5.9996L0.749976 10.0746C0.424976 10.3996 0.424976 10.9246 0.749976 11.2496C1.07498 11.5746 1.59998 11.5746 1.92498 11.2496L5.99998 7.1746L10.075 11.2496C10.4 11.5746 10.925 11.5746 11.25 11.2496C11.575 10.9246 11.575 10.3996 11.25 10.0746L7.17497 5.9996L11.25 1.9246C11.5666 1.60793 11.5666 1.0746 11.25 0.757931Z"
+                                                            fill="#BCC3C8" />
+                                                    </svg>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{end}}
+                                    <a id="addModalOpen" class="flex items-center" href="javascript:;"> <span><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M18 11.3327H11.3333V17.9993C11.3333 18.7327 10.7333 19.3327 9.99996 19.3327C9.26663 19.3327 8.66663 18.7327 8.66663 17.9993V11.3327H1.99996C1.26663 11.3327 0.666626 10.7327 0.666626 9.99935C0.666626 9.26602 1.26663 8.66602 1.99996 8.66602H8.66663V1.99935C8.66663 1.26602 9.26663 0.666016 9.99996 0.666016C10.7333 0.666016 11.3333 1.26602 11.3333 1.99935V8.66602H18C18.7333 8.66602 19.3333 9.26602 19.3333 9.99935C19.3333 10.7327 18.7333 11.3327 18 11.3327Z" fill="#05ACE5"/>
+                                        </svg>
+                                        </span> <span class="text-petnetlightblue px-1">Add Provider</span></a>
+                                </div>
+
+                                <div class="w-full lg:w-1/3 flex rounded-l py-4 px-8">
+                                    <input type="text" value="{{.SearchTerm}}" id="search" placeholder="Search for provider"
+                                        class="w-full h-12 p-4 bg-petnetgray border searchBorder focus:outline-none rounded-l-md">
+                                    <button id="serachbutton" class="bg-petnetblue text-white rounded-r p-3 searchbtn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="py-4">
+                                    <table class="w-full">
+                                        <thead>
+                                            <tr class="">
+                                                <th class="py-3 text-xl pl-8 text-left tabletextcolor">Provider Code</th>
+                                                <th class="py-3 text-xl text-left tabletextcolor">Provider Name</th>
+                                                <th class="py-3 text-xl text-left tabletextcolor">Service</th>
+                                                <th class="py-3 text-xl text-left tabletextcolor">Added By</th>
+                                                <th class="w-1/6 py-3 text-xl text-center tabletextcolor"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {{range $key,$provider := .AllProviderList}}
+                                            <tr id="row_{{$provider.Stype}}" data-stype="{{$provider.Stype}}"  data-name="{{$provider.Name}}" data-servicename="{{$provider.ServiceName}}" class="border-b">
+                                                <td class="py-3 text-xl pl-8 text-left tabletextcolor">{{$provider.Stype}}</td>
+                                                <td class="py-3 text-xl text-left  tabletextcolor">{{$provider.Name}}</td>
+                                                <td class="py-3 text-xl text-left  tabletextcolor">{{$provider.ServiceName}}</td>
+                                                <td class="py-3 text-xl text-left  tabletextcolor">{{$provider.UpdatedBy}}</td>
+                                                <td class="w-1/6 py-3 text-xl tabletextcolor">
+                                                    <span class="flex w-full justify-center items-center relative">
+                                                        <svg class="w-full providerCl cursor-pointer" width="6" height="22" viewBox="0 0 6 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M3.00004 5.66732C4.46671 5.66732 5.66671 4.46732 5.66671 3.00065C5.66671 1.53398 4.46671 0.333984 3.00004 0.333984C1.53337 0.333984 0.333374 1.53398 0.333374 3.00065C0.333374 4.46732 1.53337 5.66732 3.00004 5.66732ZM3.00004 8.33398C1.53337 8.33398 0.333374 9.53398 0.333374 11.0007C0.333374 12.4673 1.53337 13.6673 3.00004 13.6673C4.46671 13.6673 5.66671 12.4673 5.66671 11.0007C5.66671 9.53398 4.46671 8.33398 3.00004 8.33398ZM0.333374 19.0007C0.333374 17.534 1.53337 16.334 3.00004 16.334C4.46671 16.334 5.66671 17.534 5.66671 19.0007C5.66671 20.4673 4.46671 21.6673 3.00004 21.6673C1.53337 21.6673 0.333374 20.4673 0.333374 19.0007Z" fill="#1A2791"/>
+                                                            </svg>
+                                                            <div class="hidden providerDes providerDes2">
+                                                                <div class="absolute w-10 h-10 transform left-1/2 -translate-x-1/2 top-8 sd rotate-45 z-10 bg-white rounded-sm "></div>
+                                                                <div class="absolute w-32 top-11 transform left-1/2 -translate-x-1/2 bg-white shadow-2xl rounded-md z-20">
+                                                                    <ul class="mt-4">
+                                                                        <li class="text-left">
+                                                                            <a class="text-xs pl-8 py-2 inline-block text-petnetheadertext" href="javascript:;">ACTIONS</a>
+                                                                        </li>
+                                                                        <li class="text-left editColor">
+                                                                            <a onclick="modalShow('{{$provider.Stype}}')" class="text-xs pl-8 py-2 inline-block w-full" href="javascript:;">Edit</a>
+                                                                        </li>
+                                                                        <li class="text-left">
+                                                                            <a onclick="deleteModalShow('{{$provider.Stype}}')" class="text-xs pl-8 pt-2 pb-3 inline-block w-full" href="javascript:;">Delete</a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            {{end}}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- edit Modal Start-->
+    <div id="modalPro" class="modalPro h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-black bg-opacity-50 z-30 hidden">
+    <div class="py-3 w-full lg:w-1/2 px-4 mx-auto">
+        <div class="bg-white shadow-lg w-full z-50 rounded-md overflow-hidden">
+            <div class="mx-20 my-16">
+                <div class="px-4">
+                    <span class="text-2xl text-black font-semibold">Add Provider</span>
+                    <p class="text-petnettextgray mt-4 mb-2">Please fill up the following information.</p>
+                </div>
+                <div class="w-full">
+                    <form id="dataReset" method="POST"
+                    action="">
+                        {{.CSRFField}}
+                        <div class="flex">
+                            <div class="w-full md:w-1/2 px-4 py-2">
+                                    <label class="block py-1 text-sm label-color font-semibold" for="">Provider Name<span class="text-petnetpink">*</span></label>
+                                    <input type="text" name="ProviderName" id="ProviderName" value="{{ .ProviderName }}" class="border border-petnetblue bg-petnetgray px-4  py-2 w-full rounded-md focus:outline-none" required>
+                            </div>
+                            <div class="w-full md:w-1/2 px-4 py-2">
+                                <label class="block py-1 text-sm label-color font-semibold">Service Offered<span class="text-petnetpink">*</span></label>
+                                <div class="relative  inline-flex w-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="w-6 h-6 absolute top-0 right-0 m-2 pointer-events-none"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                    <select name="Provider" id="Provider" class="w-full rounded border text-xs sm:text-base border-gray-300 text-gray-700 py-2 pl-5 pr-10 bg-petnetgray hover:border-gray-400 focus:outline-none appearance-none">
+                                        <option value="" disabled>Select Service</option>
+                                        {{range .AllProviders}}
+                                            <option value="{{.}}">{{.}}</option>
+                                        {{end}}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="flex justify-between">
+                            <div class="w-full md:w-1/2 px-4 py-4">
+                                <a id="closeEditmodal" href="javascript:;"
+                                    class="border border-petnetblue text-sm rounded-md text-center w-full py-4 text-petnetblue font-bold mr-4 inline-block">
+                                    Cancel
+                                </a>
+                            </div>
+                            <div class="w-full md:w-1/2 px-4 py-4">
+                                <button type="submit"
+                                    class="border border-petnetyellow text-sm rounded-md text-center w-full py-4 text-petnetblue font-bold bg-petnetyellow">
+                                    Update Provider
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- edit Modal End -->
+    <!-- add Modal Start-->
+    <div id="addmodal" class="h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-black bg-opacity-50 z-30 hidden">
+    <div class="py-3 w-full lg:w-1/2 px-4 mx-auto">
+        <div class="bg-white shadow-lg w-full z-50 rounded-md overflow-hidden">
+            <div class="mx-20 my-16">
+                <div class="px-4">
+                    <span class="text-2xl text-black font-semibold">Add Provider</span>
+                    <p class="text-petnettextgray mt-4 mb-2">Please fill up the following information.</p>
+                </div>
+                <div class="w-full">
+                    <form name="add_provider_frm" id="add_provider_frm" action="/dashboard/provider-create" method="post" onsubmit="addvalidateform(event);">
+                        {{.CSRFField}}
+                        <div class="flex">
+                            <div class="w-full md:w-1/2 px-4 py-2">
+                                    <label class="block py-1 text-sm label-color font-semibold" for="">Provider Name<span class="text-petnetpink">*</span></label>
+                                    <input type="text" name="ProviderName" id="ProviderName" class="border border-petnetblue bg-petnetgray px-4  py-2 w-full rounded-md focus:outline-none" required>
+                                    <p class="text-red-700 mt-2 errMsg" id="ProviderNameErr">{{with .Errors.ProviderName}}{{.}}{{end}}</p>
+                            </div>
+                            <div class="w-full md:w-1/2 px-4 py-2">
+                                <label class="block py-1 text-sm label-color font-semibold">Service Offered<span class="text-petnetpink">*</span></label>
+                                <div class="relative  inline-flex w-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="w-6 h-6 absolute top-0 right-0 m-2 pointer-events-none"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                    <select name="Provider" id="Provider" class="w-full rounded border text-xs sm:text-base border-gray-300 text-gray-700 py-2 pl-5 pr-10 bg-petnetgray hover:border-gray-400 focus:outline-none appearance-none">
+                                        <option value="" disabled>Select Service</option>
+                                        {{range .AllProviders}}
+                                            <option value="{{.}}">{{.}}</option>
+                                        {{end}}
+                                    </select>
+                                </div>
+                                <p class="text-red-700 mt-2 errMsg" id="ProviderErr">{{with .Errors.Provider}}{{.}}{{end}}</p>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="flex justify-between">
+                            <div class="w-full md:w-1/2 px-4 py-4">
+                                <a id="closeaAddmodal" href="javascript:;"
+                                    class="border border-petnetblue text-sm rounded-md text-center w-full py-4 text-petnetblue font-bold mr-4 inline-block">
+                                    Cancel
+                                </a>
+                            </div>
+                            <div class="w-full md:w-1/2 px-4 py-4">
+                                <button type="submit"
+                                    class="border border-petnetyellow text-sm rounded-md text-center w-full py-4 text-petnetblue font-bold bg-petnetyellow">
+                                    Add Provider
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- add Modal End -->
+
+    <!--delete provider modal start-->
+    <div id="deleteBranchModal" class="hidden">
+        <div
+            class="fixed top-0 left-0 z-50 w-screen min-h-screen bg-black bg-opacity-50 py-6 flex flex-col justify-center sm:py-12">
+            <div class="py-3 sm:max-w-full sm:mx-auto">
+                <div class="w-full delete-modal-container">
+                    <div class="bg-white flex flex-col shadow-lg w-full z-50 rounded-lg overflow-hidden">
+                        <div class="flex flex-col items-center">
+                            <form class="w-full flex flex-col px-20" id="deleteForm" method="POST" action="">
+                                {{.CSRFField}}
+                                <div class="mt-16 text-center">
+                                    <h1 class="mt-8 text-3xl font-bold px-8 mb-4">Are you sure you want to delete this?
+                                    </h1>
+                                    <p class="mt-4 px-8 text-gray-600 mb-8">This action cannot be revoked.</p>
+                                </div>
+                                <div class="flex justify-between pb-12 px-8 ">
+                                    <a href="javascript:;" onclick="deleteModalNotNow()"
+                                        class="py-3 px-4 mr-2 w-1/2 text-lg font-bold rounded-md text-petnetblue focus:outline-none border border-petnetblue inline-block text-center">Not
+                                        now</a>
+                                    <button type="submit"
+                                        class=" py-3 px-4 ml-4 w-1/2 text-lg font-bold rounded-md text-petnetblue bg-petnetyellow focus:outline-none">Yes
+                                        I’m sure.</button>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--delete provider modal end-->
+    <script>
+        const params = new URLSearchParams(window.location.search)
+        // Hide and Show LoggedIn User Profile Section 
+        function toggleTopButton(id) {
+            let getDropdownItem = document.getElementById(id)
+            let isHiddenClass = getDropdownItem.classList.contains('hidden');
+            if (!isHiddenClass) {
+                getDropdownItem.classList.add("hidden");
+            } else {
+                getDropdownItem.classList.remove("hidden");
+            }
+        }
+
+        // Get Service Type
+        (() => {
+            let serviceTypeCard = document.querySelectorAll(".service-type-card");
+            if (serviceTypeCard) {
+                serviceTypeCard.forEach(element => {
+                    checkPartnersStatus(element.id);
+                });
+            }
+        })();
+
+        // Change Specific Partner Status
+        function changePartnerStatus(ServiceTypeID, element) {
+            let serviceName = parseServiceName(ServiceTypeID);
+            let oModalData = {
+                    serviceTypeID: ServiceTypeID,
+                    partnerID: element.parentElement.firstElementChild.id,
+                    actionType: ""
+                };
+
+            if(element.parentElement.firstElementChild.checked == true) {
+                oModalData.modalID = "modal-disableService"
+                oModalData.modalTile = `Are you sure you want to turn off connection for ${element.dataset.name} - ${serviceName} Service?`
+
+                changeModalTitle(oModalData);
+            }else{
+                oModalData.modalID = "modal-enableService"
+                oModalData.modalTile = `Are you sure you want to turn on connection for ${element.dataset.name} - ${serviceName} Service?`
+                changeModalTitle(oModalData);
+            }
+
+            if (ServiceTypeID != "") {
+                checkPartnersStatus(ServiceTypeID);
+            }
+        }
+
+        // Parse Service name 
+        function parseServiceName(ServiceTypeID) {
+            let serviceName = "";
+            switch(ServiceTypeID) {
+                case "REMITTANCE":
+                    serviceName = "Remittance"
+                    break;
+                case "BILLSPAYMENT":
+                    serviceName = "Bills Payment"
+                    break;
+                case "MICROINSURANCE":
+                    serviceName = "Micro Insurance"
+                    break;
+                case "CASHINCASHOUT":
+                    serviceName = "Cash In/Cash Out"
+                    break;
+                default:
+                    serviceName = ""
+            } 
+            return serviceName;
+        }
+
+        // Check all of the Partners are Enabled or Disabled which are same Service Type
+        function checkPartnersStatus(serviceTypeID) {
+            let serviceStatus = true;
+            let serviceStatusArr = [];
+
+            if (serviceTypeID != "" && serviceTypeID != NaN && serviceTypeID != undefined) {
+                const divElem = document.getElementById(serviceTypeID);
+                const checkboxElements = divElem.querySelectorAll("input")
+               
+                checkboxElements.forEach( el => {
+                    serviceStatusArr.push(el.checked);
+                });
+
+                serviceStatus = allAreTrue(serviceStatusArr);
+                handleServiceTypeBtn(serviceStatus, serviceTypeID);
+            }
+        }
+
+        function allAreTrue(arr) {
+            return arr.every(element => element == true);
+        }
+
+        // Make Clickable Enable All And Disable All Button 
+        function handleServiceTypeBtn(serviceStatus, serviceTypeID) {
+            let enableBtn = document.getElementById(serviceTypeID +"-Enable");
+            let disableBtn = document.getElementById(serviceTypeID +"-Disable");
+
+            if (serviceStatus) {
+                enableBtn.classList.replace('endBtnColor', 'dsbBtnColor');
+                enableBtn.style.pointerEvents="none";
+                enableBtn.style.cursor="default";
+                
+                disableBtn.classList.replace('dsbBtnColor', 'endBtnColor');
+                disableBtn.style.pointerEvents="auto";
+                disableBtn.style.cursor="pointer";
+            }else{
+                disableBtn.classList.replace('endBtnColor', 'dsbBtnColor');
+                disableBtn.style.pointerEvents="none";
+                disableBtn.style.cursor="pointer";
+                
+                enableBtn.classList.replace('dsbBtnColor', 'endBtnColor');
+                enableBtn.style.pointerEvents="auto";
+                enableBtn.style.cursor="pointer";
+            }
+        }
+
+        // Change All Partner Status
+        function changeAllPartnerStatus(serviceTypeID, action, checkClose = false) {
+            if (serviceTypeID != "" && action != "") {
+                let serviceName = parseServiceName(serviceTypeID);
+                const divElem = document.getElementById(serviceTypeID);
+                const checkboxElements = divElem.querySelectorAll("input");
+                let oModalData = {
+                    serviceTypeID: serviceTypeID,
+                    partnerID: "all",
+                    actionType: action
+                };
+
+               if (!checkClose) {
+                if (action == "Enable") {
+                    // Show Enable all Modal
+                    oModalData.modalID = "modal-enableService"
+                    oModalData.modalTile = `Are you sure you want to turn on all connection for ${serviceName} Service?`
+                    changeModalTitle(oModalData)
+                    changeAllStatus(true, serviceTypeID)
+                }else{
+                    // Show Disable all Modal
+                    oModalData.modalID = "modal-disableService"
+                    oModalData.modalTile = `Are you sure you want to turn off all connection for ${serviceName} Service?`
+                    changeModalTitle(oModalData)
+                    changeAllStatus(false, serviceTypeID)
+                }
+               }
+            }
+        }
+        function changeAllStatus(status, serviceTypeID) {
+            checkboxElements.forEach( el => {
+                el.checked = status
+            });
+            handleServiceTypeBtn(status, serviceTypeID)
+        }
+
+        // Change Modal Title
+        function changeModalTitle(oModalData) {
+            let disableServiceModal = document.getElementById(oModalData.modalID);
+                disableServiceModal.classList.remove('hidden');
+            let titleMsg = disableServiceModal.querySelector("h1");
+                titleMsg.innerText = oModalData.modalTile;
+                titleMsg.dataset.sectionid = oModalData.partnerID;
+                titleMsg.dataset.service = oModalData.serviceTypeID;
+                if (oModalData.actionType) {
+                    titleMsg.dataset.actiontype = oModalData.actionType;
+                }
+        }
+
+        function closeModal(modalId, titleMsgID) {
+            let titleMsg = document.getElementById(titleMsgID).dataset;
+            if (titleMsg.sectionid == "all") {
+                let actionType = titleMsg.actiontype == "Enable"? "Disable" : "Enable";
+                changeAllPartnerStatus(titleMsg.service, actionType, true);
+            }else{
+                let targetElem = document.getElementById(titleMsg.sectionid);
+                targetElem.checked =  targetElem.checked ? false : true;
+            }
+           
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        // Check modal input value
+        function checkInput(params) {
+            let reason = document.getElementById("reason").value
+            let errMsg = document.getElementById("err-reason")
+            if (reason.trim() != "") {
+                errMsg.classList.add("hidden")
+            }else {
+                errMsg.classList.remove("hidden")
+            }
+        }
+
+    // Validate form
+    function validateForm() {
+        let IsValid = true
+        let reason = document.getElementById("reason").value
+        if (reason.trim() == "") {
+            document.getElementById("err-reason").classList.remove("hidden")
+            IsValid = false
+        }
+        return IsValid
+    }
+    var providerCls = document.querySelectorAll('.providerCl');
+    var providerDess = document.querySelectorAll('.providerDes');
+    for(var i=0; i<providerCls.length; i++ ){
+        providerCls[i].addEventListener('click', (ee)=>{
+            var sElm = ee.target.nextElementSibling;
+            if (sElm != null) {
+                console.log(sElm);
+                var elmSelect = false;
+                if (sElm.classList.contains("hidden")) {
+                    elmSelect = true;
+                }
+                for(var j=0; j<providerDess.length; j++ ){
+                    providerDess[j].classList.add('hidden');
+                }
+                if (elmSelect) {
+                    sElm.classList.remove('hidden');
+                }
+            }
+        });
+    }
+    modalPro = document.getElementById('modalPro');
+    closeEditmodal = document.getElementById('closeEditmodal');
+    editProvider = document.querySelectorAll('.editProvider');
+    providerDes2 = document.querySelectorAll('.providerDes2');
+    closeEditmodal.addEventListener('click', ()=>{
+        modalPro.classList.add('hidden');
+    });
+    for(let i =0; i<editProvider.length; i++){
+        editProvider[i].addEventListener('click',()=>{
+            modalPro.classList.remove('hidden')
+            providerDes2[i].classList.add('hidden')
+        })
+    }
+    addmodal = document.getElementById('addmodal')
+    addModalOpen = document.getElementById('addModalOpen')
+    closeaAddmodal = document.getElementById('closeaAddmodal')
+    addModalOpen.addEventListener('click', ()=>{
+        var providerDess = document.querySelectorAll('.providerDes');
+        for(var j=0; j < providerDess.length; j++ ){
+            providerDess[j].classList.add('hidden');
+        }
+        addmodal.classList.remove('hidden')
+    });
+    closeaAddmodal.addEventListener('click',()=>{
+        addmodal.classList.add('hidden')
+        var providerDess = document.querySelectorAll('.providerDes');
+        for(var j=0; j < providerDess.length; j++ ){
+            providerDess[j].classList.add('hidden');
+        }
+    });
+
+    function addvalidateform(event){  
+            event.preventDefault();
+            let FirstName = document.add_provider_frm.ProviderName.value;  
+            let Provider = document.add_provider_frm.Provider.value;  
+            let isValid = true; 
+            if (FirstName == "") {
+                isValid = false;
+                document.getElementById("ProviderNameErr").innerHTML = "Provider Name is required."
+            }
+            if (Provider == "") {
+                isValid = false;
+                document.getElementById("ProviderErr").innerHTML = "Provider is required."
+            }
+            if(isValid) {
+                event.target.submit();
+            }
+        }
+        function hidealertMessage() {
+                var ase = document.getElementById("alert-show-error");
+                ase.classList.add('hidden');
+                if (params.has("msgType")) {
+                    params.delete("msgType");
+                }
+            }
+        function search() {
+                let searchTerm = document.getElementById("search").value;
+                if (params.has("search-term")) {
+                    params.delete("search-term");
+                }
+                params.append("search-term", searchTerm);
+                if (params.has("page")) {
+                    params.delete("page");
+                }
+                window.location.search = params.toString();
+            }
+            document.addEventListener("DOMContentLoaded", function () {
+            let menus = document.querySelectorAll(".mailsend");
+            let form = document.getElementById("sendform")
+            for (let i = 0; i < menus.length; i++) {
+                menus[i].addEventListener("click", function(e){
+                    e.preventDefault();
+                    document.getElementById("sendform").submit();
+                    menus[i].disabled=true;
+                });
+            }
+            let searchbtn = document.querySelectorAll(".searchbtn");
+            for (let i = 0; i < searchbtn.length; i++) {
+                searchbtn[i].addEventListener("click", function (e) {
+                    e.preventDefault();
+                    searchbtn[i].disabled = true;
+                    search();
+                });
+            }
+        });
+        var input = document.getElementById("search");
+        input.addEventListener("keyup", function(event) {
+        if (event.keyCode === 13) {
+         event.preventDefault();
+        document.getElementById("serachbutton").click();
+        }
+    });
+
+   
+    function modalShow(id) {
+        if (id) {
+            setFormValue(id);
+        }
+        var getPopUp = document.getElementById("modalPro")
+        var getPopUpClass = getPopUp.className
+        getPopUp.classList.remove("hidden");
+    }
+    
+    function setFormValue(id) {
+        let rowElm = document.getElementById("row_"+id);
+        let stype = rowElm.getAttribute("data-stype");
+        let name = rowElm.getAttribute("data-name");
+        let servicename = rowElm.getAttribute("data-servicename");
+        document.getElementById('dataReset').action = "/dashboard/providers/" + stype;
+        document.getElementById('ProviderName').value = name;
+        document.getElementById('Provider').value = servicename;
+    }
+
+    function deleteModalShow(id) {
+        var getPopUp = document.getElementById("deleteBranchModal")
+        document.getElementById('deleteForm').action = "/dashboard/providers/delete/" + id;
+        var getPopUpClass = getPopUp.className
+        getPopUp.classList.remove("hidden");
+    }
+    function deleteModalNotNow() {
+        var getPopUp = document.getElementById("deleteBranchModal")
+        var getPopUpClass = getPopUp.className
+        getPopUp.classList.add("hidden");
+    }
+    </script>
+</body>
+</html>

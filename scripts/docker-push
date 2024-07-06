@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+# This script pushes a Docker image following our conventions. To see how the
+# image tag is worked out, see the docker-image-tag script.
+
+# In CI, this script must follow the docker-build script.
+# Credentials for image repository are set up there.
+
+dir=$1
+
+if [[ -z "$IMAGE_NAME" ]]; then
+	IMAGE_NAME=$(./scripts/docker-image-tag "$dir")
+fi
+
+# set up gcr
+gcloud auth activate-service-account --key-file "$GOOGLE_APPLICATION_CREDENTIALS" || exit 1
+gcloud auth configure-docker || exit 1
+
+echo "Pushing $IMAGE_NAME"
+let try=1
+while true; do
+	if docker push $IMAGE_NAME; then
+		break
+	fi
+	if [[ $try -ge 3 ]]; then
+		echo "Giving up after 3 tries"
+		exit 1
+	fi
+	let try++
+	echo "Trying again..."
+done

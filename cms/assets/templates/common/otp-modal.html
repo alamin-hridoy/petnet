@@ -1,0 +1,170 @@
+<div id="otpPopUp" class="hidden removeClass">
+    <div
+        class="absolute inset-0 z-50 min-w-screen min-h-screen bg-black bg-opacity-50 py-6 flex flex-col justify-center sm:py-12">
+        <div class="py-3 sm:max-w-full sm:mx-auto">
+            <div class="w-full modal-otp">
+                <div class="bg-white flex flex-col shadow-lg w-full z-50 rounded-lg overflow-hidden">
+                    <div class="flex flex-col items-center">
+                        <div id="modal-body" class="bg-white rounded-sm pt-24 pb-28 px-16">
+                            <h1 class="text-3xl font-bold pb-8">Let’s verify your email.</h1>
+                            <p   class="mb-8">We sent an email to <span class="font-semibold">{{.Email}}</span>
+                                please check your inbox. <br> If you weren’t able to receive a verification email,
+                                please click the resend button.
+                            </p>
+                            <div class="w-full">
+                                <form id="otpForm" action="/mfa-confirm" method="POST" class="mb-0">
+                                    {{ .CSRFField }}
+                                    <input class="hidden" type="text" name="Code" id="otpCode">
+                                    <input type="text" oninput="otpSubmission()" onkeyup="toUnicode(0)" name="OTPCode01"
+                                        maxlength="1"
+                                        class="h-20 otpCode w-20 border text-center text-5xl mx-3 rounded-md bg-petnetgray outline-none"
+                                        autocomplete="off">
+                                    <input type="text" oninput="otpSubmission()" onkeyup="toUnicode(1)" name="OTPCode02"
+                                        maxlength="1"
+                                        class="h-20 otpCode w-20 border text-center text-5xl mx-3 rounded-md bg-petnetgray outline-none"
+                                        autocomplete="off">
+                                    <input type="text" oninput="otpSubmission()" onkeyup="toUnicode(2)" name="OTPCode03"
+                                        maxlength="1"
+                                        class="h-20 otpCode w-20 border text-center text-5xl mx-3 rounded-md bg-petnetgray outline-none"
+                                        autocomplete="off">
+                                    <input type="text" oninput="otpSubmission()" onkeyup="toUnicode(3)" name="OTPCode04"
+                                        maxlength="1"
+                                        class="h-20 otpCode w-20 border text-center text-5xl mx-3 rounded-md bg-petnetgray outline-none"
+                                        autocomplete="off">
+                                    <input type="text" oninput="otpSubmission()" onkeyup="toUnicode(4)" name="OTPCode05"
+                                        maxlength="1"
+                                        class="h-20 otpCode w-20 border text-center text-5xl mx-3 rounded-md bg-petnetgray outline-none"
+                                        autocomplete="off">
+                                    <input type="text" oninput="otpSubmission()" onkeyup="toUnicode(5)" name="OTPCode06"
+                                        maxlength="1"
+                                        class="h-20 otpCode w-20 border text-center text-5xl mx-3 rounded-md bg-petnetgray outline-none"
+                                        autocomplete="off">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div id="otp-error" class="hidden removeClass">
+    <div
+        class="absolute inset-0 z-50 min-w-screen min-h-screen bg-black bg-opacity-50 py-6 flex flex-col justify-center sm:py-12">
+        <div class="py-3 sm:max-w-full sm:mx-auto">
+            <div class="w-full modal-otp">
+                <div class="bg-white flex flex-col shadow-lg w-full z-50 rounded-lg overflow-hidden">
+                    <div class="flex flex-col items-center">
+                        <div id="modal-body" class="bg-white rounded-sm">
+                            <div class="text-center">
+                                <div class="flex justify-end">
+                                    <div id="alert-show-error" role="alert" class="w-full">
+                                        <!-- petnetpink text-white -->
+                                        <div
+                                            class="p-6 bg-petnetpink w-full text-white bg-opacity-20 rounded-lg border border-petnetpink flex items-center ">
+                                            <span
+                                                class="p-2 rounded-lg bg-petnetpink flex justify-center items-center mr-3">
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                    class="h-6 w-6 text-white rounded-full" viewBox="0 0 20 20"
+                                                    fill="currentColor">
+                                                    <path fill-rule="evenodd"
+                                                        d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                                        clip-rule="evenodd" />
+                                                </svg>
+                                            </span>
+                                            <span id="error-message" class="text-black pr-10">Invalid OTP</span>
+                                            <a href="javascript:;" class="mr-2 text-gray-400 inline-block w-3 ml-auto"
+                                                id="alert-remove-error" onclick="hideOtpAlertMessage()">
+                                                <svg width="16" height="16" viewBox="0 0 12 12" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        d="M11.25 0.757931C11.0943 0.601887 10.8829 0.514193 10.6625 0.514193C10.442 0.514193 10.2307 0.601887 10.075 0.757931L5.99998 4.8246L1.92498 0.749597C1.76928 0.593553 1.55791 0.505859 1.33748 0.505859C1.11704 0.505859 0.905668 0.593553 0.749976 0.749597C0.424976 1.0746 0.424976 1.5996 0.749976 1.9246L4.82498 5.9996L0.749976 10.0746C0.424976 10.3996 0.424976 10.9246 0.749976 11.2496C1.07498 11.5746 1.59998 11.5746 1.92498 11.2496L5.99998 7.1746L10.075 11.2496C10.4 11.5746 10.925 11.5746 11.25 11.2496C11.575 10.9246 11.575 10.3996 11.25 10.0746L7.17497 5.9996L11.25 1.9246C11.5666 1.60793 11.5666 1.0746 11.25 0.757931Z"
+                                                        fill="#577183" />
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const params = new URLSearchParams(window.location.search)
+    // Error handler
+    window.onload = function () {
+        if (params.has("has_error")) {
+            if (params.has("error-massage")) {
+                var massage = params.get("error-massage")
+            } else {
+                var massage = "Something went wrong, please try again."
+            }
+            var ase = document.getElementById("alert-show-error");
+            var errorMassage = document.getElementById("error-message");
+            errorMassage.innerHTML = massage;
+            let hasError = params.get("has_error");
+            value = document.getElementsByClassName("otpCode");
+            if (hasError == 1) {
+                for (i = 0; i < value.length; i++) {
+                    value[i].setAttribute('disabled', 'disabled');
+                }
+                ase.classList.remove('hidden');
+            } else {
+                for (i = 0; i < value.length; i++) {
+                    value[i].removeAttribute('disabled');
+                }
+                ase.classList.add('hidden')
+            }
+        }
+    }
+    
+    // After filling one input, focus will jump to next input automatic
+    function toUnicode(content) {
+        value = document.getElementsByClassName("otpCode")
+        if (value.length > content + 1) {
+            value[content + 1].focus()
+        }
+    }
+    // Auto submission after filling all inpute
+    function otpSubmission() {
+        value = document.getElementsByClassName("otpCode")
+        var otpCode = ""
+        for (i = 0; i < value.length; i++) {
+            if (value[i].value != "") {
+                otpCode += value[i].value
+            }
+        }
+        if (otpCode.length == 6) {
+            document.getElementById("otpCode").value = otpCode
+            document.getElementById("otpForm").submit();
+        }
+    }
+    // Modal show and hide
+    if (params.has('show_otp')) {
+        showOTP();
+    }
+    if (params.has('otp_failed')) {
+        showError();
+    }
+    function showOTP() {
+        var getPopUp = document.getElementById("otpPopUp")
+        getPopUp.classList.remove("hidden");
+        window.onscroll = function () {
+            window.scrollTo(0, 0);
+        };
+    }
+    function showError() {
+        var getOTPErr = document.getElementById("otp-error")
+        getOTPErr.classList.remove("hidden");
+    }
+    function hideOtpAlertMessage() {
+        params.delete("otp_failed")
+        var ase = document.getElementById("otp-error");
+        ase.classList.add('hidden');
+    }
+</script>

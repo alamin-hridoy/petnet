@@ -1,0 +1,303 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>Profile</title>
+</head>
+
+<body class="font-sans">
+    <div>
+        <div class="flex">
+            <!-- sidebar-left-start -->
+            <div class="bg-petnetblue w-32 min-h-screen">
+                <div class="min-h-screen">
+                    {{if .IsPetnetAdmin}}
+                    <img src="{{ assetHash "/images/DRP-Vertical.svg" }}" class="mx-auto my-5">
+                   {{ template "admin-sidenav-menu.html" dict "Type" "profile" "Data" .}}
+                   {{else}}
+                   {{ template "dsa-sidenav-menu.html" dict "Type" "profile" "Data" .}}
+                   {{end}}
+                </div>
+            </div>
+            <!-- sidebarleft-end -->
+            
+            <!-- top-header-start -->
+            <div class="min-h-screen w-full flex bg-petnetgray ">
+                <div class="w-full">
+                  <div class="px-32 py-4 shadow-md bg-white">
+                    <ul class="flex justify-end items-center space-x-4 mb-5">
+                      <li>
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" fill="none" viewBox="0 0 24 24"
+                              stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                          </svg>
+                   
+                      </li>
+                      <li>
+                        {{ template "top-head-profile.html" dict "UserInfo" .LoginUserInfo "CompanyName" .CompanyName .}}
+                      </li>
+                      <li>
+                          <div class="relative" id="topDropdownBox">
+                              <a href="javascript:;" onclick="toggleTopButton('openTopDropdown')">
+                                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                      viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M19 9l-7 7-7-7" />
+                                  </svg>
+                              </a>
+                              <div class="absolute right-0 top-12 hidden" id="openTopDropdown">
+                                  <div
+                                      class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                  </div>
+                                  <div class="shadow-lg  absolute top-3 -right-5 rounded">
+                                      <div class="relative z-20 p-3 w-36 bg-white rounded space-y-2">
+                                          <a class="flex text-sm items-center" href="/profile">
+                                              <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                  <path fill-rule="evenodd" clip-rule="evenodd" d="M16 8C16 10.21 14.21 12 12 12C9.79 12 8 10.21 8 8C8 5.79 9.79 4 12 4C14.21 4 16 5.79 16 8ZM4 18C4 15.34 9.33 14 12 14C14.67 14 20 15.34 20 18V19C20 19.55 19.55 20 19 20H5C4.45 20 4 19.55 4 19V18Z" fill="#333333"/>
+                                              </svg>
+                                              Profile
+                                          </a>
+                                          <a href="/logout" class="flex text-sm pl-1">
+                                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
+                                                  viewBox="0 0 24 24" stroke="currentColor">
+                                                  <path stroke-linecap="round" stroke-linejoin="round"
+                                                      stroke-width="2"
+                                                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                              </svg>
+                                              Logout
+                                          </a>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </li>
+                  </ul>
+                  {{if ne .MessageDetails ""}}
+                  <div class="flex bg-white justify-end">
+                   
+                      <div id="alert-show-error" role="alert" class=" w-3/3 mr-20">
+                        <div class=" absolute right-56 top-16 ">
+                            <div
+                                class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                            </div>
+                            <div class="shadow absolute top-3 -right-2 rounded">
+                                <div class="relative z-20 px-3 py-4 w-80 bg-white rounded ">
+                                    <div class="border-b">
+                                        Notification
+                                    </div>
+                                    <div class="flex items-center pt-2">
+                                        <div class="p-2 h-10 rounded-lg bg-petnetgreen mr-3">
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                          class="h-6 w-6 text-white rounded-full" viewBox="0 0 20 20"
+                                          fill="currentColor">
+                                          <path fill-rule="evenodd"
+                                              d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                              clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                  <div>
+                                    <p class="text-petnetblue font-bold"> You have updated your profile</p>
+                                    <span>
+                                        {{.MessageDetails}}
+                                    </span>
+                                  </div>
+                                  <a href="javascript:;" class="mr-2 text-black-400 inline-block w-3 ml-auto"
+                                      id="alert-remove-error" onclick="hidealertMessage()">
+                                      <svg width="15" height="15" viewBox="0 0 12 12" fill="none"
+                                          xmlns="http://www.w3.org/2000/svg">
+                                          <path
+                                              d="M11.25 0.757931C11.0943 0.601887 10.8829 0.514193 10.6625 0.514193C10.442 0.514193 10.2307 0.601887 10.075 0.757931L5.99998 4.8246L1.92498 0.749597C1.76928 0.593553 1.55791 0.505859 1.33748 0.505859C1.11704 0.505859 0.905668 0.593553 0.749976 0.749597C0.424976 1.0746 0.424976 1.5996 0.749976 1.9246L4.82498 5.9996L0.749976 10.0746C0.424976 10.3996 0.424976 10.9246 0.749976 11.2496C1.07498 11.5746 1.59998 11.5746 1.92498 11.2496L5.99998 7.1746L10.075 11.2496C10.4 11.5746 10.925 11.5746 11.25 11.2496C11.575 10.9246 11.575 10.3996 11.25 10.0746L7.17497 5.9996L11.25 1.9246C11.5666 1.60793 11.5666 1.0746 11.25 0.757931Z"
+                                              fill="#BCC3C8" />
+                                      </svg>
+                                  </a>
+                                  </div>
+                                    
+                                    
+                                </div>
+                            </div>
+                            </div>
+                          <!-- petnetpink text-white -->
+                          
+                      </div>
+                  </div>
+                  {{end}}
+                <div class="mb-4">
+                    <h2 class="sm:text-4xl text-2xl text-petnetblue">My Profile</h2>
+                </div>
+                  </div>
+                    <!-- top-header-end -->
+                    <!-- side-nav -->
+                    <div>
+                        <div class="px-6 lg:px-32 py-10 flex flex-wrap bg-petnetgray h-screen mt-4">
+                            <div class="w-1/4 pr-2 flex flex-col rounded">
+                              <div class="mb-8">
+                                <div class="bg-white rounded">
+                                    <h4 class="text-xl font-semibold text-petnetblue pt-7 px-6 pb-4 border-b">Actions</h4>
+                                    <!-- actions list start -->
+                                    <ul>
+                                        <li>
+                                            <a href="/profile" class="flex items-center border-l-4 hover:bg-petnetlightblue hover:bg-opacity-10 py-5 px-10 bg-petnetlightblue bg-opacity-10 border-petnetblue">
+                                                <span class="w-12 inline-block">
+                                                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M20.71 4.04207C21.1 3.65211 21.1 3.02217 20.71 2.63221L18.37 0.292455C18.1832 0.105222 17.9295 0 17.665 0C17.4005 0 17.1468 0.105222 16.96 0.292455L15 2.25225L18.75 6.00186L20.71 4.04207ZM17.75 7.00176L14 3.25215L4.15 13.1011C4.05 13.2011 4 13.3211 4 13.4611V16.5008C4 16.7807 4.22 17.0007 4.5 17.0007H7.54C7.67 17.0007 7.8 16.9507 7.89 16.8507L17.75 7.00176ZM22 20.0004H2C0.9 20.0004 0 20.9003 0 22.0002C0 23.1001 0.9 24 2 24H22C23.1 24 24 23.1001 24 22.0002C24 20.9003 23.1 20.0004 22 20.0004Z" fill="#1A2791"/>
+                                                    </svg>
+                                                </span>
+                                                <span class="font-semibold text-base">Edit Profile</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/change-password" class="flex items-center border-l-4 border-white hover:bg-petnetlightblue hover:bg-opacity-10 hover:border-petnetblue py-5 px-10">
+                                                <span class="w-12 inline-block">
+                                                  <svg width="18" height="22" viewBox="0 0 18 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M1.19 3.37625L8.19 0.26625C8.7 0.03625 9.3 0.03625 9.81 0.26625L16.81 3.37625C17.53 3.69625 18 4.41625 18 5.20625V9.90625C18 15.4563 14.16 20.6462 9 21.9062C3.84 20.6462 0 15.4563 0 9.90625V5.20625C0 4.41625 0.47 3.69625 1.19 3.37625ZM16 10.8962H9V2.09625L2 5.20625V10.9062H9V19.8363C12.72 18.6863 15.47 15.0163 16 10.8962Z" fill="#1A2791"/>
+                                                    </svg>
+                                                </span>
+                                                <span class="font-semibold text-base">Change Password</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <!-- actions list end -->
+                                </div>
+                            </div>
+                            </div>
+                            <div class="w-3/4 pl-2">
+                                <div class="bg-white rounded mb-3">
+                                    <div class="border-b flex items-center justify-between">
+                                        <h4 class="text-xl font-bold text-petnetblue pt-7 px-6 pb-4">Edit Profile</h4>
+                                    </div>
+                                    <form method="POST" enctype="multipart/form-data" action="/profile" name="bussinessForm" onsubmit="return validateForm()">
+                                        {{ .CSRFField }}
+                                    <div class="ml-10 mt-10 relative w-16">
+                                        <label class="" for="ProfileImage">
+                                            {{if .LoginUserInfo.ProfileImage}}
+                                            <img class="rounded-full cursor-pointer" id="PP" src="/u/files/{{ .LoginUserInfo.ProfileImage }}" alt="">
+                                            {{else}}
+                                            <img class="rounded-full cursor-pointer" id="PP" src="{{ assetHash "/images/profile.svg" }}" alt="">
+                                            {{end}}
+                                            <input type="file" class="hidden" name="ProfileImage" id="ProfileImage" accept=".png, .jpg, .jpeg" onchange="showPreview(event);"/> 
+                                            <img class="cursor-pointer absolute right-0 bottom-0" src="{{ assetHash "/images/upload.svg" }}">
+                                        </label>
+                                    </div>
+                                    <div class="py-6">
+                                        <div class="grid grid-cols-6 gap-6 mb-2 px-8 pt-3">
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <label for="" class="block font-normal text-sm">First Name<span class="text-petnetpink">*</span>
+                                                </label>
+                                                <input oninput="removeValidationError('firstName')" value="{{.LoginUserInfo.FirstName}}" id="FirstName" name="FirstName" type="text" placeholder="Enter first name"
+                                        class="{{with .Errors.FirstName}}border-red-500{{end}} py-2 w-full rounded-md bg-petnetgray focus:outline-none focus:ring-1 focus:ring-blue-400 px-3 border border-gray-300 mt-1 text-gray-700">
+                                            
+                                            <p class="text-red-700 mt-2" id="firstName">{{with .Errors.FirstName}}{{.}}{{end}}</p>
+                                            
+                                        </div>
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <label for="" class="block font-normal text-sm">Last Name<span class="text-petnetpink">*</span>
+                                                </label>
+                                                <input oninput="removeValidationError('lastName')" value="{{.LoginUserInfo.LastName}}" id="LastName" name="LastName" type="text" placeholder="Enter last name"
+                                        class="{{with .Errors.LastName}}border-red-500{{end}} py-2 w-full rounded-md bg-petnetgray focus:outline-none focus:ring-1 focus:ring-blue-400 px-3 border border-gray-300 mt-1 text-gray-700">
+                                            
+                                            <p id="lastName" class="text-red-700 mt-2">{{with .Errors.LastName}}{{.}}{{end}}</p>
+                                            
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div class="px-9 pb-11">
+                                        <button type="submit" class="bg-petnetblue py-3 px-12 text-white rounded-md">Save</button>
+                                    </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            const params = new URLSearchParams(window.location.search);
+            function toggleTopButton(id) {
+                let getDropdownItem = document.getElementById(id)
+                let isHiddenClass = getDropdownItem.classList.contains('hidden');
+                if (!isHiddenClass) {
+                    getDropdownItem.classList.add("hidden");
+                } else {
+                    getDropdownItem.classList.remove("hidden");
+                }
+            }
+            document.addEventListener("DOMContentLoaded", function () {
+                let menus = document.querySelectorAll("a");
+                for (let i = 0; i < menus.length; i++) {
+                    menus[i].addEventListener("click", function(e){
+                        e.preventDefault();
+                        let lnk = menus[i].href;
+                        menus[i].href = "javascript:;"
+                        window.location.href = lnk;
+                    });
+                }
+            });
+            function hidealertMessage() {
+                var ase = document.getElementById("alert-show-error");
+                ase.classList.add('hidden');
+                if (params.has("msgType")) {
+                    params.delete("msgType")
+                }
+            }
+            function showPreview(event){
+            if(event.target.files.length > 0){
+                var src = URL.createObjectURL(event.target.files[0]);
+                var preview = document.getElementById("PP");
+                preview.src = src;
+                }
+            }
+
+            function validateForm() {
+                console.log("check:")
+            let IsValid = true;
+				let firstName = document.bussinessForm.FirstName;
+				let lastName = document.bussinessForm.LastName;
+				if(firstName.value == "") {
+					let comErr = document.getElementById("firstName");
+					comErr.innerHTML = "First name can not be empty";
+					comErr.classList.remove("hidden");
+					comErr.parentElement.children[1].classList.add("border-red-500")
+					firstName.focus();
+					IsValid = false;
+				}
+
+                if(lastName.value == "") {
+					let comErr = document.getElementById("lastName");
+					comErr.innerHTML = "Last name can not be empty";
+					comErr.classList.remove("hidden");
+					comErr.parentElement.children[1].classList.add("border-red-500")
+					lastName.focus();
+					IsValid = false;
+				}
+                if (IsValid) {
+					 return( true );
+				 }else {
+					 return( false );
+				 }
+            }
+
+            function removeValidationError(id){
+			isInput = true
+            var err = document.getElementById(id);
+			let field = err.closest("div").children[1]
+			if (field.tagName == "INPUT" && field.classList.contains("border-red-500")) {
+				field.classList.remove("border-red-500")
+			}
+            err.classList.add("hidden");
+        }
+        let resFirstName = document.getElementById('FirstName').value
+        if (resFirstName == "placeholder"){
+            document.getElementById("FirstName").value = "";
+        }
+        let resLastName = document.getElementById('LastName').value
+        if (resLastName == "placeholder"){
+            document.getElementById("LastName").value = "";
+        }
+</script>
+</body>
+</html>

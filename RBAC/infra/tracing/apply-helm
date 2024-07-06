@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -e -x
+
+if ! helm version | grep -q '"v3\.2\.4'; then
+	echo "Please install helm 3.0"
+	exit 1
+fi
+
+helm repo add jaegertracing https://jaegertracing.github.io/helm-charts
+helm upgrade --namespace tracing --atomic --debug --install jaeger jaegertracing/jaeger --version 0.51.4
+helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
+helm upgrade --namespace tracing --atomic --debug --install my-opentelemetry-collector  open-telemetry/opentelemetry-collector --version 0.8.1 -f helm-values/otel-values.yaml

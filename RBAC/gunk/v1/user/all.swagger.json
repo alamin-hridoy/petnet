@@ -1,0 +1,1047 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/rbac/gunk/v1/user/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "Signup"
+    },
+    {
+      "name": "UserService"
+    },
+    {
+      "name": "UserAuthService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/confirmemail": {
+      "post": {
+        "summary": "ResendConfirmEmail resends email to confirm user",
+        "operationId": "Signup_ResendConfirmEmail",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/userResendConfirmEmailResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/userResendConfirmEmailRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Signup"
+        ]
+      }
+    },
+    "/v1/disableuser/{user_id}": {
+      "post": {
+        "summary": "Disable User.",
+        "description": "Disable User from user UserID.",
+        "operationId": "UserService_DisableUser",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/userDisableUserResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/v1/emailconfirmation": {
+      "post": {
+        "summary": "EmailConfirmation verifies the confirmation code sent to the users email",
+        "operationId": "Signup_EmailConfirmation",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/userEmailConfirmationResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/userEmailConfirmationRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Signup"
+        ]
+      }
+    },
+    "/v1/enableuser/{user_id}": {
+      "post": {
+        "summary": "Enable User.",
+        "description": "Enable User from user UserID.",
+        "operationId": "UserService_EnableUser",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/userEnableUserResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/v1/forgotpassword": {
+      "post": {
+        "summary": "ForgotPassword is for sending a password reset mail containing\ntoken for changing the password",
+        "operationId": "Signup_ForgotPassword",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/userForgotPasswordResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/userForgotPasswordRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Signup"
+        ]
+      }
+    },
+    "/v1/forgotpassword/{code}/reset": {
+      "post": {
+        "summary": "ResetPassword is for resetting the user's password with the sent token",
+        "operationId": "Signup_ResetPassword",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/userResetPasswordResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "code",
+            "description": "Code is the password reset token sent to the user's email",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/userResetPasswordRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Signup"
+        ]
+      }
+    },
+    "/v1/signup": {
+      "post": {
+        "summary": "Signup signs up a user using the passed in details",
+        "operationId": "Signup_Signup",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/userSignupResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/userSignupRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Signup"
+        ]
+      }
+    },
+    "/v1/user": {
+      "get": {
+        "summary": "List users.",
+        "description": "Get all created user user from user ID.",
+        "operationId": "UserService_ListUsers",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/userListUsersResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "DESC",
+              "ASC"
+            ],
+            "default": "DESC"
+          },
+          {
+            "name": "sort_by_column",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "CreatedDate",
+              "UserName"
+            ],
+            "default": "CreatedDate"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Invited",
+                "InviteSent",
+                "Expired",
+                "InProgress",
+                "Revoked",
+                "Approved"
+              ]
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "id",
+            "description": "List of User IDs.",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      },
+      "post": {
+        "summary": "Authenticate user with username(or email) and password.",
+        "description": "Authenticate user.",
+        "operationId": "UserAuthService_AuthenticateUser",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/userAuthenticateUserResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/userAuthenticateUserRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Authenticate User"
+        ]
+      }
+    },
+    "/v1/user/{id}": {
+      "get": {
+        "summary": "Get user.",
+        "description": "Get all created user user from user ID.",
+        "operationId": "UserService_GetUser",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/userGetUserResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/v1/user/{user_id}": {
+      "post": {
+        "summary": "Change the user's record.",
+        "description": "Update User.",
+        "operationId": "UserService_UpdateUser",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/userUpdateUserResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "description": "User unique identifier.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/userUpdateUserRequest"
+            }
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/v1/user/{user_id}/password": {
+      "post": {
+        "summary": "Change the user's password.",
+        "description": "Change Password.",
+        "operationId": "UserService_ChangePassword",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/userChangePasswordResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/userChangePasswordRequest"
+            }
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/v1/user/{user_id}/password/{mfa_event_id}": {
+      "put": {
+        "summary": "Confirm identity to apply the submitted password change.",
+        "description": "Confirm Password.",
+        "operationId": "UserService_ConfirmUpdate",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/userConfirmUpdateResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "description": "User unique identifier.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "mfa_event_id",
+            "description": "MFA event identifier for confirming user identity.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/userConfirmUpdateRequest"
+            }
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "googlerpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "mfaMFA": {
+      "type": "string",
+      "enum": [
+        "PASS",
+        "TOTP",
+        "CODE",
+        "SMS",
+        "RECOVERY",
+        "EMAIL"
+      ],
+      "default": "PASS"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "userAuthenticateUserRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "userAuthenticateUserResponse": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        }
+      }
+    },
+    "userChangePasswordRequest": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string"
+        },
+        "event_id": {
+          "type": "string"
+        },
+        "old_password": {
+          "type": "string"
+        },
+        "new_password": {
+          "type": "string"
+        }
+      }
+    },
+    "userChangePasswordResponse": {
+      "type": "object",
+      "properties": {
+        "mfa_event_id": {
+          "type": "string",
+          "description": "Returned when MFA confirmation is required before the password change is applied."
+        },
+        "mfa_type": {
+          "$ref": "#/definitions/mfaMFA",
+          "description": "Expected type of MFA."
+        },
+        "": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Uptate confirmation timestamp."
+        }
+      }
+    },
+    "userConfirmUpdateRequest": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "description": "User unique identifier."
+        },
+        "mfa_event_id": {
+          "type": "string",
+          "description": "MFA event identifier for confirming user identity."
+        },
+        "mfa_type": {
+          "$ref": "#/definitions/mfaMFA",
+          "description": "Expected type of MFA."
+        },
+        "mfa_token": {
+          "type": "string",
+          "description": "MFA Token for authentication."
+        }
+      }
+    },
+    "userConfirmUpdateResponse": {
+      "type": "object",
+      "properties": {
+        "": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Uptate confirmation timestamp."
+        }
+      }
+    },
+    "userDisableUserResponse": {
+      "type": "object",
+      "properties": {
+        "": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "userEmailConfirmationRequest": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "Code is the code generated and sent to the user on signup for validation purposes."
+        }
+      }
+    },
+    "userEmailConfirmationResponse": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "title": "Email address that was confirmed"
+        },
+        "user_id": {
+          "type": "string",
+          "title": "UserID of user that was confirmed"
+        },
+        "org_id": {
+          "type": "string",
+          "title": "OrgID of user that was confirmed"
+        },
+        "username": {
+          "type": "string",
+          "description": "Username of the confirmed user."
+        },
+        "first_name": {
+          "type": "string",
+          "description": "FirstName of the confirmed user."
+        },
+        "last_name": {
+          "type": "string",
+          "description": "LastName of the confirmed user."
+        }
+      }
+    },
+    "userEnableOpt": {
+      "type": "string",
+      "enum": [
+        "NoChange",
+        "Enable",
+        "Disable"
+      ],
+      "default": "NoChange"
+    },
+    "userEnableUserResponse": {
+      "type": "object",
+      "properties": {
+        "": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "userForgotPasswordRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "title": "Email is the email of the user account requesting password reset"
+        }
+      }
+    },
+    "userForgotPasswordResponse": {
+      "type": "object"
+    },
+    "userGetUserResponse": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/userUser"
+        }
+      }
+    },
+    "userListUsersResponse": {
+      "type": "object",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/userUser"
+          }
+        },
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "user": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/userUser"
+          },
+          "description": "User list mapped by User ID."
+        }
+      }
+    },
+    "userResendConfirmEmailRequest": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "userResendConfirmEmailResponse": {
+      "type": "object"
+    },
+    "userResetPasswordRequest": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "title": "Code is the password reset token sent to the user's email"
+        },
+        "password": {
+          "type": "string",
+          "title": "Password is the new password of the user's choosing"
+        }
+      }
+    },
+    "userResetPasswordResponse": {
+      "type": "object"
+    },
+    "userSignupRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string",
+          "title": "Username to be registered"
+        },
+        "first_name": {
+          "type": "string",
+          "title": "First Name of the user"
+        },
+        "last_name": {
+          "type": "string",
+          "title": "Last Name of the user"
+        },
+        "email": {
+          "type": "string",
+          "title": "Email is the email that will be used for subsequent logins\nand will also be used to contact the user in future"
+        },
+        "password": {
+          "type": "string",
+          "title": "Password will be used as the account password"
+        },
+        "invite_code": {
+          "type": "string",
+          "description": "Invite Code is the invite if the user was invited by an org."
+        },
+        "org_id": {
+          "type": "string",
+          "title": "OrgID is the organization identifier for use in org-specific signups"
+        }
+      }
+    },
+    "userSignupResponse": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        }
+      }
+    },
+    "userSortBy": {
+      "type": "string",
+      "enum": [
+        "DESC",
+        "ASC"
+      ],
+      "default": "DESC"
+    },
+    "userSortByColumn": {
+      "type": "string",
+      "enum": [
+        "CreatedDate",
+        "UserName"
+      ],
+      "default": "CreatedDate"
+    },
+    "userStatus": {
+      "type": "string",
+      "enum": [
+        "Invited",
+        "InviteSent",
+        "Expired",
+        "InProgress",
+        "Revoked",
+        "Approved"
+      ],
+      "default": "Invited"
+    },
+    "userUpdateUserRequest": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "description": "User unique identifier."
+        },
+        "first_name": {
+          "type": "string",
+          "description": "First Name of the user."
+        },
+        "last_name": {
+          "type": "string",
+          "description": "Last Name of the user."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email is the email that will be used for subsequent logins\nand will also be used to contact the user in future.\nMust be confirmed using MFA via the email given."
+        },
+        "mfa_type": {
+          "$ref": "#/definitions/mfaMFA",
+          "description": "Preferred MFA method."
+        },
+        "login_mfa": {
+          "$ref": "#/definitions/userEnableOpt",
+          "description": "Require MFA challenge on login."
+        }
+      }
+    },
+    "userUpdateUserResponse": {
+      "type": "object",
+      "properties": {
+        "mfa_event_id": {
+          "type": "string",
+          "description": "Returned when MFA confirmation is required before the password change is applied."
+        },
+        "mfa_type": {
+          "$ref": "#/definitions/mfaMFA",
+          "description": "Expected type of MFA."
+        },
+        "": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Update confirmation timestamp."
+        }
+      }
+    },
+    "userUser": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "org_name": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "invite_status": {
+          "type": "string"
+        },
+        "country_code": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deleted": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

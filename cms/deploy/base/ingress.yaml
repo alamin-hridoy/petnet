@@ -1,0 +1,24 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: cms
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/protocol: h2c
+    traefik.ingress.kubernetes.io/router.tls: "true"
+spec:
+  tls:
+  - hosts:
+    - "dev.OVERLAY_ME"
+    secretName: cert-dev
+  rules:
+  - host: dev.OVERLAY_ME
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: cms
+          servicePort: 80
+
+...

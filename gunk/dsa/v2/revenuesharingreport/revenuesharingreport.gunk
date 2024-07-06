@@ -1,0 +1,232 @@
+package revenuesharingreport // proto "petnet.v2.revenuesharingreport"
+
+import (
+	"encoding/json"
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+	"time"
+)
+
+type SortOrder int
+
+const (
+	DESC SortOrder = iota
+	ASC
+)
+
+type SortByColumn int
+
+const (
+	OmitSortByColumn SortByColumn = iota
+	OrgID
+)
+
+type RevenueSharingReport struct {
+	ID                string    `pb:"1" json:"id"`
+	OrgID             string    `pb:"2" json:"org_id"`
+	Status            int       `pb:"3" json:"status"`
+	Created           time.Time `pb:"4" json:"created"`
+	Updated           time.Time `pb:"5" json:"updated"`
+	Count             int       `pb:"6" json:"count"`
+	RemittanceCount   int       `pb:"7" json:"remittance_count"`
+	CicoCount         int       `pb:"8" json:"cico_count"`
+	BillsPaymentCount int       `pb:"9" json:"bills_payment_count"`
+	InsuranceCount    int       `pb:"10" json:"insurance_count"`
+	DsaCommission     string    `pb:"11" json:"dsa_commission"`
+	CommissionType    string    `pb:"12" json:"dsa_commission_type"`
+	DsaCode           string    `pb:"13" json:"dsa_code"`
+	YearMonth         string    `pb:"14" json:"year_month"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "org_id",
+//         },
+// }}
+type CreateRevenueSharingReportRequest struct {
+	OrgID             string    `pb:"1" json:"org_id"`
+	Status            int       `pb:"2" json:"status"`
+	Created           time.Time `pb:"3" json:"created"`
+	RemittanceCount   int       `pb:"4" json:"remittance_count"`
+	CicoCount         int       `pb:"5" json:"cico_count"`
+	BillsPaymentCount int       `pb:"6" json:"bills_payment_count"`
+	InsuranceCount    int       `pb:"7" json:"insurance_count"`
+	DsaCommission     string    `pb:"8" json:"dsa_commission"`
+	CommissionType    string    `pb:"9" json:"dsa_commission_type"`
+	DsaCode           string    `pb:"10" json:"dsa_code"`
+	YearMonth         string    `pb:"11" json:"year_month"`
+}
+
+type CreateRevenueSharingReportResponse struct {
+	ID                string    `pb:"1" json:"id"`
+	OrgID             string    `pb:"2" json:"org_id"`
+	Status            int       `pb:"3" json:"status"`
+	Created           time.Time `pb:"4" json:"created"`
+	Updated           time.Time `pb:"5" json:"updated"`
+	RemittanceCount   int       `pb:"6" json:"remittance_count"`
+	CicoCount         int       `pb:"7" json:"cico_count"`
+	BillsPaymentCount int       `pb:"8" json:"bills_payment_count"`
+	InsuranceCount    int       `pb:"9" json:"insurance_count"`
+	DsaCommission     string    `pb:"10" json:"dsa_commission"`
+	CommissionType    string    `pb:"11" json:"dsa_commission_type"`
+	DsaCode           string    `pb:"12" json:"dsa_code"`
+	YearMonth         string    `pb:"13" json:"year_month"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "org_id",
+//         },
+// }}
+type GetRevenueSharingReportListRequest struct {
+	ID                string       `pb:"1" json:"id"`
+	OrgID             string       `pb:"2" json:"org_id"`
+	Status            int          `pb:"3" json:"status"`
+	Created           time.Time    `pb:"4" json:"created"`
+	Updated           time.Time    `pb:"5" json:"updated"`
+	Count             int          `pb:"6" json:"count"`
+	Limit             int32        `pb:"7" json:"limit"`
+	Offset            int32        `pb:"8" json:"offset"`
+	SortOrder         SortOrder    `pb:"9" json:"sort_order"`
+	SortByColumn      SortByColumn `pb:"10" json:"sort_by_column"`
+	RemittanceCount   int          `pb:"11" json:"remittance_count"`
+	CicoCount         int          `pb:"12" json:"cico_count"`
+	BillsPaymentCount int          `pb:"13" json:"bills_payment_count"`
+	InsuranceCount    int          `pb:"14" json:"insurance_count"`
+	DsaCommission     string       `pb:"15" json:"dsa_commission"`
+	CommissionType    string       `pb:"16" json:"dsa_commission_type"`
+	DsaCode           string       `pb:"17" json:"dsa_code"`
+	YearMonth         string       `pb:"18" json:"year_month"`
+}
+
+type GetRevenueSharingReportListResponse struct {
+	Results []RevenueSharingReport `pb:"1" json:"results"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "org_id",
+//                 "year_month",
+//         },
+// }}
+type UpdateRevenueSharingReportRequest struct {
+	ID                string    `pb:"1" json:"id"`
+	OrgID             string    `pb:"2" json:"org_id"`
+	Status            int       `pb:"3" json:"status"`
+	Created           time.Time `pb:"4" json:"created"`
+	RemittanceCount   int       `pb:"5" json:"remittance_count"`
+	CicoCount         int       `pb:"6" json:"cico_count"`
+	BillsPaymentCount int       `pb:"7" json:"bills_payment_count"`
+	InsuranceCount    int       `pb:"8" json:"insurance_count"`
+	DsaCommission     string    `pb:"9" json:"dsa_commission"`
+	CommissionType    string    `pb:"10" json:"dsa_commission_type"`
+	DsaCode           string    `pb:"11" json:"dsa_code"`
+	YearMonth         string    `pb:"12" json:"year_month"`
+}
+
+type UpdateRevenueSharingReportResponse struct {
+	ID                string    `pb:"1" json:"id"`
+	OrgID             string    `pb:"2" json:"org_id"`
+	Status            int       `pb:"3" json:"status"`
+	Created           time.Time `pb:"4" json:"created"`
+	Updated           time.Time `pb:"5" json:"updated"`
+	RemittanceCount   int       `pb:"6" json:"remittance_count"`
+	CicoCount         int       `pb:"7" json:"cico_count"`
+	BillsPaymentCount int       `pb:"8" json:"bills_payment_count"`
+	InsuranceCount    int       `pb:"9" json:"insurance_count"`
+	DsaCommission     string    `pb:"10" json:"dsa_commission"`
+	CommissionType    string    `pb:"11" json:"dsa_commission_type"`
+	DsaCode           string    `pb:"12" json:"dsa_code"`
+	YearMonth         string    `pb:"13" json:"year_month"`
+}
+
+type RevenueSharingReportService interface {
+	// Create Revenue Sharing Report
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/revenue-sharing-report",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Revenue Sharing Report"},
+	//         Description: "Create Revenue Sharing Report.",
+	//         Summary:     "Revenue Sharing Report.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/RevenueSharingReportServiceCreateRevenueSharingReportResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	CreateRevenueSharingReport(CreateRevenueSharingReportRequest) CreateRevenueSharingReportResponse
+
+	// List Revenue Sharing Report
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v2/revenue-sharing-report",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Revenue Sharing Report"},
+	//         Description: "List all created Revenue Sharing Report.",
+	//         Summary:     "List Revenue Sharing Report.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/RevenueSharingReportServiceGetRevenueSharingReportListResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	GetRevenueSharingReportList(GetRevenueSharingReportListRequest) GetRevenueSharingReportListResponse
+
+	// Update Revenue Sharing Report
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v2/revenue-sharing-report",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Revenue Sharing Report"},
+	//         Description: "Update Revenue Sharing Report.",
+	//         Summary:     "Revenue Sharing Report.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/RevenueSharingReportServiceUpdateRevenueSharingReportResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	UpdateRevenueSharingReport(UpdateRevenueSharingReportRequest) UpdateRevenueSharingReportResponse
+}

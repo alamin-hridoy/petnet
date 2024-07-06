@@ -1,0 +1,12 @@
+#!/bin/sh
+
+GO_VERSION=1.16
+CHROME_VERSION=84.0.4147.105
+
+IMAGE_TAG=asia.gcr.io/o-production/rbac-e2e:go${GO_VERSION}-chrome${CHROME_VERSION}
+
+docker build \
+	--build-arg GO_VERSION=${GO_VERSION} \
+	--build-arg CHROME_VERSION=${CHROME_VERSION} \
+	-t $IMAGE_TAG . || exit 1
+docker push $IMAGE_TAG || exit 1

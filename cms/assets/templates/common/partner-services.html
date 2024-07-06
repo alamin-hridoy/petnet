@@ -1,0 +1,495 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>Commission Management</title>
+    <style>
+		.checkBoxColor { filter: hue-rotate(220deg) }
+        .w-41 {width: 40.5rem;}
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        .endBtnColor {
+            color: #05ACE5;
+        }
+        .dsbBtnColor {
+            color: #BCC3C8;
+        }
+
+        input:checked ~ .dot {
+            transform: translateX(100%);
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            @apply: bg-green-400;
+            background-color: #1A2791;
+        }
+        .hide {
+            display: none;
+        }
+    
+        .infoImg:hover + .hide {
+            display: block;
+        }
+        .top-08 {
+            top: 0.8rem;
+        }
+        .resizeArea {
+            resize: none;
+        }
+        .CircleColor {
+            color: #F7653B;
+        }
+        @media (min-width: 768px) {
+            .md\:px-24 {
+                padding-left: 6rem/* 96px */;
+                padding-right: 6rem/* 96px */;
+            }
+        }
+
+        @media only screen and (min-width: 640px) {
+            .modal-w {
+                width: 38rem;
+            }
+        }
+        @media only screen and (min-width: 1024px) {
+            .modal-w {
+                width: 43rem;
+            }
+        }
+
+	</style>
+</head>
+<body class="font-sans">
+    <div>
+        <div class="flex mainWarper">
+            <!-- sidebar-left-start -->
+            <div class="bg-petnetblue w-32 min-h-screen">
+                <div class="min-h-screen">
+                    <img src="{{ assetHash "/images/DRP-Vertical.svg" }}" class="mx-auto my-5">
+                    <!-- Sidebar menu start -->
+                    {{ template "admin-sidenav-menu.html" dict "Type" "partner-list" "Data" .}}
+                    <!-- Sidebar menu end -->
+                </div>
+            </div>
+            <!-- sidebarleft-end -->
+            <!-- top-header-start -->
+            <div class="min-h-screen w-full flex bg-petnetgray ">
+                <div class="w-full">
+                    <div class="px-6 lg:px-28 py-10 shadow-md relative z-10 bg-white">
+                        <ul class="flex justify-end items-center space-x-4 mb-10">
+                            <li>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                </svg>
+                            </li>
+                            <li>
+                                {{ template "top-head-profile.html" dict "UserInfo" .UserInfo "CompanyName" "" .}}
+                            </li>
+                            <li>
+                                <div class="relative" id="topDropdownBox">
+                                    <a href="javascript:;" onclick="toggleTopButton('openTopDropdown')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </a>
+                                    <div class="absolute right-0 top-12 hidden" id="openTopDropdown">
+                                        <div class="transform skew-y-12 skew-x-12 rotate-45 w-6 h-6 absolute ml-auto top-0 right-0 shadow bg-white z-10">
+                                        </div>
+                                        <div class="shadow-lg  absolute top-3 -right-5 rounded">
+                                            <div class="relative z-20 p-3 w-36 bg-white rounded space-y-2">
+                                                <a class="flex text-sm items-center" href="/profile">
+                                                    <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M16 8C16 10.21 14.21 12 12 12C9.79 12 8 10.21 8 8C8 5.79 9.79 4 12 4C14.21 4 16 5.79 16 8ZM4 18C4 15.34 9.33 14 12 14C14.67 14 20 15.34 20 18V19C20 19.55 19.55 20 19 20H5C4.45 20 4 19.55 4 19V18Z" fill="#333333"/>
+                                                    </svg>
+                                                    Profile
+                                                </a>
+                                                <a href="/logout" class="flex text-sm">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                                    </svg>
+                                                    Logout
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="">
+                            <h2 class="text-5xl text-petnetblue mr-4 font-semibold">Services</h2>
+                        </div>
+                    </div>
+                    <div class="px-6 lg:px-24 py-10 bg-petnetgray flex flex-wrap">
+                        <div class="w-1/4 pr-4 flex flex-col">
+                            <div class="mb-8">
+                                <!-- Admin partner sidebar menu start -->
+                                {{ template "admin-partner-sideBar-menu.html" dict "Tab" "services"}}
+                                <!-- Admin partner sidebar menu end -->
+                            </div>
+                        </div>
+                        <div class="w-3/4">
+                            <form action="" method="get" name="partnerServiceForm" class="w-full">
+                                <div class="flex flex-wrap card-warper">
+                                    <!-- partner service cards start -->
+                                    <div id="remit" class="lg:w-1/2 w-full pl-4 pr-2 pb-6 hidden">
+                                        {{ template "partner-services-cards.html" dict "SType" "REMITTANCE" "ServicePartnerList" .ServicePartnerList}}
+                                    </div>
+                                    <div id="bills" class="lg:w-1/2 w-full pl-4 pr-2 pb-6 hidden">
+                                        {{ template "partner-services-cards.html" dict "SType" "BILLSPAYMENT" "ServicePartnerList" .ServicePartnerList}}
+                                    </div>
+                                    <div id="micro" class="lg:w-1/2 w-full pl-4 pr-2 pb-6 hidden">
+                                        {{ template "partner-services-cards.html" dict "SType" "MICROINSURANCE" "ServicePartnerList" .ServicePartnerList}}
+                                    </div>
+                                    <div id="cico" class="lg:w-1/2 w-full pl-4 pr-2 pb-6 hidden">
+                                        {{ template "partner-services-cards.html" dict "SType" "CASHINCASHOUT" "ServicePartnerList" .ServicePartnerList}}
+                                    </div>
+                                <!-- partner service cards end -->
+                                <script>
+                                    let remit = false;
+                                    let bills = false;
+                                    let micro = false;
+                                    let cico = false;
+                                    {{range $i, $value := .ServicePartnerList}}
+                                        {{if eq $value.ServiceName "REMITTANCE"}}
+                                            remit =true
+                                        {{else if eq $value.ServiceName "BILLSPAYMENT"}}
+                                            bills = true
+                                        {{else if eq $value.ServiceName "MICROINSURANCE"}}
+                                            micro = true
+                                        {{else if eq $value.ServiceName "CASHINCASHOUT"}}
+                                            cico = true
+                                        {{end}}
+                                    {{end}}
+
+                                    if (remit) {
+                                        document.getElementById("remit").classList.remove("hidden")
+                                    }
+                                    if (bills) {
+                                        document.getElementById("bills").classList.remove("hidden")
+                                    }
+                                    if (micro) {
+                                        document.getElementById("micro").classList.remove("hidden")
+                                    }
+                                    if (cico) {
+                                        document.getElementById("cico").classList.remove("hidden")
+                                    }
+                                </script>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Disable Modal Start-->
+    <div id="modal-disableService" class="hidden disableService overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 md:inset-0 h-modal md:h-full">
+        <div class="absolute inset-0 z-50 min-w-screen min-h-screen bg-black bg-opacity-50 py-6 flex flex-col justify-center sm:py-12">
+            <div class="py-3 sm:max-w-full md:pl-4 lg:pl-24 w-full sm:mx-auto flex justify-center">
+                <div id="modal-disable" class="modal-w">
+                    <div class="bg-white flex flex-col shadow-lg w-full z-50 rounded-lg overflow-hidden">
+                        <div class="flex flex-row items-center w-full">
+                            <div id="modal-body" class="bg-white w-full rounded-sm py-16 px-20">
+                                <div class="flex justify-between w-full">
+                                    <div>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.0" stroke="currentColor" class="w-11 h-11 mt-2 CircleColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                                        </svg>
+                                    </div>
+                                    <h1 id="disableTitle" data-ActionType="" data-Service="" data-SectionID="" class="text-2xl pl-2 font-normal">Are you sure you want to turn off connection for Maya - Cash In/Cash Out Service?</h1>
+                                </div>
+                                <div class="w-full pl-1 mt-10 pr-4">
+                                    <form id="PartnerDisable" name="spDisableForm" action="/dashboard/partner-services" method="POST" onsubmit="return validateForm()" class="mb-0 w-full">
+                                        {{ $.CSRFField }}
+                                        <div class="w-full">
+                                            <input hidden type="text" name="Stype" value="" id="stype">
+                                            <input hidden type="text" name="Status" value="" id="status">
+                                            <h3 class="text-sm font-normal">Reason for turning off<span class="text-petnetpink">*</span></h3>
+                                            <textarea autofocus onkeyup="checkInput()" name="DisableReason" id="reason" rows="4" placeholder="Enter Reason" class="resizeArea border text-base px-2 mr-3 rounded-md bg-petnetgray outline-none w-full"></textarea>
+                                            <p class="text-red-700 mt-2 hidden" id="err-reason">Reason can not be empty</p>
+                                        </div>
+                                        <div class="w-full flex justify-center space-y-2 lg:space-y-0 lg:justify-between flex-wrap mt-12">
+                                            <button type="button" onclick="closeModal('modal-disableService','disableTitle')" class="text-petnetblue rounded-md border-2 border-blue-600 px-24 py-4 text-sm font-normal">Cancel</button>
+                                            <button type="submit" class="text-petnetblue rounded-md bg-yellow-400 px-24 py-4 text-sm font-normal">Confirm</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Disable Modal End -->
+    <!-- Enable Modal Start-->
+    <div id="modal-enableService" class="hidden enableService overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 md:inset-0 h-modal md:h-full">
+        <div class="absolute inset-0 z-50 min-w-screen min-h-screen bg-black bg-opacity-50 py-6 flex flex-col justify-center sm:py-12">
+            <div class="py-3 sm:max-w-full md:pl-4 lg:pl-24 full sm:mx-auto flex justify-center">
+                <div id="modal-enable" class="modal-w">
+                    <div class="bg-white flex flex-col shadow-lg w-full z-50 rounded-lg overflow-hidden">
+                        <div class="w-full flex flex-row items-center">
+                            <div id="modal-body" class="w-full bg-white rounded-sm py-16 px-20">
+                                <div class="w-full flex justify-between">
+                                    <div>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.0" stroke="currentColor" class="w-11 h-11 mt-2 CircleColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                                        </svg>
+                                    </div>
+                                    <h1 data-ActionType="" id="enableTitle" data-Service="" data-SectionID="" class="text-2xl pl-2 font-normal">Are you sure you want to turn on connection for  Maya - Cash In/Cash Out Service?</h1>
+                                </div>
+                                <div class="w-full pl-1 mt-16 pr-4">
+                                    <form id="PartnerEnable" name="spEnableForm" action="/dashboard/partner-services" method="POST" class="mb-0">
+                                        {{ $.CSRFField }}
+                                        <input hidden type="text" name="Stype" value="" id="stype">
+                                        <input hidden type="text" name="Status" value="" id="status">
+                                        <div class="w-full flex justify-center space-y-2 lg:space-y-0 lg:justify-between flex-wrap">
+                                            <button type="button" onclick="closeModal('modal-enableService', 'enableTitle')" class="text-petnetblue rounded-md border-2 border-blue-600 px-24 py-4 text-sm font-normal">Cancel</button>
+                                            <button type="submit"  class="text-petnetblue rounded-md bg-yellow-400 px-24 py-4 text-sm font-normal">Confirm</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Enable Modal End -->
+    <script>
+        // Hide and Show LoggedIn User Profile Section 
+        function toggleTopButton(id) {
+            let getDropdownItem = document.getElementById(id)
+            let isHiddenClass = getDropdownItem.classList.contains('hidden');
+            if (!isHiddenClass) {
+                getDropdownItem.classList.add("hidden");
+            } else {
+                getDropdownItem.classList.remove("hidden");
+            }
+        }
+
+        // Get Service Type
+        (() => {
+            let serviceTypeCard = document.querySelectorAll(".service-type-card");
+            if (serviceTypeCard) {
+                serviceTypeCard.forEach(element => {
+                    checkPartnersStatus(element.id);
+                });
+            }
+        })();
+
+        // Change Specific Partner Status
+        function changePartnerStatus(ServiceTypeID, element) {
+            let serviceName = parseServiceName(ServiceTypeID);
+            let oModalData = {
+                    serviceTypeID: ServiceTypeID,
+                    partnerID: element.parentElement.firstElementChild.id,
+                    actionType: "",
+                    partnerName: []
+                };
+                oModalData.partnerName.push(element.parentElement.firstElementChild.value);
+
+            if(element.parentElement.firstElementChild.checked == true) {
+                oModalData.modalID = "modal-disableService"
+                oModalData.modalTile = `Are you sure you want to turn off connection for ${element.dataset.name} - ${serviceName} Service?`
+
+                changeModalTitle(oModalData);
+            }else{
+                oModalData.modalID = "modal-enableService"
+                oModalData.modalTile = `Are you sure you want to turn on connection for ${element.dataset.name} - ${serviceName} Service?`
+                changeModalTitle(oModalData);
+            }
+
+            if (ServiceTypeID != "") {
+                checkPartnersStatus(ServiceTypeID);
+            }
+        }
+
+        // Parse Service name 
+        function parseServiceName(ServiceTypeID) {
+            let serviceName = "";
+            switch(ServiceTypeID) {
+                case "REMITTANCE":
+                    serviceName = "Remittance"
+                    break;
+                case "BILLSPAYMENT":
+                    serviceName = "Bills Payment"
+                    break;
+                case "MICROINSURANCE":
+                    serviceName = "Micro Insurance"
+                    break;
+                case "CASHINCASHOUT":
+                    serviceName = "Cash In/Cash Out"
+                    break;
+                default:
+                    serviceName = ""
+            } 
+            return serviceName;
+        }
+
+        // Check all of the Partners are Enabled or Disabled which are same Service Type
+        function checkPartnersStatus(serviceTypeID) {
+            let serviceStatus = true;
+            let serviceStatusArr = [];
+
+            if (serviceTypeID != "" && serviceTypeID != NaN && serviceTypeID != undefined) {
+                const divElem = document.getElementById(serviceTypeID);
+                const checkboxElements = divElem.querySelectorAll("input")
+               
+                checkboxElements.forEach( el => {
+                    serviceStatusArr.push(el.checked);
+                });
+
+                serviceStatus = allAreTrue(serviceStatusArr);
+                handleServiceTypeBtn(serviceStatus, serviceTypeID);
+            }
+        }
+
+        function allAreTrue(arr) {
+            return arr.every(element => element == true);
+        }
+
+        // Make Clickable Enable All And Disable All Button 
+        function handleServiceTypeBtn(serviceStatus, serviceTypeID) {
+            let enableBtn = document.getElementById(serviceTypeID +"-Enable");
+            let disableBtn = document.getElementById(serviceTypeID +"-Disable");
+
+            if (serviceStatus) {
+                enableBtn.classList.replace('endBtnColor', 'dsbBtnColor');
+                enableBtn.style.pointerEvents="none";
+                enableBtn.style.cursor="default";
+                
+                disableBtn.classList.replace('dsbBtnColor', 'endBtnColor');
+                disableBtn.style.pointerEvents="auto";
+                disableBtn.style.cursor="pointer";
+            }else{
+                disableBtn.classList.replace('endBtnColor', 'dsbBtnColor');
+                disableBtn.style.pointerEvents="none";
+                disableBtn.style.cursor="pointer";
+                
+                enableBtn.classList.replace('dsbBtnColor', 'endBtnColor');
+                enableBtn.style.pointerEvents="auto";
+                enableBtn.style.cursor="pointer";
+            }
+        }
+
+        // Change All Partner Status
+        function changeAllPartnerStatus(serviceTypeID, action, checkClose = false) {
+            if (serviceTypeID != "" && action != "") {
+                let serviceName = parseServiceName(serviceTypeID);
+                const divElem = document.getElementById(serviceTypeID);
+                const checkboxElements = divElem.querySelectorAll("input");
+                let oModalData = {
+                    serviceTypeID: serviceTypeID,
+                    partnerID: "all",
+                    actionType: action,
+                    partnerName: []
+                };
+
+               if (!checkClose) {
+                if (action == "Enable") {
+                    // Show Enable all Modal
+                    oModalData.modalID = "modal-enableService"
+                    oModalData.modalTile = `Are you sure you want to turn on all connection for ${serviceName} Service?`
+                    oModalData.partnerName = changeAllStatus(true, serviceTypeID, checkboxElements)
+                    changeModalTitle(oModalData)
+                }else{
+                    // Show Disable all Modal
+                    oModalData.modalID = "modal-disableService"
+                    oModalData.modalTile = `Are you sure you want to turn off all connection for ${serviceName} Service?`
+                    oModalData.partnerName = changeAllStatus(false, serviceTypeID, checkboxElements)
+                    changeModalTitle(oModalData)
+                }
+               }else{
+                if (action == "Enable") {
+                    changeAllStatus(false, serviceTypeID, checkboxElements)
+                }else{
+                    changeAllStatus(true, serviceTypeID, checkboxElements)
+                }
+               }
+            }
+        }
+        function changeAllStatus(status, serviceTypeID, checkboxElements) {
+            let partnerName = [];
+            checkboxElements.forEach( el => {
+                el.checked = status;
+                partnerName.push(el.value);
+            });
+            handleServiceTypeBtn(status, serviceTypeID)
+
+            return partnerName;
+        }
+
+        // Change Modal Title
+        function changeModalTitle(oModalData) {
+            let disableServiceModal = document.getElementById(oModalData.modalID);
+                disableServiceModal.classList.remove('hidden');
+            let titleMsg = disableServiceModal.querySelector("h1");
+                titleMsg.innerText = oModalData.modalTile;
+                titleMsg.dataset.sectionid = oModalData.partnerID;
+                titleMsg.dataset.service = oModalData.serviceTypeID;
+                if (oModalData.actionType) {
+                    titleMsg.dataset.actiontype = oModalData.actionType;
+                }
+            let dataInput = disableServiceModal.querySelectorAll("input");
+            console.log("oModalData.partnerName",oModalData.partnerName);
+            dataInput[1].value = oModalData.partnerName;
+
+            if (oModalData.modalID == "modal-disableService") {
+                dataInput[2].value = "DISABLED"
+            }else{
+                dataInput[2].value = "ENABLED"
+            }
+        }
+
+        function closeModal(modalId, titleMsgID) {
+            window.location.reload();
+            let titleMsg = document.getElementById(titleMsgID).dataset;
+            if (titleMsg.sectionid == "all") {
+                changeAllPartnerStatus(titleMsg.service, titleMsg.actiontype, true);
+            }else{
+                let targetElem = document.getElementById(titleMsg.sectionid);
+                targetElem.checked =  targetElem.checked ? false : true;
+            }
+           
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        // Check modal input value
+        function checkInput(params) {
+            let reason = document.getElementById("reason").value
+            let errMsg = document.getElementById("err-reason")
+            if (reason.trim() != "") {
+                errMsg.classList.add("hidden")
+            }else {
+                errMsg.classList.remove("hidden")
+            }
+        }
+
+        // Validate form
+        function validateForm() {
+            let IsValid = true
+            let reason = document.getElementById("reason").value
+            if (reason.trim() == "") {
+                document.getElementById("err-reason").classList.remove("hidden")
+                IsValid = false
+            }
+            return IsValid
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-config
+data:
+  RUNTIME_LOGLEVEL: debug
+  RUNTIME_ENVIRONMENT: live
+  DATABASE_HOST: 172.30.225.19
+  DATABASE_DBNAME: petnetdb_dev
+  CORS_ORIGINS: "https://api.staging.petnet.dev,https://*.api.staging.petnet.dev"
+  HYDRA_ADMINURL: http://hydra-admin
+  HYDRA_AUDIENCE: https://api.staging.petnet.dev
+  AUTH_OAUTHURL: https://auth.staging.petnet.dev
+  AUTH_ISSUER: https://auth.staging.petnet.dev
+  AUTH_TOKEN: https://auth.staging.petnet.dev/oauth2/token
+  AUTH_COOKIEMAXAGE: "0"
+  PERAHUB_BASEURL: https://newkycgateway.dev.perahub.com.ph/gateway/
+  PERAHUB_SERVERIP: 34.87.153.43
+  PERAHUB_AUTHMOCK: "false"
+  PERAHUB_TIMEOUT: 45s
+  INFLUXDB_BUCKET: conexdev
+  INFLUXDB_ORGANIZATION: petnetdev
+
+...

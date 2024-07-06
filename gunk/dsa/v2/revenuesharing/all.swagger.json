@@ -1,0 +1,1434 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/dsa/v2/revenuesharing/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "RevenueSharingService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v2/partner-list": {
+      "get": {
+        "summary": "get partner list.",
+        "description": "get partner list.",
+        "operationId": "RevenueSharingService_GetPartnerTransactionType",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/RevenueSharingServiceGetPartnerTransactionTypeResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "partners",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Revenue Sharing"
+        ]
+      }
+    },
+    "/v2/revenue-sharing": {
+      "get": {
+        "summary": "List Revenue Sharing.",
+        "description": "List all created Revenue Sharing.",
+        "operationId": "RevenueSharingService_GetRevenueSharingList",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/RevenueSharingServiceGetRevenueSharingListResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "org_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "partner",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "bound_type",
+            "description": "The bound type is two type of transaction one is inbound, other one is outbound.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EMPTYBOUNDTYPE",
+              "INBOUND",
+              "OUTBOUND",
+              "OTHERS"
+            ],
+            "default": "EMPTYBOUNDTYPE"
+          },
+          {
+            "name": "remit_type",
+            "description": "The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EMPTYSERVICETYPE",
+              "REMITTANCE",
+              "BILLSPAYMENT",
+              "CASHINCASHOUT",
+              "MICROINSURANCE"
+            ],
+            "default": "EMPTYSERVICETYPE"
+          },
+          {
+            "name": "transaction_type",
+            "description": "There is transaction type one is digital, other one is otc.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EMPTYTRANSACTIONTYPE",
+              "DIGITAL",
+              "OTC"
+            ],
+            "default": "EMPTYTRANSACTIONTYPE"
+          },
+          {
+            "name": "tier_type",
+            "description": "There is tier type is fixed, percentage, fixed_tier, percentage_tier.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EMPTYTIERTYPE",
+              "PERCENTAGE",
+              "TIERPERCENTAGE"
+            ],
+            "default": "EMPTYTIERTYPE"
+          },
+          {
+            "name": "amount",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "created_by",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "updated_by",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "created",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "updated",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "Revenue Sharing"
+        ]
+      },
+      "delete": {
+        "summary": "DELETE",
+        "description": "Delete Revenue Sharing",
+        "operationId": "RevenueSharingService_DeleteRevenueSharing",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/RevenueSharingServiceRevenueSharing"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "org_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "partner",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "bound_type",
+            "description": "The bound type is two type of transaction one is inbound, other one is outbound.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EMPTYBOUNDTYPE",
+              "INBOUND",
+              "OUTBOUND",
+              "OTHERS"
+            ],
+            "default": "EMPTYBOUNDTYPE"
+          },
+          {
+            "name": "remit_type",
+            "description": "The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EMPTYSERVICETYPE",
+              "REMITTANCE",
+              "BILLSPAYMENT",
+              "CASHINCASHOUT",
+              "MICROINSURANCE"
+            ],
+            "default": "EMPTYSERVICETYPE"
+          },
+          {
+            "name": "transaction_type",
+            "description": "There is transaction type one is digital, other one is otc.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EMPTYTRANSACTIONTYPE",
+              "DIGITAL",
+              "OTC"
+            ],
+            "default": "EMPTYTRANSACTIONTYPE"
+          },
+          {
+            "name": "tier_type",
+            "description": "There is tier type is fixed, percentage, fixed_tier, percentage_tier.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EMPTYTIERTYPE",
+              "PERCENTAGE",
+              "TIERPERCENTAGE"
+            ],
+            "default": "EMPTYTIERTYPE"
+          },
+          {
+            "name": "amount",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "created_by",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "updated_by",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "created",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "updated",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "Revenue Sharing"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      },
+      "post": {
+        "summary": "Revenue Sharing.",
+        "description": "Create Revenue Sharing.",
+        "operationId": "RevenueSharingService_CreateRevenueSharing",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/RevenueSharingServiceCreateRevenueSharingResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/revenuesharingCreateRevenueSharingRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Revenue Sharing"
+        ]
+      },
+      "put": {
+        "summary": "Revenue Sharing.",
+        "description": "Update Revenue Sharing.",
+        "operationId": "RevenueSharingService_UpdateRevenueSharing",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/RevenueSharingServiceUpdateRevenueSharingResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/revenuesharingUpdateRevenueSharingRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Revenue Sharing"
+        ]
+      }
+    },
+    "/v2/revenue-sharing-tier": {
+      "get": {
+        "summary": "List Revenue Sharing tier.",
+        "description": "List all created Revenue Sharing tier.",
+        "operationId": "RevenueSharingService_GetRevenueSharingTierList",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/RevenueSharingServiceGetRevenueSharingTierListResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "revenue_sharing_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "min_value",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "max_value",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "amount",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Revenue Sharing"
+        ]
+      },
+      "delete": {
+        "summary": "DELETE",
+        "description": "Delete Revenue Sharing Tier",
+        "operationId": "RevenueSharingService_DeleteRevenueSharingTier",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/RevenueSharingServiceRevenueSharing"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "revenue_sharing_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "min_value",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "max_value",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "amount",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Revenue Sharing"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      },
+      "post": {
+        "summary": "Revenue Sharing Tier.",
+        "description": "Create Revenue Sharing tier.",
+        "operationId": "RevenueSharingService_CreateRevenueSharingTier",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/RevenueSharingServiceCreateRevenueSharingTierResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/revenuesharingCreateRevenueSharingTierRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Revenue Sharing"
+        ]
+      },
+      "put": {
+        "summary": "Revenue Sharing Tier.",
+        "description": "update Revenue Sharing tier.",
+        "operationId": "RevenueSharingService_UpdateRevenueSharingTier",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/RevenueSharingServiceUpdateRevenueSharingTierResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/revenuesharingUpdateRevenueSharingTierRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Revenue Sharing"
+        ]
+      }
+    },
+    "/v2/revenue-sharing-tier-by-id": {
+      "delete": {
+        "summary": "DELETE",
+        "description": "Delete Revenue Sharing Tier",
+        "operationId": "RevenueSharingService_DeleteRevenueSharingTierById",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/RevenueSharingServiceRevenueSharing"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "revenue_sharing_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "min_value",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "max_value",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "amount",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Revenue Sharing"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v2/revenue-sharing-tier-upsert": {
+      "put": {
+        "summary": "Revenue Sharing Tier.",
+        "description": "upsert Revenue Sharing tier.",
+        "operationId": "RevenueSharingService_UpsertRevenueSharingTier",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/RevenueSharingServiceUpsertRevenueSharingTierResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/revenuesharingUpsertRevenueSharingTierRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Revenue Sharing"
+        ]
+      }
+    },
+    "/v2/revenue-sharing-upsert": {
+      "put": {
+        "summary": "Revenue Sharing.",
+        "description": "Update Revenue Sharing.",
+        "operationId": "RevenueSharingService_UpsertRevenueSharing",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/RevenueSharingServiceUpsertRevenueSharingResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/revenuesharingUpsertRevenueSharingRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Revenue Sharing"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "revenuesharingBoundType": {
+      "type": "string",
+      "enum": [
+        "EMPTYBOUNDTYPE",
+        "INBOUND",
+        "OUTBOUND",
+        "OTHERS"
+      ],
+      "default": "EMPTYBOUNDTYPE",
+      "title": "BoundType can be either inbound or outbound"
+    },
+    "revenuesharingCreateRevenueSharingRequest": {
+      "type": "object",
+      "properties": {
+        "org_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "bound_type": {
+          "$ref": "#/definitions/revenuesharingBoundType",
+          "title": "The bound type is two type of transaction one is inbound, other one is outbound"
+        },
+        "remit_type": {
+          "$ref": "#/definitions/revenuesharingRemitType",
+          "title": "The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT"
+        },
+        "transaction_type": {
+          "$ref": "#/definitions/revenuesharingTransactionType",
+          "title": "There is transaction type one is digital, other one is otc"
+        },
+        "tier_type": {
+          "$ref": "#/definitions/revenuesharingTierType",
+          "title": "There is tier type is fixed, percentage, fixed_tier, percentage_tier"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "created_by": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "org_id",
+        "user_id",
+        "partner",
+        "bound_type",
+        "remit_type",
+        "transaction_type",
+        "tier_type"
+      ]
+    },
+    "revenuesharingCreateRevenueSharingResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "bound_type": {
+          "$ref": "#/definitions/revenuesharingBoundType",
+          "title": "The bound type is two type of transaction one is inbound, other one is outbound"
+        },
+        "remit_type": {
+          "$ref": "#/definitions/revenuesharingRemitType",
+          "title": "The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT"
+        },
+        "transaction_type": {
+          "$ref": "#/definitions/revenuesharingTransactionType",
+          "title": "There is transaction type one is digital, other one is otc"
+        },
+        "tier_type": {
+          "$ref": "#/definitions/revenuesharingTierType",
+          "title": "There is tier type is fixed, percentage, fixed_tier, percentage_tier"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "created_by": {
+          "type": "string"
+        },
+        "updated_by": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "revenuesharingCreateRevenueSharingTierRequest": {
+      "type": "object",
+      "properties": {
+        "revenue_sharing_id": {
+          "type": "string"
+        },
+        "min_value": {
+          "type": "string"
+        },
+        "max_value": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "revenue_sharing_id",
+        "min_value",
+        "max_value",
+        "amount"
+      ]
+    },
+    "revenuesharingCreateRevenueSharingTierResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "revenue_sharing_id": {
+          "type": "string"
+        },
+        "min_value": {
+          "type": "string"
+        },
+        "max_value": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        }
+      }
+    },
+    "revenuesharingGetPartnerTransactionTypeResponse": {
+      "type": "object",
+      "properties": {
+        "partner_details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/revenuesharingPartnerDetail"
+          }
+        }
+      }
+    },
+    "revenuesharingGetRevenueSharingListResponse": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/revenuesharingRevenueSharing"
+          }
+        }
+      }
+    },
+    "revenuesharingGetRevenueSharingTierListResponse": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/revenuesharingRevenueSharingTier"
+          }
+        }
+      }
+    },
+    "revenuesharingPartnerDetail": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "stype": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "transaction_types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "revenuesharingRemitType": {
+      "type": "string",
+      "enum": [
+        "EMPTYSERVICETYPE",
+        "REMITTANCE",
+        "BILLSPAYMENT",
+        "CASHINCASHOUT",
+        "MICROINSURANCE"
+      ],
+      "default": "EMPTYSERVICETYPE",
+      "description": "RemitType are types of remittance services. Ex. REMITTANCE, BILLSPAYMENT etc."
+    },
+    "revenuesharingRevenueSharing": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "bound_type": {
+          "$ref": "#/definitions/revenuesharingBoundType",
+          "title": "The bound type is two type of transaction one is inbound, other one is outbound"
+        },
+        "remit_type": {
+          "$ref": "#/definitions/revenuesharingRemitType",
+          "title": "The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT"
+        },
+        "transaction_type": {
+          "$ref": "#/definitions/revenuesharingTransactionType",
+          "title": "There is transaction type one is digital, other one is otc"
+        },
+        "tier_type": {
+          "$ref": "#/definitions/revenuesharingTierType",
+          "title": "There is tier type is fixed, percentage, fixed_tier, percentage_tier"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "created_by": {
+          "type": "string"
+        },
+        "updated_by": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "revenuesharingRevenueSharingTier": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "revenue_sharing_id": {
+          "type": "string"
+        },
+        "min_value": {
+          "type": "string"
+        },
+        "max_value": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        }
+      }
+    },
+    "revenuesharingTierType": {
+      "type": "string",
+      "enum": [
+        "EMPTYTIERTYPE",
+        "PERCENTAGE",
+        "TIERPERCENTAGE"
+      ],
+      "default": "EMPTYTIERTYPE",
+      "title": "TierType denotes whether commission is in fixed tier ot range tier"
+    },
+    "revenuesharingTransactionType": {
+      "type": "string",
+      "enum": [
+        "EMPTYTRANSACTIONTYPE",
+        "DIGITAL",
+        "OTC"
+      ],
+      "default": "EMPTYTRANSACTIONTYPE",
+      "title": "TransactionType is type of transaction"
+    },
+    "revenuesharingUpdateRevenueSharingRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "bound_type": {
+          "$ref": "#/definitions/revenuesharingBoundType",
+          "title": "The bound type is two type of transaction one is inbound, other one is outbound"
+        },
+        "remit_type": {
+          "$ref": "#/definitions/revenuesharingRemitType",
+          "title": "The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT"
+        },
+        "transaction_type": {
+          "$ref": "#/definitions/revenuesharingTransactionType",
+          "title": "There is transaction type one is digital, other one is otc"
+        },
+        "tier_type": {
+          "$ref": "#/definitions/revenuesharingTierType",
+          "title": "There is tier type is fixed, percentage, fixed_tier, percentage_tier"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "created_by": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "org_id",
+        "user_id",
+        "partner",
+        "transaction_type",
+        "remit_type",
+        "bound_type"
+      ]
+    },
+    "revenuesharingUpdateRevenueSharingResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "bound_type": {
+          "$ref": "#/definitions/revenuesharingBoundType",
+          "title": "The bound type is two type of transaction one is inbound, other one is outbound"
+        },
+        "remit_type": {
+          "$ref": "#/definitions/revenuesharingRemitType",
+          "title": "The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT"
+        },
+        "transaction_type": {
+          "$ref": "#/definitions/revenuesharingTransactionType",
+          "title": "There is transaction type one is digital, other one is otc"
+        },
+        "tier_type": {
+          "$ref": "#/definitions/revenuesharingTierType",
+          "title": "There is tier type is fixed, percentage, fixed_tier, percentage_tier"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "created_by": {
+          "type": "string"
+        },
+        "updated_by": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "revenuesharingUpdateRevenueSharingTierRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "revenue_sharing_id": {
+          "type": "string"
+        },
+        "min_value": {
+          "type": "string"
+        },
+        "max_value": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "revenue_sharing_id",
+        "min_value",
+        "max_value",
+        "amount"
+      ]
+    },
+    "revenuesharingUpdateRevenueSharingTierResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "revenue_sharing_id": {
+          "type": "string"
+        },
+        "min_value": {
+          "type": "string"
+        },
+        "max_value": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        }
+      }
+    },
+    "revenuesharingUpsertRevenueSharingRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "bound_type": {
+          "$ref": "#/definitions/revenuesharingBoundType",
+          "title": "The bound type is two type of transaction one is inbound, other one is outbound"
+        },
+        "remit_type": {
+          "$ref": "#/definitions/revenuesharingRemitType",
+          "title": "The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT"
+        },
+        "transaction_type": {
+          "$ref": "#/definitions/revenuesharingTransactionType",
+          "title": "There is transaction type one is digital, other one is otc"
+        },
+        "tier_type": {
+          "$ref": "#/definitions/revenuesharingTierType",
+          "title": "There is tier type is fixed, percentage, fixed_tier, percentage_tier"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "created_by": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "org_id",
+        "user_id",
+        "partner",
+        "bound_type",
+        "remit_type",
+        "transaction_type",
+        "tier_type"
+      ]
+    },
+    "revenuesharingUpsertRevenueSharingResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "bound_type": {
+          "$ref": "#/definitions/revenuesharingBoundType",
+          "title": "The bound type is two type of transaction one is inbound, other one is outbound"
+        },
+        "remit_type": {
+          "$ref": "#/definitions/revenuesharingRemitType",
+          "title": "The remit type is the different services we are offering for example REMITTANCE, BILLSPAYMENT"
+        },
+        "transaction_type": {
+          "$ref": "#/definitions/revenuesharingTransactionType",
+          "title": "There is transaction type one is digital, other one is otc"
+        },
+        "tier_type": {
+          "$ref": "#/definitions/revenuesharingTierType",
+          "title": "There is tier type is fixed, percentage, fixed_tier, percentage_tier"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "created_by": {
+          "type": "string"
+        },
+        "updated_by": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "revenuesharingUpsertRevenueSharingTierRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "revenue_sharing_id": {
+          "type": "string"
+        },
+        "min_value": {
+          "type": "string"
+        },
+        "max_value": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "revenue_sharing_id",
+        "min_value",
+        "max_value",
+        "amount"
+      ]
+    },
+    "revenuesharingUpsertRevenueSharingTierResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "revenue_sharing_id": {
+          "type": "string"
+        },
+        "min_value": {
+          "type": "string"
+        },
+        "max_value": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

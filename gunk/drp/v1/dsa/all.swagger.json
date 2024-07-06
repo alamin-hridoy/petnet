@@ -1,0 +1,515 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/drp/v1/dsa/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "DSAService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/dsa": {
+      "get": {
+        "summary": "List DSA records",
+        "description": "List all DSA records.",
+        "operationId": "DSAService_ListDSA",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/dsaListDSAResponse"
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "internal error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "DSA"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      },
+      "post": {
+        "summary": "Creates DSA record",
+        "description": "Creates new DSA record.",
+        "operationId": "DSAService_CreateDSA",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/dsaDSA"
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "internal error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dsaCreateDSARequest"
+            }
+          }
+        ],
+        "tags": [
+          "DSA"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/dsa/{id}": {
+      "delete": {
+        "summary": "Deletes DSA record",
+        "description": "Deletes DSA record by ID.",
+        "operationId": "DSAService_DeleteDSAByID",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/dsaDSA"
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "internal error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "DSA"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      },
+      "put": {
+        "summary": "Update DSA record",
+        "description": "Update DSA record by ID.",
+        "operationId": "DSAService_UpdateDSA",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/dsaDSA"
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "internal error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dsaUpdateDSARequest"
+            }
+          }
+        ],
+        "tags": [
+          "DSA"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/revenue-commission/dsa/{id}": {
+      "get": {
+        "summary": "Get DSA record",
+        "description": "Get DSA record by ID.",
+        "operationId": "DSAService_GetDSAByID",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/dsaDSA"
+            }
+          },
+          "422": {
+            "description": "Returned when unprocessable entity.",
+            "schema": {
+              "example": {
+                "code": 422,
+                "message": "invalid input for parameters"
+              }
+            }
+          },
+          "500": {
+            "description": "Returned when internal server error.",
+            "schema": {
+              "example": {
+                "code": 500,
+                "message": "internal error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "DSA"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "dsaCreateDSARequest": {
+      "type": "object",
+      "properties": {
+        "dsa_code": {
+          "type": "string"
+        },
+        "dsa_name": {
+          "type": "string"
+        },
+        "email_address": {
+          "type": "string"
+        },
+        "vatable": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "tin": {
+          "type": "string"
+        },
+        "updated_by": {
+          "type": "string"
+        },
+        "contact_person": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "province": {
+          "type": "string"
+        },
+        "zipcode": {
+          "type": "string"
+        },
+        "president": {
+          "type": "string"
+        },
+        "general_manager": {
+          "type": "string"
+        }
+      },
+      "description": "CreateDSARequest ...",
+      "required": [
+        "dsa_code",
+        "dsa_name",
+        "vatable",
+        "address",
+        "updated_by",
+        "contact_person",
+        "city",
+        "province",
+        "president",
+        "general_manager"
+      ]
+    },
+    "dsaDSA": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "dsa_code": {
+          "type": "string"
+        },
+        "dsa_name": {
+          "type": "string"
+        },
+        "email_address": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "vatable": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "address": {
+          "type": "string"
+        },
+        "tin": {
+          "type": "string"
+        },
+        "updated_by": {
+          "type": "string"
+        },
+        "contact_person": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "province": {
+          "type": "string"
+        },
+        "zipcode": {
+          "type": "string"
+        },
+        "president": {
+          "type": "string"
+        },
+        "general_manager": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "title": "DSA represents perahub DSA object"
+    },
+    "dsaListDSAResponse": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dsaDSA"
+          }
+        }
+      },
+      "description": "ListDSAResponse ..."
+    },
+    "dsaUpdateDSARequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "dsa_code": {
+          "type": "string"
+        },
+        "dsa_name": {
+          "type": "string"
+        },
+        "email_address": {
+          "type": "string"
+        },
+        "vatable": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "tin": {
+          "type": "string"
+        },
+        "updated_by": {
+          "type": "string"
+        },
+        "contact_person": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "province": {
+          "type": "string"
+        },
+        "zipcode": {
+          "type": "string"
+        },
+        "president": {
+          "type": "string"
+        },
+        "general_manager": {
+          "type": "string"
+        }
+      },
+      "description": "UpdateDSARequest ...",
+      "required": [
+        "id",
+        "dsa_code",
+        "dsa_name",
+        "vatable",
+        "address",
+        "updated_by",
+        "contact_person",
+        "city",
+        "province",
+        "president",
+        "general_manager"
+      ]
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: usermgm-config
+data:
+  RUNTIME_ENVIRONMENT: 'uat'
+  HYDRA_AUDIENCE: uat.petnet.dev
+  HYDRA_ADMINURL: 'http://hydra-admin'
+  CORS_ORIGINS: 'https://uat.petnet.dev,https://*.uat.petnet.dev'
+  BASE_URL: 'https://uat.petnet.dev'
+  API_HOST: 'https://api.uat.petnet.dev'
+  API_AUTHHOST: 'https://auth.uat.petnet.dev/oauth2/token'
+  DATABASE_HOST: 172.30.225.19
+  DATABASE_DBNAME: identitydb_uat
+  ORG_AUTOCREATE: "true"
+  BOOTSTRAP_NAME: admin
+  BOOTSTRAP_EMAIL: admin@example.com
+  KETO_HOST: keto-api
+  INFLUXDB_BUCKET: conexuat
+  INFLUXDB_ORGANIZATION: petnetdev
+  BOOTSTRAP_ENVLIST: "sandbox live" 
+  IDP_URL: https://auth.uat.petnet.dev
+  MAILER_EMAILCONFIRMURL: https://uat.petnet.dev/registration/preliminary-screen
+  MAILER_SIGNUPURL: https://uat.petnet.dev/registration/account-details
+  USER_EXISTERROR: "true"

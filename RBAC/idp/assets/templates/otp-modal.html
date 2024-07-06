@@ -1,0 +1,64 @@
+<div id="mfa-otp-modal" class="mfa-mdal">
+    <div class="custom-modal">
+      <a class="modal-close" href="#" onclick="modalCancel()">
+        <img src="/assets/images/icons/close-red.png" alt="" width="15" height="15">
+      </a>
+      <form id="otpForm" accept="/event/confirm" method="POST" class="">
+          <h1 class="">Let’s verify your email.</h1>
+          <p class="">We sent an email to <span class="font-weight-bold">your@email.com.</span>
+              please check your inbox. <br> If you weren’t able to receive a verification email,
+              please click the resend button.</p>
+              <div class="w-full">
+                  <input class="hidden" type="text" name="OTPCode" id="otpCode">
+                  <input type="text" oninput="otpSubmission()" name="OTPCode01" maxlength="1" class="otpCode custom-input">
+                  <input type="text" oninput="otpSubmission()" name="OTPCode02" maxlength="1" class="otpCode custom-input">
+                  <input type="text" oninput="otpSubmission()" name="OTPCode03" maxlength="1" class="otpCode custom-input">
+                  <input type="text" oninput="otpSubmission()" name="OTPCode04" maxlength="1" class="otpCode custom-input">
+                  <input type="text" oninput="otpSubmission()" name="OTPCode05" maxlength="1" class="otpCode custom-input">
+              </div>
+          <a href="#" class="custom-button">
+              Resend verification email
+          </a>
+      </form>
+  </div>
+</div>
+<script>
+    function modalShow() {
+        var getPopUp = document.getElementById("mfa-otp-modal");
+        var getPopUpClass = getPopUp.className;
+        getPopUp.classList.remove("hidden");
+    }
+    function modalCancel() {
+        var getPopUp = document.getElementById("mfa-otp-modal");
+        var getPopUpClass = getPopUp.className;
+        getPopUp.classList.add("hidden");
+    }
+    const params = new URLSearchParams(window.location.search)
+    window.onload = function () {
+        if (params.has("email-send")) {
+            var ass = document.getElementById("alert-show-success");
+            var ase = document.getElementById("alert-show-error");
+            let emailsend = params.get("email-send");
+            if(emailsend == 1){
+                ase.classList.add('hidden')
+                ass.classList.remove('hidden');
+            }else if(emailsend == 0){
+                ass.classList.add('hidden');
+                ase.classList.remove('hidden');
+            }
+        }
+    }
+    function otpSubmission(){
+        value = document.getElementsByClassName("otpCode");
+        var otpCode = "";
+        for(i = 0; i < value.length; i++) {
+          if (value[i].value != ""){
+            otpCode += value[i].value;
+          }
+        }
+        if(otpCode.length == 5) {
+            document.getElementById("otpCode").value = otpCode;
+            document.getElementById("otpForm").submit();
+        }
+    }
+</script>

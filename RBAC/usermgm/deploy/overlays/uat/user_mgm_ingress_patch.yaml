@@ -1,0 +1,7 @@
+- op: replace
+  path: /spec/tls/0/hosts
+  value: [usermgm.uat.proxtera.app]
+
+- op: replace
+  path: /spec/rules/0/host
+  value: usermgm.uat.proxtera.app

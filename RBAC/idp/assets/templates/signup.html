@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Brankas - Register</title>
+    <meta name="keywords" content="Brankas" />
+    <meta name="description" content="Brankas" />
+    <link rel="stylesheet" href="/assets/css/app.min.css" />
+  </head>
+  <script>
+    // Toggle show password
+    //
+    document.addEventListener("DOMContentLoaded", function(){
+      var togglePasswordBtn = document.getElementsByClassName("toggle-password");
+      var passwordInput = document.getElementsByClassName('password');
+
+      for (let i = 0; i < togglePasswordBtn.length; i++) {
+        let togglePassword = togglePasswordBtn[i]
+        let password = passwordInput[i]
+        togglePassword.addEventListener("click", function () {
+          password.type = (password.type==="password") ? "text" : "password";
+        });
+      }
+    });
+  </script>
+  <body>
+    <main>
+      <div class="bg-blue-dark-15 relative z-0">
+        <div class="container m-auto flex flex-wrap">
+          <div class="w-full md:w-4/6 min-h-screen pl-8 lg:pl-40 pr-8 lg:pr-10 pt-16">
+            <h1 class="text-3xl text-green-dark-5 text-white font-medium">
+              Signup 
+            </h1>
+            <form class="pb-16 w-full flex flex-wrap" method="POST" action="/signup">
+              <input name="InvCode" value="{{ .InvCode }}" type="hidden" />
+              {{ .CSRFField }}
+              <div class="md:pr-2 w-full md:w-1/2 mb-4">
+                <input
+                  type="text"
+                  name="FirstName"
+                  placeholder="First Name"
+                  class="px-8 h-14 w-full border rounded border-grey-dark-10 focus:border-blue-light-5 bg-blue-dark-15 focus:bg-blue-dark-20 text-white {{if .FormErrors.FirstName}}border-red{{end}}"
+                  value="{{ .FirstName }}"
+                />
+                  {{with .FormErrors.FirstName}}
+                  <p class="text-red text-sm">{{.}}</p>
+                  {{end}}
+              </div>
+              <div class="md:pl-2 w-full md:w-1/2 mb-4">
+                <input
+                  type="text"
+                  name="LastName"
+                  placeholder="Last Name"
+                  class="px-8 h-14 w-full border rounded border-grey-dark-10 focus:border-blue-light-5 bg-blue-dark-15 focus:bg-blue-dark-20 text-white {{if .FormErrors.LastName}}border-red{{end}}"
+                  value="{{ .LastName }}"
+                />
+                  {{with .FormErrors.LastName}}
+                  <p class="text-red text-sm">{{.}}</p>
+                  {{end}}
+              </div>
+              {{if not .InvCode}}
+              <div class="w-full mb-4">
+                <input
+                  type="text"
+                  name="Email"
+                  placeholder="Email"
+                  class="px-8 h-14 w-full border rounded border-grey-dark-10 focus:border-blue-light-5 bg-blue-dark-15 focus:bg-blue-dark-20 text-white
+                      {{if .FormErrors.Email}}border-red{{end}}
+                      {{if .FormErrors.EmailExists}}border-red{{end}}"
+                  value="{{ .Email }}"
+                />
+                  {{with .FormErrors.Email}}
+                    <p class="text-red text-sm">{{.}}</p>
+                  {{end}}
+                  {{if .FormErrors.EmailExists}}
+                    <p class="text-red text-sm">
+                      Your email already exists. Please 
+                      <a
+                        href="{{ .SignupURL }}"
+                        class="hover:underline text-white font-medium">
+                        log in
+                      </a>.
+                    </p>
+                  {{end}}
+              </div>
+              {{end}}
+              <div class="w-full mb-4">
+                <div class="relative">
+                  <input
+                    type="password"
+                    name="Password"
+                    minlength="8"
+                    maxlength="256"
+                    placeholder="Password"
+                    class="password px-8 h-14 w-full border rounded border-grey-dark-10 focus:border-blue-light-5 bg-blue-dark-15 focus:bg-blue-dark-20 text-white
+                          {{if .FormErrors.Password}}border-red{{end}}"/>
+                  <span class="toggle-password cursor-pointer absolute top-0 right-0 mt-5 mr-3">
+                    <img class="pw-show hidden" src="/assets/images/icons/show-password.svg" width="20">
+                    <img class="pw-hide hidden" src="/assets/images/icons/hide-password.svg" width="20">
+                  </span>
+                </div>
+                <span class="text-xs text-grey-dark-10">
+                  Must be 8 characters and contain at least 1 number
+                </span>
+                  {{with .FormErrors.Password}}
+                  <p class="text-red text-sm">{{.}}</p>
+                  {{end}}
+              </div>
+              <div class="w-full mb-4">
+                <div class="relative">
+                  <input
+                  type="password"
+                  name="Password2"
+                  placeholder="confirm Password"
+                  class="password px-8 h-14 w-full border rounded border-grey-dark-10 focus:border-blue-light-5 bg-blue-dark-15 focus:bg-blue-dark-20 text-white
+                        {{if .FormErrors.Password2}}border-red{{end}}"/>
+                  <span class="toggle-password cursor-pointer absolute top-0 right-0 mt-5 mr-3">
+                    <img class="pw-show hidden" src="/assets/images/icons/show-password.svg" width="20">
+                    <img class="pw-hide hidden" src="/assets/images/icons/hide-password.svg" width="20">
+                  </span>
+                </div>
+                  {{with .FormErrors.Password2}}
+                  <p class="text-red text-sm">{{.}}</p>
+                  {{end}}
+              </div>
+              <div class="w-full">
+                <button class="w-full h-14 rounded bg-blue hover:bg-blue-dark-5 text-white font-medium">
+                  Continue
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+  <script src="/assets/js/app.js"></script>
+</html>

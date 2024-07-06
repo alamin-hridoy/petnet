@@ -1,0 +1,30 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: idp-config
+data:
+  RUNTIME_ENVIRONMENT: "production"
+  SERVER_HOST: ""
+  SITE_URL: https://drp.perahub.com.ph
+  SIGNUP_URL: https://drp.perahub.com.ph/registration/account-details
+  LOGIN_URL: https://drp.perahub.com.ph/login
+  USERMGM_API: profile-admin:80
+  AUTHENTICATOR_NAMES: usermgm perahub
+  AUTHENTICATOR_DEFAULT: usermgm
+  AUTHENTICATOR_USERMGM_TYPE: session
+  AUTHENTICATOR_USERMGM_HOST: profile-admin:80
+  AUTHENTICATOR_USERMGM_DURATION: 24h
+  AUTHENTICATOR_PERAHUB_TYPE: session
+  AUTHENTICATOR_PERAHUB_HOST: drp-api-internal:80
+  AUTHENTICATOR_PERAHUB_DURATION: 24h
+  SERVER_ERRORURL: https://drp.perahub.com.ph/docs
+  CORS_ORIGINS: https://auth.drp.perahub.com.ph
+  REMEMBER_FOR: "259200" # 3 days
+  HYDRA_ADMINURL: http://hydra-admin
+  GOOGLE_CALLBACK: https://auth.drp.perahub.com.ph/login/google-callback
+  INFLUXDB_BUCKET: conexprod
+  INFLUXDB_ORGANIZATION: conex
+  AUTH_URL: https://auth.drp.perahub.com.ph
+
+...

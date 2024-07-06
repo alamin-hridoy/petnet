@@ -1,0 +1,32 @@
+package permissions
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+)
+
+type ValidatePermissionRequest struct {
+	ID          string `pb:"1" json:"id"`
+	Action      string `pb:"2" json:"action"`
+	Resource    string `pb:"3" json:"resource"`
+	OrgID       string `pb:"4" json:"org_id"`
+	Environment string `pb:"5" json:"environment"`
+}
+
+type ValidatePermissionResponse struct {
+	ID        string    `pb:"1" json:"id"`
+	Name      string    `pb:"2" json:"name"`
+	OrgID     string    `pb:"3" json:"org_id"`
+	Validated time.Time `pb:"4" json:"validated"`
+}
+
+// Validation is an internal service to support permission enforcement on API calls.
+type ValidationService interface {
+
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/permission/{ID}/validate",
+	// }
+	ValidatePermission(ValidatePermissionRequest) ValidatePermissionResponse
+}

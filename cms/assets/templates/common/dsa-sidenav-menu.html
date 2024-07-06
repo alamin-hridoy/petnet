@@ -1,0 +1,59 @@
+<div class="bg-petnetblue w-32 min-h-screen">
+    <div class="min-h-screen">
+        <img src="{{ assetHash "/images/DRP-Vertical.svg" }}" class="mx-auto my-5">
+        <ul class="">
+            <li class="w-full flex items-center justify-center text-white">
+                <a href="/api-guide" class="menulink text-center w-full dsa-nav-li px-2 py-4 {{if eq "api-pages" .Type}}bg-white text-petnetyellow bg-opacity-30{{end}}">
+                    <img class="mx-auto mb-3 w-7" src="/images/api-key-{{if eq "api-pages" .Type}}yellow{{else}}white{{end}}.png">
+                    <span class="leading-5 font-bold">API Integration</span>
+                </a>
+            </li>
+            <li class="w-full flex items-center justify-center text-white">
+                <a href="/transactions" class="menulink text-center w-full dsa-nav-li px-2 py-4 {{if eq "dsa-transaction" .Type}}bg-white text-petnetyellow bg-opacity-30{{end}}">
+                    <img class="mx-auto mb-3 w-7" src="/images/transaction-{{if eq "dsa-transaction" .Type}}yellow{{else}}white{{end}}.png">
+                    <span class="leading-5 font-bold">Transactions</span>
+                </a>
+            </li>
+            <li class="w-full px-2 py-4 flex items-center justify-center">
+                <a href="/docs" class="menulink text-center text-white" target="_blank">
+                    <img class="mx-auto mb-3 w-7" src="{{assetHash "/images/docs.svg"}}">
+                    <span class="leading-5 font-bold">Doc Portal</span>
+                </a>
+            </li>
+            {{if not .Data.PresetPermission.isprovider.permission}}
+            <li class="w-full px-2 py-4 flex items-center justify-center">
+                <a href="javascript:;" class="menulink text-center text-white">
+                    <img class="mx-auto mb-3 w-7" src="{{assetHash "/images/settings.png"}}">
+                    <span class="leading-5 font-bold">Settings</span>
+                </a>
+            </li>
+            {{end}}
+            {{if  and (.Data.ServiceRequest)  (not .Data.PresetPermission.isprovider.permission)}}
+            <li class="w-full flex items-center justify-center text-white ">
+                <a href="/dsa-services" class="menulink text-center w-full dsa-nav-li px-2 py-4 {{if eq "dsa-services" .Type}}bg-white text-petnetyellow bg-opacity-30{{end}}">
+                    <img class="mx-auto mb-3 w-7" src="/images/services-{{if eq "dsa-services" .Type}}yellow{{else}}white{{end}}.png">
+                    <span class="leading-5 font-bold">Services</span>
+                </a>
+            </li> 
+            {{end}}
+        </ul>
+    </div>
+</div>
+<script type="text/javascript" src="{{ assetHash "/js/monitoractivity.js" }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let menus = document.querySelectorAll("a");
+        for (let i = 0; i < menus.length; i++) {
+            menus[i].addEventListener("click", function(e){
+                e.preventDefault();
+                let lnk = menus[i].href;
+                if (menus[i].target !== undefined && menus[i].target == "_blank") {
+                    window.open(lnk, '_blank');
+                }else{
+                    menus[i].href = "javascript:;";
+                    window.location.href = lnk;
+                }
+            });
+        }
+    });
+</script>

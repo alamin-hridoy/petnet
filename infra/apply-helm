@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+set -e -x
+
+if ! helm version | grep -q '"v3\.2\.4'; then
+	echo "Please install helm 3.0"
+	exit 1
+fi
+
+kubectl apply -f init.yaml
+
+helm repo add traefik https://helm.traefik.io/traefik
+helm repo add jetstack https://charts.jetstack.io
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+
+helm upgrade --namespace ingress --atomic --debug --install traefik traefik/traefik --version 9.18.2 -f helm-values/traefik.yaml
+
+helm upgrade --namespace cert-manager --atomic --debug --install cert-manager jetstack/cert-manager --version v1.3.1  -f helm-values/cert-manager.yaml
+
+helm upgrade --namespace prometheus \
+	--debug \
+	--atomic \
+	--version 13.8.0 \
+	--install prometheus prometheus-community/prometheus \
+	-f helm-values/prometheus.yaml \
+
+helm upgrade --namespace grafana --atomic --debug --install grafana grafana/grafana --version 6.8.0 -f helm-values/grafana.yaml

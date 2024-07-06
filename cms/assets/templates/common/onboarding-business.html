@@ -1,0 +1,820 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>Business Information</title>
+	<style>
+		.checkBoxColor { filter: hue-rotate(220deg) }
+	</style>
+</head>
+
+<body class="font-proxima-nova-reg">
+    <div>
+        <div class="flex min-h-screen items-center justify-center bg-petnetblue">
+            <div class="w-full md:w-10/12  lg:w-7/12">
+                <!-- perahub logo -->
+                <div class="my-2 hidden sm:flex justify-center">
+					<img src="{{ assetHash "/images/DRP-white-horizontal.svg" }}" alt="" srcset="">
+				</div>
+				<div class="my-2 mx-6 flex justify-center sm:hidden">
+					<img src="{{ assetHash "/images/DRP-white-horizontal.svg" }}" alt="" srcset="">
+				</div>
+                <!-- content area -->
+                <div class="bg-white rounded mx-6">
+					<div class="bg-petnetheader bg-opacity-60 rounded-t sm:hidden justify-around px-4 py-4 flex">
+						<div class="border-2 rounded-full border-petnetpink h-10 w-10 bg-petnetpink text-white font-bold text-xl flex items-center justify-center">
+							1
+						</div>
+						<div class="border-2 rounded-full border-petnetblue h-10 w-10 text-petnetblue font-bold text-xl flex items-center justify-center">
+							2
+						</div>
+						<div class="border-2 rounded-full border-petnetblue h-10 w-10 text-petnetblue font-bold text-xl flex items-center justify-center">
+							3
+						</div>
+						<div class="border-2 rounded-full border-petnetblue h-10 w-10 text-petnetblue font-bold text-xl flex items-center justify-center">
+							4
+						</div>
+					</div>
+                    <!-- step area -->
+                    <div class="sm:flex bg-petnetheader bg-opacity-60 rounded-t hidden">
+						<div class="w-1/4">
+                        <div class="flex bg-petnetpink p-4 items-center rounded-tl">
+                            <span
+                                class=" text-white text-2xl rounded-full border-white border h-8 w-8 inline-flex justify-center items-center mr-2">1</span>
+                            <p class="text-white text-xl ">Business Information</p>
+                        </div>
+					</div>
+					<div class="w-1/4">
+                        <div class="flex p-4 items-center">
+                            <span
+                                class=" text-petnetblue text-2xl rounded-full border-petnetblue border h-8 w-8 inline-flex justify-center items-center mr-2">2</span>
+                            <p class="text-petnetblue text-xl ">Financial Information</p>
+                        </div>
+					</div>
+					<div class="w-1/4">
+                        <div class="flex p-4 items-center text-petnetblue">
+                            <span
+                                class=" text-petnetblue text-2xl rounded-full border-petnetblue border h-8 w-8 inline-flex justify-center items-center mr-2">3</span>
+                            <p class="text-petnetblue text-xl ">Account Onboarding</p>
+                        </div>
+					</div>
+					<div class="w-1/4">
+                        <div class="flex p-4 items-center text-petnetblue">
+                            <span
+                                class=" text-petnetblue text-2xl rounded-full border-petnetblue border h-8 w-8 inline-flex justify-center items-center mr-2">4</span>
+                            <p class="text-petnetblue text-xl ">DRP Onboarding</p>
+						</div>
+                        </div>
+
+                    </div>
+                    <!-- form area -->
+						  <form method="POST" action="/register/businessinfo" enctype="multipart/form-data" name="bussinessForm" onsubmit="return validateForm()">
+   	  					  {{ .CSRFField }}
+							  <div class="flex flex-wrap justify-center px-2">
+								  <!-- header text -->
+								  <div>
+									  <p class="text-center text-gray-400 pt-4 pb-3">STEP 1</p>
+									  <p class="text-center pb-4 text-2xl font-bold">Business Information</p>
+									  <p class="text-center">Please fill in your account details to be used for settlement.</p>
+								  </div>
+							  </div>
+							  <div class="sm:px-48 px-6">
+								  <h1 class="text-petnetblue py-4">COMPANY DETAILS</h1>
+								  <div>
+									  <div class="mb-4">
+										  <label class="text-gray-700 text-sm">
+											  Company Name<span class="text-petnetpink">*</span>
+										  </label>
+										  <input oninput="removeValidationError('comName')" class="{{with .Errors.CompanyName}}border-red-500{{end}} mt-3 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-400  border border-gray-300 bg-petnetgray"
+												  name="CompanyName" id="company" value="{{ .CompanyName }}">
+												  
+												  <p class="text-red-700 mt-2" id="comName">{{with .Errors.CompanyName}}{{.}}{{end}}</p>
+												  
+									  </div>
+
+									  <div class="mb-4">
+										  <label class="text-gray-700 text-sm">
+											  Store Name (Optional)
+										  </label>
+										  <br>
+										  <small class="italic text-gray-700">If company name is different from store name</small>
+										  <input class=" mt-3 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-400  border border-gray-300 bg-petnetgray" name="StoreName" id="store" value="{{ .StoreName }}">
+									  </div>
+									  <div class="grid grid-cols-6 gap-6 mb-4">
+										  <div class="col-span-3">
+											  <label for="first_name" class="block text-sm font-medium text-gray-700 whitespace-nowrap">Phone Number<span class="text-petnetpink">*</span>
+												  </label>
+											  <input oninput="removeValidationError('phnNumber')" type="text" name="PhoneNumber" id="phone-number" placeholder="e.g. 63-999-9999" value="{{ .PhoneNumber }}" class=" {{with .Errors.PhoneNumber}}border-red-500{{end}} mt-3 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-400  border border-gray-400 bg-petnetgray">
+											  
+												<p class="text-red-700 mt-2" id="phnNumber">{{with .Errors.PhoneNumber}}{{.}}{{end}}</p>
+												
+										  </div>
+
+										  <div class="col-span-3">
+											  <label for="last_name" class="block text-sm font-medium text-gray-700 whitespace-nowrap">Fax Number (Optional)</label>
+											  <input oninput="removeValidationError('fxnumber')" type="text" name="FaxNumber" id="fax-number" placeholder=" e.g. 63-999-9999" value="{{ .FaxNumber }}" class=" {{with .Errors.FaxNumber}}border-red-500{{end}} mt-3 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-400  border border-gray-400 bg-petnetgray">
+											  
+												<p class="text-red-700 mt-2" id="fxnumber">{{with .Errors.FaxNumber}}{{.}}{{end}}</p>
+												
+										  </div>
+									  </div>
+									  <div class="mb-4">
+										  <label class="text-gray-700 text-sm">
+											  Website (Optional)
+										  </label>
+										  <input oninput="removeValidationError('web')" class=" mt-3 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-400 {{with .Errors.Website}}border-red-500{{end}} border border-gray-300 bg-petnetgray" name="Website" id="website" value="{{ .Website }}">
+										  <p class="text-red-700 mt-2" id="web">{{with .Errors.Website}}{{.}}{{end}}</p>
+									  </div>
+									  <div class="mb-4">
+										  <label class="text-gray-700 text-sm">
+											  Company Email Address<span class="text-petnetpink">*</span>
+										  </label>
+										  <input oninput="removeValidationError('emailAddrs')" class="{{with .Errors.CompanyEmail}}border-red-500{{end}} mt-3 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-400  border border-gray-300 bg-petnetgray"
+												  name="CompanyEmail" id="c-email" placeholder="company@example.com" value="{{ .CompanyEmail }}">
+												  
+												<p class="text-red-700 mt-2" id="emailAddrs">{{with .Errors.CompanyEmail}}{{.}}{{end}}</p>
+												
+									  </div>
+									  <div class="grid grid-cols-6 gap-6 mb-4">
+										  <div class="col-span-3">
+											  <label for="contact-person"
+														class="block text-sm font-medium text-gray-700 whitespace-nowrap">Contact Person<span class="text-petnetpink">*</span>
+														</label>
+											  <input oninput="removeValidationError('contPersn')" type="text" name="ContactPerson" id="contact-person" value="{{ .ContactPerson }}" 
+																					  class="{{with .Errors.ContactPerson}}border-red-500{{end}} mt-3 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-400  border border-gray-400 bg-petnetgray">
+												
+												<p class="text-red-700 mt-2" id="contPersn">{{with .Errors.ContactPerson}}{{.}}{{end}}</p>
+												
+										  </div>
+
+										  <div class="col-span-3">
+											  <label for="position" class="block text-sm font-medium text-gray-700">Position<span class="text-petnetpink">*</span>
+											  </label>
+											  <input oninput="removeValidationError('pos')" type="text" name="Position" id="position" value="{{ .Position }}" 
+																					  class="{{with .Errors.Position}}border-red-500{{end}} mt-3 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-400  border border-gray-400 bg-petnetgray">
+												
+												<p class="text-red-700 mt-2" id="pos">{{with .Errors.Position}}{{.}}{{end}}</p>
+												
+										  </div>
+									  </div>
+									  <h1 class="text-petnetblue py-4">HEAD OFFICE BUSINESS ADDRESS</h1>
+									  <div class="grid grid-cols-6 gap-6 mb-4">
+										  <div class="col-span-3">
+											  <label for="address1"
+														class="block text-sm font-medium text-gray-700">Building/Street<span class="text-petnetpink">*</span>
+														</label>
+											  <input oninput="removeValidationError('street')" type="text" name="Address1" id="b-s" value="{{ .Address1 }}" 
+																					  class="{{with .Errors.Address1}}border-red-500{{end}} mt-3 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-400  border border-gray-400 bg-petnetgray">
+												
+												<p class="text-red-700 mt-2" id="street">{{with .Errors.Address1}}{{.}}{{end}}</p>
+												
+										  </div>
+
+										  <div class="col-span-3">
+											  <label for="city" class="block text-sm font-medium text-gray-700">Town/City<span class="text-petnetpink">*</span>
+											  </label>
+											  <input oninput="removeValidationError('city')" type="text" name="City" id="t-c" value="{{ .City }}" 
+																					  class="{{with .Errors.City}}border-red-500{{end}} mt-3 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-400  border border-gray-400 bg-petnetgray">
+												
+												<p class="text-red-700 mt-2" id="city">{{with .Errors.City}}{{.}}{{end}}</p>
+												
+										  </div>
+									  </div>
+									  <div class="grid grid-cols-6 gap-6 mb-4">
+										  <div class="col-span-3">
+											  <label for="state" class="block text-sm font-medium text-gray-700">Province<span class="text-petnetpink">*</span>
+												  </label>
+											  <input oninput="removeValidationError('provi')" type="text" name="State" id="province" value="{{ .State }}" 
+																							 class="{{with .Errors.State}}border-red-500{{end}} mt-3 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-400  border border-gray-400 bg-petnetgray">
+												
+												<p class="text-red-700 mt-2" id="provi">{{with .Errors.State}}{{.}}{{end}}</p>
+												
+										  </div>
+
+										  <div class="col-span-3">
+											  <label for="PostalCode"
+														class="block text-sm font-medium text-gray-700">Zip/Postalcode<span class="text-petnetpink">*</span>
+											  </label>
+											  <input oninput="removeValidationError('zip')" type="text" name="PostalCode" id="z-p" value="{{ .PostalCode }}" class="{{with .Errors.PostalCode}}border-red-500{{end}} mt-3 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-400  border border-gray-400 bg-petnetgray">
+											  
+												<p class="text-red-700 mt-2" id="zip">{{with .Errors.PostalCode}}{{.}}{{end}}</p>
+												
+										  </div>
+									  </div>
+									  <h1 class="text-petnetblue pt-4">UPLOAD DOCUMENTS</h1>
+									  <p class="italic text-gray-400 font-normal">The following file types are accepted: pdf,
+									  png,jpg</p>
+									  <h1 class="pt-4">Valid ID<span class="text-petnetpink">*</span></h1>
+									  <p class="italic text-gray-400 font-normal">Provide documents for Principal/Owner and each
+									  FLA</p>
+									  <!-- upload form -->
+									  <div id="file-upload-validid" class="w-full bg-petnetgray {{with .Errors.validid}} border border-red-500{{end}}"></div>
+									  <p class="text-red-700 mt-2 all-errs-validid" id="err-validid"></p>
+									  {{with .Errors.validid}}
+											<p class="text-red-700 mt-2 all-errs-validid">{{.}}</p>
+									  {{end}}
+									  <h1 class="pt-4">2x2 picture<span class="text-petnetpink">*</span></h1>
+									  <p class="italic text-gray-400 font-normal">Provide documents for Principal/Owner and each
+									  FLA</p>
+									  <!-- <div class="bg-petnetgray flex justify-between rounded mt-2 p-6 border border-gray-300"> -->
+									  <div id="file-upload-picture" class="w-full bg-petnetgray {{with .Errors.picture}} border border-red-500{{end}}"></div>
+									  <p class="text-red-700 mt-2 all-errs-picture" id="err-picture"></p>
+									  {{with .Errors.picture}}
+											<p class="text-red-700 mt-2 all-errs-picture">{{.}}</p>
+									  {{end}}
+									  <!-- </div> -->
+									  <h1 class="pt-4">NBI Clearance<span class="text-petnetpink">*</span></h1>
+									  <div id="file-upload-nbi" class="w-full bg-petnetgray {{with .Errors.nbi}} border border-red-500{{end}}"></div>
+									  <p class="text-red-700 mt-2 all-errs-nbi" id="err-nbi"></p>
+									  {{with .Errors.nbi}}
+											<p class="text-red-700 mt-2 all-errs-nbi">{{.}}</p>
+									  {{end}}
+									  <h1 class="pt-4">Court Clearance<span class="text-petnetpink">*</span></h1>
+									  <div id="file-upload-cc" class="w-full bg-petnetgray {{with .Errors.cc}} border border-red-500{{end}}"></div>
+									  <p class="text-red-700 mt-2 all-errs-cc" id="err-cc"></p>
+									  {{with .Errors.cc}}
+											<p class="text-red-700 mt-2 all-errs-cc">{{.}}</p>
+									  {{end}}
+									  <h1 class="pt-4">Incorporation Papers<span class="text-petnetpink">*</span></h1>
+									  <div id="file-upload-ip" class="w-full bg-petnetgray {{with .Errors.ip}} border border-red-500{{end}}"></div>
+									  <p class="text-red-700 mt-2 all-errs-ip" id="err-ip"></p>
+									  {{with .Errors.ip}}
+											<p class="text-red-700 mt-2 all-errs-ip">{{.}}</p>
+									  {{end}}
+									  <div class="pb-10">
+										  <h1 class="pt-4">Mayors Permit<span class="text-petnetpink">*</span></h1>
+										  <div id="file-upload-mp" class="w-full bg-petnetgray {{with .Errors.mp}} border border-red-500{{end}}"></div>
+										  <p class="text-red-700 mt-2 all-errs-mp" id="err-mp"></p>
+										  {{with .Errors.mp}}
+											<p class="text-red-700 mt-2 all-errs-mp">{{.}}</p>
+										  {{end}}
+
+										  <h1 class="pt-4">NDA<span class="text-petnetpink">*</span></h1>
+										  <div id="file-upload-nda" class="w-full bg-petnetgray {{with .Errors.nda}} border border-red-500{{end}}"></div>
+										  <p class="text-red-700 mt-2 all-errs-nda" id="err-nda"></p>
+										  {{with .Errors.nda}}
+										  <p class="text-red-700 mt-2 all-errs-nda">{{.}}</p>
+										  {{end}}
+									  </div>
+									  	<div class="pb-12">
+											<p class="font-semibold text-sm text-petnetblue">SELECT TRANSACTION</p>
+											<p class="my-2 font-normal text-sm">Transaction Type<span class="text-petnetpink">*</span></p>
+											<div>
+												<div class="form-check mb-2 flex items-center">
+													<input name="TransactionTypes" value="DIGITAL" {{if selectedCheck "DIGITAL" .TransactionTypes}}checked{{end}} type="checkbox" id="isDigital" class="form-check-input checkBoxColor h-5 w-5 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200  align-top bg-no-repeat bg-center bg-contain float-left mr-3 cursor-pointer">
+													<label class="form-check-label inline-block text-gray-800" for="isDigital">
+														Digital
+													</label>
+												</div>
+												<div class="form-check flex items-center">
+													<input name="TransactionTypes" value="OTC" {{if selectedCheck "OTC" .TransactionTypes}}checked{{end}} type="checkbox" id="isOvertheCounter" class="form-check-input checkBoxColor h-5 w-5 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200  align-top bg-no-repeat bg-center bg-contain float-left mr-3 cursor-pointer">
+													<label class="form-check-label inline-block text-gray-800" for="isOvertheCounter">
+														Over the Counter
+													</label>
+												</div>
+											</div>
+											<p id="err-transType" class="text-red-700 mt-2 all-errs-transType hidden"></p>
+											{{with .Errors.TransactionTypes}}
+												<p class="text-red-700 mt-2 all-errs-transType">{{.}}</p>
+											{{end}}
+									  	</div>
+								  </div>
+							  </div>
+                </div>
+
+                <div class="sm:flex mt-5 justify-between mb-16 hidden mx-6">
+                    <div class="mt-3">
+                        <a id="account-reg-back" onclick="getPrevUrl(event)" class="rounded-md font-bold text-white cursor-pointer border border-white px-8 py-4">
+                            Go back
+						</a>
+                    </div>
+					<div class="lg:w-auto w-full lg:ml-auto text-center mr-1.5">
+						<button id="SaveDraft" name="SaveDraft" value="SaveDraft" type="submit" class="bg-petnetlightblue border border-petnetlightblue text-sm text-white px-6 py-3 rounded-md font-bold hidden">
+						Save as Draft 
+						</button>
+					</div>
+                    <div>
+                        <button id="SaveContinue" name="SaveContinue" value="SaveContinue" type="submit" class="bg-petnetyellow text-petnetblue px-8 py-3 rounded-md font-bold">
+                            Save & Continue
+                        </button>
+                    </div>
+                </div>
+				<div class="sm:hidden mt-5 mx-6 mb-16">
+					<div>
+						<button id="SaveDraft" name="SaveDraft" value="SaveDraft" type="submit" class="bg-petnetlightblue border border-petnetlightblue text-sm text-white  px-8 py-3 rounded-md font-normal my-3 text-center w-full mb-4 hidden">
+						Save as Draft 
+						</button>
+					</div>
+					<div>
+                        <button id="SaveContinue" name="SaveContinue" value="SaveContinue" type="submit" class="bg-petnetyellow text-petnetblue px-8 py-3 rounded-md font-bold w-full mb-4">
+                            Save & Continue
+                        </button>
+                    </div>
+                    <div>
+                        <a id="account-reg-back" onclick="getPrevUrl(event)" class="rounded-md cursor-pointer font-bold text-white border border-white px-8 w-full py-3 block text-center">
+                            Go back
+						</a>
+                    </div>
+                    
+                </div>
+				  </form>
+            </div>
+        </div>
+    </div>
+    <script src="{{ assetHash "/js/fileupload.js" }}"></script>
+		<script>
+			company.addEventListener('keyup', function(){
+			if(company.value){
+				SaveDraft.classList.remove("hidden");
+			}
+			else {
+				SaveDraft.classList.add("hidden");
+			}
+			});
+			function validateForm() {
+				let UrlRegx = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
+				let EmailRegex = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
+				let CP = /^[a-zA-Z ]*$/;
+
+				let IsValid = true;
+				let companyName = document.bussinessForm.CompanyName;
+
+				if (companyName.value == "") {
+					let comErr = document.getElementById("comName");
+					comErr.innerHTML = "Company name can not be empty";
+					comErr.classList.remove("hidden");
+					comErr.parentElement.children[1].classList.add("border-red-500")
+					companyName.focus();
+					IsValid = false;
+				}
+				let phoneNumber = document.bussinessForm.PhoneNumber;
+				let phnErr = document.getElementById("phnNumber");
+				if (phoneNumber.value == "") {
+					phnErr.innerHTML = "Phone number can not be empty";
+					phnErr.parentElement.children[1].classList.add("border-red-500");
+					phnErr.classList.remove("hidden");
+					phoneNumber.focus();
+					IsValid = false;
+				}
+				if (isNaN(phoneNumber.value)) {
+					phnErr.innerHTML = "Phone number needs to be digits only";
+					phnErr.parentElement.children[1].classList.add("border-red-500");
+					phnErr.classList.remove("hidden");
+					phoneNumber.focus();
+					IsValid = false;
+				}
+				let faxNumber = document.bussinessForm.FaxNumber;
+				if (isNaN(faxNumber.value)) {
+					let faxErr = document.getElementById("fxnumber");
+					faxErr.innerHTML = "Fax number should be digit";
+					faxErr.parentElement.children[1].classList.add("border-red-500");
+					faxErr.classList.remove("hidden");
+					faxNumber.focus();
+					IsValid = false;
+				}
+				let webSite = document.bussinessForm.Website;
+				if (webSite.value != "") {
+					if (!webSite.value.match(UrlRegx)) {
+						let webErr = document.getElementById("web")
+						webErr.innerHTML = "Website need to be a valid URL";
+						webErr.parentElement.children[1].classList.add("border-red-500");
+						webErr.classList.remove("hidden");
+						webSite.focus();
+						IsValid = false;
+					}
+				}
+
+				let emailAdd = document.bussinessForm.CompanyEmail;
+				if (!emailAdd.value.match(EmailRegex)) {
+					let emErr = document.getElementById("emailAddrs");
+					emErr.innerHTML = "Should be a valid Email";
+					emErr.parentElement.children[1].classList.add("border-red-500");
+					emErr.classList.remove("hidden");
+					emailAdd.focus();
+					IsValid = false;
+				}
+				let conPer = document.bussinessForm.ContactPerson;
+				let conErr = document.getElementById("contPersn");
+				if (conPer.value == "") {
+					conErr.innerHTML = "Contact person can't be empty";
+					conErr.parentElement.children[1].classList.add("border-red-500");
+					conErr.classList.remove("hidden");
+					conPer.focus();
+					IsValid = false;
+				}
+				if (conPer.value != "") {
+					if (!conPer.value.match(CP)) {
+						conErr.innerHTML = "Only allow alphabet and space";
+						conErr.parentElement.children[1].classList.add("border-red-500");
+						conErr.classList.remove("hidden");
+						conPer.focus();
+						IsValid = false;
+					}
+				}
+				let pos = document.bussinessForm.Position
+				let posErr = document.getElementById("pos");
+				if (pos.value == "") {
+					posErr.innerHTML = "Position can't be empty";
+					posErr.parentElement.children[1].classList.add("border-red-500");
+					posErr.classList.remove("hidden");
+					pos.focus();
+					IsValid = false;
+				}
+				if (pos.value != "") {
+					if (!pos.value.match(CP)) {
+						posErr.innerHTML = "Only allow alphabet and space";
+						posErr.parentElement.children[1].classList.add("border-red-500");
+						posErr.classList.remove("hidden");
+						pos.focus();
+						IsValid = false;
+					}
+				}
+				let add = document.bussinessForm.Address1;
+				if (add.value == "") {
+					addErr = document.getElementById("street")
+					addErr.innerHTML = "Building/Stree is required";
+					addErr.parentElement.children[1].classList.add("border-red-500");
+					addErr.classList.remove("hidden");
+					add.focus();
+					IsValid = false;
+				}
+				let city = document.bussinessForm.City;
+				if (city.value == "") {
+					cityErr = document.getElementById("city")
+					cityErr.innerHTML = "City is required";
+					cityErr.parentElement.children[1].classList.add("border-red-500");
+					cityErr.classList.remove("hidden");
+					city.focus();
+					IsValid = false;
+				}
+				let state = document.bussinessForm.State
+				if (state.value == "") {
+					staErr = document.getElementById("provi")
+					staErr.innerHTML = "Province is required";
+					staErr.parentElement.children[1].classList.add("border-red-500");
+					staErr.classList.remove("hidden");
+					state.focus();
+					IsValid = false;
+				}
+				let zip = document.bussinessForm.PostalCode
+				if (zip.value == "") {
+					zipErr = document.getElementById("zip")
+					zipErr.innerHTML = "Zip/Postalcode is required";
+					zipErr.parentElement.children[1].classList.add("border-red-500");
+					zipErr.classList.remove("hidden");
+					zip.focus();
+					IsValid = false;
+				}
+
+				let docErrMsg = "This is a required document, please upload a file"
+				let validIDDoc = document.bussinessForm.validid;
+				if (!isFileSelected(validIDDoc)) {
+					IsValid = false;
+					addDocErrorMessage("validid", docErrMsg);
+					validIDDoc.focus();
+				}
+
+				let pictureDoc = document.bussinessForm.picture;
+				if (!isFileSelected(pictureDoc)) {
+					IsValid = false;
+					addDocErrorMessage("picture", docErrMsg);
+					pictureDoc.focus();
+				}
+
+				let nbiDoc = document.bussinessForm.nbi;
+				if (!isFileSelected(nbiDoc)) {
+					IsValid = false;
+					addDocErrorMessage("nbi", docErrMsg);
+					nbiDoc.focus();
+				}
+
+				let ccDoc = document.bussinessForm.cc;
+				if (!isFileSelected(ccDoc)) {
+					IsValid = false;
+					addDocErrorMessage("cc", docErrMsg);
+					ccDoc.focus();
+				}
+
+				let ipDoc = document.bussinessForm.ip;
+				if (!isFileSelected(ipDoc)) {
+					IsValid = false;
+					addDocErrorMessage("ip", docErrMsg);
+					ipDoc.focus();
+				}
+
+				let mpDoc = document.bussinessForm.mp;
+				if (!isFileSelected(mpDoc)) {
+					IsValid = false;
+					addDocErrorMessage("mp", docErrMsg);
+					mpDoc.focus();
+				}
+
+				let ndaDoc = document.bussinessForm.nda;
+				if (!isFileSelected(ndaDoc)) {
+					IsValid = false;
+					addDocErrorMessage("nda", docErrMsg);
+					ndaDoc.focus();
+				}
+				let transactionType = document.bussinessForm.TransactionTypes;
+				let istransactionTypeChecked = false
+				let comErr = document.getElementById("err-transType");
+				comErr.classList.add("hidden");
+				transactionType.forEach(function(item){
+					if (item.checked) {
+						istransactionTypeChecked = true
+					}
+				});
+				if (!istransactionTypeChecked) {
+					comErr.innerHTML = "Please select at least 1 Transaction Type to avail";
+					IsValid = false;
+					comErr.classList.remove("hidden");
+				}
+				return IsValid;
+			}
+
+			function isFileSelected(el) {
+				if (!el) {
+					console.log("file input not present");
+					return false;
+				}
+
+				// If files are uploaded previously, then that file is not requireds
+				if (document.getElementsByName("uploaded-" + el.name).length > 0) {
+					return true
+				}
+
+				// if not multiple
+				if (el.files && el.files.length > 0) {
+					return true;
+				}
+
+				// if multiple
+				for (let i = 0; i < el.length; i++) {
+					if (el[i].files.length > 0) {
+						return true;
+					}
+				}
+
+				return false
+			}
+
+			function addDocErrorMessage(field, msg) {
+				if (field == "") {
+					return;
+				}
+
+				let fieldContainer = document.getElementById("file-upload-" + field);
+				if (!fieldContainer) {
+					return;
+				}
+
+				// remove errors if no error msg
+				if (msg == "") {
+					fieldContainer.classList.remove("border-red-500", "border");
+					let allDocErrs = document.querySelector(".all-errs-" + field);
+					if (allDocErrs) {
+						allDocErrs.innerHTML = "";
+					}
+
+					return;
+				}
+
+				// for error
+				fieldContainer.classList.add("border-red-500", "border");
+				document.getElementById("err-" + field).innerHTML = msg
+			}
+		</script>
+<script>
+    var IDPhotoURL = "{{.IDPhotoURLs}}"
+    var PictureURL = "{{.PictureURLs}}"
+    var NBIClearanceURL = "{{.NBIClearanceURLs}}"
+    var CourtClearanceURL = "{{.CourtClearanceURL}}"
+    var IncorporationPapersURL = "{{.IncorporationPapersURLs}}"
+    var MayorsPermitURL = "{{.MayorsPermitURL}}"
+	var IDPhotoID = "{{.IDPhotoID}}"
+	var PictureID = "{{.PictureID}}"
+	var NBIClearanceID = "{{.NBIClearanceID}}"
+	var CourtClearanceID = "{{.CourtClearanceID}}"
+	var IncorporationPapersID = "{{.IncorporationPapersID}}"
+	var MayorsPermitID = "{{.MayorsPermitID}}"
+	var NdaURL = "{{.NdaURLs}}"
+	var NdaID = "{{.NdaID}}"
+	var CSRFFieldValue = "{{.CSRFFieldValue}}"
+	var isInput=false
+</script>
+    <script>
+		const validid = [];
+		var IDPhotoURLs = IDPhotoURL.split(",");
+		if (IDPhotoURLs.length > 0) {
+			IDPhotoURLs.forEach(function (item) {
+				if (item != "") {
+					validid.push({
+						'name': item,
+						'url': "/u/files/" + item,
+						'input': IDPhotoID,
+						'video': false
+					});
+				}
+			});
+		}
+		new FileUpload("validid", 3, ["pdf", "png", "jpg", "jpeg"],
+				"", "Choose file/s to upload valid ID", validid, '', {
+					'previewImages': true,
+					'multiple': true,
+					'uploadCallback': function () {
+						return addDocErrorMessage("validid", "")
+					}
+				});
+
+		const picture = [];
+		var PictureURLs = PictureURL.split(",");
+		if (PictureURLs.length > 0) {
+			PictureURLs.forEach(function (item) {
+				if (item != "") {
+					picture.push({
+						'name': item,
+						'url': "/u/files/" + item,
+						'input': PictureID,
+						'video': false
+					});
+				}
+			});
+		}
+		new FileUpload("picture", 3, ["pdf", "png", "jpg", "jpeg"],
+				"", "Choose file/s to upload", picture, '', {
+					'previewImages': true,
+					'multiple': true,
+					'uploadCallback': function () {
+						return addDocErrorMessage("picture", "")
+					}
+				});
+		const nbi = [];
+		var NBIClearanceURLs = NBIClearanceURL.split(",");
+		if (NBIClearanceURLs.length > 0) {
+			NBIClearanceURLs.forEach(function (item) {
+				if (item != "") {
+					nbi.push({
+						'name': item,
+						'url': "/u/files/" + item,
+						'input': NBIClearanceID,
+						'video': false
+					});
+				}
+			});
+		}
+		new FileUpload("nbi", 3, ["pdf", "png", "jpg", "jpeg"],
+				"", "Choose file/s to upload", nbi, '', {
+					'previewImages': true,
+					'multiple': true,
+					'uploadCallback': function () {
+						return addDocErrorMessage("nbi", "")
+					}
+				});
+		const cc = [];
+		var CourtClearanceURLs = CourtClearanceURL.split(",");
+		if (CourtClearanceURLs.length > 0) {
+			CourtClearanceURLs.forEach(function (item) {
+				if (item != "") {
+					cc.push({
+						'name': item,
+						'url': "/u/files/" + item,
+						'input': CourtClearanceID,
+						'video': false
+					});
+				}
+			});
+		}
+		new FileUpload("cc", 3, ["pdf", "png", "jpg", "jpeg"],
+				"", "Choose file to upload", cc, '', {
+					'previewImages': true,
+					'uploadCallback': function () {
+						return addDocErrorMessage("cc", "")
+					}
+				});
+		const ip = [];
+		var IncorporationPapersURLs = IncorporationPapersURL.split(",");
+		if (IncorporationPapersURLs.length > 0) {
+			IncorporationPapersURLs.forEach(function (item) {
+				if (item != "") {
+					ip.push({
+						'name': item,
+						'url': "/u/files/" + item,
+						'input': IncorporationPapersID,
+						'video': false
+					});
+				}
+			});
+		}
+		new FileUpload("ip", 3, ["pdf", "png", "jpg", "jpeg"],
+				"", "Choose file/s to upload", ip, '', {
+					'previewImages': true,
+					'multiple': true,
+					'uploadCallback': function () {
+						return addDocErrorMessage("ip", "")
+					}
+				});
+		const mp = [];
+		var MayorsPermitURLs = MayorsPermitURL.split(",");
+		if (MayorsPermitURLs.length > 0) {
+			MayorsPermitURLs.forEach(function (item) {
+				if (item != "") {
+					mp.push({
+						'name': item,
+						'url': "/u/files/" + item,
+						'input': MayorsPermitID,
+						'video': false
+					});
+				}
+			});
+		}
+		new FileUpload("mp", 3, ["pdf", "png", "jpg", "jpeg"],
+				"", "Choose file to upload", mp, '', {
+					'previewImages': true,
+					'uploadCallback': function () {
+						return addDocErrorMessage("mp", "")
+					}
+				});
+
+		const nda = [];
+		var NdaURLs = NdaURL.split(",");
+		if (NdaURLs.length > 0) {
+			NdaURLs.forEach(function (item) {
+				if (item != "") {
+					nda.push({
+						'name': item,
+						'url': "/u/files/" + item,
+						'input': NdaID,
+						'video': false
+					});
+				}
+			});
+		}
+
+		new FileUpload("nda", 3, ["pdf", "png", "jpg", "jpeg", "doc", "docx"],
+				"", "Choose file to upload", nda, '', {
+					'previewImages': true,
+					'multiple': true,
+					'uploadCallback': function () {
+						return addDocErrorMessage("nda", "")
+					}
+				});
+
+		//remove validation error
+		function removeValidationError(id) {
+			isInput = true
+			var err = document.getElementById(id);
+			let field = err.closest("div").children[1]
+			if (field.tagName == "INPUT" && field.classList.contains("border-red-500")) {
+				field.classList.remove("border-red-500")
+			}
+			err.classList.add("hidden");
+		}
+
+		function loadAjax(url, method, nameV) {
+			var xhttp = new XMLHttpRequest();
+			var data = new FormData();
+			data.append("name", nameV);
+			data.append("gorilla.csrf.Token", CSRFFieldValue);
+			xhttp.open(method, url, true);
+			xhttp.send(data);
+		}
+
+		function removedUploadedFile() {
+			const removefile = document.getElementsByClassName("remove_file");
+			for (var i = 0; i < removefile.length; i++) {
+				removefile[i].addEventListener("click", function (e) {
+					let file = this.getAttribute("data-file")
+					let fileid = this.getAttribute("data-fileid")
+					if (typeof file !== 'undefined') {
+						if (file != null) {
+							loadAjax("/u/files/" + fileid, "DELETE", file)
+						}
+					}
+					this.closest(".remove_file_wrap").remove();
+				});
+			}
+		}
+
+		document.addEventListener('DOMContentLoaded', function (event) {
+			removedUploadedFile()
+		});
+		document.body.addEventListener('DOMSubtreeModified', function (event) {
+			removedUploadedFile()
+		});
+
+		function getPrevUrl(e) {
+			if (isInput) {
+				e.preventDefault();
+				var result = confirm("Do you want to discard the changes?");
+				if (!result) {
+					return
+				}
+			}
+			window.location.href = "/registration/preliminary-screen";
+		}
+    </script>
+</body>
+</html>

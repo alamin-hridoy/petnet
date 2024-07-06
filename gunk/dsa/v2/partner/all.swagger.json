@@ -1,0 +1,1156 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/dsa/v2/partner/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "PartnerService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v2/partner/{org_id}": {
+      "get": {
+        "summary": "Get partner.",
+        "description": "Get created partner by org ID.",
+        "operationId": "PartnerService_GetPartner",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/partnersGetPartnerResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Partners"
+        ]
+      }
+    },
+    "/v2/partners/disable": {
+      "post": {
+        "summary": "Disable partner.",
+        "description": "Disable partner for DSA.",
+        "operationId": "PartnerService_DisablePartner",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/partnersDisablePartnerResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/partnerDisablePartnerRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Partners"
+        ]
+      }
+    },
+    "/v2/partners/enable": {
+      "post": {
+        "summary": "Enable partner.",
+        "description": "Enable partner for DSA.",
+        "operationId": "PartnerService_EnablePartner",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/partnersEnablePartnerResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/partnerEnablePartnerRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Partners"
+        ]
+      }
+    },
+    "/v2/partners/validate": {
+      "post": {
+        "summary": "Validate partner.",
+        "description": "Validate user access to partner.",
+        "operationId": "PartnerService_ValidatePartnerAccess",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/partnersValidatePartnerAccessResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/partnerValidatePartnerAccessRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Partners"
+        ]
+      }
+    },
+    "/v2/partners/{id}": {
+      "delete": {
+        "summary": "Delete partner.",
+        "description": "Delete partner by ID.",
+        "operationId": "PartnerService_DeletePartner",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/partnersDeletePartnerResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Partner"
+        ]
+      }
+    },
+    "/v2/partners/{org_id}": {
+      "get": {
+        "summary": "Get partners.",
+        "description": "Get created partners by org ID.",
+        "operationId": "PartnerService_GetPartners",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/partnersGetPartnersResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Partners"
+        ]
+      }
+    },
+    "/v2/partners/{partners.id}": {
+      "post": {
+        "summary": "Create partners.",
+        "description": "Create one or more dsa partners.",
+        "operationId": "PartnerService_CreatePartners",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/partnersCreatePartnersResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "partners.id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/partnerCreatePartnersRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Partners"
+        ]
+      },
+      "put": {
+        "summary": "Update partners.",
+        "description": "Update one or more dsa partners.",
+        "operationId": "PartnerService_UpdatePartners",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/partnersUpdatePartnersResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "partners.id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/partnerUpdatePartnersRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Partners"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "partnerAyannahPartner": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "param1": {
+          "type": "string"
+        },
+        "param2": {
+          "type": "string"
+        },
+        "enabled": {
+          "$ref": "#/definitions/partnerPartnerStatusType"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "startdate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "enddate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "partnerBPIPartner": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "param1": {
+          "type": "string"
+        },
+        "param2": {
+          "type": "string"
+        },
+        "enabled": {
+          "$ref": "#/definitions/partnerPartnerStatusType"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "startdate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "enddate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "partnerCebuanaIntlPartner": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "param1": {
+          "type": "string"
+        },
+        "param2": {
+          "type": "string"
+        },
+        "enabled": {
+          "$ref": "#/definitions/partnerPartnerStatusType"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "startdate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "enddate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "partnerCebuanaPartner": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "param1": {
+          "type": "string"
+        },
+        "param2": {
+          "type": "string"
+        },
+        "enabled": {
+          "$ref": "#/definitions/partnerPartnerStatusType"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "startdate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "enddate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "partnerCreatePartnersRequest": {
+      "type": "object",
+      "properties": {
+        "partners": {
+          "$ref": "#/definitions/partnerPartners"
+        }
+      }
+    },
+    "partnerCreatePartnersResponse": {
+      "type": "object",
+      "properties": {
+        "partners": {
+          "$ref": "#/definitions/partnerPartners"
+        }
+      }
+    },
+    "partnerDeletePartnerResponse": {
+      "type": "object"
+    },
+    "partnerDisablePartnerRequest": {
+      "type": "object",
+      "properties": {
+        "org_id": {
+          "type": "string"
+        },
+        "partner": {
+          "$ref": "#/definitions/partnerPartnerType"
+        }
+      }
+    },
+    "partnerDisablePartnerResponse": {
+      "type": "object"
+    },
+    "partnerEnablePartnerRequest": {
+      "type": "object",
+      "properties": {
+        "org_id": {
+          "type": "string"
+        },
+        "partner": {
+          "$ref": "#/definitions/partnerPartnerType"
+        }
+      }
+    },
+    "partnerEnablePartnerResponse": {
+      "type": "object"
+    },
+    "partnerGetPartnerResponse": {
+      "type": "object",
+      "properties": {
+        "partner": {
+          "$ref": "#/definitions/partnerPartner"
+        }
+      }
+    },
+    "partnerGetPartnersResponse": {
+      "type": "object",
+      "properties": {
+        "partners": {
+          "$ref": "#/definitions/partnerPartners"
+        }
+      }
+    },
+    "partnerIRemitPartner": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "param1": {
+          "type": "string"
+        },
+        "param2": {
+          "type": "string"
+        },
+        "enabled": {
+          "$ref": "#/definitions/partnerPartnerStatusType"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "startdate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "enddate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "partnerInstantCashPartner": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "param1": {
+          "type": "string"
+        },
+        "param2": {
+          "type": "string"
+        },
+        "enabled": {
+          "$ref": "#/definitions/partnerPartnerStatusType"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "startdate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "enddate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "partnerIntelExpressPartner": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "param1": {
+          "type": "string"
+        },
+        "param2": {
+          "type": "string"
+        },
+        "enabled": {
+          "$ref": "#/definitions/partnerPartnerStatusType"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "startdate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "enddate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "partnerJapanRemitPartner": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "param1": {
+          "type": "string"
+        },
+        "param2": {
+          "type": "string"
+        },
+        "enabled": {
+          "$ref": "#/definitions/partnerPartnerStatusType"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "startdate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "enddate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "partnerMetroBankPartner": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "param1": {
+          "type": "string"
+        },
+        "param2": {
+          "type": "string"
+        },
+        "enabled": {
+          "$ref": "#/definitions/partnerPartnerStatusType"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "startdate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "enddate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "partnerPartner": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_by": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "partnerPartnerStatusType": {
+      "type": "string",
+      "enum": [
+        "DISABLED",
+        "PENDING",
+        "ENABLED"
+      ],
+      "default": "DISABLED"
+    },
+    "partnerPartnerType": {
+      "type": "string",
+      "enum": [
+        "WU",
+        "IR",
+        "TF",
+        "RM",
+        "RIA",
+        "MB",
+        "BPI",
+        "USSC",
+        "JPR",
+        "IC",
+        "UNT",
+        "CEB",
+        "WISE",
+        "CEBI",
+        "AYA",
+        "IE"
+      ],
+      "default": "WU"
+    },
+    "partnerPartners": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "wu_partner": {
+          "$ref": "#/definitions/partnerWesternUnionPartner"
+        },
+        "ir_partner": {
+          "$ref": "#/definitions/partnerIRemitPartner"
+        },
+        "tf_partner": {
+          "$ref": "#/definitions/partnerTransfastPartner"
+        },
+        "rm_partner": {
+          "$ref": "#/definitions/partnerRemitlyPartner"
+        },
+        "ria_partner": {
+          "$ref": "#/definitions/partnerRiaPartner"
+        },
+        "mb_partner": {
+          "$ref": "#/definitions/partnerMetroBankPartner"
+        },
+        "bpi_partner": {
+          "$ref": "#/definitions/partnerBPIPartner"
+        },
+        "ussc_partner": {
+          "$ref": "#/definitions/partnerUSSCPartner"
+        },
+        "jpr_partner": {
+          "$ref": "#/definitions/partnerJapanRemitPartner"
+        },
+        "ic_partner": {
+          "$ref": "#/definitions/partnerInstantCashPartner"
+        },
+        "unt_partner": {
+          "$ref": "#/definitions/partnerUnitellerPartner"
+        },
+        "wise_partner": {
+          "$ref": "#/definitions/partnerTransferWisePartner"
+        },
+        "cebi_partner": {
+          "$ref": "#/definitions/partnerCebuanaIntlPartner"
+        },
+        "ceb_partner": {
+          "$ref": "#/definitions/partnerCebuanaPartner"
+        },
+        "aya_partner": {
+          "$ref": "#/definitions/partnerAyannahPartner"
+        },
+        "ie_partner": {
+          "$ref": "#/definitions/partnerIntelExpressPartner"
+        },
+        "updated_by": {
+          "type": "string"
+        },
+        "partner_statuses": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "for easy access to all enabled partners"
+        }
+      }
+    },
+    "partnerRemitlyPartner": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "param1": {
+          "type": "string"
+        },
+        "param2": {
+          "type": "string"
+        },
+        "enabled": {
+          "$ref": "#/definitions/partnerPartnerStatusType"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "startdate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "enddate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "partnerRiaPartner": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "param1": {
+          "type": "string"
+        },
+        "param2": {
+          "type": "string"
+        },
+        "enabled": {
+          "$ref": "#/definitions/partnerPartnerStatusType"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "startdate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "enddate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "partnerTransfastPartner": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "param1": {
+          "type": "string"
+        },
+        "param2": {
+          "type": "string"
+        },
+        "enabled": {
+          "$ref": "#/definitions/partnerPartnerStatusType"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "startdate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "enddate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "partnerTransferWisePartner": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "param1": {
+          "type": "string"
+        },
+        "param2": {
+          "type": "string"
+        },
+        "enabled": {
+          "$ref": "#/definitions/partnerPartnerStatusType"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "startdate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "enddate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "partnerUSSCPartner": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "param1": {
+          "type": "string"
+        },
+        "param2": {
+          "type": "string"
+        },
+        "enabled": {
+          "$ref": "#/definitions/partnerPartnerStatusType"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "startdate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "enddate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "partnerUnitellerPartner": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "param1": {
+          "type": "string"
+        },
+        "param2": {
+          "type": "string"
+        },
+        "enabled": {
+          "$ref": "#/definitions/partnerPartnerStatusType"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "startdate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "enddate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "partnerUpdatePartnersRequest": {
+      "type": "object",
+      "properties": {
+        "partners": {
+          "$ref": "#/definitions/partnerPartners"
+        }
+      }
+    },
+    "partnerUpdatePartnersResponse": {
+      "type": "object",
+      "properties": {
+        "partners": {
+          "$ref": "#/definitions/partnerPartners"
+        }
+      }
+    },
+    "partnerValidatePartnerAccessRequest": {
+      "type": "object",
+      "properties": {
+        "org_id": {
+          "type": "string"
+        },
+        "partner": {
+          "$ref": "#/definitions/partnerPartnerType"
+        }
+      }
+    },
+    "partnerValidatePartnerAccessResponse": {
+      "type": "object"
+    },
+    "partnerWesternUnionPartner": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "coy": {
+          "type": "string"
+        },
+        "operator_id": {
+          "type": "string"
+        },
+        "terminal_id": {
+          "type": "string"
+        },
+        "enabled": {
+          "$ref": "#/definitions/partnerPartnerStatusType"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "startdate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "enddate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

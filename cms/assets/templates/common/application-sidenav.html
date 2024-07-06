@@ -1,0 +1,246 @@
+<div class="mb-8">
+    <div class="bg-white rounded">
+        <h4 class="text-xl font-semibold text-petnetblue pt-7 px-6 pb-4 border-b">Summary</h4>
+        <!-- Summary list start -->
+        <ul>
+            <li>
+                <a href="/dashboard/dsa-applicant-list/{{.OrgID}}" class="nav-anchor">
+                    <span class="w-12 inline-block">
+                        <svg width="39" height="39" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M14 0.666016C6.64002 0.666016 0.666687 6.63935 0.666687 13.9993C0.666687 21.3594 6.64002 27.3327 14 27.3327C21.36 27.3327 27.3334 21.3594 27.3334 13.9993C27.3334 6.63935 21.36 0.666016 14 0.666016ZM14 20.666C13.2667 20.666 12.6667 20.066 12.6667 19.3327V13.9993C12.6667 13.266 13.2667 12.666 14 12.666C14.7334 12.666 15.3334 13.266 15.3334 13.9993V19.3327C15.3334 20.066 14.7334 20.666 14 20.666ZM12.6667 9.99935H15.3334V7.33268H12.6667V9.99935Z" fill="#1A2791"/>
+                        </svg>
+                    </span>
+                    <span class="font-semibold text-base">Details</span>
+                </a>
+            </li>
+            {{if .PresetPermission.documentChecklist.read}}
+            <li>
+                <a href="/dashboard/checkout-list/{{.OrgID}}" class="nav-anchor ">
+                    <span class="w-12 inline-block">
+                        <svg width="45" height="45" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M12.56 0.666016C13.2666 0.666016 13.9466 0.946016 14.4533 1.45268L20.88 7.89268C21.3866 8.38602 21.6666 9.06602 21.6666 9.77268V24.666C21.6666 26.1327 20.4666 27.3327 19 27.3327H2.98665C1.51998 27.3327 0.333313 26.1327 0.333313 24.666V3.33268C0.333313 1.86602 1.53331 0.666016 2.99998 0.666016H12.56ZM6.99998 21.9993H15C15.7333 21.9993 16.3333 21.3993 16.3333 20.666C16.3333 19.9327 15.7333 19.3327 15 19.3327H6.99998C6.26665 19.3327 5.66665 19.9327 5.66665 20.666C5.66665 21.3993 6.26665 21.9993 6.99998 21.9993ZM15 16.666H6.99998C6.26665 16.666 5.66665 16.066 5.66665 15.3327C5.66665 14.5993 6.26665 13.9993 6.99998 13.9993H15C15.7333 13.9993 16.3333 14.5993 16.3333 15.3327C16.3333 16.066 15.7333 16.666 15 16.666ZM12.3333 2.66602V8.66602C12.3333 9.39935 12.9333 9.99935 13.6666 9.99935H19.6666L12.3333 2.66602Z" fill="#1A2791"/>
+                        </svg>
+                    </span>
+                    <span class="font-semibold text-base">Document Checklist</span>
+                </a>
+            </li>
+            {{end}}
+        </ul>
+        <!-- Summary list end -->
+    </div>
+</div>
+<div class="">
+    <div class="bg-white rounded">
+        <h4 class="text-xl font-semibold text-petnetblue pt-7 px-6 pb-4 border-b">Configuration</h4>
+        <!-- Configuration list start -->
+        <ul>
+            {{if .PresetPermission.currency.read}}
+            <li>
+                <a href="/dashboard/currency/{{.OrgID}}" class="nav-anchor">
+                    <span class="w-12 inline-block">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 32C24.8099 32 32 24.8094 32 16C32 7.19 24.8094 0 16 0C7.19006 0 0 7.19056 0 16C0 24.81 7.19056 32 16 32ZM20.7467 29.3036C21.6532 28.1451 22.3481 26.7634 22.8701 25.3744H26.5554C24.9938 27.1312 23.0021 28.4964 20.7467 29.3036ZM27.9639 23.5H23.4762C24.0294 21.4883 24.354 19.2577 24.423 16.9375H30.0931C29.9351 19.3368 29.1756 21.5741 27.9639 23.5ZM27.9639 8.5C29.1756 10.4259 29.9351 12.6632 30.0931 15.0625H24.423C24.354 12.7423 24.0294 10.5118 23.4762 8.5H27.9639ZM26.5554 6.625H22.87C22.3483 5.23719 21.6534 3.85525 20.7466 2.69644C23.0021 3.50363 24.9938 4.86875 26.5554 6.625ZM16.9375 2.03538C18.7773 2.65894 20.0971 4.84694 20.8519 6.625H16.9375V2.03538ZM16.9375 8.5H21.5267C22.1228 10.4736 22.4735 12.7127 22.5473 15.0625H16.9375V8.5ZM16.9375 16.9369H22.5473C22.4735 19.2873 22.1228 21.5264 21.5267 23.5H16.9375V16.9369ZM16.9375 25.3744H20.8519C20.0958 27.1561 18.7757 29.3416 16.9375 29.9646V25.3744ZM5.44462 25.375H9.13C9.65175 26.7628 10.3466 28.1447 11.2534 29.3036C8.99794 28.4964 7.00619 27.1313 5.44462 25.375ZM15.0625 29.9646C13.2243 29.3416 11.9043 27.1563 11.1481 25.375H15.0625V29.9646ZM15.0625 23.5H10.4733C9.87719 21.5264 9.5265 19.2873 9.45269 16.9375H15.0625V23.5ZM15.0625 15.0625H9.45269C9.5265 12.7127 9.87719 10.4736 10.4733 8.5H15.0625V15.0625ZM15.0625 2.03538V6.625H11.1481C11.9043 4.84387 13.2242 2.65844 15.0625 2.03538ZM11.2533 2.69644C10.3467 3.85488 9.65194 5.23656 9.12994 6.625H5.44462C7.00619 4.86875 8.99794 3.50356 11.2533 2.69644ZM4.03606 8.49938H8.52381C7.97056 10.5118 7.646 12.7423 7.577 15.0625H1.90688C2.06488 12.6632 2.82438 10.4259 4.03606 8.49938ZM1.90688 16.9375H7.577C7.646 19.2577 7.97056 21.4883 8.52381 23.5H4.03606C2.82438 21.5741 2.06488 19.3368 1.90688 16.9375Z" fill="#1A2791"/>
+                            </svg>
+                    </span>
+                    <span class="font-semibold text-base">Currency</span>
+                </a>
+            </li>
+            {{end}}
+            {{if .PresetPermission.fees.read}}
+            <!-- <li>
+                <a href="/dashboard/fee-management/{{.OrgID}}" class="nav-anchor ">
+                    <span class="w-12 inline-block"><img src="/images/fees.svg" alt=""></span>
+                    <span class="font-semibold text-base">Fees & Commission</span>
+                </a>
+            </li> -->
+            {{end}}
+            {{if .PresetPermission.fees.read}}
+            <li>
+                <a href="/dashboard/revenue-sharing-mgt/{{.OrgID}}" class="nav-anchor ">
+                    <span class="w-12 inline-block">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M27.3137 4.68625C24.2917 1.66425 20.2738 0 16 0C11.7262 0 7.70825 1.66425 4.68625 4.68625C1.66425 7.70825 0 11.7262 0 16C0 20.2738 1.66431 24.2917 4.68625 27.3137C7.70819 30.3358 11.7262 32 16 32C20.2738 32 24.2917 30.3357 27.3137 27.3137C30.3357 24.2917 32 20.2738 32 16C32 11.7262 30.3357 7.70831 27.3137 4.68625ZM16 15C18.4813 15 20.5 17.0187 20.5 19.5C20.5 21.5548 19.1152 23.2912 17.2301 23.8277C17.0947 23.8663 17 23.9881 17 24.1289V24.9718C17 25.5103 16.5862 25.9736 16.0483 25.9989C15.474 26.0259 15 25.5683 15 25V24.1287C15 23.9882 14.9059 23.8664 14.7708 23.8279C12.8938 23.2942 11.5126 21.5709 11.5001 19.5279C11.4968 18.9826 11.9255 18.5161 12.4706 18.5004C13.0363 18.4842 13.5 18.9379 13.5 19.5C13.5 20.9376 14.7198 22.0957 16.1787 21.9937C17.4102 21.9077 18.4077 20.9101 18.4937 19.6786C18.5956 18.2196 17.4376 17 16 17C13.5187 17 11.5 14.9813 11.5 12.5C11.5 10.4452 12.8848 8.70881 14.7699 8.17231C14.9053 8.13375 15 8.01194 15 7.87113V7.02825C15 6.48975 15.4138 6.02644 15.9517 6.00112C16.526 5.97412 17 6.43169 17 7V7.87131C17 8.01175 17.0941 8.13363 17.2292 8.17206C19.1062 8.70581 20.4874 10.4291 20.4999 12.4721C20.5033 13.0174 20.0745 13.4839 19.5294 13.4996C18.9637 13.5158 18.5 13.0621 18.5 12.5C18.5 11.0624 17.2802 9.90425 15.8213 10.0063C14.5898 10.0923 13.5923 11.0899 13.5063 12.3214C13.4044 13.7804 14.5624 15 16 15Z" fill="#1A2791"/>
+                            </svg>
+                    </span>
+                    <span class="font-semibold text-base">Revenue Sharing Mgt.</span>
+                </a>
+            </li>
+            {{end}}
+            {{if .PresetPermission.branch.read}}
+            <li>
+                <a href="/dashboard/location/{{.OrgID}}" class="nav-anchor ">
+                    <span class="w-12 inline-block">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M31.3687 0.121084C31.0465 -0.0403614 30.6671 -0.0403614 30.3449 0.121084L0.631596 14.9778C0.067173 15.2603 -0.161368 15.9468 0.121077 16.5112C0.281853 16.8325 0.584387 17.0595 0.937813 17.124L12.7306 19.269L14.8756 31.0618C14.9634 31.5452 15.3504 31.9184 15.8367 31.9886C15.8905 31.9964 15.9447 32.0002 15.999 32C16.4321 32.0002 16.8282 31.7556 17.0218 31.3681L31.8785 1.65472C32.1613 1.09043 31.933 0.403798 31.3687 0.121084Z" fill="#1A2791"/>
+                            </svg>
+                    </span>
+                    <span class="font-semibold text-base">Location & Branches</span>
+                </a>
+            </li>
+            {{end}}
+            {{if .PresetPermission.serviceCatalog.read}}         
+            <li>
+                <a href="/dashboard/service-catalog/{{.OrgID}}" class="nav-anchor ">
+                    <span class="w-12 inline-block">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="14.5455" height="14.5455" rx="2" fill="#1A2791"/>
+                            <rect y="17.4551" width="14.5455" height="14.5455" rx="2" fill="#1A2791"/>
+                            <rect x="17.4546" width="14.5455" height="14.5455" rx="2" fill="#1A2791"/>
+                            <rect x="17.4546" y="17.4551" width="14.5455" height="14.5455" rx="2" fill="#1A2791"/>
+                        </svg>
+                    </span>
+                    <span class="font-semibold text-base">Service Catalog</span>
+                </a>
+            </li>
+            {{end}}
+        </ul>
+        <!-- Configuration list end -->
+    </div>
+</div>
+<!--DSA application modal -->
+<div id="dsaAplicantPop" class="fixed h-full w-full bg-black bg-opacity-20 px-4 z-50 top-0 left-0 hidden">
+    <div class="w-full relative">
+        <div class="absolute top-64 left-1/2 transform -translate-x-1/2 w-full md:w-2/3 xl:w-1/2 px-4 mx-auto bg-white rounded-md shadow-xl h-full">
+            <div class="px-4 md:px-12 lg:px-20 py-8 bg-white rounded-md">
+                <div class="flex justify-center items-center py-8">
+                    <span class="mr-4"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="24" cy="24" r="18" stroke="#F7653B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M24 14V24" stroke="#F7653B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="24" cy="32" r="2" fill="#F7653B"/>
+                        </svg>
+                    </span>
+                    <p class="text-2xl text-black-light">Are you sure you want to accept the application of {{.BusinessInfo.CompanyName}}?</p>
+                </div>
+                <form id="acceptStatusForm" action="/dashboard/change-status" method="POST" onsubmit="return submitDSACode()">
+                    {{ .CSRFField }}
+                    <input id="statusAccept" type="hidden" name="Status" value="{{.Status}}">
+                    <input type="hidden" name="OrgID" value="{{.OrgID}}">
+                    <div class="flex flex-wrap">
+                        <div class="w-full md:w-1/2 px-4 py-4">
+                            <label class="block text-sm font-semibold py-1" for="">DSA Code<span class="text-petnetpink">*</span></label>
+                            <input oninput="checkIsDSACodeExist(this)" id="dsaCode" type="text" name="DsaCode" class="border border-gray-light rounded-md outline-none bg-petnetgray bg-opacity-80 px-4 py-2 w-full" maxlength="3" placeholder="Max of 3 characters" >
+                            <span id="err-DSA" class="inline-block py-1 text-petnetpink text-sm hidden">DSA Code is Required</span>
+                        </div>
+                        {{if .TransactionTypesForDSACode.Otc}}
+                            <div class="w-full md:w-1/2 px-4 py-4">
+                                <label class="block text-sm font-semibold py-1" for="">OTC Terminal ID<span class="text-petnetpink">*</span></label>
+                                <input oninput="removeErrorMessage(this)" type="text" name="TerminalIdOtc" class="border border-gray-light rounded-md outline-none bg-petnetgray bg-opacity-80 px-4 py-2 w-full" maxlength="15" placeholder="Max of 15 characters">
+                                <span id="err-OTC" class="inline-block py-1 text-petnetpink text-sm hidden">OTC Terminal ID is Required</span>
+                            </div>
+                        {{end}}
+                        {{if .TransactionTypesForDSACode.Digital}}
+                            <div class="w-full md:w-1/2 px-4 py-4">
+                                <label class="block text-sm font-semibold py-1" for="">Digital Terminal ID<span class="text-petnetpink">*</span></label>
+                                <input oninput="removeErrorMessage(this)" type="text" name="TerminalIdDigital" class="border border-gray-light rounded-md outline-none bg-petnetgray bg-opacity-80 px-4 py-2 w-full" maxlength="15" placeholder="Max of 15 characters">
+                                <span id="err-Digital" class="inline-block py-1 text-petnetpink text-sm hidden">Digital Terminal ID is Required</span>
+                            </div>
+                        {{end}}
+
+                    </div>
+                    <div class="flex flex-wrap w-full justify-between">
+                        <div class="w-full md:w-1/2 px-4 py-4">
+                            <button onclick="closeModel()" type="button" name="dsaAappClose" class="w-full inline-block text-center py-3 rounded-md  border text-petnetblue border-petnetblue">Cancel</button>
+                        </div>
+                        <div class="w-full md:w-1/2 px-4 py-4">
+                            <button type="submit" name="dsaAapplication" class="w-full text-center py-3 rounded-md border border-petnetyellow bg-petnetyellow">Confirm</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--DSA application modal -->
+<script>
+        const DsaCode = "{{ .DsaCode}}"
+        let isDSACodeExist = false
+    let navAnchors = document.getElementsByClassName("nav-anchor");
+    let currentPath = window.location.href.split('?')[0];
+    for (let i = 0; i < navAnchors.length; i++) {
+        if (navAnchors[i].href == currentPath) {
+            navAnchors[i].classList.add("active-nav-anchor")
+        }
+    }
+    function closeModel(){
+			document.getElementById('dsaAplicantPop').classList.add('hidden')
+        }
+        function checkIsDSACodeExist(element) {
+            removeErrorMessage(element)
+            let dsaCodeVal = element.value.trim();
+            let errDSA = document.getElementById("err-DSA")
+            let data = new FormData();
+            let xhttp = new XMLHttpRequest();
+           
+            xhttp.onreadystatechange = function() {
+                if (xhttp.readyState == XMLHttpRequest.DONE) {
+                    let resValue = JSON.parse(xhttp.responseText)
+                    isDSACodeExist = resValue;
+                }
+                if (dsaCodeVal != "" && isDSACodeExist ) {
+                    errDSA.classList.remove("hidden")
+                    errDSA.innerHTML = "DsaCode can not be duplicate"
+                }else{
+                    if (!errDSA.classList.contains("hidden")) {
+                        errDSA.classList.add("hidden")
+                        errDSA.innerHTML = "DSA Code is Required"
+                    }
+                }
+            }
+
+            data.append("DsaCode", dsaCodeVal);
+            data.append("gorilla.csrf.Token", CSRFFieldValue);
+            xhttp.open("POST", "/dashboard/profile-dsa-code", true);
+            xhttp.send(data);
+        }
+
+        function submitDSACode() {
+            let isValid = false
+            let cheackValue = []
+			let form = document.getElementById('acceptStatusForm').querySelectorAll("input");
+            form.forEach(element => {
+                cheackValue.push(element.value) 
+                if (element.value.trim() == "") {
+                    showErrorMessage(element)
+                }
+            });
+
+            isValid = cheackValue.every(elem => elem != "")
+            if (form[1].value.trim() != "" && isDSACodeExist) {
+                isValid = false
+            }
+            return isValid
+        }
+
+        function showErrorMessage(element) {
+            switch (element.name) {
+                case "DsaCode":
+                    document.getElementById("err-DSA").classList.remove("hidden")
+                    break;
+                case "TerminalIdOtc":
+                    document.getElementById("err-OTC").classList.remove("hidden")
+                    break;
+                case "TerminalIdDigital":
+                    document.getElementById("err-Digital").classList.remove("hidden")
+                    break;
+                default:
+                    break;
+            }
+        }
+        function removeErrorMessage(element) {
+            if (element.value.trim() != "") {
+                switch (element.name) {
+                    case "DsaCode":
+                        document.getElementById("err-DSA").classList.add("hidden")
+                        break;
+                    case "TerminalIdOtc":
+                        document.getElementById("err-OTC").classList.add("hidden")
+                        break;
+                    case "TerminalIdDigital":
+                        document.getElementById("err-Digital").classList.add("hidden")
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+</script>

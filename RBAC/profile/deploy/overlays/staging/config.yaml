@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: profile-config
+data:
+  RUNTIME_ENVIRONMENT: 'staging'
+  DATABASE_HOST: 10.236.0.3
+  DATABASE_DBNAME: cebcorp-profile
+  USERMGM_API: "usermgm:80"

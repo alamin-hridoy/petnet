@@ -1,0 +1,276 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "brank.as/petnet/gunk/dsa/v1/fees/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "OrgFeesService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/dsafees/{fees.id}": {
+      "put": {
+        "summary": "Upsert org fees.",
+        "description": "Create or update an org fees.",
+        "operationId": "OrgFeesService_UpsertFees",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/orgFeesUpsertFeesResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "fees.id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/feesUpsertFeesRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Org Fees"
+        ]
+      }
+    },
+    "/v1/orgfees": {
+      "get": {
+        "summary": "List org feess.",
+        "description": "List all created org fees.",
+        "operationId": "OrgFeesService_GetFees",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/orgFeesGetFeesResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          }
+        ],
+        "tags": [
+          "Org Fees"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "feesAmount": {
+      "type": "object",
+      "properties": {
+        "": {
+          "type": "string"
+        },
+        "": {
+          "type": "string"
+        }
+      }
+    },
+    "feesDSAFeeSchedule": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "fees": {
+          "$ref": "#/definitions/feesFeeSchedule"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deleted": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "feesFeeRate": {
+      "type": "object",
+      "properties": {
+        "": {
+          "type": "string"
+        },
+        "": {
+          "type": "string"
+        },
+        "": {
+          "type": "string"
+        },
+        "": {
+          "$ref": "#/definitions/feesAmount"
+        },
+        "": {
+          "type": "string"
+        },
+        "": {
+          "$ref": "#/definitions/feesAmount"
+        }
+      }
+    },
+    "feesFeeSchedule": {
+      "type": "object",
+      "properties": {
+        "fee_status": {
+          "$ref": "#/definitions/feesFeeStatus"
+        },
+        "start_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "rates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/feesFeeRate"
+          }
+        }
+      }
+    },
+    "feesFeeStatus": {
+      "type": "string",
+      "enum": [
+        "UnknownFeeStatus",
+        "Active",
+        "Disabled"
+      ],
+      "default": "UnknownFeeStatus"
+    },
+    "feesGetFeesResponse": {
+      "type": "object",
+      "properties": {
+        "": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/feesDSAFeeSchedule"
+          }
+        }
+      }
+    },
+    "feesUpsertFeesRequest": {
+      "type": "object",
+      "properties": {
+        "": {
+          "$ref": "#/definitions/feesDSAFeeSchedule"
+        }
+      }
+    },
+    "feesUpsertFeesResponse": {
+      "type": "object",
+      "properties": {
+        "": {
+          "type": "string"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

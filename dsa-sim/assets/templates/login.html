@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Auth Option</title>
+	</head>
+	<body>
+		<form class="mt-4 space-y-6" action="/login-basic" method="POST">
+			{{ .CSRFField }}
+			<div>
+			<label for="email">Email Address</label>
+			</div>
+			<input type="email" name="Email"/><br>
+			<div>
+			<br>
+			<label for="password">Password</label>
+			</div>
+			<input type="password" name="Password"/><br>
+			<br>
+			<button type="submit">
+				Sign in
+			</button>
+			</div>
+		</form>
+</html>

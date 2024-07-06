@@ -1,0 +1,844 @@
+package service // proto "petnet.v2.service"
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+type SortBy int
+
+const (
+	DESC SortBy = iota
+	ASC
+)
+
+type ServiceSort int
+
+const (
+	CREATED ServiceSort = iota
+	COMPANYNAME
+	SERVICENAME
+	STATUS
+	PARTNER
+	LASTUPDATED
+	UPDATEDBY
+	APPLIED
+)
+
+type RemittancePartner int
+
+const (
+	WU RemittancePartner = iota
+	IR
+	TF
+	RM
+	RIA
+	MB
+	BPI
+	USSC
+	JPR
+	IC
+	UNT
+	CEB
+	WISE
+	CEBI
+	AYA
+	IE
+)
+
+type CICOPartner int
+
+const (
+	GCASH CICOPartner = iota
+	DRAGONPAY
+	PAYMAYA
+	COINS
+	PERAHUB
+	DISKARTECH
+)
+
+type ServiceType int
+
+const (
+	EMPTYSERVICETYPE ServiceType = iota
+	REMITTANCE
+	BILLSPAYMENT
+	CASHINCASHOUT
+	MICROINSURANCE
+	REMITTOACCOUNT
+)
+
+type ServiceRequestStatus int
+
+const (
+	// NOSTATUS is set when a service is enabled without a service request from DSA
+	NOSTATUS ServiceRequestStatus = iota
+	PENDING
+	ACCEPTED
+	REJECTED
+	PARTNERDRAFT
+	REQDOCDRAFT
+	ADDIDOCDRAFT
+)
+
+type AddServiceRequestRequest struct {
+	OrgID string      `pb:"1" json:"org_id"`
+	Type  ServiceType `pb:"2" json:"service_type"`
+	// add service partners to apply for later, use the enums for service partners
+	Partners []string `pb:"3" json:"partners"`
+	// set if all available partners should be added for the service
+	AllPartners bool `pb:"4" json:"all_partners"`
+}
+
+type ApplyServiceRequestRequest struct {
+	OrgID string      `pb:"1" json:"org_id"`
+	Type  ServiceType `pb:"2" json:"service_type"`
+}
+
+type ListServiceRequestRequest struct {
+	// OrgIDs leave empty to retrieve services for all orgs
+	OrgIDs []string `pb:"1" json:"org_ids"`
+	// set Type to only retrieve services with that type
+	Types []ServiceType `pb:"2" json:"service_types"`
+	// set Status to only retrieve services with that status
+	Statuses []ServiceRequestStatus `pb:"3" json:"service_request_statuses"`
+	// set Partner to only retrieve services with those partners
+	Partners     []string    `pb:"4" json:"partners"`
+	SortByColumn ServiceSort `pb:"5" json:"sort_by_column"`
+	SortBy       SortBy      `pb:"6" json:"sort_by"`
+	Limit        int         `pb:"7" json:"limit"`
+	Offset       int         `pb:"8" json:"offset"`
+}
+
+type ListServiceRequestResponse struct {
+	ServiceRequst []ServiceRequest `pb:"1" json:"services"`
+	Total         int32            `pb:"2" json:"total"`
+}
+
+type ServiceRequest struct {
+	OrgID       string               `pb:"1" json:"org_id"`
+	CompanyName string               `pb:"2" json:"company_name"`
+	Partner     string               `pb:"3" json:"partner"`
+	Type        ServiceType          `pb:"4" json:"service_type"`
+	Status      ServiceRequestStatus `pb:"5" json:"service_request_status"`
+	Enabled     bool                 `pb:"6" json:"enabled"`
+	Remarks     string               `pb:"7" json:"remarks"`
+	Applied     time.Time            `pb:"8" json:"applied"`
+	Created     time.Time            `pb:"9" json:"created"`
+	Updated     time.Time            `pb:"10" json:"updated"`
+	UpdatedBy   string               `pb:"11" json:"updated_by"`
+	ID          string               `pb:"12" json:"id"`
+	Partners    string               `pb:"13" json:"partners"`
+	Pending     int                  `pb:"14" json:"pending"`
+	Accepted    int                  `pb:"15" json:"accepted"`
+	Rejected    int                  `pb:"16" json:"rejected"`
+}
+
+type ServiceStatusRequestRequest struct {
+	OrgID     string `pb:"1" json:"org_id"`
+	UpdatedBy string `pb:"2" json:"updated_by"`
+	Partner   string `pb:"3" json:"partner"`
+	SvcName   string `pb:"4" json:"svc_name"`
+}
+
+type ValidateServiceAccessRequest struct {
+	OrgID               string `pb:"1" json:"org_id"`
+	Partner             string `pb:"2" json:"partner"`
+	SvcName             string `pb:"3" json:"svc_name"`
+	IsAnyPartnerEnabled bool   `pb:"4" json:"is_any_partner_enabled"`
+}
+
+type ValidateServiceAccessResponse struct {
+	Enabled bool `pb:"1" json:"enabled"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "org_id",
+//                 "partner",
+//                 "service_name",
+//                 "file_type",
+//                 "file_id",
+//         },
+// }}
+type AddUploadSvcRequestRequest struct {
+	OrgID    string `pb:"1" json:"org_id"`
+	Partner  string `pb:"2" json:"partner"`
+	SvcName  string `pb:"3" json:"service_name"`
+	FileType string `pb:"4" json:"file_type"`
+	FileID   string `pb:"5" json:"file_id"`
+	CreateBy string `pb:"6" json:"create_by"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "org_id",
+//                 "partner",
+//                 "service_name",
+//                 "file_type",
+//                 "file_id",
+//                 "verify_by",
+//         },
+// }}
+type UpdateUploadSvcRequestRequest struct {
+	OrgID    string `pb:"1" json:"org_id"`
+	Partner  string `pb:"2" json:"partner"`
+	SvcName  string `pb:"3" json:"service_name"`
+	Status   string `pb:"4" json:"status"`
+	FileType string `pb:"5" json:"file_type"`
+	FileID   string `pb:"6" json:"file_id"`
+	CreateBy string `pb:"7" json:"create_by"`
+	VerifyBy string `pb:"8" json:"verify_by"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "org_id",
+//                 "partner",
+//                 "service_name",
+//                 "file_type",
+//                 "verify_by",
+//         },
+// }}
+type AcceptUploadSvcRequestRequest struct {
+	OrgID    string `pb:"1" json:"org_id"`
+	Partner  string `pb:"2" json:"partner"`
+	SvcName  string `pb:"3" json:"service_name"`
+	FileType string `pb:"4" json:"file_type"`
+	VerifyBy string `pb:"5" json:"verify_by"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "org_id",
+//                 "partner",
+//                 "service_name",
+//                 "status",
+//         },
+// }}
+type SetStatusUploadSvcRequestRequest struct {
+	OrgID    string               `pb:"1" json:"org_id"`
+	Partners []string             `pb:"2" json:"partners"`
+	SvcName  string               `pb:"3" json:"service_name"`
+	Status   ServiceRequestStatus `pb:"4" json:"status"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "org_id",
+//                 "updated_by",
+//                 "service_name",
+//         },
+// }}
+type AddRemarkSvcRequestRequest struct {
+	OrgID     string `pb:"1" json:"org_id"`
+	Remark    string `pb:"2" json:"remark"`
+	UpdatedBy string `pb:"3" json:"updated_by"`
+	SvcName   string `pb:"4" json:"service_name"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "org_id",
+//                 "partner",
+//                 "service_name",
+//                 "file_type",
+//                 "verify_by",
+//         },
+// }}
+type RejectUploadSvcRequestRequest struct {
+	OrgID    string `pb:"1" json:"org_id"`
+	Partner  string `pb:"2" json:"partner"`
+	SvcName  string `pb:"3" json:"service_name"`
+	FileType string `pb:"4" json:"file_type"`
+	VerifyBy string `pb:"5" json:"verify_by"`
+}
+
+// +gunk openapiv2.Schema{JSONSchema: openapiv2.JSONSchema{
+//         Required: []string{
+//                 "org_id",
+//                 "partner",
+//                 "service_name",
+//                 "file_type",
+//         },
+// }}
+type RemoveUploadSvcRequestRequest struct {
+	OrgID    string `pb:"1" json:"org_id"`
+	Partner  string `pb:"2" json:"partner"`
+	SvcName  string `pb:"3" json:"service_name"`
+	FileType string `pb:"4" json:"file_type"`
+}
+
+type ListUploadSvcRequestRequest struct {
+	OrgID    string   `pb:"1" json:"id"`
+	Status   []string `pb:"2" json:"status"`
+	SvcNames []string `pb:"3" json:"svc_names"`
+	Partners []string `pb:"4" json:"partners"`
+}
+
+type UploadSvcResponse struct {
+	ID       string    `pb:"1" json:"id"`
+	OrgID    string    `pb:"2" json:"org_id"`
+	Partner  string    `pb:"3" json:"partner"`
+	SvcName  string    `pb:"4" json:"service_name"`
+	Status   string    `pb:"5" json:"status"`
+	FileType string    `pb:"6" json:"file_type"`
+	FileID   string    `pb:"7" json:"file_id"`
+	CreateBy string    `pb:"8" json:"create_by"`
+	VerifyBy string    `pb:"9" json:"verify_by"`
+	Total    string    `pb:"10" json:"total"`
+	Created  time.Time `pb:"11" json:"created"`
+	Verified time.Time `pb:"12" json:"verified"`
+}
+
+type ListUploadSvcRequestResponse struct {
+	Results []UploadSvcResponse `pb:"1" json:"results"`
+}
+
+type AddUploadSvcRequestResponse struct {
+	ID       string    `pb:"1" json:"id"`
+	OrgID    string    `pb:"2" json:"org_id"`
+	Partner  string    `pb:"3" json:"partner"`
+	SvcName  string    `pb:"4" json:"service_name"`
+	Status   string    `pb:"5" json:"status"`
+	FileType string    `pb:"6" json:"file_type"`
+	FileID   string    `pb:"7" json:"file_id"`
+	CreateBy string    `pb:"8" json:"create_by"`
+	VerifyBy string    `pb:"9" json:"verify_by"`
+	Total    string    `pb:"10" json:"total"`
+	Created  time.Time `pb:"11" json:"created"`
+	Verified time.Time `pb:"12" json:"verified"`
+}
+
+type UpdateUploadSvcRequestResponse struct {
+	ID       string    `pb:"1" json:"id"`
+	OrgID    string    `pb:"2" json:"org_id"`
+	Partner  string    `pb:"3" json:"partner"`
+	SvcName  string    `pb:"4" json:"service_name"`
+	Status   string    `pb:"5" json:"status"`
+	FileType string    `pb:"6" json:"file_type"`
+	FileID   string    `pb:"7" json:"file_id"`
+	CreateBy string    `pb:"8" json:"create_by"`
+	VerifyBy string    `pb:"9" json:"verify_by"`
+	Total    string    `pb:"10" json:"total"`
+	Created  time.Time `pb:"11" json:"created"`
+	Verified time.Time `pb:"12" json:"verified"`
+}
+
+type GetAllServiceRequestRequest struct {
+	// OrgIDs leave empty to retrieve services for all orgs
+	OrgIDs []string `pb:"1" json:"org_ids"`
+	// set Type to only retrieve services with that type
+	Types []ServiceType `pb:"2" json:"service_types"`
+	// set Status to only retrieve services with that status
+	Statuses []ServiceRequestStatus `pb:"3" json:"service_request_statuses"`
+	// set Partner to only retrieve services with those partners
+	Partners     []string    `pb:"4" json:"partners"`
+	SortByColumn ServiceSort `pb:"5" json:"sort_by_column"`
+	SortBy       SortBy      `pb:"6" json:"sort_by"`
+	Limit        int         `pb:"7" json:"limit"`
+	Offset       int         `pb:"8" json:"offset"`
+	ServiceNames []string    `pb:"9" json:"service_names"`
+	CompanyName  string      `pb:"10" json:"company_name"`
+}
+
+type GetAllServiceRequestResponse struct {
+	ServiceRequst []ServiceRequest `pb:"1" json:"services"`
+	Total         int32            `pb:"2" json:"total"`
+}
+
+type UpdateServiceRequestByOrgIDRequest struct {
+	OldOrgID string `pb:"1" json:"oldOrgID"`
+	NewOrgID string `pb:"2" json:"newOrgID"`
+	Status   string `pb:"3" json:"status"`
+}
+
+type UpdateServiceRequestByOrgIDResponse struct {
+	ID string `pb:"1" json:"id"`
+}
+
+type ServiceService interface {
+	// Add DSA service request partners.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/dsa-service/add-request/{OrgID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"ServiceRequest"},
+	//         Description: "Add DSA service partners to the service request to service before applying so applying is done separately if files or other info needs to be added.",
+	//         Summary:     "Add DSA service partners.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	AddServiceRequest(AddServiceRequestRequest)
+
+	// Apply for DSA service.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/dsa-service/apply/{OrgID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"ServiceRequest"},
+	//         Description: "DSA makes Service request to be able to use the services.",
+	//         Summary:     "Apply for DSA service.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	ApplyServiceRequest(ApplyServiceRequestRequest)
+
+	// List DSA Services.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v2/dsa-service/list",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Service"},
+	//         Description: "List DSA services with its partners.",
+	//         Summary:     "List DSA services.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/dsaserviceListServiceResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	ListServiceRequest(ListServiceRequestRequest) ListServiceRequestResponse
+
+	// Accept for DSA service.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/dsa-service/accept/{OrgID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"AcceptServiceRequest"},
+	//         Description: "DSA makes Accept Service request to be able to use the services.",
+	//         Summary:     "Accept for DSA service.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	AcceptServiceRequest(ServiceStatusRequestRequest)
+
+	// Reject for DSA service.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/dsa-service/reject/{OrgID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"RejectServiceRequest"},
+	//         Description: "DSA makes Reject Service request to be able to use the services.",
+	//         Summary:     "Reject for DSA service.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	RejectServiceRequest(ServiceStatusRequestRequest)
+
+	// Enable for DSA service.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/dsa-service/enable/{OrgID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"EnableServiceRequest"},
+	//         Description: "DSA makes Enable Service request to be able to use the services.",
+	//         Summary:     "Enable for DSA service.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	EnableServiceRequest(ServiceStatusRequestRequest)
+
+	// Disable for DSA service.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/dsa-service/disable/{OrgID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"DisableServiceRequest"},
+	//         Description: "DSA makes Disable Service request to be able to use the services.",
+	//         Summary:     "Disable for DSA service.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	DisableServiceRequest(ServiceStatusRequestRequest)
+
+	// Validate for DSA service.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/dsa-service/validate/{OrgID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"ValidateServiceAccess"},
+	//         Description: "DSA makes Disable Service request to be able to use the services.",
+	//         Summary:     "Disable for DSA service.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/dsaserviceValidateServiceAccessResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	ValidateServiceAccess(ValidateServiceAccessRequest) ValidateServiceAccessResponse
+
+	// Add DSA upload service request partners.
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/dsa-service/upload-request/{OrgID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"UploadServiceRequest"},
+	//         Description: "Add upload service request.",
+	//         Summary:     "Add upload service request.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/dsaserviceAddUploadSvcRequestResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	AddUploadSvcRequest(AddUploadSvcRequestRequest) AddUploadSvcRequestResponse
+
+	// update for DSA upload service request
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/dsa-service/update/{OrgID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"UpdateServiceRequest"},
+	//         Description: "update for DSA upload service request.",
+	//         Summary:     "update for DSA upload service request.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/dsaserviceUpdateUploadSvcRequestResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	UpdateUploadSvcRequest(UpdateUploadSvcRequestRequest) UpdateUploadSvcRequestResponse
+
+	// Accept for DSA upload service request
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/dsa-service/accept/{OrgID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"AcceptServiceRequest"},
+	//         Description: "Accept for DSA upload service request.",
+	//         Summary:     "Accept for DSA upload service request.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	AcceptUploadSvcRequest(AcceptUploadSvcRequestRequest)
+
+	// Reject for DSA upload service request
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/dsa-service/reject/{OrgID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"RejectServiceRequest"},
+	//         Description: "Reject for DSA upload service request.",
+	//         Summary:     "Reject for DSA upload service request.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	RejectUploadSvcRequest(RejectUploadSvcRequestRequest)
+
+	// Remove for DSA upload service request
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/dsa-service/remove/{OrgID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"RemoveServiceRequest"},
+	//         Description: "Remove for DSA upload service request.",
+	//         Summary:     "Remove for DSA upload service request.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	RemoveUploadSvcRequest(RemoveUploadSvcRequestRequest)
+
+	// List DSA upload Services request.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v2/dsa-service/upload-list",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"UploadServiceRequest"},
+	//         Description: "List DSA services with its partners.",
+	//         Summary:     "List DSA services.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/dsaserviceListUploadSvcRequestResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	ListUploadSvcRequest(ListUploadSvcRequestRequest) ListUploadSvcRequestResponse
+
+	// set status for DSA upload service request
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/dsa-service/status/{OrgID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"SetStatusServiceRequest"},
+	//         Description: "set status for DSA service request.",
+	//         Summary:     "set status for DSA service request.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	SetStatusUploadSvcRequest(SetStatusUploadSvcRequestRequest)
+
+	// Add Remark for DSA upload service request
+	//
+	// +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/v2/dsa-service/remark/{OrgID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"AddRemarkSvcRequest"},
+	//         Description: "Add Remark for DSA service request.",
+	//         Summary:     "Add Remark for DSA service request.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	AddRemarkSvcRequest(AddRemarkSvcRequestRequest)
+
+	// get all DSA Services.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v2/dsa-all-services",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Service"},
+	//         Description: "List DSA services with its partners.",
+	//         Summary:     "List DSA services.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/dsaserviceGetAllServiceRequestResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	GetAllServiceRequest(GetAllServiceRequestRequest) GetAllServiceRequestResponse
+
+	// Update service request orgid.
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v2/dsa-service/{OldOrgID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Service Request"},
+	//         Description: "Update service request.",
+	//         Summary:     "Upsert org profile.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/dsaserviceUpdateServiceRequestByOrgIDResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	UpdateServiceRequestByOrgID(UpdateServiceRequestByOrgIDRequest) UpdateServiceRequestByOrgIDResponse
+}

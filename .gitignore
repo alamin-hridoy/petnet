@@ -1,0 +1,9 @@
+/api/api
+/idp/idp
+/cms/cms
+/vendor/
+/docs/docs
+/deploy/local-setup/vendor/
+/deploy/dsa-sim/
+/deploy/compose/.env
+.vscode

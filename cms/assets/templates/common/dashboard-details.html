@@ -1,0 +1,548 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ assetHash "/css/app.min.css" }}">
+    <title>Home Screen</title>
+    <style>
+        .text-black-light{
+            color: #2E2E2F;
+        }
+        .border-gray-light{
+            border-color: #E5E5E5;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="flex">
+        <!-- left-section -->
+        <div class="bg-petnetblue w-32 min-h-screen">
+            <div class="min-h-screen">
+                <img src="{{ assetHash "/images/DRP-Vertical.svg" }}" class="mx-auto my-5">
+                <!-- Sidebar menu start -->
+                {{ template "admin-sidenav-menu.html" dict "Type" "dsa-list" "Data" .}}
+                <!-- Sidebar menu end -->
+            </div>
+        </div>
+
+        <!-- right-section -->
+        <div class="min-h-screen w-full flex bg-petnetgray relative">
+            <div class="w-full">
+                {{ template "admin-head.html" . }}
+                <div class="px-6 lg:px-32 py-10 bg-petnetgray flex flex-wrap">
+                    <div class="w-1/4 pr-2 flex flex-col">
+                        {{ template "application-sidenav.html" .}}
+                    </div>
+                    <div class="w-3/4 pl-2">
+                        <div class="bg-white rounded mb-6">
+                            <div class="border-b pt-7 px-6 pb-4">
+                                <h4 class="text-xl text-petnetblue font-semibold">Business Information</h4>
+                            </div>
+                            <h5 class="mb-5 text-base pt-6 px-8 font-semibold">Account Registration</h5>
+                            <div class="mb-4 mx-8 pb-2">
+                                <p class="text-gray-400 text-sm mb-4 font-semibold">EMAIL ADDRESS</p>
+                                <h5 class="text-base">{{.Userr.Email}}</h5>
+                            </div>
+                            <div class="px-6 pb-6">
+                                <h5 class="mb-5 text-base px-2 font-semibold">Company Details</h5>
+                                <div class="flex flex-wrap">
+                                    <div class="w-1/2 mb-4 flex">
+                                        <div class="mb-4 border-b mx-2 pb-2 w-full">
+                                            <p class="text-gray-400 text-sm font-semibold mb-4">COMPANY NAME</p>
+                                            <h5 class="text-base">{{.BusinessInfo.CompanyName}}</h5>
+                                        </div>
+                                    </div>
+                                    <div class="w-1/2 mb-4 flex">
+                                        <div class="mb-4 border-b mx-2 pb-2 w-full">
+                                            <p class="text-gray-400 text-sm font-semibold mb-4">WEBSITE</p>
+                                            <h5 class="text-base">{{.BusinessInfo.Website}}</h5>
+                                        </div>
+                                    </div>
+                                    <div class="w-1/2 mb-4 flex">
+                                        <div class="mb-4 border-b mx-2 pb-2 w-full">
+                                            <p class="text-gray-400 text-sm font-semibold mb-4">STORE NAME</p>
+                                            <h5 class="text-base">{{.BusinessInfo.StoreName}}</h5>
+                                        </div>
+                                    </div>
+                                    <div class="w-1/2 mb-4 flex">
+                                        <div class="mb-4 border-b mx-2 pb-2 w-full">
+                                            <p class="text-gray-400 text-sm font-semibold mb-4">COMPANY EMAIL ADDRESS</p>
+                                            <h5 class="text-base">{{.BusinessInfo.CompanyEmail}}</h5>
+                                        </div>
+                                    	</div>
+                                    
+                                    <div class="w-1/2 mb-4 flex">
+                                        <div class="mb-4 border-b mx-2 pb-2 w-full">
+                                            <p class="text-gray-400 text-sm font-semibold mb-4">PHONE NUMBER</p>
+                                            <h5 class="text-base">{{.BusinessInfo.PhoneNumber}}</h5>
+                                        </div>
+                                    </div>
+                                    <div class="w-1/2 mb-4 flex">
+                                        <div class="mb-4 border-b mx-2 pb-2 w-full">
+                                            <p class="text-gray-400 text-sm font-semibold mb-4">CONTACT PERSON</p>
+                                            <h5 class="text-base">{{.BusinessInfo.ContactPerson}}</h5>
+                                        </div>
+                                    </div>
+                                    <div class="w-1/2 mb-4 flex">
+                                        <div class="mb-4 border-b px-2 pb-2 w-full">
+                                            <p class="text-gray-400 text-sm font-semibold mb-4">FAX NUMBER</p>
+                                            <h5 class="text-base">{{.BusinessInfo.FaxNumber}}</h5>
+                                        </div>
+                                    </div>
+                                    <div class="w-1/2 mb-4 flex">
+                                        <div class="mb-4 border-b px-2 pb-2 w-full">
+                                            <p class="text-gray-400 text-sm font-semibold mb-4">POSITION</p>
+                                            <h5 class="text-base">{{.BusinessInfo.Position}}</h5>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="w-1/2 mb-4 flex">
+                                        <div class="mb-4 border-b px-2 pb-2 w-full">
+                                            <p class="text-gray-400 text-sm font-semibold mb-4">TRANSACTION TYPE</p>
+                                            <div class="flex pb-4 px-2">
+                                                <div class="form-check pr-8 flex items-center">
+                                                    {{if selectedCheck "DIGITAL" .TransactionTypes}}
+                                                    <span
+                                                        class="w-6 h-6 border-2 border-petnetblue bg-petnetblue inline-block rounded text-white">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                                            viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2" d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                    </span>
+                                                    {{else}}
+                                                    <span
+                                                        class="sm:w-6 sm:h-6 h-4 w-4 border-2 border-gray-400 inline-block rounded"></span>
+                                                    {{end}}
+                                                    <label class="form-check-label inline-block pl-4 text-gray-800" for="isDigital">
+                                                        Digital
+                                                    </label>
+                                                </div>
+                                                <div class="form-check flex items-center">
+                                                    {{if selectedCheck "OTC" .TransactionTypes}}
+                                                    <span
+                                                        class="w-6 h-6 border-2 border-petnetblue bg-petnetblue inline-block rounded text-white">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                                            viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2" d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                    </span>
+                                                    {{else}}
+                                                    <span
+                                                        class="sm:w-6 sm:h-6 h-4 w-4 border-2 border-gray-400 inline-block rounded"></span>
+                                                    {{end}}
+                                                    <label class="form-check-label inline-block pl-4 text-gray-800" for="isOvertheCounter">
+                                                        Over the Counter
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="w-1/2 mb-4 flex">
+                                        <div class="mb-4 border-b px-2 pb-2 w-full">
+                                            <p class="text-gray-400 text-sm font-semibold mb-4">DSA Code</p>
+                                            <h5 class="text-base">{{.DsaCode}}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h5 class="mb-5 text-base font-semibold px-2">Head Office Business Address</h5>
+                                <div class="flex flex-wrap">
+                                    <div class="w-1/2 mb-4 flex">
+                                        <div class="mb-4 border-b mx-2 pb-2 w-full">
+                                            <p class="text-gray-400 text-sm font-semibold mb-4">BUILDING/STREET</p>
+                                            <h5 class="text-base">{{.BusinessInfo.Address.Address1}}</h5>
+                                        </div>
+                                    </div>
+                                    <div class="w-1/2 mb-4 flex">
+                                        <div class="mb-4 border-b mx-2 pb-2 w-full">
+                                            <p class="text-gray-400 text-sm font-semibold mb-4">TOWN/CITY</p>
+                                            <h5 class="text-base">{{.BusinessInfo.Address.City}}</h5>
+                                        </div>
+                                    </div>
+                                    <div class="w-1/2 mb-4 flex">
+                                        <div class="mb-4 border-b mx-2 pb-2 w-full">
+                                            <p class="text-gray-400 text-sm font-semibold mb-4">PROVINCE</p>
+                                            <h5 class="text-base">{{.BusinessInfo.Address.State}}</h5>
+                                        </div>
+                                    </div>
+                                    <div class="w-1/2 mb-4 flex">
+                                        <div class="mb-4 border-b mx-2 pb-2 w-full">
+                                            <p class="text-gray-400 text-sm font-semibold mb-4">ZIP/POSTAL CODE</p>
+                                            <h5 class="text-base">{{.BusinessInfo.Address.PostalCode}}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h5 class="mb-5 text-base font-semibold px-2">Documents</h5>
+                                <div class="border-b px-2 py-2 mb-4">
+                                    <p class="text-gray-400 text-sm font-semibold mb-4">VALID ID</p>
+                                    
+                                    {{ range $i, $value := .Files.IDPhoto }}
+                                    <div class="flex px-4 py-2">
+                                        <div class="flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-4"
+                                                viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd"
+                                                    d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                            {{getFileName $.Files.IDPhotoName $value}}
+                                        </div>
+                                        <a {{if eq $value ""}} onclick="noFileAlert(event)" {{end}} class="w-36 py-2 border border-petnetblue text-center rounded mr-4 ml-auto" {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}}>
+                                        View
+                                        </a>
+                                        <a {{if eq $value ""}} onclick="noFileAlert(event)" {{end}} class="w-36 py-2 bg-petnetblue text-center rounded text-white" {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} download>
+                                        Download
+										</a>
+                                    </div>
+                                    {{end}}
+                                </div>
+                                <div class="border-b px-2 py-2 mb-4">
+                                    <p class="text-gray-400 text-sm font-semibold mb-4">2x2 PICTURE</p>
+                                    {{ range $i, $value := .Files.Picture }}
+                                    <div class="flex px-4 py-2">
+                                        <div class="flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-4"
+                                                viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd"
+                                                    d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                            {{getFileName $.Files.PictureName $value}}
+                                        </div>
+                                        <a {{if eq $value ""}} onclick="noFileAlert(event)" {{end}} class="w-36 py-2 border border-petnetblue text-center rounded mr-4 ml-auto" {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}} >
+                                        View
+                                        </a>
+                                        <a {{if eq $value ""}} onclick="noFileAlert(event)" {{end}} class="w-36 py-2 bg-petnetblue text-center rounded text-white" {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true" {{else}}href="#"{{end}} download>
+                                        Download
+                                        </a>
+                                    </div>
+                                    {{end}}
+                                </div>
+                                <div class="border-b px-2 py-2 mb-4">
+                                    <p class="text-gray-400 text-sm font-semibold mb-4">NBI CLEARANCE</p>
+                                    {{ range $i, $value := .Files.NBIClearance }}
+                                    <div class="flex px-4 py-2">
+                                        <div class="flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-4"
+                                                viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd"
+                                                    d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                            {{getFileName $.Files.NBIClearanceName $value}}
+                                        </div>
+                                        <a {{if eq $value ""}} onclick="noFileAlert(event)" {{end}} class="w-36 py-2 border border-petnetblue text-center rounded mr-4 ml-auto" {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}}>
+                                        View
+                                        </a>
+                                        <a {{if eq $value ""}} onclick="noFileAlert(event)" {{end}} class="w-36 py-2 bg-petnetblue text-center rounded text-white" {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} download>
+                                        Download
+                                        </a>
+                                    </div>
+                                    {{end}}
+                                </div>
+                                <div class="border-b px-2 py-2 mb-4">
+                                    <p class="text-gray-400 text-sm font-semibold mb-4">COURT CLEARANCE</p>
+                                    
+                                    {{ range $i, $value := .Files.CourtClearance }}
+                                    <div class="flex px-4 py-2">
+                                        <div class="flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-4"
+                                                viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd"
+                                                    d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"
+                                                    clip-rule="evenodd" />
+                                            </svg>		  
+                                            {{getFileName $.Files.CourtClearanceName $value}}
+                                        </div>
+                                        <a {{if eq $value ""}} onclick="noFileAlert(event)" {{end}} class="w-36 py-2 border border-petnetblue text-center rounded mr-4 ml-auto" {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}}>
+                                        View
+                                        </a>
+                                        <a {{if eq $value ""}} onclick="noFileAlert(event)" {{end}} class="w-36 py-2 bg-petnetblue text-center rounded text-white" {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} download>
+                                        Download
+										</a>
+                                    </div>
+                                    {{end}}
+                                </div>
+                                <div class="border-b px-2 py-2 mb-4">
+                                    <p class="text-gray-400 text-sm font-semibold mb-4">INCORPORATION PAPERS</p>
+                                    {{ range $i, $value := .Files.IncorporationPapers }}
+                                    <div class="flex px-4 py-2">
+                                        <div class="flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-4"
+                                                viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd"
+                                                    d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                            {{getFileName $.Files.IncorporationPapersName $value}}
+                                        </div>
+                                        <a {{if eq $value ""}} onclick="noFileAlert(event)" {{end}} class="w-36 py-2 border border-petnetblue text-center rounded mr-4 ml-auto" {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}}>
+                                        View
+                                        </a>
+                                        <a {{if eq $value ""}} onclick="noFileAlert(event)" {{end}} class="w-36 py-2 bg-petnetblue text-center rounded text-white" {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} download>
+                                        Download
+                                        </a>
+                                    </div>
+                                    {{end}}
+                                </div>
+                                <div class="border-b px-2 py-2 mb-4">
+                                    <p class="text-gray-400 text-sm font-semibold mb-4">MAYORS PERMIT</p>
+                                    {{ range $i, $value := .Files.MayorsPermit }}
+                                    <div class="flex px-4 py-2">
+                                        <div class="flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-4"
+                                                viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd"
+                                                    d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                            {{getFileName $.Files.MayorsPermitName $value}}
+                                        </div>
+                                        <a {{if eq $value ""}} onclick="noFileAlert(event)" {{end}} class="w-36 py-2 border border-petnetblue text-center rounded mr-4 ml-auto" {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}}>
+                                        View
+                                        </a>
+                                        <a {{if eq $value ""}} onclick="noFileAlert(event)" {{end}} class="w-36 py-2 bg-petnetblue text-center rounded text-white" {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} download>
+                                        Download
+										</a>
+                                    </div>
+                                    {{end}}
+                                </div>
+                                <div class="border-b px-2 py-2 mb-4">
+                                    <p class="text-gray-400 text-sm font-semibold mb-4">NDA</p>
+                                    {{ range $i, $value := .Files.NDA }}
+                                    <div class="flex px-4 py-2" data-file="{{$value}}">
+                                        <div class="flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-4"
+                                                 viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd"
+                                                      d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"
+                                                      clip-rule="evenodd" />
+                                            </svg>
+                                            {{getFileName $.Files.NDAName $value}}
+                                        </div>
+                                        <a {{if eq $value ""}} onclick="noFileAlert(event)" {{end}} class="w-36 py-2 border border-petnetblue text-center rounded mr-4 ml-auto" {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}}>
+                                        View
+                                        </a>
+                                        <a {{if eq $value ""}} onclick="noFileAlert(event)" {{end}} class="w-36 py-2 bg-petnetblue text-center rounded text-white" {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} download>
+                                        Download
+                                        </a>
+                                    </div>
+                                    {{end}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded mb-6">
+                            <div class="border-b pt-7 px-6 pb-4">
+                                <h4 class="text-xl font-semibold text-petnetblue">Financial Information</h4>
+                            </div>
+                            <div class="p-6">
+                                <div class="border-b px-2 py-2 mb-4">
+                                    <p class="text-gray-400 text-sm font-semibold mb-4">FINANCIAL STATEMENT</p>
+                                    {{ range $i, $value := .Files.FinancialStatement }}
+                                    <div class="flex px-4 py-2">
+                                        <div class="flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-4"
+                                                viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd"
+                                                    d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                            {{getFileName $.Files.FinancialStatementName $value}}
+                                        </div>
+                                        <a {{if eq $value ""}} onclick="noFileAlert(event)" {{end}} class="w-36 py-2 border border-petnetblue text-center rounded mr-4 ml-auto" {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}}>
+                                        View
+                                        </a>
+                                        <a {{if eq $value ""}} onclick="noFileAlert(event)" {{end}} class="w-36 py-2 bg-petnetblue text-center rounded text-white" {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} download>
+                                        Download
+                                        </a>
+                                    </div>
+                                {{end}}
+                                </div>
+                                <div class="px-2 pt-2">
+                                    <p class="text-gray-400 text-sm font-semibold mb-4">BANK STATEMENT</p>
+                                    {{ range $i, $value := .Files.BankStatement }}
+                                    <div class="flex px-4 py-2">
+                                        <div class="flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-4"
+                                                viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd"
+                                                    d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                            {{getFileName $.Files.BankStatementName $value}}
+                                        </div>
+                                        <a {{if eq $value ""}} onclick="noFileAlert(event)" {{end}} class="w-36 py-2 border border-petnetblue text-center rounded mr-4 ml-auto" {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}}>
+                                        View
+                                        </a>
+                                        <a {{if eq $value ""}} onclick="noFileAlert(event)" {{end}} class="w-36 py-2 bg-petnetblue text-center rounded text-white" {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} download>
+                                        Download
+                                        </a>
+                                    </div>
+                                    {{end}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded mb-6">
+                            <div class="border-b pt-7 px-6 pb-4">
+                                <h4 class="text-xl font-semibold text-petnetblue">Risk Assessment</h4>
+                            </div>
+                            <div class="p-6">
+                                <div class="border-b px-2 py-2 mb-4">
+                                    <p class="text-gray-400 text-sm font-semibold mb-4">RISK ASSESSMENT</p>
+                                    {{ range $i, $value := .Files.Questionnaire }}
+                                    <div class="flex px-4 py-2">
+                                        <div class="flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-4"
+                                                viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd"
+                                                    d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                            {{getFileName $.Files.QuestionnaireName $value}}
+                                        </div>
+                                        <a {{if eq $value ""}} onclick="noFileAlert(event)" {{end}} class="w-36 py-2 border border-petnetblue text-center rounded mr-4 ml-auto" {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}"{{else}}href="#"{{end}}>
+                                        View
+                                        </a>
+                                        <a {{if eq $value ""}} onclick="noFileAlert(event)" {{end}} class="w-36 py-2 bg-petnetblue text-center rounded text-white" {{if ne $value ""}} href="{{$.BaseURL}}{{$value}}?downloadable=true"{{else}}href="#"{{end}} download>
+                                        Download
+                                        </a>
+                                    </div>
+                                {{end}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded mb-6">
+                            <div class="border-b pt-7 px-6 pb-4">
+                                <h4 class="text-xl font-semibold text-petnetblue">Bank Account Information</h4>
+                            </div>
+                            <div class="p-6">
+                                <div>
+                                    <h5 class="mb-5 text-base font-semibold px-2">Account Details</h5>
+                                    <div class="mb-4 border-b mx-2 pb-2">
+                                        <p class="text-gray-400 text-sm mb-4 font-semibold">BANK</p>
+                                        <h5 class="text-base">{{.AccountInfo.Bank}}</h5>
+                                    </div>
+                                    <div class="mb-4 border-b mx-2 pb-2">
+                                        <p class="text-gray-400 text-sm mb-4 font-semibold">BANK ACCOUNT NUMBER</p>
+                                        <h5 class="text-base">{{.AccountInfo.BankAccountNumber}}</h5>
+                                    </div>
+                                    <div class="mb-4 border-b mx-2 pb-2">
+                                        <p class="text-gray-400 text-sm mb-4 font-semibold">ACCOUNT HOLDER</p>
+                                        <h5 class="text-base">{{.AccountInfo.BankAccountHolder}}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded">
+                            <div class="border-b pt-7 px-6 pb-4">
+                                <h4 class="text-xl font-semibold text-petnetblue">DRP Services</h4>
+                            </div>
+                            <div class="p-6">
+                                {{if .DRPInfo.WUInfo}}
+                                <p class="text-base font-medium border-b py-2 pl-2">Western Union</p>
+                                {{end}}
+                                {{if .DRPInfo.TFInfo}}
+                                <p class="text-base font-medium border-b py-2 pl-2">TransFast</p>
+                                {{end}}
+                                {{if .DRPInfo.IRInfo}}
+                                <p class="text-base font-medium border-b py-2 pl-2">Iremit</p>
+                                {{end}}
+                                {{if .DRPInfo.RIAInfo}}
+                                <p class="text-base font-medium border-b py-2 pl-2">Ria</p>
+                                {{end}}
+                                {{if .DRPInfo.MBInfo}}
+                                <p class="text-base font-medium border-b py-2 pl-2">Metro Bank</p>
+                                {{end}}
+                                {{if .DRPInfo.RMInfo}}
+                                <p class="text-base font-medium border-b py-2 pl-2">Remitly</p>
+                                {{end}}
+                                {{if .DRPInfo.BPIInfo}}
+                                <p class="text-base font-medium border-b py-2 pl-2">BPI</p>
+                                {{end}}
+                                {{if .DRPInfo.USSCInfo}}
+                                <p class="text-base font-medium border-b py-2 pl-2">USSC</p>
+                                {{end}}
+                                {{if .DRPInfo.JPRInfo}}
+                                <p class="text-base font-medium border-b py-2 pl-2">JapanRemit</p>
+                                {{end}}
+                                {{if .DRPInfo.ICInfo}}
+                                <p class="text-base font-medium border-b py-2 pl-2">InstantCash</p>
+                                {{end}}
+                                {{if .DRPInfo.UNTInfo}}
+                                <p class="text-base font-medium border-b py-2 pl-2">Uniteller</p>
+                                {{end}}
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    {{ template "otp-modal.html" dict "Email" .User.Aemail "CSRFField" .CSRFField }}
+
+    <script>
+        const CSRFFieldValue = "{{.CSRFFieldValue}}"
+        
+        function loadValue(id, field, source, target){
+            if (id != "undefined" && field != "undefined") {
+                loadAjax(id, field, source, target)
+            }
+        }
+
+        function loadAjax(id, field, source, target) {
+            var data = new FormData();
+            if (id != "undefined") {
+                data.id = id
+            }
+            if (field != "undefined") {
+                data.field = field
+            }
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                valueField = document.getElementById(source)
+                detailsBtn = document.getElementById(target)
+                
+                if (xhttp.readyState == XMLHttpRequest.DONE) {
+                    resValue = JSON.parse(xhttp.responseText)
+                    if(field == "phn") {
+                        valueField.innerHTML = resValue.phn
+                    } else if (field == "comEmail"){
+                        valueField.innerHTML = resValue.comEmail
+                    } else if (field == "bankAcc"){
+                        valueField.innerHTML = resValue.bankAcc
+                    } else if (field == "bankHold"){
+                        valueField.innerHTML = resValue.bankHold
+                    }
+                    detailsBtn.classList.add("hidden")
+                    if(valueField.classList.contains("hidden")){
+                        valueField.classList.remove("hidden")
+                    }
+                }
+            }
+            data.append("Field", field);
+            data.append("gorilla.csrf.Token", CSRFFieldValue);
+            xhttp.open("POST", "/dashboard/disclosure/"+id, true);
+            xhttp.send(data);
+        }
+        function noFileAlert(e){
+            e.preventDefault();
+            alert("File is missing");
+        }
+
+ 
+        
+      
+
+        
+    </script>
+</body>
+
+</html>
